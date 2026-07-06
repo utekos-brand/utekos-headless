@@ -27,7 +27,7 @@ export function ChevronDownSection() {
             duration: 0.4,
             ease: [0.22, 1, 0.36, 1]
           }}
-          className='dark:group-hover:text-dark-foreground block text-sm leading-none font-medium tracking-[-0.01em] text-foreground transition-colors group-hover:text-foreground'
+          className='group-hover:text-foreground block text-sm leading-none font-medium tracking-[-0.01em] text-foreground transition-colors group-hover:text-foreground'
         >
           Les mer
         </motion.span>
@@ -56,7 +56,7 @@ export function ChevronDownSection() {
       </div>
 
       <motion.span
-        className='dark:via-dark-foreground absolute bottom-3 left-0 h-px w-full origin-center bg-linear-to-r from-transparent via-foreground to-transparent'
+        className='via-foreground absolute bottom-3 left-0 h-px w-full origin-center bg-linear-to-r from-transparent via-foreground to-transparent'
         initial={false}
         animate={{ scaleX: hovered ? 1 : 0 }}
         transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}

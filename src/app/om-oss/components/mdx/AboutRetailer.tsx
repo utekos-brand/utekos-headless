@@ -5,11 +5,12 @@ import { MapPin } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { AboutBadge } from './AboutBadge'
+import { aboutSectionInsetClass } from './AboutPageShell'
 
 export function AboutRetailer() {
   return (
     <article className='bg-card py-20 text-card-foreground sm:py-28'>
-      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+      <div className={aboutSectionInsetClass}>
         <div className='grid grid-cols-1 items-center gap-10 rounded-3xl border border-border bg-background p-6 text-foreground md:grid-cols-[0.85fr_1.15fr] md:p-8 lg:p-10'>
           <div className='flex min-h-48 items-center justify-center rounded-lg border border-border bg-white p-8'>
             <Image

@@ -6,7 +6,7 @@ export default function CardProductionLayout({
   children: ReactNode
 }) {
   return (
-    <article className='dark:bg-dark-background w-full bg-background text-foreground'>
+    <article className='bg-background w-full bg-background text-foreground'>
       {children}
     </article>
   )

@@ -21,7 +21,7 @@ function Section({
       value={section.id}
       className='  rounded-xl border border-border bg-card px-4'
     >
-      <AccordionTrigger className='dark:hover:text-dark-foreground dark:focus-visible:ring-dark-foreground/45 min-h-14 text-left font-sans text-lg font-semibold tracking-normal text-foreground transition-colors hover:text-foreground hover:no-underline focus-visible:ring-2 focus-visible:ring-foreground/45 md:text-xl'>
+      <AccordionTrigger className='hover:text-foreground focus-visible:ring-foreground/45 min-h-14 text-left font-sans text-lg font-semibold tracking-normal text-foreground transition-colors hover:text-foreground hover:no-underline focus-visible:ring-2 focus-visible:ring-foreground/45 md:text-xl'>
         {section.title}
       </AccordionTrigger>
       <AccordionContent className='pt-2 pb-6'>
@@ -41,7 +41,7 @@ function Section({
                   {group.rows.map(row => (
                     <div
                       key={row.label}
-                      className=' dark:bg-dark-background/40 rounded-lg border border-border bg-background/40 p-3'
+                      className=' bg-background/40 rounded-lg border border-border bg-background/40 p-3'
                     >
                       <dt className='text-sm leading-[1.35] font-semibold tracking-normal text-foreground'>
                         {row.label}
@@ -66,7 +66,7 @@ function Section({
                   {group.items.map(item => (
                     <li
                       key={item}
-                      className='dark:marker:text-dark-foreground/55 list-disc marker:text-foreground/55'
+                      className='marker:text-foreground/55 list-disc marker:text-foreground/55'
                     >
                       {item}
                     </li>
@@ -74,7 +74,7 @@ function Section({
                 </ul>
               )}
               {group.note && (
-                <div className='google-sans-flex  dark:bg-dark-background/55 rounded-lg border border-border bg-background/55 p-4 text-foreground'>
+                <div className='google-sans-flex  bg-background/55 rounded-lg border border-border bg-background/55 p-4 text-foreground'>
                   <h4 className='font-sans text-base leading-tight font-semibold tracking-normal'>
                     {group.note.title}
                   </h4>
@@ -106,7 +106,7 @@ export function ProductDetailsAccordion({
   return (
     <article
       key={selectedModel}
-      className='dark:bg-dark-background w-full bg-background pt-6 pb-24 text-foreground'
+      className='bg-background w-full bg-background pt-6 pb-24 text-foreground'
       aria-live='polite'
     >
       <div className='mx-auto max-w-3xl px-4'>

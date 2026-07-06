@@ -19,20 +19,20 @@ const TrafficLights = ({
   const colors =
     variant === 'colored' ?
       [
-        'bg-destructive dark:bg-dark-destructive',
-        'bg-chart-3 dark:bg-dark-chart-3',
-        'bg-chart-4 dark:bg-dark-chart-4'
+        'bg-destructive',
+        'bg-chart-3 bg-chart-3',
+        'bg-chart-4 bg-chart-4'
       ]
     : variant === 'card' ?
       [
-        'bg-card-foreground/45 dark:bg-dark-card-foreground/45',
-        'bg-card-foreground/65 dark:bg-dark-card-foreground/65',
-        'bg-card-foreground/85 dark:bg-dark-card-foreground/85'
+        'bg-card-foreground/45 bg-card-foreground/45',
+        'bg-card-foreground/65 bg-card-foreground/65',
+        'bg-card-foreground/85 bg-card-foreground/85'
       ]
     : [
-        'bg-secondary-foreground/45 dark:bg-dark-secondary-foreground/45',
-        'bg-secondary-foreground/65 dark:bg-dark-secondary-foreground/65',
-        'bg-secondary-foreground/85 dark:bg-dark-secondary-foreground/85'
+        'bg-secondary-foreground/45 bg-secondary-foreground/45',
+        'bg-secondary-foreground/65 bg-secondary-foreground/65',
+        'bg-secondary-foreground/85 bg-secondary-foreground/85'
       ]
 
   return (
@@ -94,14 +94,14 @@ const frontCardClasses = cn(
   cardSizeClasses,
   cardBaseClasses,
   frontCardPlacementClasses,
-  'border-foreground/12 bg-background text-foreground dark:border-dark-foreground/12 dark:bg-dark-background dark:text-dark-foreground'
+  'border-foreground/12 bg-background text-foreground border-foreground/12 bg-background text-foreground'
 )
 
 const backCardIconClassName =
-  'flex size-[clamp(1.9rem,8cqi,2.35rem)] shrink-0 items-center justify-center rounded-lg border border-card-foreground/35 bg-card-foreground text-card dark:border-dark-card-foreground/35'
+  'flex size-[clamp(1.9rem,8cqi,2.35rem)] shrink-0 items-center justify-center rounded-lg border border-card-foreground/35 bg-card-foreground text-card border-card-foreground/35'
 
 const frontCardIconClassName =
-  'flex size-[clamp(1.9rem,8cqi,2.35rem)] shrink-0 items-center justify-center rounded-lg border border-foreground/20 bg-foreground/8 text-foreground dark:border-dark-foreground/20 dark:bg-dark-foreground/10 dark:text-dark-foreground'
+  'flex size-[clamp(1.9rem,8cqi,2.35rem)] shrink-0 items-center justify-center rounded-lg border border-foreground/20 bg-foreground/8 text-foreground border-foreground/20 bg-foreground/10 text-foreground'
 
 export function InfoCardStackView() {
   return (
@@ -187,7 +187,7 @@ export function InfoCardStackView() {
                 vår{' '}
                 <Link
                   href='/personvern'
-                  className='font-normal text-foreground underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground dark:focus-visible:outline-dark-foreground'
+                  className='font-normal text-foreground underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground focus-visible:outline-foreground'
                 >
                   <InlineText>personvernserklæring</InlineText>
                 </Link>

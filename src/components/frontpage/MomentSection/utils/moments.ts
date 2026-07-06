@@ -1,6 +1,6 @@
 import { Home, Car, Anchor, type LucideIcon } from 'lucide-react'
 
-export type MomentTheme = 'jungle' | 'pine' | 'teal'
+export type MomentTheme = 'secondary' | 'card' | 'teal'
 
 export interface Moment {
   id: string
@@ -17,7 +17,7 @@ export const moments: Moment[] = [
     title: 'I bobilen',
     description:
       'Lett å pakke, genial i bruk. Bytt ut store pledd og ekstra jakker med ett plagg som gjør hvert eneste stopp til en varm og komfortabel opplevelse.',
-    theme: 'jungle'
+    theme: 'secondary'
   },
   {
     id: 'boat',
@@ -25,7 +25,7 @@ export const moments: Moment[] = [
     title: 'I båten',
     description:
       'Nyt solnedgangen fra dekk uten å la den kalde sjøbrisen ødelegge øyeblikket. Den beskytter mot trekk og lar deg forlenge båtkvelden i ren komfort.',
-    theme: 'pine'
+    theme: 'card'
   },
   {
     id: 'cabin',

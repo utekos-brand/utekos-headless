@@ -60,9 +60,9 @@ export function SmartRealTimeActivity({
   return (
     <div
       aria-live='polite'
-      className='flex items-center gap-2 font-utekos-text-medium text-sm text-promo-foreground dark:text-dark-promo-foreground'
+      className='flex items-center gap-2 font-utekos-text-medium text-sm text-accent-foreground'
     >
-      <EyeIcon className='size-5 rounded-full bg-promo-foreground dark:bg-dark-promo-foreground p-1 text-promo dark:text-dark-promo md:size-6' />
+      <EyeIcon className='size-5 rounded-full bg-accent-foreground-foreground p-1text-promo md:size-6' />
       <span
         className={[
           'transform font-utekos-text-medium transition-opacity duration-400 ease-out',
@@ -73,7 +73,7 @@ export function SmartRealTimeActivity({
       >
         {currentViewerCount}
       </span>
-      <span className='font-utekos-text-medium text-sm text-promo-foreground dark:text-dark-promo-foreground'>
+      <span className='font-utekos-text-medium text-sm text-accent-foreground'>
         andre ser på dette produktet akkurat nå
       </span>
     </div>

@@ -61,12 +61,12 @@ export function ImageColumn() {
 
           <CarouselPrevious
             aria-label='Forrige produktbilde'
-            className='dark:border-dark-sidebar-foreground dark:hover:text-dark-sidebar-foreground dark:focus-visible:outline-dark-sidebar-foreground absolute top-1/2 left-2 z-20 size-10 -translate-y-1/2 cursor-pointer border border-sidebar-foreground bg-sidebar text-sidebar-foreground shadow-none transition-colors hover:bg-sidebar hover:text-sidebar-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-foreground sm:left-3 sm:size-11'
+            className='border-sidebar-foreground hover:text-sidebar-foreground focus-visible:outline-sidebar-foreground absolute top-1/2 left-2 z-20 size-10 -translate-y-1/2 cursor-pointer border border-sidebar-foreground bg-sidebar text-sidebar-foreground shadow-none transition-colors hover:bg-sidebar hover:text-sidebar-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-foreground sm:left-3 sm:size-11'
           />
 
           <CarouselNext
             aria-label='Neste produktbilde'
-            className='dark:border-dark-sidebar-foreground dark:hover:text-dark-sidebar-foreground dark:focus-visible:outline-dark-sidebar-foreground absolute top-1/2 right-2 z-20 size-10 -translate-y-1/2 cursor-pointer border border-sidebar-foreground bg-sidebar text-sidebar-foreground shadow-none transition-colors hover:bg-sidebar hover:text-sidebar-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-foreground sm:right-3 sm:size-11'
+            className='border-sidebar-foreground hover:text-sidebar-foreground focus-visible:outline-sidebar-foreground absolute top-1/2 right-2 z-20 size-10 -translate-y-1/2 cursor-pointer border border-sidebar-foreground bg-sidebar text-sidebar-foreground shadow-none transition-colors hover:bg-sidebar hover:text-sidebar-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-foreground sm:right-3 sm:size-11'
           />
         </Carousel>
       </div>

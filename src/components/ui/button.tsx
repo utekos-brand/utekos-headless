@@ -5,31 +5,30 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils/className'
 
 const buttonVariants = cva(
-  'group/button dark:focus-visible:border-dark-ring dark:focus-visible:ring-dark-ring/50 dark:aria-invalid:border-dark-destructive dark:aria-invalid:ring-dark-destructive/20 dark:aria-invalid:border-dark-destructive/50 dark:aria-invalid:ring-dark-destructive/40 inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
+  'group/button inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed [&_[&>svg]:pointer-events-none [&_[&>svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
   {
     variants: {
       variant: {
         alternate:
-          'bg-alternate-button text-foreground hover:scale-104 hover:bg-[#12403C]',
-        checkout:
-          'bg-primary text-foreground hover:text-foreground/90 dark:bg-primary dark:text-foreground',
+          'bg-alternate-button text-foreground hover:scale-104 hover:bg-secondary',
+        checkout: 'bg-primary text-primary-foreground hover:text-primary-foreground/90',
         'commerce-primary':
-          'bg-commerce-primary dark:bg-dark-commerce-primary text-commerce-primary-foreground dark:text-dark-commerce-primary-foreground hover:bg-commerce-primary-hover dark:hover:bg-dark-commerce-primary-hover hover:text-commerce-primary-hover-foreground dark:hover:text-dark-commerce-primary-hover-foreground',
+          'bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-foreground',
         'commerce-secondary':
-          'border-commerce-secondary dark:border-dark-commerce-secondary bg-commerce-secondary dark:bg-dark-commerce-secondary text-commerce-secondary-foreground dark:text-dark-commerce-secondary-foreground hover:bg-commerce-secondary-hover dark:hover:bg-dark-commerce-secondary-hover hover:text-commerce-secondary-hover-foreground dark:hover:text-dark-commerce-secondary-hover-foreground',
+          'border-secondary bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:text-secondary-foreground',
         default:
-          'hover:bg-primary-hover bg-primary text-primary-foreground dark:bg-primary',
+          'bg-primary text-primary-foreground hover:bg-primary-hover',
         outline:
-          'border-input dark:border-dark-input bg-background dark:bg-dark-background hover:bg-accent dark:hover:bg-dark-accent hover:text-accent-foreground dark:hover:text-dark-accent-foreground',
+          'border-input bg-background hover:bg-accent hover:text-accent-foreground',
         seeProduct:
-          'border-border bg-sidebar-primary text-foreground shadow-xs aria-expanded:bg-accent aria-expanded:text-accent-foreground dark:border-border dark:bg-sidebar-primary dark:aria-expanded:bg-accent dark:aria-expanded:text-accent-foreground',
+          'border-border bg-sidebar-primary text-foreground shadow-xs aria-expanded:bg-accent aria-expanded:text-accent-foreground',
         secondary:
-          'dark:aria-expanded:text-dark-secondary-foreground bg-secondary text-secondary-foreground aria-expanded:bg-secondary aria-expanded:text-secondary-foreground dark:bg-secondary dark:aria-expanded:bg-secondary',
+          'bg-secondary text-secondary-foreground aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
         ghost:
-          'dark:aria-expanded:bg-dark-accent dark:aria-expanded:text-dark-accent-foreground text-foreground hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground dark:hover:bg-accent',
+          'text-foreground hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground',
         destructive:
-          'text-destructive-foreground dark:text-destructive-foreground dark:hover:bg-dark-destructive/90 dark:focus-visible:border-dark-destructive dark:focus-visible:ring-dark-destructive/30 bg-destructive hover:bg-destructive/90 focus-visible:border-destructive focus-visible:ring-destructive/30 dark:bg-destructive',
-        link: 'text-primary underline-offset-4 hover:underline dark:text-primary'
+          'bg-destructive text-destructive-foreground hover:bg-destructive/90 focus-visible:border-destructive focus-visible:ring-destructive/30',
+        link: 'text-primary underline-offset-4 hover:underline'
       },
       size: {
         'default':

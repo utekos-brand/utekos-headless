@@ -9,7 +9,7 @@ export function MagazineImageBlock({
   block
 }: MagazineImageBlockProps) {
   return (
-    <figure className='dark:border-dark-background/10 my-14 overflow-hidden rounded-lg border border-background/10 bg-foreground shadow-[0_24px_70px_-54px_color-mix(in_oklch,var(--background)_65%,transparent)]'>
+    <figure className='border-background/10 my-14 overflow-hidden rounded-lg border border-background/10 bg-foreground shadow-[0_24px_70px_-54px_color-mix(in_oklch,var(--background)_65%,transparent)]'>
       <Image
         src={block.src}
         alt={block.alt}
@@ -20,7 +20,7 @@ export function MagazineImageBlock({
         {...(block.priority ? { priority: true } : {})}
       />
       {block.caption && (
-        <figcaption className='leading-text-paragraph dark:text-dark-background/68 px-5 py-4 text-sm text-background/68'>
+        <figcaption className='leading-text-paragraph text-background/68 px-5 py-4 text-sm text-background/68'>
           {block.caption}
         </figcaption>
       )}

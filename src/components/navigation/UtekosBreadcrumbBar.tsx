@@ -8,9 +8,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
+import { siteXGutterClassName } from '@/lib/layout/siteGutter'
 import {
   breadcrumbSurfaceStyles,
-  isEmbeddedSurface,
   type BreadcrumbNavItem,
   type BreadcrumbSurface
 } from '@/lib/navigation/breadcrumbVariants'
@@ -32,9 +32,6 @@ export function UtekosBreadcrumbBar({
   embedded
 }: UtekosBreadcrumbBarProps) {
   const styles = breadcrumbSurfaceStyles[surface]
-  const stripeless = isEmbeddedSurface(surface)
-  const showColoredStripe =
-    !embedded && !stripeless && Boolean(styles.stripe)
 
   const breadcrumb = (
     <Breadcrumb className={className}>
@@ -84,18 +81,8 @@ export function UtekosBreadcrumbBar({
     return breadcrumb
   }
 
-  if (showColoredStripe) {
-    return (
-      <article className={cn('w-full', styles.stripe)}>
-        <div className='container mx-auto w-full px-4 py-5'>
-          {breadcrumb}
-        </div>
-      </article>
-    )
-  }
-
   return (
-    <div className='container mx-auto w-full px-4 py-5'>
+    <div className={cn('w-full py-3', siteXGutterClassName)}>
       {breadcrumb}
     </div>
   )

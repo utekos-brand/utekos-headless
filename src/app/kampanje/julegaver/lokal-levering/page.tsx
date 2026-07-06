@@ -51,7 +51,7 @@ export const metadata: Metadata = {
 export default async function ChristmasLocalDelivery() {
   await connection()
   return (
-    <div className='dark:bg-dark-background bg-background pb-20'>
+    <div className='bg-background pb-20'>
       <CampaignPageTracker />
       <article className='relative overflow-hidden bg-card pt-24 pb-16 text-center text-card-foreground md:pt-32'>
         <div className='relative z-10 container mx-auto px-4'>
@@ -61,7 +61,7 @@ export default async function ChristmasLocalDelivery() {
             parentLabel='Julegaver'
           />
           {/* Badge for lokal tilhørighet */}
-          <div className='bg-promo dark:bg-dark-promo text-promo-foreground dark:text-dark-promo-foreground inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 backdrop-blur-sm'>
+          <div className='bg-accent text-accent-foreground inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 backdrop-blur-sm'>
             <Gift className='h-4 w-4' />
             <span className='text-sm font-medium'>
               Gi bort funksjonell varme
@@ -78,7 +78,7 @@ export default async function ChristmasLocalDelivery() {
             </span>
           </h1>
 
-          <p className='dark:text-dark-muted-foreground mx-auto mt-6 max-w-2xl text-lg text-muted-foreground'>
+          <p className='text-muted-foreground mx-auto mt-6 max-w-2xl text-lg text-muted-foreground'>
             Klikk og hent eller få levert bestillingen hjem. Vi
             kjører ut julegaver helt frem til julaften!{' '}
             <br className='hidden sm:block' />
@@ -92,7 +92,7 @@ export default async function ChristmasLocalDelivery() {
               Se gavene vi kan levere
               <ArrowRight className='ml-2 h-4 w-4' />
             </Link>
-            <div className='dark:text-dark-muted-foreground flex items-center gap-2 text-sm text-muted-foreground'>
+            <div className='text-muted-foreground flex items-center gap-2 text-sm text-muted-foreground'>
               <Car className='h-4 w-4' />
               <span>Utkjøring til 24. desember</span>
             </div>
@@ -103,14 +103,14 @@ export default async function ChristmasLocalDelivery() {
         <div className='container mx-auto px-4'>
           <div className='grid gap-8 text-center sm:grid-cols-3'>
             <div className='flex flex-col items-center gap-3'>
-              <div className='dark:bg-dark-background flex h-12 w-12 items-center justify-center rounded-full bg-background ring-1 ring-white/10'>
+              <div className='bg-background flex h-12 w-12 items-center justify-center rounded-full bg-background ring-1 ring-white/10'>
                 <Car className='h-6 w-6 text-red-400' />
               </div>
               <div>
                 <h3 className='font-semibold text-foreground'>
                   Lokal hjemlevering
                 </h3>
-                <p className='dark:text-dark-muted-foreground text-sm text-muted-foreground'>
+                <p className='text-muted-foreground text-sm text-muted-foreground'>
                   Daglig utkjøring av julegaver i
                   Bergens-området.
                 </p>
@@ -119,28 +119,28 @@ export default async function ChristmasLocalDelivery() {
 
             {/* 2. Bytterett (Viktig trygghet) */}
             <div className='flex flex-col items-center gap-3'>
-              <div className='dark:bg-dark-background flex h-12 w-12 items-center justify-center rounded-full bg-background ring-1 ring-white/10'>
+              <div className='bg-background flex h-12 w-12 items-center justify-center rounded-full bg-background ring-1 ring-white/10'>
                 <ShieldCheck className='h-6 w-6 text-red-400' />
               </div>
               <div>
                 <h3 className='font-semibold text-foreground'>
                   Utvidet bytterett
                 </h3>
-                <p className='dark:text-dark-muted-foreground text-sm text-muted-foreground'>
+                <p className='text-muted-foreground text-sm text-muted-foreground'>
                   Bytt gaver frem til 15. januar.
                 </p>
               </div>
             </div>
 
             <div className='flex flex-col items-center gap-3'>
-              <div className='dark:bg-dark-background flex h-12 w-12 items-center justify-center rounded-full bg-background ring-1 ring-white/10'>
+              <div className='bg-background flex h-12 w-12 items-center justify-center rounded-full bg-background ring-1 ring-white/10'>
                 <CreditCard className='h-6 w-6 text-red-400' />
               </div>
               <div>
                 <h3 className='font-semibold text-foreground'>
                   Sikker betaling
                 </h3>
-                <p className='dark:text-dark-muted-foreground text-sm text-muted-foreground'>
+                <p className='text-muted-foreground text-sm text-muted-foreground'>
                   Betal trygt med Vipps eller Klarna.
                 </p>
               </div>
@@ -156,7 +156,7 @@ export default async function ChristmasLocalDelivery() {
             <h3 className='text-2xl font-bold text-card-foreground'>
               Slik fungerer julegave-ekspressen:
             </h3>
-            <p className='dark:text-dark-muted-foreground mt-2 text-sm text-muted-foreground'>
+            <p className='text-muted-foreground mt-2 text-sm text-muted-foreground'>
               Vi kjører ut gaver helt frem til julaften 🎅
             </p>
           </div>
@@ -170,7 +170,7 @@ export default async function ChristmasLocalDelivery() {
               <h4 className='font-semibold text-card-foreground'>
                 Fyll handlekurven
               </h4>
-              <p className='dark:text-dark-muted-foreground mt-2 text-sm text-muted-foreground'>
+              <p className='text-muted-foreground mt-2 text-sm text-muted-foreground'>
                 Finn dine favoritter. Vi har gavene på lokalt
                 lager i Bergen.
               </p>
@@ -183,7 +183,7 @@ export default async function ChristmasLocalDelivery() {
               <h4 className='font-semibold text-card-foreground'>
                 Fyll inn adressen din
               </h4>
-              <p className='dark:text-dark-muted-foreground mt-2 text-sm text-muted-foreground'>
+              <p className='text-muted-foreground mt-2 text-sm text-muted-foreground'>
                 Valget{' '}
                 <strong className='text-card-foreground'>
                   Lokal levering
@@ -200,7 +200,7 @@ export default async function ChristmasLocalDelivery() {
               <h4 className='font-semibold text-card-foreground'>
                 Skreddersydd levering?
               </h4>
-              <p className='dark:text-dark-muted-foreground mt-2 text-sm text-muted-foreground'>
+              <p className='text-muted-foreground mt-2 text-sm text-muted-foreground'>
                 Legg ved leveringsinstruksjon i kassen. Vi tar
                 kontakt før utkjøring.
               </p>
@@ -217,14 +217,14 @@ export default async function ChristmasLocalDelivery() {
           <h2 className='text-3xl font-bold'>
             Våre mest populære gaver
           </h2>
-          <p className='dark:text-dark-muted-foreground mt-2 text-muted-foreground'>
+          <p className='text-muted-foreground mt-2 text-muted-foreground'>
             Produktene som garantert blir brukt – året rundt. Nå
             med julerabatt!
           </p>
         </div>
 
         <div className='grid gap-8 md:grid-cols-2 lg:gap-12'>
-          <div className='group hover:border-commerce-primary/40 dark:hover:border-dark-commerce-primary/40 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
+          <div className='group4040 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
             <div className='absolute top-4 right-4 z-10 rounded-full bg-red-800 px-3 py-1 text-xs font-bold text-white shadow-lg'>
               JULERABATT
             </div>
@@ -243,7 +243,7 @@ export default async function ChristmasLocalDelivery() {
               <h3 className='text-2xl font-bold'>
                 Utekos TechDown™
               </h3>
-              <p className='dark:text-dark-muted-foreground mt-2 text-muted-foreground'>
+              <p className='text-muted-foreground mt-2 text-muted-foreground'>
                 Nyhet: Vår varmeste mest allsidige modell.
                 Optimalisert etter erfaringer og
                 tilbakemeldinger.
@@ -252,20 +252,20 @@ export default async function ChristmasLocalDelivery() {
                 <span className='text-xl font-bold text-foreground'>
                   1 790 kr
                 </span>
-                <span className='dark:text-dark-muted-foreground text-sm text-muted-foreground line-through'>
+                <span className='text-muted-foreground text-sm text-muted-foreground line-through'>
                   1 999 kr
                 </span>
               </div>
               <Link
                 href='/produkter/utekos-techdown'
-                className='bg-commerce-primary dark:bg-dark-commerce-primary text-commerce-primary-foreground dark:text-dark-commerce-primary-foreground hover:bg-commerce-primary-hover dark:hover:bg-dark-commerce-primary-hover hover:text-commerce-primary-hover-foreground dark:hover:text-dark-commerce-primary-hover-foreground mt-6 block w-full rounded-lg py-3 text-center font-semibold transition-colors'
+                className='bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-foreground mt-6 block w-full rounded-lg py-3 text-center font-semibold transition-colors'
               >
                 Kjøp TechDown™
               </Link>
             </div>
           </div>
 
-          <div className='group hover:border-commerce-primary/40 dark:hover:border-dark-commerce-primary/40 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
+          <div className='group4040 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
             <div className='absolute top-4 right-4 z-10 rounded-full bg-blue-900 px-3 py-1 text-xs font-bold text-white shadow-lg'>
               BESTSELGER
             </div>
@@ -284,7 +284,7 @@ export default async function ChristmasLocalDelivery() {
               <h3 className='text-2xl font-bold'>
                 Utekos Mikrofiber™
               </h3>
-              <p className='dark:text-dark-muted-foreground mt-2 text-muted-foreground'>
+              <p className='text-muted-foreground mt-2 text-muted-foreground'>
                 Lettvekt møter varme og allsidighet. Gir deg
                 følelsen av dun med ekstra fordeler.
               </p>
@@ -292,20 +292,20 @@ export default async function ChristmasLocalDelivery() {
                 <span className='text-xl font-bold text-foreground'>
                   1 590 kr
                 </span>
-                <span className='dark:text-dark-muted-foreground text-sm text-muted-foreground line-through'>
+                <span className='text-muted-foreground text-sm text-muted-foreground line-through'>
                   2 290 kr
                 </span>
               </div>
               <Link
                 href='/produkter/utekos-mikrofiber'
-                className='bg-commerce-primary dark:bg-dark-commerce-primary text-commerce-primary-foreground dark:text-dark-commerce-primary-foreground hover:bg-commerce-primary-hover dark:hover:bg-dark-commerce-primary-hover hover:text-commerce-primary-hover-foreground dark:hover:text-dark-commerce-primary-hover-foreground mt-6 block w-full rounded-lg py-3 text-center font-semibold transition-colors'
+                className='bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-foreground mt-6 block w-full rounded-lg py-3 text-center font-semibold transition-colors'
               >
                 Kjøp Mikrofiber
               </Link>
             </div>
           </div>
 
-          <div className='group hover:border-commerce-primary/40 dark:hover:border-dark-commerce-primary/40 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
+          <div className='group4040 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
             <div className='absolute top-4 right-4 z-10 rounded-full bg-orange-900 px-3 py-1 text-xs font-bold text-white shadow-lg'>
               FÅ IGJEN
             </div>
@@ -322,27 +322,27 @@ export default async function ChristmasLocalDelivery() {
 
             <div className='p-6'>
               <h3 className='text-2xl font-bold'>Utekos Dun™</h3>
-              <p className='dark:text-dark-muted-foreground mt-2 text-muted-foreground'>
+              <p className='text-muted-foreground mt-2 text-muted-foreground'>
                 Klassisk dun-kvalitet for de kaldeste dagene.
               </p>
               <div className='mt-4 flex items-baseline gap-3'>
                 <span className='text-xl font-bold text-foreground'>
                   1 990 kr
                 </span>
-                <span className='dark:text-dark-muted-foreground text-sm text-muted-foreground line-through'>
+                <span className='text-muted-foreground text-sm text-muted-foreground line-through'>
                   3 290 kr
                 </span>
               </div>
               <Link
                 href='/produkter/utekos-dun'
-                className='bg-commerce-primary dark:bg-dark-commerce-primary text-commerce-primary-foreground dark:text-dark-commerce-primary-foreground hover:bg-commerce-primary-hover dark:hover:bg-dark-commerce-primary-hover hover:text-commerce-primary-hover-foreground dark:hover:text-dark-commerce-primary-hover-foreground mt-6 block w-full rounded-lg py-3 text-center font-semibold transition-colors'
+                className='bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-foreground mt-6 block w-full rounded-lg py-3 text-center font-semibold transition-colors'
               >
                 Kjøp Dun
               </Link>
             </div>
           </div>
 
-          <div className='group hover:border-commerce-primary/40 dark:hover:border-dark-commerce-primary/40 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
+          <div className='group4040 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
             <div className='absolute top-4 right-4 z-10 rounded-full bg-neutral-800 px-3 py-1 text-xs font-bold text-white shadow-lg'>
               ALLROUNDER
             </div>
@@ -359,7 +359,7 @@ export default async function ChristmasLocalDelivery() {
 
             <div className='p-6'>
               <h3 className='text-2xl font-bold'>Comfyrobe™</h3>
-              <p className='dark:text-dark-muted-foreground mt-2 text-muted-foreground'>
+              <p className='text-muted-foreground mt-2 text-muted-foreground'>
                 Den ultimate skifteroben. Vindtett, vanntett og
                 foret.
               </p>
@@ -367,13 +367,13 @@ export default async function ChristmasLocalDelivery() {
                 <span className='text-xl font-bold text-foreground'>
                   1 290 kr
                 </span>
-                <span className='dark:text-dark-muted-foreground text-sm text-muted-foreground line-through'>
+                <span className='text-muted-foreground text-sm text-muted-foreground line-through'>
                   1 690 kr
                 </span>
               </div>
               <Link
                 href='/produkter/comfyrobe'
-                className='bg-commerce-primary dark:bg-dark-commerce-primary text-commerce-primary-foreground dark:text-dark-commerce-primary-foreground hover:bg-commerce-primary-hover dark:hover:bg-dark-commerce-primary-hover hover:text-commerce-primary-hover-foreground dark:hover:text-dark-commerce-primary-hover-foreground mt-6 block w-full rounded-lg py-3 text-center font-semibold transition-colors'
+                className='bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-foreground mt-6 block w-full rounded-lg py-3 text-center font-semibold transition-colors'
               >
                 Kjøp Comfyrobe™
               </Link>
@@ -387,13 +387,13 @@ export default async function ChristmasLocalDelivery() {
           <h2 className='text-3xl font-bold'>
             Sjekk om du kan få levering på døren
           </h2>
-          <p className='dark:text-dark-muted-foreground mt-2 text-muted-foreground'>
+          <p className='text-muted-foreground mt-2 text-muted-foreground'>
             Fyll inn adressen din i kassen. Dukker valget{' '}
             <em>Lokal levering</em> opp? Da kan du lene deg
             tilbake – vi fikser resten!
           </p>
           {/* Ny linje for henting lagt til her */}
-          <p className='dark:text-dark-muted-foreground mt-1 text-muted-foreground'>
+          <p className='text-muted-foreground mt-1 text-muted-foreground'>
             Vi tilbyr også{' '}
             <strong>henting hver dag mellom kl. 08-21</strong>{' '}
             frem til lille julaften.
@@ -409,7 +409,7 @@ export default async function ChristmasLocalDelivery() {
               <Gift className='h-8 w-8 text-red-400' />
             </div>
             <h3 className='text-lg font-semibold'>Lær mer</h3>
-            <p className='dark:text-dark-muted-foreground text-sm text-muted-foreground'>
+            <p className='text-muted-foreground text-sm text-muted-foreground'>
               Lær mer om funksjonaliteten.
             </p>
           </Link>
@@ -424,7 +424,7 @@ export default async function ChristmasLocalDelivery() {
             <h3 className='text-lg font-semibold'>
               Spørsmål om levering?
             </h3>
-            <p className='dark:text-dark-muted-foreground text-sm text-muted-foreground'>
+            <p className='text-muted-foreground text-sm text-muted-foreground'>
               Ta kontakt med oss.
             </p>
           </Link>
@@ -439,7 +439,7 @@ export default async function ChristmasLocalDelivery() {
             <h3 className='text-lg font-semibold'>
               Usikker på størrelse?
             </h3>
-            <p className='dark:text-dark-muted-foreground text-sm text-muted-foreground'>
+            <p className='text-muted-foreground text-sm text-muted-foreground'>
               Se vår størrelsesguide og tips.
             </p>
           </Link>

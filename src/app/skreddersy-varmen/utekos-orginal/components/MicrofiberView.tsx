@@ -37,7 +37,7 @@ export function MicrofiberView({
               sizes='(max-width: 768px) 100vw, 50vw'
               quality={95}
             />
-            <div className='absolute top-4 left-4 rounded-full bg-promo dark:bg-dark-promo px-3 py-1.5 text-xs font-bold tracking-wider text-promo-foreground dark:text-dark-promo-foreground uppercase shadow-sm'>
+            <div className='absolute top-4 left-4 rounded-full bg-accent px-3 py-1.5 text-xs font-bold tracking-wider text-accent-foreground uppercase shadow-sm'>
               Bestselger
             </div>
           </AnimatedBlock>
@@ -142,7 +142,7 @@ export function MicrofiberView({
                 onClick={handleAddToCart}
                 data-track='❗🛒❗SkreddersyUtekosOrginalAddToCartClick ❗🛒❗'
                 disabled={isPending}
-                className='flex w-full items-center justify-center gap-3 rounded-full bg-commerce-primary dark:bg-dark-commerce-primary py-4 text-lg font-bold text-commerce-primary-foreground dark:text-dark-commerce-primary-foreground shadow-xl transition-all duration-200 hover:-translate-y-1 hover:bg-commerce-primary-hover dark:hover:bg-dark-commerce-primary-hover hover:text-commerce-primary-hover-foreground dark:hover:text-dark-commerce-primary-hover-foreground hover:shadow-2xl active:scale-[0.98] disabled:transform-none disabled:cursor-not-allowed disabled:opacity-70 md:py-5'
+                className='flex w-full items-center justify-center gap-3 rounded-full bg-primary py-4 text-lg font-bold text-primary-foreground shadow-xl transition-all duration-200 hover:-translate-y-1 hover:bg-primary-hover hover:text-primary-foreground hover:shadow-2xl active:scale-[0.98] disabled:transform-none disabled:cursor-not-allowed disabled:opacity-70 md:py-5'
               >
                 {isPending ?
                   <>

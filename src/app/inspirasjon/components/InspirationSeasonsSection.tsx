@@ -54,7 +54,7 @@ export function InspirationSeasonsSection({
 }: InspirationSeasonsSectionProps) {
   const [glowA, glowB] = glowTokens ?? [
     'var(--primary)',
-    'var(--mountain-view)'
+    'var(--secondary)'
   ]
 
   return (
@@ -99,7 +99,7 @@ export function InspirationSeasonsSection({
           <Lead
             Text={lead}
             className={cn(
-              'text-ancient-water mt-6 max-w-2xl pb-0 text-left md:pb-0 lg:pb-0',
+              'text-secondary mt-6 max-w-2xl pb-0 text-left md:pb-0 lg:pb-0',
               leadClassName
             )}
           />

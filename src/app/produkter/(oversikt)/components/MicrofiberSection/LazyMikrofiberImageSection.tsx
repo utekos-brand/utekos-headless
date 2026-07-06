@@ -12,7 +12,7 @@ const MikrofiberImageSection = dynamic(
     ssr: false,
     loading: () => (
       <div
-        className='aspect-square w-full rounded-xl bg-foreground/12'
+        className='aspect-square w-full rounded-xl bg-muted'
         aria-hidden='true'
       />
     )
@@ -21,7 +21,7 @@ const MikrofiberImageSection = dynamic(
 
 const fallback = (
   <div
-    className='aspect-square w-full rounded-xl bg-foreground/12'
+    className='aspect-square w-full rounded-xl bg-muted'
     aria-hidden='true'
   />
 )

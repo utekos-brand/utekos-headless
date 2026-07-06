@@ -1,30 +1,18 @@
 /**
- * Godkjente Maritime Blue-tokens for inspirasjon-ruter.
- * Ingen nye farger — kun eksisterende tokens fra globals.css @theme inline.
+ * Semantic tokens for inspirasjon-ruter — kun globals.css @theme inline.
  */
 
 export const inspirationPalette = {
-  /** Monochromatic / primary dark surfaces */
   background: 'var(--background)',
-  havdyp: 'var(--havdyp)',
-  maritimeDarkest: 'var(--maritime-darkest)',
-
-  /** Light surfaces & body text on dark */
-  cloudDancer: 'var(--foreground)',
   foreground: 'var(--foreground)',
-  ancientWater: 'var(--ancient-water)',
-  overcast: 'var(--overcast)',
-
-  /** Accents by harmony group */
+  card: 'var(--card)',
   primary: 'var(--primary)',
-  mountainView: 'var(--mountain-view)',
-  fairOrchid: 'var(--fair-orchid)',
-  veryPeri: 'var(--very-peri)',
-  countryAir: 'var(--country-air)',
-  skipperBlue: 'var(--skipper-blue)',
-
-  /** Supporting */
-  mutedForeground: 'var(--muted-foreground)'
+  secondary: 'var(--secondary)',
+  muted: 'var(--muted)',
+  mutedForeground: 'var(--muted-foreground)',
+  ceramic: 'var(--ceramic)',
+  ring: 'var(--ring)',
+  accent: 'var(--accent)'
 } as const
 
 export type InspirationPaletteToken =

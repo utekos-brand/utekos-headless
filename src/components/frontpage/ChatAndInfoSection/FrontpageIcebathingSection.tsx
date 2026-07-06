@@ -113,7 +113,7 @@ export function FrontpageIceBathingSection() {
             <div className='motion-content  mb-8 inline-flex items-center self-start rounded-full bg-card px-4 py-1.5 opacity-0 backdrop-blur-md'>
               <span className='relative mr-3 flex h-2 w-2'>
                 <span className='motion-badge-pulse  absolute inline-flex size-full rounded-full bg-card opacity-75'></span>
-                <span className='dark:bg-dark-foreground relative inline-flex h-2 w-2 rounded-full bg-foreground'></span>
+                <span className='bg-foreground relative inline-flex h-2 w-2 rounded-full bg-foreground'></span>
               </span>
               <span className='text-foreground outline-hidden'>
                 Siste sjanse
@@ -122,7 +122,7 @@ export function FrontpageIceBathingSection() {
 
             <h2 className='motion-content outline-hiddenfont-bold mb-6 bg-linear-to-r from-slate-900 via-slate-500 to-slate-900 bg-clip-text text-4xl text-white opacity-0 sm:text-5xl lg:text-6xl'>
               Vi rydder plass til <br />
-              <span className='dark:from-dark-primary dark:via-dark-accent dark:to-dark-primary bg-linear-to-r from-primary via-accent to-primary bg-clip-text text-left text-transparent'>
+              <span className='from-primary via-accent to-primary bg-linear-to-r from-primary via-accent to-primary bg-clip-text text-left text-transparent'>
                 sesongens nyheter
               </span>
             </h2>
@@ -139,15 +139,15 @@ export function FrontpageIceBathingSection() {
                   title: 'SherpaCore™',
                   desc: '250 GSM fôr som gir umiddelbar isolering.',
                   color:
-                    'text-background dark:text-dark-background',
-                  bg: 'bg-foreground-muted'
+                    'text-background',
+                  bg: 'bg-muted'
                 },
                 {
                   icon: Droplets,
                   title: 'Tørker deg opp',
                   desc: 'Fôret absorberer restfuktighet effektivt.',
                   color:
-                    'text-background dark:text-dark-background',
+                    'text-background',
                   bg: 'bg-card '
                 },
                 {
@@ -155,12 +155,12 @@ export function FrontpageIceBathingSection() {
                   title: 'Stopper vinden',
                   desc: 'HydroGuard™ skall med 8000mm vannsøyle.',
                   color: 'text-foreground ',
-                  bg: 'bg-primary dark:bg-dark-primary'
+                  bg: 'bg-primary'
                 }
               ].map((item, idx) => (
                 <div
                   key={idx}
-                  className='motion-feature-card group dark:border-dark-foreground/70 dark:hover:border-dark-foreground/40 flex items-center gap-5 rounded-xl border border-foreground/70 bg-white/2 p-4 opacity-0 transition-all duration-300 hover:translate-x-1 hover:border-foreground/40 hover:bg-white/5'
+                  className='motion-feature-card group border-foreground/70 hover:border-foreground/40 flex items-center gap-5 rounded-xl border border-foreground/70 bg-white/2 p-4 opacity-0 transition-all duration-300 hover:translate-x-1 hover:border-foreground/40 hover:bg-white/5'
                 >
                   <div
                     className={`flex size-12 shrink-0 items-center justify-center rounded-lg border border-white/5 ${item.bg} transition-transform group-hover:scale-110`}
@@ -173,7 +173,7 @@ export function FrontpageIceBathingSection() {
                     <h3 className='mb-0.5 text-base font-semibold text-white transition-colors group-hover:text-amber-100'>
                       {item.title}
                     </h3>
-                    <p className='text-foreground-muted dark:group-hover:text-dark-foreground text-sm transition-colors group-hover:text-foreground'>
+                    <p className='text-muted-foreground group-hover:text-foreground text-sm transition-colors group-hover:text-foreground'>
                       {item.desc}
                     </p>
                   </div>
@@ -198,9 +198,9 @@ export function FrontpageIceBathingSection() {
               </BrandBadge>
               <BrandBadge
                 asChild
-                backgroundColor='var(--color-foreground-muted)'
+                backgroundColor='var(--muted)'
                 textColor='var(--color-background)'
-                className='group dark:ring-dark-background/10 h-14 w-full justify-center px-8 text-base font-medium ring-1 ring-background/10 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-95 sm:w-auto md:w-[162px] lg:w-[182px]'
+                className='group ring-background/10 h-14 w-full justify-center px-8 text-base font-medium ring-1 ring-background/10 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-95 sm:w-auto md:w-[162px] lg:w-[182px]'
               >
                 <Link
                   href={'/inspirasjon/isbading' as Route}
@@ -212,8 +212,8 @@ export function FrontpageIceBathingSection() {
               </BrandBadge>
             </div>
 
-            <div className='motion-content text-foreground-muted mt-6 flex items-center gap-2 text-sm opacity-0'>
-              <AlertCircle className='dark:text-dark-primary h-4 w-4 text-primary' />
+            <div className='motion-content text-muted-foreground mt-6 flex items-center gap-2 text-sm opacity-0'>
+              <AlertCircle className='text-primary h-4 w-4 text-primary' />
               <span className='italic'>
                 OBS: Begrenset antall igjen på lager.
               </span>
@@ -233,16 +233,16 @@ export function FrontpageIceBathingSection() {
                 <div className='pointer-events-none absolute inset-0 bg-linear-to-t from-neutral-950/60 via-transparent to-transparent' />
 
                 <BrandBadge
-                  backgroundColor='var(--color-foreground-muted)'
+                  backgroundColor='var(--muted)'
                   textColor='var(--color-background)'
-                  className='dark:ring-dark-background/10 absolute top-6 right-6 px-4 py-2 text-sm font-medium shadow-[0_16px_32px_-24px_rgba(18,24,29,0.45)] ring-1 ring-background/10'
+                  className='ring-background/10 absolute top-6 right-6 px-4 py-2 text-sm font-medium shadow-[0_16px_32px_-24px_rgba(18,24,29,0.45)] ring-1 ring-background/10'
                 >
                   Comfyrobe™
                 </BrandBadge>
               </div>
             </div>
 
-            <div className='bg-foreground-muted pointer-events-none absolute -right-10 -bottom-10 -z-10 h-64 w-64 rounded-full blur-[100px]' />
+            <div className='bg-muted pointer-events-none absolute -right-10 -bottom-10 -z-10 h-64 w-64 rounded-full blur-[100px]' />
           </div>
         </div>
       </div>

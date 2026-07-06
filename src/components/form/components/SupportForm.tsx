@@ -37,7 +37,7 @@ type ContactFormData = z.infer<typeof ClientContactFormSchema>
 
 const initialState: ContactFormState = { message: '' }
 const contactFieldClassName =
-  'h-12 rounded-none border-foreground dark:border-dark-foreground bg-card  text-card-foreground  tracking-normal placeholder:text-muted-foreground dark:placeholder:text-dark-muted-foreground focus-visible:border-primary dark:focus-visible:border-dark-primary focus-visible:ring-primary/35 dark:focus-visible:ring-dark-primary/35'
+  'h-12 rounded-none border-foreground bg-card  text-card-foreground  tracking-normal placeholder:text-muted-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:border-primary focus-visible:ring-primary/35 focus-visible:ring-primary/35'
 
 export function SupportForm({
   idPrefix = 'contact'
@@ -184,17 +184,17 @@ export function SupportForm({
                       name={field.name}
                       value={field.value ?? ''}
                     />
-                    <SelectTrigger className='dark:border-dark-foreground  dark:focus-visible:border-dark-primary dark:focus-visible:ring-dark-primary/35 dark:data-placeholder:text-dark-muted-foreground dark:[&_svg:not([class*=text-])]:text-dark-card-foreground h-12 w-full rounded-none border-foreground bg-card tracking-normal text-card-foreground focus-visible:border-primary focus-visible:ring-primary/35 data-placeholder:text-muted-foreground [&_svg:not([class*=text-])]:text-card-foreground'>
+                    <SelectTrigger className='border-foreground  focus-visible:border-primary focus-visible:ring-primary/35 data-placeholder:text-muted-foreground dark:[&_svg:not([class*=text-])]:text-card-foreground h-12 w-full rounded-none border-foreground bg-card tracking-normal text-card-foreground focus-visible:border-primary focus-visible:ring-primary/35 data-placeholder:text-muted-foreground [&_svg:not([class*=text-])]:text-card-foreground'>
                       <SelectValue placeholder='Velg ditt land' />
                     </SelectTrigger>
                   </div>
                 </FormControl>
-                <SelectContent className='dark:border-dark-foreground  border-foreground bg-card text-card-foreground'>
+                <SelectContent className='border-foreground  border-foreground bg-card text-card-foreground'>
                   {countries.map(country => (
                     <SelectItem
                       key={country.value}
                       value={country.value}
-                      className='dark:focus:bg-dark-secondary dark:focus:text-dark-secondary-foreground tracking-normal focus:bg-secondary focus:text-secondary-foreground'
+                      className='focus:bg-secondary focus:text-secondary-foreground tracking-normal focus:bg-secondary focus:text-secondary-foreground'
                     >
                       {country.label}
                     </SelectItem>
@@ -250,14 +250,14 @@ export function SupportForm({
                         form.clearErrors('message')
                       }
                     }}
-                    className='dark:border-dark-foreground  dark:placeholder:text-dark-muted-foreground dark:focus-visible:border-dark-primary dark:focus-visible:ring-dark-primary/35 min-h-40 rounded-none border-foreground bg-card tracking-normal text-card-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/35'
+                    className='border-foreground  placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/35 min-h-40 rounded-none border-foreground bg-card tracking-normal text-card-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/35'
                   />
                 </FormControl>
                 <div className='leading-text-paragraph mt-1 flex items-center justify-between text-xs tracking-normal text-foreground'>
                   <span
                     className={
                       showMessageMinimumError ?
-                        'dark:text-dark-destructive text-destructive'
+                        'text-destructive'
                       : undefined
                     }
                   >
@@ -281,7 +281,7 @@ export function SupportForm({
           control={form.control}
           name='privacy'
           render={({ field }) => (
-            <FormItem className='dark:border-dark-foreground  relative flex flex-row items-center justify-between rounded-none border border-foreground bg-card p-4 text-card-foreground'>
+            <FormItem className='border-foreground  relative flex flex-row items-center justify-between rounded-none border border-foreground bg-card p-4 text-card-foreground'>
               <div className='flex-1 space-y-0.5 pr-4'>
                 <FormLabel className='leading-text-paragraph text-base tracking-normal text-foreground'>
                   Personvern
@@ -291,7 +291,7 @@ export function SupportForm({
                   beskrevet i{' '}
                   <Link
                     href='/personvern'
-                    className='dark:hover:text-dark-primary text-card-foreground underline underline-offset-4 hover:text-primary'
+                    className='hover:text-primary text-card-foreground underline underline-offset-4 hover:text-primary'
                   >
                     Personvernerklæringen
                   </Link>
@@ -309,7 +309,7 @@ export function SupportForm({
                     id={`${idPrefix}-consent`}
                     checked={!!field.value}
                     onCheckedChange={field.onChange}
-                    className='dark:border-dark-foreground dark:data-[state=checked]:bg-dark-primary dark:data-[state=unchecked]:bg-dark-card dark:focus-visible:ring-dark-primary/35 border border-foreground focus-visible:ring-primary/35 data-[state=checked]:bg-primary data-[state=unchecked]:bg-card'
+                    className='border-foreground dark:data-[state=checked]:bg-primary dark:data-[state=unchecked]:bg-card focus-visible:ring-primary/35 border border-foreground focus-visible:ring-primary/35 data-[state=checked]:bg-primary data-[state=unchecked]:bg-card'
                   />
                 </div>
               </FormControl>

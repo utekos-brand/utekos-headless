@@ -142,7 +142,7 @@ export function MobileMenuPanel({
           render={
             <Button
               variant='outline'
-              className='dark:hover:bg-dark-accent h-11 min-w-[5.75rem] rounded-md border-transparent bg-transparent px-3 text-sm font-semibold text-foreground hover:bg-accent hover:text-accent-foreground'
+              className='hover:bg-accent h-11 min-w-[5.75rem] rounded-md border-transparent bg-transparent px-3 text-sm font-semibold text-foreground hover:bg-accent hover:text-accent-foreground'
               aria-label='Åpne meny'
               data-track='MobileMenuClick'
             />
@@ -155,16 +155,16 @@ export function MobileMenuPanel({
 
       <SheetContent
         side='left'
-        className='dark:border-dark-foreground/12 dark:bg-dark-background w-full max-w-sm border-foreground/12 bg-background p-0 text-foreground backdrop-blur-xl'
+        className='border-foreground/12 bg-background w-full max-w-sm border-foreground/12 bg-background p-0 text-foreground backdrop-blur-xl'
       >
         <div className='pointer-events-none absolute inset-0 -z-10'>
-          <div className='absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--color-maritime-800)_36%,var(--background))_0%,var(--background)_54%,color-mix(in_oklab,var(--color-maritime-950)_22%,var(--background))_100%)]' />
-          <div className='absolute inset-0 bg-[radial-gradient(105%_78%_at_20%_0%,color-mix(in_oklab,var(--color-primary)_18%,transparent)_0%,transparent_64%),radial-gradient(95%_72%_at_88%_34%,color-mix(in_oklab,var(--color-maritime-100)_12%,transparent)_0%,transparent_66%)]' />
-          <div className='dark:via-dark-background/8 dark:to-dark-background/48 absolute inset-0 bg-linear-to-b from-transparent via-background/8 to-background/48' />
+          <div className='absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--card)_36%,var(--background))_0%,var(--background)_54%,color-mix(in_oklab,var(--card)_22%,var(--background))_100%)]' />
+          <div className='absolute inset-0 bg-[radial-gradient(105%_78%_at_20%_0%,color-mix(in_oklab,var(--color-primary)_18%,transparent)_0%,transparent_64%),radial-gradient(95%_72%_at_88%_34%,color-mix(in_oklab,var(--muted)_12%,transparent)_0%,transparent_66%)]' />
+          <div className='via-background/8 to-background/48 absolute inset-0 bg-linear-to-b from-transparent via-background/8 to-background/48' />
         </div>
 
-        <SheetHeader className='dark:border-dark-foreground/10 relative border-b border-foreground/10 p-6'>
-          <div className='dark:via-dark-foreground/24 absolute top-0 right-0 left-0 h-px bg-linear-to-r from-transparent via-foreground/24 to-transparent' />
+        <SheetHeader className='border-foreground/10 relative border-b border-foreground/10 p-6'>
+          <div className='via-foreground/24 absolute top-0 right-0 left-0 h-px bg-linear-to-r from-transparent via-foreground/24 to-transparent' />
 
           <div className='mb-2 flex items-start justify-between gap-3'>
             <div className='flex items-center gap-2'>
@@ -175,7 +175,7 @@ export function MobileMenuPanel({
             </div>
           </div>
 
-          <SheetDescription className='leading-text-paragraph /66 text-sm tracking-[-0.01em] text-foreground/66'>
+          <SheetDescription className='leading-text-paragraph text-foreground/66 text-sm tracking-[-0.01em] text-foreground/66'>
             <span className='block overflow-hidden'>
               <span
                 ref={subtitleRef}

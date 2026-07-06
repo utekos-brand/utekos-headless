@@ -21,7 +21,7 @@ export function SizeLabel({ className = '' }: SizeLabelProps) {
         target='_blank'
         rel='noopener noreferrer'
         className={cn(
-          'font-utekos-text-medium /90 dark:focus-visible:outline-dark-card-foreground inline-flex items-center gap-1 text-sm tracking-wide text-card-foreground uppercase hover:text-card-foreground/90 hover:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground',
+          'font-utekos-text-medium /90 focus-visible:outline-card-foreground inline-flex items-center gap-1 text-sm tracking-wide text-card-foreground uppercase hover:text-card-foreground/90 hover:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground',
           className
         )}
       >
@@ -34,12 +34,12 @@ export function SizeLabel({ className = '' }: SizeLabelProps) {
         align='start'
       >
         <div className='flex items-start space-x-3'>
-          <Ruler className='dark:text-dark-popover-foreground mt-1 size-7 text-popover-foreground' />
+          <Ruler className='text-popover-foreground mt-1 size-7 text-popover-foreground' />
           <div className='space-y-1'>
-            <H3 className='dark:text-dark-popover-foreground pb-0 text-sm font-semibold text-popover-foreground'>
+            <H3 className='text-popover-foreground pb-0 text-sm font-semibold text-popover-foreground'>
               Usikker på størrelsen?
             </H3>
-            <P className='dark:text-dark-popover-foreground/90 text-sm text-popover-foreground/90 not-first:mt-0'>
+            <P className='text-popover-foreground/90 text-sm text-popover-foreground/90 not-first:mt-0'>
               Klikk for å åpne vår størrelsesguide i en ny fane.
             </P>
           </div>

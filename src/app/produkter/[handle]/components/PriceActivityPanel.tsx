@@ -121,14 +121,14 @@ export default function PriceActivityPanel({
         <div className='relative z-20 mb-4 flex flex-wrap items-center gap-3'>
           <BrandBadge
             backgroundColor='var(--card)'
-            className='text-ml dark:border-dark-card/40 font-utekos-text-medium gap-2 border border-card/40 px-6 py-2 text-foreground shadow-[0_12px_28px_-22px_rgba(32,28,54,0.72)] dark:text-dark-foreground sm:px-5 sm:py-2'
+            className='text-ml border-card/40 font-utekos-text-medium gap-2 border border-card/40 px-6 py-2 text-foreground shadow-[0_12px_28px_-22px_rgba(32,28,54,0.72)] text-foreground sm:px-5 sm:py-2'
           >
             {currentOffer.label}
           </BrandBadge>
           <BrandBadge
             label={`Spar ${Math.round(savingsAmount)},-`}
             backgroundColor='var(--card)'
-            className='text-ml dark:border-dark-card/40 font-utekos-text-medium border border-card/40 px-4 py-2 text-foreground dark:text-dark-foreground sm:px-5 sm:py-2.5'
+            className='text-ml border-card/40 font-utekos-text-medium border border-card/40 px-4 py-2 text-foreground sm:px-5 sm:py-2.5'
           />
         </div>
       )}
@@ -169,12 +169,12 @@ export default function PriceActivityPanel({
         )}
 
         {isSpecialEdition && shouldShowLimitedStockNotice && (
-          <div className='dark:border-dark-card/60  relative mt-4 overflow-hidden rounded-2xl border border-card/60 bg-card p-4'>
+          <div className='border-card/60  relative mt-4 overflow-hidden rounded-2xl border border-card/60 bg-card p-4'>
             <div
               className='relative flex items-center gap-3'
               style={{ zIndex: 10 }}
             >
-              <div className='dark:border-dark-card/60  flex h-10 w-10 items-center justify-center rounded-full border border-card/60 bg-card text-foreground'>
+              <div className='border-card/60  flex h-10 w-10 items-center justify-center rounded-full border border-card/60 bg-card text-foreground'>
                 <ShieldAlert
                   className='h-5 w-5'
                   aria-hidden='true'
@@ -193,7 +193,7 @@ export default function PriceActivityPanel({
               className='pointer-events-none absolute -inset-x-2 -inset-y-8 opacity-20 blur-2xl'
               style={{
                 background:
-                  'radial-gradient(120% 120% at 50% 0%, transparent 30%, color-mix(in oklab, var(--very-peri) 72%, transparent) 100%)'
+                  'radial-gradient(120% 120% at 50% 0%, transparent 30%, color-mix(in oklab, var(--ring) 72%, transparent) 100%)'
               }}
               aria-hidden='true'
             />
@@ -237,7 +237,7 @@ export default function PriceActivityPanel({
       )}
 
       {activityNode && (
-        <div className='border-promo-foreground/20 dark:border-dark-promo-foreground/20 bg-promo dark:bg-dark-promo text-promo-foreground dark:text-dark-promo-foreground mt-5 rounded-[1.15rem] border px-4 pt-1.5 pb-2.5 md:mt-6'>
+        <div className='border-accent-foreground/2020 bg-accent text-accent-foreground mt-5 rounded-[1.15rem] border px-4 pt-1.5 pb-2.5 md:mt-6'>
           {activityNode}
         </div>
       )}

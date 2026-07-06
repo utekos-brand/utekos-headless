@@ -17,7 +17,7 @@ export function MagazineArticleShell({
 }: MagazineArticleShellProps) {
   return (
     <article
-      className='bg-overcast text-background dark:text-dark-background'
+      className='bg-muted text-background'
       style={getMagazineThemeStyle(article.theme)}
     >
       <MagazineBreadcrumbs article={article} />

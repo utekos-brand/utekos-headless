@@ -17,7 +17,7 @@ function TechDownFallback() {
   return (
     <div
       aria-hidden
-      className='dark:border-dark-background bg-foreground-muted min-h-[760px] w-full border-t border-background'
+      className='border-background bg-muted min-h-[760px] w-full border-t border-background'
     />
   )
 }
@@ -26,7 +26,7 @@ function SocialProofFallback() {
   return (
     <div
       aria-hidden
-      className='dark:bg-dark-background min-h-[560px] w-full bg-background'
+      className='bg-background min-h-[560px] w-full bg-background'
     />
   )
 }

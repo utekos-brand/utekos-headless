@@ -36,7 +36,7 @@ const cardMotion = {
 const articleClassName = 'group h-full min-w-0'
 
 const iconClassName =
-  'flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/15 bg-primary dark:bg-ceramic text-primary-foreground  shadow-xs ring-1 ring-primary/20 dark:ring-dark-primary/20 transition-transform duration-300 ease-out group-hover:scale-[1.08] motion-reduce:transition-none motion-reduce:group-hover:scale-100'
+  'flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/15 bg-primary dark:bg-ceramic text-primary-foreground  shadow-xs ring-1 ring-primary/20 transition-transform duration-300 ease-out group-hover:scale-[1.08] motion-reduce:transition-none motion-reduce:group-hover:scale-100'
 
 const cardClassName =
   'h-full border border-border p-8 text-card-foreground bg-background shadow-md transition-shadow duration-300 group-hover:shadow-lg motion-reduce:transition-none'

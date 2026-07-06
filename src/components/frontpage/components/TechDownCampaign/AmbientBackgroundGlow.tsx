@@ -4,7 +4,7 @@ export function AmbientBackgroundGlow() {
       <div
         className='absolute left-[-30%] top-[-18%] size-[520px] opacity-[0.08] blur-[96px] sm:size-[680px] sm:blur-[120px] lg:size-[800px]'
         style={{
-          background: 'radial-gradient(circle, var(--ancient-water) 0%, transparent 70%)'
+          background: 'radial-gradient(circle, var(--secondary) 0%, transparent 70%)'
         }}
       />
       <div

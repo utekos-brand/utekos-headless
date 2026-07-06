@@ -11,7 +11,7 @@ export function Hero() {
   return (
     <article
       aria-labelledby='hero-headline'
-      className='dark:bg-dark-background relative min-h-[calc(100svh-70px)] w-full overflow-hidden bg-background font-sans text-foreground xl:min-h-[calc(100svh-86px)]'
+      className='bg-background relative min-h-[calc(100svh-70px)] w-full overflow-hidden bg-background font-sans text-foreground xl:min-h-[calc(100svh-86px)]'
     >
       {/* Background — desktop */}
       <div className='absolute inset-0 z-0 hidden md:block'>
@@ -44,11 +44,11 @@ export function Hero() {
       {/* Static overlays. No motion values, no JS. */}
       <div
         aria-hidden
-        className='dark:from-dark-background/35 dark:via-dark-background/55 dark:to-dark-background/95 absolute inset-0 z-1 bg-linear-to-b from-background/35 via-background/55 via-50% to-background/95'
+        className='from-background/35 via-background/55 to-background/95 absolute inset-0 z-1 bg-linear-to-b from-background/35 via-background/55 via-50% to-background/95'
       />
       <div
         aria-hidden
-        className='dark:from-dark-background/80 dark:via-dark-background/20 absolute inset-y-0 left-0 z-1 hidden w-1/2 bg-linear-to-r from-background/80 via-background/20 to-transparent md:block'
+        className='from-background/80 via-background/20 absolute inset-y-0 left-0 z-1 hidden w-1/2 bg-linear-to-r from-background/80 via-background/20 to-transparent md:block'
       />
       {/* Main content */}
       <div className='relative z-10 mx-auto flex min-h-[calc(100svh-70px)] w-full max-w-350 flex-col items-start justify-center px-6 pt-20 pb-16 md:px-12 md:pt-24 lg:px-20 xl:min-h-[calc(100svh-86px)]'>
@@ -66,12 +66,12 @@ export function Hero() {
             <span className='block whitespace-nowrap text-foreground'>
               Skreddersy varmen.
             </span>
-            <span className='dark:text-dark-primary mt-3 block max-w-4xl text-left font-sans text-3xl font-bold text-primary italic sm:text-4xl md:text-5xl lg:text-6xl'>
+            <span className='text-primary mt-3 block max-w-4xl text-left font-sans text-3xl font-bold text-primary italic sm:text-4xl md:text-5xl lg:text-6xl'>
               Forleng kvelden.
             </span>
           </h1>
 
-          <p className='leading-text-paragraph /90 mt-7 max-w-xl font-sans text-base text-foreground/90 drop-shadow-md md:text-lg lg:text-xl'>
+          <p className='leading-text-paragraph text-foreground/90 mt-7 max-w-xl font-sans text-base text-foreground/90 drop-shadow-md md:text-lg lg:text-xl'>
             Kompromissløs komfort <span>og</span> overlegen
             allsidighet.
           </p>
@@ -90,7 +90,7 @@ export function Hero() {
           </div>
 
           <p
-            className='leading-text-paragraph /80 mt-5 flex w-fit max-w-full flex-nowrap items-center font-sans text-xs font-medium tracking-normal whitespace-nowrap text-foreground/80 md:text-sm'
+            className='leading-text-paragraph text-foreground/80 mt-5 flex w-fit max-w-full flex-nowrap items-center font-sans text-xs font-medium tracking-normal whitespace-nowrap text-foreground/80 md:text-sm'
             aria-label='På lager, levering 2 til 5 dager, 14 dagers retur'
           >
             <span>På lager</span>

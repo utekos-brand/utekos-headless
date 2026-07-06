@@ -9,7 +9,7 @@ import { nbccFaqItems } from '../utils/nbccLandingPageContent'
 
 export function NbccFaqSection() {
   return (
-    <article className='dark:bg-dark-background bg-background px-4 py-20 sm:px-6 lg:px-8'>
+    <article className='bg-background px-4 py-20 sm:px-6 lg:px-8'>
       <div className='mx-auto grid w-full max-w-4xl gap-10'>
         <div data-nbcc-reveal data-nbcc-animate>
           <p className='mx-auto text-sm font-semibold tracking-[0.18em] text-foreground uppercase md:text-2xl'>
@@ -27,7 +27,7 @@ export function NbccFaqSection() {
               key={item.question}
               value={item.question}
             >
-              <AccordionTrigger className='dark:hover:text-dark-primary py-5 text-base text-card-foreground hover:text-primary hover:no-underline'>
+              <AccordionTrigger className='hover:text-primary py-5 text-base text-card-foreground hover:text-primary hover:no-underline'>
                 {item.question}
               </AccordionTrigger>
               <AccordionContent className='/80 pb-6 text-sm leading-7 text-card-foreground/80'>

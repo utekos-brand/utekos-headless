@@ -29,7 +29,7 @@ const benefits = [
     label: 'Toveis YKK®-glidelås',
     description: '— Enkel av- og påkledning',
     glowColor: 'var(--primary)',
-    tone: 'overcast' as const
+    tone: 'muted' as const
   }
 ]
 

@@ -29,38 +29,38 @@ export const pageAccents: Record<
   index: {
     slug: 'index',
     primary: 'var(--primary)',
-    secondary: 'var(--mountain-view)',
+    secondary: 'var(--secondary)',
     surface: 'var(--background)', // Gjør overflaten konsekvent for høyest kontrast
     textOnAccent: 'background',
     cardTitlePair: 'cardTitleOnAccentLight'
   },
   hytteliv: {
     slug: 'hytteliv',
-    primary: 'var(--ancient-water)',
-    secondary: 'var(--mountain-view)',
+    primary: 'var(--secondary)',
+    secondary: 'var(--secondary)',
     surface: 'var(--background)',
     textOnAccent: 'background',
     cardTitlePair: 'cardTitleOnAccentLight'
   },
   bobil: {
     slug: 'bobil',
-    primary: 'var(--fair-orchid)',
-    secondary: 'var(--mountain-view)',
+    primary: 'var(--ceramic)',
+    secondary: 'var(--secondary)',
     surface: 'var(--background)',
     textOnAccent: 'background',
     cardTitlePair: 'cardTitleOnAccentLight'
   },
   batliv: {
     slug: 'batliv',
-    primary: 'var(--skipper-blue)',
-    secondary: 'var(--ancient-water)',
+    primary: 'var(--secondary)',
+    secondary: 'var(--secondary)',
     surface: 'var(--background)',
     textOnAccent: 'foreground',
     cardTitlePair: 'cardTitleOnAccentDark'
   },
   terrassen: {
     slug: 'terrassen',
-    primary: 'var(--mountain-view)',
+    primary: 'var(--secondary)',
     secondary: 'var(--primary)',
     surface: 'var(--background)',
     textOnAccent: 'foreground',
@@ -69,15 +69,15 @@ export const pageAccents: Record<
   grillkvelden: {
     slug: 'grillkvelden',
     primary: 'var(--primary)',
-    secondary: 'var(--skipper-blue)',
+    secondary: 'var(--secondary)',
     surface: 'var(--background)',
     textOnAccent: 'background', // Må korrespondere med textOnAccent fra inspirationPages
     cardTitlePair: 'cardTitleOnAccentLight'
   },
   isbading: {
     slug: 'isbading',
-    primary: 'var(--ether)',
-    secondary: 'var(--ocean-cavern)',
+    primary: 'var(--secondary)',
+    secondary: 'var(--card)',
     surface: 'var(--background)',
     textOnAccent: 'background',
     cardTitlePair: 'cardTitleOnAccentLight'

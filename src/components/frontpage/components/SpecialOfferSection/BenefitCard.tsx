@@ -6,7 +6,7 @@ import type { CSSProperties } from 'react'
 import { InlineText } from '@/components/typography/TypographyInlineText'
 import { cn } from '@/lib/utils/className'
 
-type BenefitTone = 'water' | 'mauve' | 'overcast'
+type BenefitTone = 'water' | 'mauve' | 'muted'
 
 interface Benefit {
   label: string
@@ -31,7 +31,7 @@ const toneStyles: Record<
   mauve: {
    icon: 'border-card-foreground/28 bg-secondary text-sidebar-foreground'
   },
-  overcast: {
+  muted: {
    icon: 'border-card-foreground/28 bg-secondary text-sidebar-foreground'
   }
 }
@@ -45,7 +45,7 @@ export function BenefitCard({
   return (
     <li
       className={cn(
-        'animate-fade-in-on-scroll group font-sans-normal relative overflow-hidden rounded-lg border border-border bg-background p-4 text-foreground shadow-sm transition-all duration-300 hover:translate-x-1 dark:border-dark-border'
+        'animate-fade-in-on-scroll group font-sans-normal relative overflow-hidden rounded-lg border border-border bg-background p-4 text-foreground shadow-sm transition-all duration-300 hover:translate-x-1 border-border'
       )}
       style={
         {

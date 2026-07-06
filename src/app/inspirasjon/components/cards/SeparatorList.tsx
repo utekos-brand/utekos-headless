@@ -15,17 +15,17 @@ export function EggplantSeparatorList({
     <div className='flex w-full max-w-sm flex-col gap-2 text-sm'>
       <dl className='flex items-center justify-between'>
         <dt>HEX</dt>
-        <dd className='text-muted-foreground dark:text-dark-muted-foreground'>#{EggplantHEX}</dd>
+        <dd className='text-muted-foreground text-muted-foreground'>#{EggplantHEX}</dd>
       </dl>
       <Separator />
       <dl className='flex items-center justify-between'>
         <dt>PMS</dt>
-        <dd className='text-muted-foreground dark:text-dark-muted-foreground'>{EggplantPMS}</dd>
+        <dd className='text-muted-foreground text-muted-foreground'>{EggplantPMS}</dd>
       </dl>
       <Separator />
       <dl className='flex items-center justify-between'>
         <dt>CMYK</dt>
-        <dd className='text-muted-foreground dark:text-dark-muted-foreground'>{EggplantCMYK}</dd>
+        <dd className='text-muted-foreground text-muted-foreground'>{EggplantCMYK}</dd>
       </dl>
     </div>
   )

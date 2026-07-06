@@ -7,7 +7,7 @@ import { NavLinks } from './NavLinks'
 export function PreFooterNavigation() {
   return (
     // Gradient-bakgrunnen blender sømløst over fra trekkspillet over, og ned i footeren under
-    <article className='dark:from-dark-background dark:to-dark-card w-full max-w-full bg-linear-to-b from-background to-card py-16 text-foreground md:py-24'>
+    <article className='from-background to-card w-full max-w-full bg-linear-to-b from-background to-card py-16 text-foreground md:py-24'>
       <div className='mx-auto max-w-5xl px-6'>
         <div className='mb-12 text-center'>
           <h2 className='leading-heading-level-two mb-4 font-sans text-5xl font-semibold text-foreground md:text-6xl'>
@@ -22,8 +22,8 @@ export function PreFooterNavigation() {
               href={link.href}
               className={cn(
                 'group flex items-center justify-between p-6',
-                'dark:border-dark-foreground/10 dark:bg-dark-background/30 rounded-2xl border border-foreground/10 bg-background/30 backdrop-blur-sm',
-                'dark:hover:border-dark-primary/50 dark:hover:bg-dark-background/60 dark:hover:shadow-dark-primary/5 transition-all duration-400 hover:border-secondary/50 hover:bg-background/60 hover:shadow-lg hover:shadow-secondary/5',
+                'border-foreground/10 bg-background/30 rounded-2xl border border-foreground/10 bg-background/30 backdrop-blur-sm',
+                'hover:border-primary/50 hover:bg-background/60 hover:shadow-primary/5 transition-all duration-400 hover:border-secondary/50 hover:bg-background/60 hover:shadow-lg hover:shadow-secondary/5',
                 index === 0 && 'md:col-span-2 lg:col-span-3',
                 link.mdOnly && 'hidden md:flex'
               )}
@@ -39,7 +39,7 @@ export function PreFooterNavigation() {
                 </div>
 
                 <div className='flex flex-col'>
-                  <span className='/50 dark:group-hover:text-dark-foreground/90 mb-0.5 font-sans text-xs font-medium tracking-widest text-foreground/50 uppercase transition-colors group-hover:text-foreground/90'>
+                  <span className='/50 group-hover:text-foreground/90 mb-0.5 font-sans text-xs font-medium tracking-widest text-foreground/50 uppercase transition-colors group-hover:text-foreground/90'>
                     {link.description}
                   </span>
                   <span className='font-sans text-lg font-medium text-foreground transition-transform duration-300 group-hover:translate-x-1'>

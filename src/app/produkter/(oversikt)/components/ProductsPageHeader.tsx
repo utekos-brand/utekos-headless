@@ -12,13 +12,13 @@ const STAR_POSITIONS = [
 
 export function ProductsPageHeader() {
   return (
-    <header className='relative mb-12 w-full overflow-hidden rounded-3xl bg-[radial-gradient(circle_at_top,color-mix(in_oklab,var(--ancient-water)_16%,transparent),transparent_42%),linear-gradient(180deg,color-mix(in_oklab,var(--havdyp)_90%,black)_0%,color-mix(in_oklab,var(--background)_94%,black)_100%)] pt-12 pb-16'>
+    <header className='relative mb-12 w-full overflow-hidden rounded-3xl bg-[radial-gradient(circle_at_top,color-mix(in_oklab,var(--secondary)_16%,transparent),transparent_42%),linear-gradient(180deg,color-mix(in_oklab,var(--card)_90%,black)_0%,color-mix(in_oklab,var(--background)_94%,black)_100%)] pt-12 pb-16'>
       <div className='pointer-events-none absolute inset-0 -z-10 overflow-hidden'>
         <div className='motion-grid absolute inset-0 bg-[linear-gradient(to_right,rgba(245,243,239,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(245,243,239,0.045)_1px,transparent_1px)] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] bg-size-[32px_32px]' />
 
         <div className='absolute top-0 left-1/2 h-200 w-250 -translate-x-1/2 opacity-25 mix-blend-screen'>
           <div
-            className='motion-spotlight from-ancient-water via-very-peri/18 size-full bg-linear-to-b to-transparent blur-[120px] will-change-transform'
+            className='motion-spotlight from-secondary via-ring/18 size-full bg-linear-to-b to-transparent blur-[120px] will-change-transform'
             style={{ transform: 'translate(0, 0)' }}
           />
         </div>
@@ -41,7 +41,7 @@ export function ProductsPageHeader() {
       <div className='relative z-10 container mx-auto px-4 text-center'>
         <div className='motion-badge mb-8 inline-flex items-center justify-center'>
           <BrandBadge
-            backgroundColor='var(--havdyp)'
+            backgroundColor='var(--card)'
             textColor='var(--foreground)'
             className='group relative border border-foreground/18 px-5 py-2.5 shadow-[0_14px_32px_-24px_rgba(8,10,24,0.62)] sm:px-6 sm:py-3'
           >
@@ -72,14 +72,14 @@ export function ProductsPageHeader() {
           Vi har{' '}
           <span className='relative inline-block font-medium text-foreground'>
             redefinert
-            <span className='motion-underline dark:bg-dark-primary absolute bottom-0 left-0 h-0.5 w-full origin-left bg-primary' />
+            <span className='motion-underline bg-primary absolute bottom-0 left-0 h-0.5 w-full origin-left bg-primary' />
           </span>{' '}
           utekosen gjennom teknologi og funksjonalitet.
           <br className='hidden md:block' />
           Utforsk vår kolleksjon og{' '}
           <span className='relative inline-block px-1'>
-            <span className='motion-highlight bg-very-peri/24 absolute inset-0 origin-left -skew-x-6 rounded' />
-            <span className='text-heading-secondary dark:text-dark-heading-secondary relative z-10 font-medium'>
+            <span className='motion-highlight bg-ring/24 absolute inset-0 origin-left -skew-x-6 rounded' />
+            <span className='text-heading-secondary text-heading-secondary relative z-10 font-medium'>
               skreddersy
             </span>
           </span>{' '}
@@ -87,7 +87,7 @@ export function ProductsPageHeader() {
         </p>
       </div>
 
-      <div className='dark:from-dark-background dark:via-dark-background/80 pointer-events-none absolute right-0 bottom-0 left-0 h-32 bg-linear-to-t from-background via-background/80 to-transparent' />
+      <div className='from-background via-background/80 pointer-events-none absolute right-0 bottom-0 left-0 h-32 bg-linear-to-t from-background via-background/80 to-transparent' />
     </header>
   )
 }

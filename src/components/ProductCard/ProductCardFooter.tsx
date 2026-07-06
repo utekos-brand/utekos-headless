@@ -70,7 +70,7 @@ export function ProductCardFooter({
           variant='seeProduct'
           className={cn(
             viewProductButtonClassName,
-            'dark:focus-visible:outline-dark-foreground focus-visible:outline-foreground'
+            'focus-visible:outline-foreground focus-visible:outline-foreground'
           )}
         >
           <Link
@@ -92,7 +92,7 @@ export function ProductCardFooter({
             variant='checkout'
             className={cn(
               actionButtonClassName,
-              'border-commerce-primary dark:border-dark-commerce-primary focus-visible:outline-commerce-primary-foreground dark:focus-visible:outline-dark-commerce-primary-foreground border disabled:opacity-70'
+              'border-primary border disabled:opacity-70'
             )}
           >
             {isPending ?

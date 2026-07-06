@@ -29,7 +29,7 @@ export async function QualitySection() {
                 )}
               >
                 <div
-                  className='via-coral-green pointer-events-none absolute inset-0 z-0 -translate-x-full bg-linear-to-r from-transparent to-transparent transition-transform duration-1000 ease-in-out group-hover:translate-x-full'
+                  className='via-ceramic pointer-events-none absolute inset-0 z-0 -translate-x-full bg-linear-to-r from-transparent to-transparent transition-transform duration-1000 ease-in-out group-hover:translate-x-full'
                   aria-hidden='true'
                 />
 

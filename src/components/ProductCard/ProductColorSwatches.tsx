@@ -54,8 +54,8 @@ export function ProductColorSwatches({
             className={cn(
               variantSwatchButtonClassName,
               isSelected ?
-                'border-coral-green ring-coral-green ring-1'
-              : 'border-card-foreground/24 hover:border-card-foreground/45 hover:ring-2 hover:ring-card-foreground/24 dark:border-dark-card-foreground/24 dark:hover:border-dark-card-foreground/45 dark:hover:ring-dark-card-foreground/24',
+                'border-ceramic ring-ceramic ring-1'
+              : 'border-card-foreground/24 hover:border-card-foreground/45 hover:ring-2 hover:ring-card-foreground/24 border-card-foreground/24 hover:border-card-foreground/45 hover:ring-card-foreground/24',
               swatchClassName
             )}
             style={{ backgroundColor: colorCode }}

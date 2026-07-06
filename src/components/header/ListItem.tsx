@@ -28,7 +28,7 @@ export const ListItem = React.forwardRef<
           {title}
         </div>
         {children && (
-          <p className='leading-text-paragraph /80 line-clamp-2 text-sm tracking-[0.01em] text-foreground/80'>
+          <p className='leading-text-paragraph text-foreground/80 line-clamp-2 text-sm tracking-[0.01em] text-foreground/80'>
             {children}
           </p>
         )}

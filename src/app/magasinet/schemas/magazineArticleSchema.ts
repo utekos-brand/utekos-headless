@@ -11,7 +11,7 @@ export const magazineCategorySchema = z.enum([
 
 export const magazineThemeSchema = z
   .object({
-    accent: z.enum(['ancient-water', 'bleached-mauve', 'very-peri', 'mountain-view', 'overcast', 'primary']),
+    accent: z.enum(['secondary', 'ceramic', 'ring', 'muted', 'primary']),
     surface: z.enum(['light', 'dark']).default('light')
   })
   .strict()

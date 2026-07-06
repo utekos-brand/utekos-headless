@@ -62,7 +62,7 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <article className='flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip bg-background dark:bg-dark-background'>
+    <article className='flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip bg-background'>
       <LandingTracking />
       <StickyMobileAction />
 

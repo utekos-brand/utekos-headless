@@ -40,7 +40,7 @@ export function ItemImage() {
                 </ItemMedia>
                 <ItemContent>
                   <ItemTitle className='line-clamp-1'>
-                    {song.title} - <span className='text-muted-foreground dark:text-dark-muted-foreground'>{song.album}</span>
+                    {song.title} - <span className='text-muted-foreground text-muted-foreground'>{song.album}</span>
                   </ItemTitle>
                   <ItemDescription>{song.artist}</ItemDescription>
                 </ItemContent>

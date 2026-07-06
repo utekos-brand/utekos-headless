@@ -19,6 +19,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -62,11 +63,12 @@
   --badge: oklch(0.2357 0.0402 194.77);
   --card: #003434;
   --teal-25: oklch(0.9569 0.014 185.95);
-  --ceramin: oklch(0.6678 0.1141 194.02);
+  --ceramic: oklch(0.6678 0.1141 194.02);
   --card-foreground: oklch(0.9493 0.007 88.64);
   --popover: oklch(0.650715 0.111076 194.7689);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
+  --primary-hover: oklch(0.28 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: var(--color-teal-800);
   --secondary-foreground: oklch(0.985 0 0);

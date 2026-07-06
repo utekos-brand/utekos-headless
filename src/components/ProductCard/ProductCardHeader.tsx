@@ -47,7 +47,7 @@ export function ProductCardHeader({
           href={productUrl}
           {...productViewClickProps}
           className={cn(
-            'font-utekos-text-medium dark:focus-visible:outline-dark-card-foreground min-w-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground',
+            'font-utekos-text-medium focus-visible:outline-card-foreground min-w-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground',
             compactMobile && 'w-full md:w-auto'
           )}
         >

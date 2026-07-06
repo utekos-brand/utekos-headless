@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 
 export default function GaveguidePage() {
   return (
-    <main className='bg-background dark:bg-dark-background'>
+    <main className='bg-background'>
       <GaveGuideHero />
       <article className='container mx-auto py-12 sm:py-16 md:max-w-7xl lg:py-16'>
         <ProductCarousel />

@@ -69,7 +69,7 @@ export function NewProductLaunchSectionView({
               </div>
 
               <div className='w-full'>
-                <div className='border-featured-border dark:border-dark-featured-border flex w-full flex-col gap-6 border-t pt-6'>
+                <div className='border-border border-featured-border flex w-full flex-col gap-6 border-t pt-6'>
                   <div className='flex flex-col gap-3'>
                     <div className='flex flex-wrap items-baseline gap-3'>
                       <InlineText className='text-4xl leading-none font-bold tracking-normal text-foreground sm:text-5xl lg:text-6xl'>
@@ -78,7 +78,7 @@ export function NewProductLaunchSectionView({
                       <InlineText className='text-sm text-foreground'>
                         inkl. mva
                       </InlineText>
-                      <InlineText className='bg-featured-foreground/10 dark:bg-dark-featured-foreground/10 decoration-featured-foreground/80 dark:decoration-dark-featured-foreground/80 ring-featured-border dark:ring-dark-featured-border rounded-full px-3 py-1 text-sm font-bold text-foreground line-through decoration-2 ring-1'>
+                      <InlineText className='bg-secondary-foreground/10 bg-featured-foreground/10 decoration-featured-foreground/80 decoration-featured-foreground/80 ring-featured-border ring-featured-border rounded-full px-3 py-1 text-sm font-bold text-foreground line-through decoration-2 ring-1'>
                         {originalPrice},-
                       </InlineText>
                     </div>

@@ -98,16 +98,16 @@ export function PurchaseClientView({
 
   return (
     <article className='relative left-[calc(-50vw+50%)] w-screen overflow-clip text-foreground lg:flex lg:min-h-screen'>
-      <div className='dark:bg-dark-background relative flex w-full flex-col items-center justify-center bg-background p-8 lg:sticky lg:top-0 lg:h-screen lg:w-1/2'>
+      <div className='bg-background relative flex w-full flex-col items-center justify-center bg-background p-8 lg:sticky lg:top-0 lg:h-screen lg:w-1/2'>
         <div
           key={`badge-${selectedModel}`}
-          className='animate-in dark:border-dark-background/10 dark:bg-dark-foreground/90 fade-in slide-in-from-left-2 absolute top-4 left-4 z-20 flex items-center gap-1.5 rounded-sm border border-background/10 bg-foreground/90 px-2.5 py-1 shadow-sm backdrop-blur-md duration-500'
+          className='animate-in border-background/10 bg-foreground/90 fade-in slide-in-from-left-2 absolute top-4 left-4 z-20 flex items-center gap-1.5 rounded-sm border border-background/10 bg-foreground/90 px-2.5 py-1 shadow-sm backdrop-blur-md duration-500'
         >
           <span className='relative flex h-1.5 w-1.5'>
-            <span className='dark:bg-dark-accent absolute inline-flex size-full animate-ping rounded-full bg-accent *:opacity-60' />
-            <span className='dark:bg-dark-accent relative inline-flex h-1.5 w-1.5 rounded-full bg-accent' />
+            <span className='bg-accent absolute inline-flex size-full animate-ping rounded-full bg-accent *:opacity-60' />
+            <span className='bg-accent relative inline-flex h-1.5 w-1.5 rounded-full bg-accent' />
           </span>
-          <span className='dark:text-dark-background text-[10px] font-bold tracking-wider text-background uppercase'>
+          <span className='text-background text-[10px] font-bold tracking-wider text-background uppercase'>
             {currentConfig.badge}
           </span>
         </div>
@@ -132,7 +132,7 @@ export function PurchaseClientView({
                 key={src}
                 className='relative h-[50vh] pl-0 lg:h-[70vh]'
               >
-                <div className='dark:ring-dark-background/10 relative size-full overflow-hidden rounded-3xl bg-linear-to-b from-white/70 to-white/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] ring-1 ring-background/10'>
+                <div className='ring-background/10 relative size-full overflow-hidden rounded-3xl bg-linear-to-b from-white/70 to-white/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] ring-1 ring-background/10'>
                   <Image
                     src={src}
                     alt={`${currentConfig.title} – bilde ${i + 1}`}
@@ -149,24 +149,24 @@ export function PurchaseClientView({
             <>
               <CarouselPrevious
                 aria-label='Forrige bilde'
-                className='dark:border-dark-background/15 dark:bg-dark-foreground/90 dark:text-dark-background dark:hover:bg-dark-foreground dark:hover:text-dark-accent left-2 size-10 border-background/15 bg-foreground/90 text-background shadow-md backdrop-blur-md hover:bg-foreground hover:text-accent md:size-11 *:md:left-4'
+                className='border-background/15 bg-foreground/90 text-background hover:bg-foreground hover:text-accent left-2 size-10 border-background/15 bg-foreground/90 text-background shadow-md backdrop-blur-md hover:bg-foreground hover:text-accent md:size-11 *:md:left-4'
               />
               <CarouselNext
                 aria-label='Neste bilde'
-                className='dark:border-dark-background/15 dark:bg-dark-foreground/90 dark:text-dark-background dark:hover:bg-dark-foreground dark:hover:text-dark-accent right-2 size-10 border-background/15 bg-foreground/90 text-background shadow-md backdrop-blur-md hover:bg-foreground hover:text-accent md:size-11 *:md:right-4'
+                className='border-background/15 bg-foreground/90 text-background hover:bg-foreground hover:text-accent right-2 size-10 border-background/15 bg-foreground/90 text-background shadow-md backdrop-blur-md hover:bg-foreground hover:text-accent md:size-11 *:md:right-4'
               />
             </>
           )}
         </Carousel>
         <p
           key={`caption-${selectedModel}`}
-          className='animate-in dark:text-dark-background fade-in mt-8 hidden font-sans text-base text-background italic duration-700 lg:block'
+          className='animate-in text-background fade-in mt-8 hidden font-sans text-base text-background italic duration-700 lg:block'
         >
           Modell vist: {currentConfig.title}
         </p>
       </div>
 
-      <div className='bg-foreground-muted flex w-full flex-col lg:h-screen lg:w-1/2'>
+      <div className='bg-muted flex w-full flex-col lg:h-screen lg:w-1/2'>
         <div className='flex-1 p-6 md:p-12 lg:overflow-y-auto lg:p-24'>
           <AnimatedBlock
             className='will-animate-fade-in-up mb-12'
@@ -182,7 +182,7 @@ export function PurchaseClientView({
             >
               <TabsList
                 aria-label='Velg modell'
-                className='dark:bg-dark-primary flex h-auto w-full flex-wrap gap-2 rounded-lg bg-primary p-1.5 md:w-fit'
+                className='bg-primary flex h-auto w-full flex-wrap gap-2 rounded-lg bg-primary p-1.5 md:w-fit'
               >
                 {(
                   Object.keys(PRODUCT_VARIANTS) as ModelKey[]
@@ -190,7 +190,7 @@ export function PurchaseClientView({
                   <TabsTrigger
                     key={key}
                     value={key}
-                    className='dark:text-dark-background dark:hover:bg-dark-background/10 dark:data-active:!bg-dark-background dark:data-active:!text-dark-foreground dark:data-active:ring-dark-background/40 dark:text-dark-background dark:data-active:!bg-dark-background dark:data-active:!text-dark-foreground h-auto flex-1 rounded-md px-6 py-3 text-base font-medium whitespace-nowrap text-background transition-all duration-300 hover:scale-[1.02] hover:bg-background/10 md:flex-none data-active:!bg-background data-active:!text-foreground data-active:shadow-md data-active:ring-1 data-active:ring-background/40'
+                    className='text-background hover:bg-background/10 dark:data-active:!bg-background dark:data-active:!text-foreground data-active:ring-background/40 text-background dark:data-active:!bg-background dark:data-active:!text-foreground h-auto flex-1 rounded-md px-6 py-3 text-base font-medium whitespace-nowrap text-background transition-all duration-300 hover:scale-[1.02] hover:bg-background/10 md:flex-none data-active:!bg-background data-active:!text-foreground data-active:shadow-md data-active:ring-1 data-active:ring-background/40'
                   >
                     {PRODUCT_VARIANTS[key].title.replace(
                       'Utekos ',
@@ -208,7 +208,7 @@ export function PurchaseClientView({
               delay='0.05s'
               threshold={0.15}
             >
-              <h2 className='dark:text-dark-background mb-4 font-sans text-4xl leading-[1.1] font-semibold text-background lg:text-7xl'>
+              <h2 className='text-background mb-4 font-sans text-4xl leading-[1.1] font-semibold text-background lg:text-7xl'>
                 {currentConfig.title}
               </h2>
             </AnimatedBlock>
@@ -217,7 +217,7 @@ export function PurchaseClientView({
               delay='0.1s'
               threshold={0.15}
             >
-              <p className='dark:text-dark-background mb-8 text-xl font-light text-background'>
+              <p className='text-background mb-8 text-xl font-light text-background'>
                 {currentConfig.subtitle}
               </p>
             </AnimatedBlock>
@@ -227,14 +227,14 @@ export function PurchaseClientView({
               threshold={0.15}
             >
               <div className='flex flex-wrap items-center gap-4 lg:gap-8'>
-                <span className='dark:text-dark-background text-3xl font-medium text-background lg:text-4xl'>
+                <span className='text-background text-3xl font-medium text-background lg:text-4xl'>
                   {currentConfig.price},-
                 </span>
                 <div className='bg-klarna-pink flex items-center gap-2 rounded-sm px-4 py-2'>
-                  <span className='dark:text-dark-background text-sm font-medium text-background'>
+                  <span className='text-background text-sm font-medium text-background'>
                     Eller {monthlyPrice},- /mnd
                   </span>
-                  <KlarnaLogo className='dark:border-dark-background/30 h-6 w-fit rounded-sm border border-background/30 p-1' />
+                  <KlarnaLogo className='border-background/30 h-6 w-fit rounded-sm border border-background/30 p-1' />
                 </div>
               </div>
             </AnimatedBlock>
@@ -244,7 +244,7 @@ export function PurchaseClientView({
                 delay='0.2s'
                 threshold={0.15}
               >
-                <div className='dark:border-dark-card/20 dark:from-dark-card/5 mt-8 flex items-center gap-4 rounded-lg border-2 border-card/20 bg-linear-to-br from-card/5 to-transparent p-4 shadow-sm'>
+                <div className='border-card/20 from-card/5 mt-8 flex items-center gap-4 rounded-lg border-2 border-card/20 bg-linear-to-br from-card/5 to-transparent p-4 shadow-sm'>
                   <div className='/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-card/10'>
                     <Gift className=' h-5 w-5 text-card' />
                   </div>
@@ -272,7 +272,7 @@ export function PurchaseClientView({
               delay='0.05s'
               threshold={0.15}
             >
-              <p className='leading-text-paragraph dark:text-dark-background/85 text-base text-background/85 md:text-lg'>
+              <p className='leading-text-paragraph text-background/85 text-base text-background/85 md:text-lg'>
                 {currentConfig.description}
               </p>
             </AnimatedBlock>
@@ -282,7 +282,7 @@ export function PurchaseClientView({
               delay='0.1s'
               threshold={0.15}
             >
-              <div className='dark:text-dark-background/75 -mx-1 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-background/75'>
+              <div className='text-background/75 -mx-1 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-background/75'>
                 {currentConfig.features.map(feature => (
                   <span
                     key={feature}
@@ -290,7 +290,7 @@ export function PurchaseClientView({
                   >
                     <span
                       aria-hidden
-                      className='dark:bg-dark-accent h-1 w-1 shrink-0 rounded-full bg-accent'
+                      className='bg-accent h-1 w-1 shrink-0 rounded-full bg-accent'
                     />
                     <span className='whitespace-nowrap'>
                       {feature}
@@ -305,15 +305,15 @@ export function PurchaseClientView({
               delay='0.15s'
               threshold={0.1}
             >
-              <div className='bg-very-white dark:border-dark-background/10 rounded-md border border-background/10 px-4'>
-                <div className='dark:border-dark-background/10 flex items-center justify-between border-b border-background/10 py-3'>
-                  <span className='dark:text-dark-background/60 text-[11px] font-bold tracking-wider text-background/60 uppercase'>
+              <div className='bg-very-white border-background/10 rounded-md border border-background/10 px-4'>
+                <div className='border-background/10 flex items-center justify-between border-b border-background/10 py-3'>
+                  <span className='text-background/60 text-[11px] font-bold tracking-wider text-background/60 uppercase'>
                     Hva gjør{' '}
                     {currentConfig.title.replace('Utekos ', '')}{' '}
                     spesiell
                   </span>
                   <Sparkles
-                    className='dark:text-dark-background size-4 text-background'
+                    className='text-background size-4 text-background'
                     aria-hidden
                   />
                 </div>
@@ -325,12 +325,12 @@ export function PurchaseClientView({
                     <AccordionItem
                       key={highlight.title}
                       value={highlight.title}
-                      className='dark:border-dark-background/10 border-b border-background/10 last:border-b-0'
+                      className='border-background/10 border-b border-background/10 last:border-b-0'
                     >
-                      <AccordionTrigger className='dark:text-dark-background dark:hover:text-dark-accent py-3 text-left text-sm font-semibold text-background hover:text-accent hover:no-underline'>
+                      <AccordionTrigger className='text-background hover:text-accent py-3 text-left text-sm font-semibold text-background hover:text-accent hover:no-underline'>
                         {highlight.title}
                       </AccordionTrigger>
-                      <AccordionContent className='leading-text-paragraph dark:text-dark-background/70 pt-0 pb-3 text-sm text-background/70'>
+                      <AccordionContent className='leading-text-paragraph text-background/70 pt-0 pb-3 text-sm text-background/70'>
                         {highlight.body}
                       </AccordionContent>
                     </AccordionItem>
@@ -344,13 +344,13 @@ export function PurchaseClientView({
           <div className='mb-12 space-y-12'>
             <div>
               <div className='mb-4 flex items-center justify-between'>
-                <span className='dark:text-dark-background text-sm font-bold tracking-widest text-background'>
+                <span className='text-background text-sm font-bold tracking-widest text-background'>
                   Størrelse
                 </span>
                 <Link
                   href={'/handlehjelp/storrelsesguide' as Route}
                   data-track='SizeGuideSkreddersyVarmen'
-                  className='dark:text-dark-background dark:hover:text-dark-card text-sm text-background underline transition-colors hover:text-card'
+                  className='text-background hover:text-card text-sm text-background underline transition-colors hover:text-card'
                 >
                   Se størrelsesguide
                 </Link>
@@ -372,20 +372,20 @@ export function PurchaseClientView({
                     className={cn(
                       'group relative overflow-hidden rounded-sm border px-3 py-5 text-sm font-medium transition-all md:px-4 md:text-base',
                       selectedSize === size ?
-                        'dark:border-dark-background dark:bg-dark-background border-background bg-background text-white shadow-lg'
-                      : 'dark:border-dark-background/20 dark:bg-dark-foreground dark:text-dark-background dark:hover:border-dark-background border-background/20 bg-foreground text-background hover:border-background'
+                        'border-background bg-background border-background bg-background text-white shadow-lg'
+                      : 'border-background/20 bg-foreground text-background hover:border-background border-background/20 bg-foreground text-background hover:border-background'
                     )}
                   >
                     {size}
                     {selectedSize === size && (
-                      <div className='dark:bg-dark-primary absolute top-0 right-0 -mt-1.5 -mr-1.5 size-3 rotate-45 bg-primary' />
+                      <div className='bg-primary absolute top-0 right-0 -mt-1.5 -mr-1.5 size-3 rotate-45 bg-primary' />
                     )}
                   </button>
                 ))}
               </div>
 
               <div className='mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs'>
-                <span className='dark:text-dark-background/55 tracking-wider text-background/55 uppercase'>
+                <span className='text-background/55 tracking-wider text-background/55 uppercase'>
                   Farge
                 </span>
                 {currentConfig.colors.map((colorObj, index) => {
@@ -412,7 +412,7 @@ export function PurchaseClientView({
                           'size-4 rounded-full border border-black/15',
                           isActive &&
                             isInteractive &&
-                            'dark:ring-dark-primary ring-1 ring-primary ring-offset-1 ring-offset-white',
+                            'ring-primary ring-1 ring-primary ring-offset-1 ring-offset-white',
                           !isActive &&
                             isInteractive &&
                             'opacity-60'
@@ -434,9 +434,9 @@ export function PurchaseClientView({
                   key={selectedSize}
                   className='animate-in fade-in slide-in-from-top-2 mt-6 duration-300'
                 >
-                  <div className='dark:bg-dark-background relative overflow-hidden rounded-md bg-background p-5'>
-                    <div className='dark:border-dark-background mb-3 flex items-center gap-2 border-b border-background pb-3'>
-                      <Ruler className='dark:text-dark-primary h-4 w-4 text-primary' />
+                  <div className='bg-background relative overflow-hidden rounded-md bg-background p-5'>
+                    <div className='border-background mb-3 flex items-center gap-2 border-b border-background pb-3'>
+                      <Ruler className='text-primary h-4 w-4 text-primary' />
                       <span className='text-sm font-bold tracking-wider text-foreground'>
                         Passer best for deg som er{' '}
                         {guidance.height}
@@ -448,7 +448,7 @@ export function PurchaseClientView({
                           key={i}
                           className='leading-text-paragraph flex items-start gap-2.5 text-sm text-foreground'
                         >
-                          <div className='dark:bg-dark-primary mt-1.5 size-1 shrink-0 rounded-full bg-primary' />
+                          <div className='bg-primary mt-1.5 size-1 shrink-0 rounded-full bg-primary' />
                           <span>{tip}</span>
                         </li>
                       ))}
@@ -460,14 +460,14 @@ export function PurchaseClientView({
           </div>
         </div>
 
-        <div className='dark:border-dark-background/10 dark:bg-dark-foreground z-30 mx-auto border-t border-background/10 bg-foreground p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] md:p-12 lg:p-20'>
+        <div className='border-background/10 bg-foreground z-30 mx-auto border-t border-background/10 bg-foreground p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] md:p-12 lg:p-20'>
           <div className='mb-8 flex h-16 gap-4'>
-            <div className='dark:border-dark-background/20 dark:bg-dark-foreground mx-auto flex h-full items-center rounded-sm border border-background/20 bg-foreground'>
+            <div className='border-background/20 bg-foreground mx-auto flex h-full items-center rounded-sm border border-background/20 bg-foreground'>
               <button
                 onClick={() =>
                   setQuantity(Math.max(1, quantity - 1))
                 }
-                className='dark:hover:bg-dark-background/5 flex h-full w-16 items-center justify-center transition-colors hover:bg-background/5'
+                className='hover:bg-background/5 flex h-full w-16 items-center justify-center transition-colors hover:bg-background/5'
                 aria-label='Reduser antall'
               >
                 <Minus size={20} />
@@ -477,7 +477,7 @@ export function PurchaseClientView({
               </span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className='dark:hover:bg-dark-background/5 flex h-full w-16 items-center justify-center transition-colors hover:bg-background/5'
+                className='hover:bg-background/5 flex h-full w-16 items-center justify-center transition-colors hover:bg-background/5'
                 aria-label='Øk antall'
               >
                 <Plus size={20} />
@@ -488,7 +488,7 @@ export function PurchaseClientView({
               data-track='🔔🛒 AddToCartSkreddersyVarmen 🛒🔔'
               disabled={isPending}
               className={cn(
-                'bg-commerce-primary dark:bg-dark-commerce-primary text-commerce-primary-foreground dark:text-dark-commerce-primary-foreground hover:bg-commerce-primary-hover dark:hover:bg-dark-commerce-primary-hover hover:text-commerce-primary-hover-foreground dark:hover:text-dark-commerce-primary-hover-foreground flex h-full flex-1 flex-row items-center justify-center gap-3 rounded-sm px-2 shadow-xl transition-all active:scale-[0.98]',
+                'bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-foreground flex h-full flex-1 flex-row items-center justify-center gap-3 rounded-sm px-2 shadow-xl transition-all active:scale-[0.98]',
                 isPending && 'cursor-not-allowed opacity-80'
               )}
             >
@@ -503,7 +503,7 @@ export function PurchaseClientView({
                   <span className='text-lg font-bold tracking-wider whitespace-nowrap md:text-xl'>
                     Legg i kurv
                   </span>
-                  <div className='bg-commerce-primary-foreground/40 dark:bg-dark-commerce-primary-foreground/40 hidden h-8 w-px md:block' />
+                  <div className='bg-primary-foreground/40-foreground/40 hidden h-8 w-px md:block' />
                   <span className='hidden text-xl font-normal whitespace-nowrap opacity-100 md:inline'>
                     {currentConfig.price * quantity},-
                   </span>
@@ -523,18 +523,18 @@ export function PurchaseClientView({
               delay='0s'
               threshold={0.1}
             >
-              <div className='bg-very-white dark:border-dark-background/10 rounded-lg border border-background/10'>
-                <div className='dark:divide-dark-background/10 grid grid-cols-1 divide-y divide-background/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0'>
+              <div className='bg-very-white border-background/10 rounded-lg border border-background/10'>
+                <div className='divide-background/10 grid grid-cols-1 divide-y divide-background/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0'>
                   <div className='flex items-start gap-3 p-4'>
                     <Truck
                       size={22}
-                      className='dark:text-dark-accent mt-0.5 shrink-0 text-accent'
+                      className='text-accent mt-0.5 shrink-0 text-accent'
                     />
                     <div className='min-w-0'>
-                      <p className='dark:text-dark-background text-sm font-semibold text-background'>
+                      <p className='text-background text-sm font-semibold text-background'>
                         Rask levering 2–5 dager
                       </p>
-                      <p className='dark:text-dark-background/65 mt-0.5 text-xs leading-snug text-background/65'>
+                      <p className='text-background/65 mt-0.5 text-xs leading-snug text-background/65'>
                         Sendes samme dag (ikke søndag). Fri frakt
                         fra 999,-.
                       </p>
@@ -543,13 +543,13 @@ export function PurchaseClientView({
                   <div className='flex items-start gap-3 p-4'>
                     <RefreshCcw
                       size={22}
-                      className='dark:text-dark-accent mt-0.5 shrink-0 text-accent'
+                      className='text-accent mt-0.5 shrink-0 text-accent'
                     />
                     <div className='min-w-0'>
-                      <p className='dark:text-dark-background text-sm font-semibold text-background'>
+                      <p className='text-background text-sm font-semibold text-background'>
                         14 dagers åpent kjøp
                       </p>
-                      <p className='dark:text-dark-background/65 mt-0.5 text-xs leading-snug text-background/65'>
+                      <p className='text-background/65 mt-0.5 text-xs leading-snug text-background/65'>
                         Send tilbake uten spørsmål.
                       </p>
                     </div>
@@ -557,23 +557,23 @@ export function PurchaseClientView({
                   <div className='flex items-start gap-3 p-4'>
                     <Store
                       size={22}
-                      className='dark:text-dark-accent mt-0.5 shrink-0 text-accent'
+                      className='text-accent mt-0.5 shrink-0 text-accent'
                     />
                     <div className='min-w-0'>
-                      <p className='dark:text-dark-background text-sm font-semibold text-background'>
+                      <p className='text-background text-sm font-semibold text-background'>
                         På lager i Bergen
                       </p>
-                      <p className='dark:text-dark-background/65 mt-0.5 text-xs leading-snug text-background/65'>
+                      <p className='text-background/65 mt-0.5 text-xs leading-snug text-background/65'>
                         Også via Intersport. Norsk garanti.
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className='dark:border-dark-background/10 border-t border-background/10 px-4 py-2.5'>
+                <div className='border-background/10 border-t border-background/10 px-4 py-2.5'>
                   <Link
                     href={'/frakt-og-retur' as Route}
                     data-track='SkreddersyVarmenFraktOgReturLink'
-                    className='group dark:text-dark-background/75 dark:hover:text-dark-accent inline-flex items-center gap-1.5 text-xs font-medium text-background/75 transition-colors hover:text-accent'
+                    className='group text-background/75 hover:text-accent inline-flex items-center gap-1.5 text-xs font-medium text-background/75 transition-colors hover:text-accent'
                   >
                     Alt om frakt og retur
                     <ArrowRight

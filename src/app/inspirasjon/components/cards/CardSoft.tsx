@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 const CardSoft = () => {
   return (
-    <Card className='bg-primary/20 dark:bg-dark-primary/20 max-w-md gap-2'>
+    <Card className='bg-primary/20 bg-primary/20 max-w-md gap-2'>
       <CardHeader>
         <CardTitle>Design Throwdown</CardTitle>
       </CardHeader>

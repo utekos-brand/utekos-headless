@@ -27,13 +27,13 @@ export default function ProductGalleryCard({
     : [
         'group relative overflow-hidden bg-transparent transition-all duration-300',
         flushOnMobile ?
-          'w-full rounded-none shadow-none md:-ml-8 md:mr-0 md:w-[calc(100%+2rem)] md:rounded-[1.5rem] md:shadow-2xl md:shadow-havdyp/18'
-        : '-ml-4 aspect-square w-[calc(100%+1rem)] rounded-[1.5rem] shadow-2xl shadow-havdyp/18 md:-ml-8 md:w-[calc(100%+2rem)]'
+          'w-full rounded-none shadow-none md:-ml-8 md:mr-0 md:w-[calc(100%+2rem)] md:rounded-[1.5rem] md:shadow-2xl md:shadow-card/18'
+        : '-ml-4 aspect-square w-[calc(100%+1rem)] rounded-[1.5rem] shadow-2xl shadow-card/18 md:-ml-8 md:w-[calc(100%+2rem)]'
       ].join(' ')
   const defaultBackgroundClassName =
     flushOnMobile ?
-      'group relative w-full overflow-hidden rounded-none bg-foreground/72 dark:bg-dark-foreground/72 shadow-none transition-all duration-300 md:-ml-8 md:mr-0 md:w-[calc(100%+2rem)] md:rounded-[1.5rem] md:shadow-2xl md:shadow-background/10 dark:md:shadow-dark-background/10'
-    : 'group relative w-full overflow-hidden rounded-[1.5rem] bg-foreground/72 dark:bg-dark-foreground/72 shadow-2xl shadow-background/10 dark:shadow-dark-background/10 transition-all duration-300 '
+      'group relative w-full overflow-hidden rounded-none bg-foreground/72 bg-foreground/72 shadow-none transition-all duration-300 md:-ml-8 md:mr-0 md:w-[calc(100%+2rem)] md:rounded-[1.5rem] md:shadow-2xl md:shadow-background/10 md:shadow-background/10'
+    : 'group relative w-full overflow-hidden rounded-[1.5rem] bg-foreground/72 bg-foreground/72 shadow-2xl shadow-background/10 shadow-background/10 transition-all duration-300 '
 
   return (
     <div

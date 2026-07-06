@@ -91,13 +91,13 @@ export function SharedProductCarousel({
       <CarouselPrevious
         forceVisible
         className={cn(
-          'top-[34%] left-1.5 z-20 flex border-background dark:border-dark-background bg-foreground dark:bg-dark-foreground text-background dark:text-dark-background shadow-lg ring-1 ring-background/45 dark:ring-dark-background/45 backdrop-blur-sm hover:bg-foreground/90 dark:hover:bg-dark-foreground/90 disabled:opacity-70 md:hidden [&_svg]:size-5'
+          'top-[34%] left-1.5 z-20 flex border-background bg-foreground text-background shadow-lg ring-1 ring-background/45 ring-background/45 backdrop-blur-sm hover:bg-foreground/90 hover:bg-foreground/90 disabled:opacity-70 md:hidden [&_[&>svg]:size-5'
         )}
       />
       <CarouselNext
         forceVisible
         className={cn(
-          'top-[34%] right-1.5 z-20 flex border-background dark:border-dark-background bg-foreground dark:bg-dark-foreground text-background dark:text-dark-background shadow-lg ring-1 ring-background/45 dark:ring-dark-background/45 backdrop-blur-sm hover:bg-foreground/90 dark:hover:bg-dark-foreground/90 disabled:opacity-70 md:hidden [&_svg]:size-5'
+          'top-[34%] right-1.5 z-20 flex border-background bg-foreground text-background shadow-lg ring-1 ring-background/45 ring-background/45 backdrop-blur-sm hover:bg-foreground/90 hover:bg-foreground/90 disabled:opacity-70 md:hidden [&_[&>svg]:size-5'
         )}
       />
       <CarouselPrevious

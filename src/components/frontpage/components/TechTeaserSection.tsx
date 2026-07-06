@@ -19,22 +19,22 @@ export default function TechTeaserSection() {
     >
       <div className='container mx-auto max-w-7xl px-4'>
         <div className='relative overflow-hidden rounded-3xl border border-foreground bg-card p-8 shadow-2xl md:p-12 lg:p-20'>
-          <div className='bg-mountain-view pointer-events-none absolute top-0 left-[-10%] size-150 -translate-y-1/2 rounded-full blur-[120px]' />
-          <div className='bg-overcast pointer-events-none absolute right-0 bottom-0 size-125 translate-y-1/3 rounded-full blur-[100px]' />
+          <div className='bg-secondary pointer-events-none absolute top-0 left-[-10%] size-150 -translate-y-1/2 rounded-full blur-[120px]' />
+          <div className='bg-muted pointer-events-none absolute right-0 bottom-0 size-125 translate-y-1/3 rounded-full blur-[100px]' />
 
           <div className='relative grid items-center gap-12 lg:grid-cols-2 lg:gap-20'>
             <div className='space-y-4'>
-              <div className='motion-content border-mountain-view/20 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 backdrop-blur-sm'>
+              <div className='motion-content border-secondary/20 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 backdrop-blur-sm'>
                 <div className='relative flex h-2 w-2'>
-                  <span className='bg-mountain-view absolute inline-flex size-full animate-pulse rounded-full opacity-75' />
-                  <span className='bg-mountain-view relative inline-flex h-2 w-2 rounded-full' />
+                  <span className='bg-secondary absolute inline-flex size-full animate-pulse rounded-full opacity-75' />
+                  <span className='bg-secondary relative inline-flex h-2 w-2 rounded-full' />
                 </div>
               </div>
 
               <div className='space-y-6'>
                 <h2 className='motion-content text-4xl font-bold text-foreground sm:text-5xl md:text-6xl'>
                   Vitenskapen bak <br />
-                  <span className='dark:from-dark-primary dark:to-dark-primary bg-linear-to-r from-primary via-yellow-500 to-primary bg-clip-text text-transparent'>
+                  <span className='from-primary to-primary bg-linear-to-r from-primary via-yellow-500 to-primary bg-clip-text text-transparent'>
                     din komfort
                   </span>
                 </h2>
@@ -59,22 +59,22 @@ export default function TechTeaserSection() {
                     title: 'Termisk effektivitet',
                     desc: 'Isolasjon som absorberer og resirkulerer kroppsvarme.',
                     color: 'text-foreground ',
-                    bg: 'bg-bleached-mauve'
+                    bg: 'bg-ceramic'
                   },
                   {
                     icon: Shield,
                     title: 'HydroGuard™ beskyttelse',
                     desc: 'Pustende membran med 8000mm vannsøyle.',
                     color:
-                      'text-background dark:text-dark-background',
-                    bg: 'bg-ancient-water'
+                      'text-background',
+                    bg: 'bg-secondary'
                   },
                   {
                     icon: Layers,
                     title: '3-i-1 adaptivitet',
                     desc: 'Fra isolerende kokong til bevegelig parkas på sekunder.',
-                    color: 'text-chocolate-plum',
-                    bg: 'bg-overcast'
+                    color: 'text-foreground',
+                    bg: 'bg-muted'
                   }
                 ].map((item, idx) => (
                   <li
@@ -87,10 +87,10 @@ export default function TechTeaserSection() {
                       <item.icon className='size-5' />
                     </div>
                     <div>
-                      <span className='group-hover:text-ancient-water block text-base font-semibold text-foreground transition-colors'>
+                      <span className='group-hover:text-secondary block text-base font-semibold text-foreground transition-colors'>
                         {item.title}
                       </span>
-                      <span className='group-hover:text-barely-blue text-ancient-water block text-sm transition-colors'>
+                      <span className='group-hover:text-muted-foreground text-secondary block text-sm transition-colors'>
                         {item.desc}
                       </span>
                     </div>
@@ -137,7 +137,7 @@ export default function TechTeaserSection() {
                   >
                     <div className='flex items-center justify-between'>
                       <div className='flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 backdrop-blur-md'>
-                        <Cpu className='text-havdyp h-3.5 w-3.5' />
+                        <Cpu className='text-card h-3.5 w-3.5' />
                         <span className='text-[10px] font-bold tracking-widest text-white uppercase'>
                           Core Tech
                         </span>
@@ -147,26 +147,26 @@ export default function TechTeaserSection() {
 
                     <div>
                       <div className='mb-4 space-y-1.5 opacity-60'>
-                        <div className='bg-ancient-water h-1 w-12 rounded-full' />
-                        <div className='bg-chocolate-plum h-1 w-8 rounded-full' />
+                        <div className='bg-secondary h-1 w-12 rounded-full' />
+                        <div className='bg-foreground h-1 w-8 rounded-full' />
                       </div>
 
                       <h3 className='text-3xl font-bold text-foreground'>
                         SherpaCore™
                       </h3>
-                      <p className='text-ancient-water text-sm font-medium'>
+                      <p className='text-secondary text-sm font-medium'>
                         Thermal Lining System
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className='motion-inner-parallax dark:bg-dark-background absolute -right-6 -bottom-6 flex h-24 w-24 translate-z-10 items-center justify-center rounded-full border border-white/10 bg-background shadow-2xl'>
+                <div className='motion-inner-parallax bg-background absolute -right-6 -bottom-6 flex h-24 w-24 translate-z-10 items-center justify-center rounded-full border border-white/10 bg-background shadow-2xl'>
                   <div className='text-center'>
                     <span className='block text-2xl font-bold text-foreground'>
                       8K
                     </span>
-                    <span className='text-ancient-water text-[10px] font-bold tracking-wider uppercase'>
+                    <span className='text-secondary text-[10px] font-bold tracking-wider uppercase'>
                       Vannsøyle
                     </span>
                   </div>

@@ -134,7 +134,7 @@ export const rawMagazineArticles = [
       description:
         'Møt TechDown™, Utekos-plagget som kombinerer dunlignende letthet med syntetisk isolasjon for norsk utekomfort.'
     },
-    theme: { accent: 'very-peri', surface: 'dark' },
+    theme: { accent: 'ring', surface: 'dark' },
     relatedSlugs: [
       'hva-er-utekos',
       '5-enkle-tips-for-a-forlenge-terrassesongen',
@@ -236,7 +236,7 @@ export const rawMagazineArticles = [
       title: 'Hva er Utekos? Historien og filosofien | Utekos Magasinet',
       description: 'Les historien bak Utekos og hvorfor personlig komfort ute er kjernen i produktfilosofien.'
     },
-    theme: { accent: 'ancient-water', surface: 'light' },
+    theme: { accent: 'secondary', surface: 'light' },
     relatedSlugs: [
       'utekos-techdown-lansering',
       '5-enkle-tips-for-a-forlenge-terrassesongen',
@@ -434,7 +434,7 @@ export const rawMagazineArticles = [
       height: 1000,
       caption: 'En god stenging gjør neste ankomst roligere, varmere og mer forutsigbar.'
     },
-    theme: { accent: 'ancient-water', surface: 'light' },
+    theme: { accent: 'secondary', surface: 'light' },
     relatedSlugs: [
       'slik-skaper-du-den-perfekte-stemningen-pa-hytta',
       'beredskap-egenomsorg',
@@ -514,7 +514,7 @@ export const rawMagazineArticles = [
       height: 683,
       caption: 'Din oase, klar for de kjølige, klare kveldene.'
     },
-    theme: { accent: 'mountain-view', surface: 'light' },
+    theme: { accent: 'secondary', surface: 'light' },
     relatedSlugs: [
       'balpannen-din-guide-til-den-perfekte-hostkvelden',
       'slik-skaper-du-den-perfekte-stemningen-pa-hytta',
@@ -600,7 +600,7 @@ export const rawMagazineArticles = [
       height: 1000,
       caption: 'Hyttekos handler om rytme, materialer og varme som ikke krever forklaring.'
     },
-    theme: { accent: 'ancient-water', surface: 'light' },
+    theme: { accent: 'secondary', surface: 'light' },
     relatedSlugs: [
       'vinterklargjoring-av-hytta-en-sjekkliste-for-livsnyteren',
       'balpannen-din-guide-til-den-perfekte-hostkvelden',
@@ -677,7 +677,7 @@ export const rawMagazineArticles = [
       height: 1024,
       caption: 'Vintercamping blir best når varme og rutiner er planlagt før avreise.'
     },
-    theme: { accent: 'bleached-mauve', surface: 'light' },
+    theme: { accent: 'ceramic', surface: 'light' },
     relatedSlugs: [
       'bobil-i-hostferien-de-vakreste-rutene-for-a-oppleve-hostfargene',
       'beredskap-egenomsorg',
@@ -760,7 +760,7 @@ export const rawMagazineArticles = [
       height: 683,
       caption: 'Høsten er bobilens rolige gullsesong når du pakker for varme stopp.'
     },
-    theme: { accent: 'bleached-mauve', surface: 'light' },
+    theme: { accent: 'ceramic', surface: 'light' },
     relatedSlugs: [
       'den-ultimate-guiden-til-komfortabel-vintercamping',
       '5-enkle-tips-for-a-forlenge-terrassesongen',
@@ -833,7 +833,7 @@ export const rawMagazineArticles = [
       height: 630,
       caption: 'Båtpussen går lettere når pauser, vind og skiftende vær er tatt med i planen.'
     },
-    theme: { accent: 'very-peri', surface: 'light' },
+    theme: { accent: 'ring', surface: 'light' },
     relatedSlugs: [
       'utekos-techdown-lansering',
       'bobil-i-hostferien-de-vakreste-rutene-for-a-oppleve-hostfargene',

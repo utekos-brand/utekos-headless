@@ -5,7 +5,7 @@
 import { Check } from 'lucide-react'
 import type { CSSProperties } from 'react'
 
-type BenefitSurface = 'dazzle' | 'orange' | 'dazzleagain'
+type BenefitSurface = 'muted' | 'accent' | 'mutedAlt'
 
 interface Benefit {
   label: string
@@ -29,19 +29,20 @@ const surfaceStyles: Record<
     iconColor?: string
   }
 > = {
-  dazzle: {
+  muted: {
     background: 'var(--muted)',
     borderColor: 'var(--border)',
     textColor: 'var(--muted-foreground)',
     descriptionColor: 'var(--muted-foreground)'
   },
-  orange: {
-    background: 'var(--promo)',
-    borderColor: 'color-mix(in oklch, var(--promo-foreground) 28%, transparent)',
-    textColor: 'var(--promo-foreground)',
-    descriptionColor: 'var(--promo-foreground)'
+  accent: {
+    background: 'var(--accent)',
+    borderColor:
+      'color-mix(in oklch, var(--accent-foreground) 28%, transparent)',
+    textColor: 'var(--accent-foreground)',
+    descriptionColor: 'var(--accent-foreground)'
   },
-  dazzleagain: {
+  mutedAlt: {
     background: 'var(--muted)',
     borderColor: 'var(--border)',
     textColor: 'var(--muted-foreground)',
@@ -50,7 +51,7 @@ const surfaceStyles: Record<
 }
 
 export function BenefitCard({ benefit, delay }: BenefitCardProps) {
-  const surface = surfaceStyles[benefit.surface ?? 'orange']
+  const surface = surfaceStyles[benefit.surface ?? 'accent']
 
   return (
     <li

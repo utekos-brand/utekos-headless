@@ -23,7 +23,7 @@ export function SectionSocialProof() {
     <SkreddersyMotionProvider>
       <article
         aria-labelledby='socialproof-heading'
-        className='dark:border-dark-background/20  relative w-full max-w-full overflow-hidden border-t border-background/20 bg-card py-20 text-foreground md:py-28'
+        className='border-background/20  relative w-full max-w-full overflow-hidden border-t border-background/20 bg-card py-20 text-foreground md:py-28'
       >
         <div
           aria-hidden
@@ -41,7 +41,7 @@ export function SectionSocialProof() {
             variants={revealGroup}
           >
             <m.div
-              className='leading-text-paragraph dark:border-dark-foreground/15 dark:bg-dark-foreground/5 /90 mb-5 inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-foreground/5 px-3.5 py-1.5 text-xs font-medium tracking-[-0.01em] text-foreground/90 backdrop-blur-sm'
+              className='leading-text-paragraph border-foreground/15 bg-foreground/5 text-foreground/90 mb-5 inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-foreground/5 px-3.5 py-1.5 text-xs font-medium tracking-[-0.01em] text-foreground/90 backdrop-blur-sm'
               variants={revealPop}
             >
               <span
@@ -77,7 +77,7 @@ export function SectionSocialProof() {
             </m.h2>
 
             <m.p
-              className='leading-text-paragraph /80 mx-auto mt-5 max-w-[34ch] text-[clamp(0.875rem,3.4vw,1.125rem)] tracking-[-0.01em] text-balance wrap-break-word text-foreground/80 md:max-w-2xl'
+              className='leading-text-paragraph text-foreground/80 mx-auto mt-5 max-w-[34ch] text-[clamp(0.875rem,3.4vw,1.125rem)] tracking-[-0.01em] text-balance wrap-break-word text-foreground/80 md:max-w-2xl'
               variants={revealItem}
             >
               Ord fra dem som allerede har byttet den snikende
@@ -99,11 +99,11 @@ export function SectionSocialProof() {
         >
           <div
             aria-hidden
-            className='dark:from-dark-card pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-linear-to-r from-card to-transparent md:w-24'
+            className='from-card pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-linear-to-r from-card to-transparent md:w-24'
           />
           <div
             aria-hidden
-            className='dark:from-dark-card pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-linear-to-l from-card to-transparent md:w-24'
+            className='from-card pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-linear-to-l from-card to-transparent md:w-24'
           />
 
           <div

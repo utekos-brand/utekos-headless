@@ -11,10 +11,10 @@ import { UsageGroup } from './UsageGroup'
 import { Leaf, ShieldCheck, Waves, Info } from 'lucide-react'
 
 const triggerClassName =
-  'font-sans text-left text-lg font-semibold text-background dark:text-dark-background hover:text-card dark:hover:text-dark-card hover:no-underline [&>svg]:text-background dark:svg]:text-dark-background md:text-xl'
+  'font-sans text-left text-lg font-semibold text-background hover:text-card hover:text-card hover:no-underline [&>[&>svg]:text-background [&>svg]:text-background md:text-xl'
 
 const itemClassName =
-  'border-background/20 dark:border-dark-background/20'
+  'border-background/20 border-background/20'
 
 export async function ProductDetailsAccordion() {
   'use cache'
@@ -25,9 +25,9 @@ export async function ProductDetailsAccordion() {
   )
 
   return (
-    <article className='bg-foreground-muted dark:text-dark-background w-full px-6 pt-6 pb-24 text-background'>
+    <article className='bg-muted text-background w-full px-6 pt-6 pb-24 text-background'>
       <div className='mx-auto max-w-3xl'>
-        <h2 className='dark:text-dark-background my-8 text-center font-sans text-4xl leading-[0.95] font-bold tracking-normal text-background md:text-5xl'>
+        <h2 className='text-background my-8 text-center font-sans text-4xl leading-[0.95] font-bold tracking-normal text-background md:text-5xl'>
           Alt du trenger å vite
         </h2>
 
@@ -105,10 +105,10 @@ export async function ProductDetailsAccordion() {
                     size={20}
                   />
                   <div>
-                    <h4 className='dark:text-dark-background mb-1 text-base font-bold text-background'>
+                    <h4 className='text-background mb-1 text-base font-bold text-background'>
                       Håndterer fuktige forhold
                     </h4>
-                    <p className='dark:text-dark-background/82 text-background/82'>
+                    <p className='text-background/82'>
                       Den avanserte, syntetiske isolasjonen er
                       konstruert for å prestere optimalt i
                       fuktige forhold. Den beholder isolerende
@@ -123,10 +123,10 @@ export async function ProductDetailsAccordion() {
                     size={20}
                   />
                   <div>
-                    <h4 className='dark:text-dark-background mb-1 text-base font-bold text-background'>
+                    <h4 className='text-background mb-1 text-base font-bold text-background'>
                       Allergivennlig
                     </h4>
-                    <p className='dark:text-dark-background/82 text-background/82'>
+                    <p className='text-background/82'>
                       Et gjennomtenkt vegansk valg som gir full
                       trygghet og komfort for deg med dunallergi
                       eller for deg som foretrekker produkter
@@ -140,10 +140,10 @@ export async function ProductDetailsAccordion() {
                     size={20}
                   />
                   <div>
-                    <h4 className='dark:text-dark-background mb-1 text-base font-bold text-background'>
+                    <h4 className='text-background mb-1 text-base font-bold text-background'>
                       Robust og allsidig
                     </h4>
-                    <p className='dark:text-dark-background/82 text-background/82'>
+                    <p className='text-background/82'>
                       Utekos™-modellen med lavest vekt, best
                       egnet for både rolig hygge og aktivitet.
                     </p>
@@ -201,9 +201,9 @@ export async function ProductDetailsAccordion() {
               Passform
             </AccordionTrigger>
             <AccordionContent>
-              <div className='leading-text-paragraph dark:text-dark-background/82 space-y-4 p-2 text-base text-background/82'>
+              <div className='leading-text-paragraph text-background/82 space-y-4 p-2 text-base text-background/82'>
                 <p>
-                  <strong className='dark:text-dark-background mb-1 block text-background'>
+                  <strong className='text-background mb-1 block text-background'>
                     Rom for bevegelse og ekstra lag
                   </strong>
                   Utekos Mikrofiber™ er designet med sjenerøs
@@ -212,7 +212,7 @@ export async function ProductDetailsAccordion() {
                   det føles trangt.
                 </p>
                 <p>
-                  <strong className='dark:text-dark-background mb-1 block text-background'>
+                  <strong className='text-background mb-1 block text-background'>
                     Fra parkas til fullstendig tildekket på
                     sekunder
                   </strong>
@@ -221,7 +221,7 @@ export async function ProductDetailsAccordion() {
                   en luftig, beskyttende parkas til en tett og
                   varmende kokong.
                 </p>
-                <p className='leading-text-paragraph dark:border-dark-foreground/15  rounded-2xl border border-foreground/15 bg-card p-4 text-sm text-foreground'>
+                <p className='leading-text-paragraph rounded-2xl border-foreground/15 border border-foreground/15 bg-card p-4 text-sm text-foreground'>
                   <strong>Tips:</strong> Bruk linken ved
                   størrelsevelgeren og i menyen over for å se de
                   nøyaktige målene i tabellen.
@@ -236,11 +236,11 @@ export async function ProductDetailsAccordion() {
             </AccordionTrigger>
             <AccordionContent>
               <div className='space-y-4 p-2'>
-                <ul className='dark:text-dark-background/82 list-inside list-disc space-y-1 text-background/82'>
+                <ul className='text-background/82 list-inside list-disc space-y-1 text-background/82'>
                   <li>Maskinvask på maks 30°C</li>
                   <li>Bruk mild såpe</li>
                   <li>
-                    <span className='dark:text-dark-background font-bold text-background'>
+                    <span className='text-background font-bold text-background'>
                       Unngå tørketrommelen
                     </span>
                   </li>
@@ -248,8 +248,8 @@ export async function ProductDetailsAccordion() {
                   <li>Unngå stryking og bleking</li>
                 </ul>
 
-                <div className='dark:border-dark-primary  mt-4 flex gap-3 rounded-2xl border-l-4 border-primary bg-card p-4 text-foreground'>
-                  <Info className='dark:text-dark-primary shrink-0 text-primary' />
+                <div className='border-primary  mt-4 flex gap-3 rounded-2xl border-l-4 border-primary bg-card p-4 text-foreground'>
+                  <Info className='text-primary shrink-0 text-primary' />
                   <div className='leading-text-paragraph text-sm'>
                     <span className='mb-1 block font-bold'>
                       Viktig om oppbevaring

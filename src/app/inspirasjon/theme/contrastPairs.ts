@@ -13,17 +13,17 @@ export const contrastPairs = {
   cardTitleOnAccentLight: {
     id: 'cardTitleOnAccentLight',
     foreground: 'var(--background)',
-    background: 'var(--mountain-view)'
+    background: 'var(--secondary)'
   },
   cardTitleOnAccentDark: {
     id: 'cardTitleOnAccentDark',
     foreground: 'var(--foreground)',
-    background: 'var(--skipper-blue)'
+    background: 'var(--secondary)'
   },
   heroCardContrast: {
     id: 'heroCardContrast',
     foreground: 'var(--foreground)',
-    background: 'var(--mountain-view)'
+    background: 'var(--secondary)'
   }
 } as const satisfies Record<ContrastPairId, ContrastPair>
 

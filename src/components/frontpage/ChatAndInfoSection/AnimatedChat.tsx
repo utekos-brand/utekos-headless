@@ -35,14 +35,14 @@ const chatBubbleClassName = 'max-w-xs sm:max-w-sm'
   soft on tone-30 ~10:1 (dark). WCAG 1.4.3 AA.
 */
 const incomingBubbleContentClassName =
-  '!rounded-2xl !rounded-tl-md !border !border-[color-mix(in_oklch,var(--accent-foreground)_12%,transparent)] !bg-accent dark:!bg-dark-accent !p-3 !text-base !leading-snug !text-accent-foreground dark:!text-dark-accent-foreground shadow-lg shadow-background/15 dark:shadow-dark-background/15'
+  '!rounded-2xl !rounded-tl-md !border !border-[color-mix(in_oklch,var(--accent-foreground)_12%,transparent)] !bg-accent dark:!bg-accent !p-3 !text-base !leading-snug !text-accent-foreground dark:!text-accent-foreground shadow-lg shadow-background/15 shadow-background/15'
 
 /*
   Thomas (outgoing): primary — white on havdyp 14.28:1 (light),
   ink on teal-70 7.03:1 (dark). WCAG 1.4.3 AA.
 */
 const outgoingBubbleContentClassName =
-  '!rounded-2xl !rounded-tr-md !border !border-[color-mix(in_oklch,var(--primary-foreground)_28%,transparent)] !bg-primary dark:!bg-dark-primary !p-3 !text-base !leading-snug !text-primary-foreground dark:!text-dark-primary-foreground shadow-lg shadow-background/15 dark:shadow-dark-background/15'
+  '!rounded-2xl !rounded-tr-md !border !border-[color-mix(in_oklch,var(--primary-foreground)_28%,transparent)] !bg-primary dark:!bg-primary !p-3 !text-base !leading-snug !text-primary-foreground dark:!text-primary-foreground shadow-lg shadow-background/15 shadow-background/15'
 
 export function AnimatedChat() {
   return (
@@ -148,7 +148,7 @@ export function AnimatedChat() {
                         Nettopp. Mer plass til vinen 😉
                       </InlineText>
                       <motion.span
-                        className='dark:bg-dark-primary-foreground ml-1 inline-block h-4 w-0.5 bg-primary-foreground'
+                        className='bg-primary-foreground ml-1 inline-block h-4 w-0.5 bg-primary-foreground'
                         animate={{ opacity: [1, 0, 1] }}
                         transition={{
                           duration: 0.9,

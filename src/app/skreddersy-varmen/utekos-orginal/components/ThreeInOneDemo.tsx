@@ -39,7 +39,7 @@ export function ThreeInOneDemo() {
                   onClick={() => setActiveMode(mode.id)}
                   className={`relative flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium whitespace-nowrap transition-all duration-300 ease-out md:flex-none md:gap-2 md:px-6 md:py-3 md:text-base ${
                     isActive ?
-                      'scale-100 bg-commerce-primary dark:bg-dark-commerce-primary text-commerce-primary-foreground dark:text-dark-commerce-primary-foreground shadow-lg'
+                      'scale-100 bg-primary text-primary-foreground shadow-lg'
                     : 'text-[#F4F1EA]/60 hover:bg-white/5 hover:text-[#F4F1EA]'
                   } `}
                 >
@@ -94,7 +94,7 @@ export function ThreeInOneDemo() {
                   <div
                     className={`absolute z-20 hidden rounded-xl border border-white/10 bg-black/40 p-6 text-left backdrop-blur-md transition-all delay-100 duration-500 md:bottom-12 md:left-12 md:block md:w-auto md:max-w-md ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} `}
                   >
-                    <div className='mb-2 flex items-center gap-3 text-commerce-primary dark:text-dark-commerce-primary'>
+                    <div className='mb-2 flex items-center gap-3'>
                       <mode.icon size={20} />
                       <h4 className='font-serif text-xl font-bold tracking-wide capitalize'>
                         {mode.title}
@@ -111,7 +111,7 @@ export function ThreeInOneDemo() {
 
           {activeModeData && (
             <div className='animate-fade-in-up mt-4 rounded-xl border border-white/5 bg-white/5 p-4 text-left md:hidden'>
-              <div className='mb-2 flex items-center gap-2 text-commerce-primary dark:text-dark-commerce-primary'>
+              <div className='mb-2 flex items-center gap-2'>
                 <activeModeData.icon size={18} />
                 <h4 className='font-serif text-lg font-bold tracking-wide capitalize'>
                   {activeModeData.title}

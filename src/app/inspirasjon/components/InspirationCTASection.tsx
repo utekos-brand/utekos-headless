@@ -42,11 +42,11 @@ export function InspirationCTASection({
   secondaryLabel = 'Finn din størrelse',
   primaryTrackId,
   secondaryTrackId,
-  accentGlow = 'var(--ancient-water)',
+  accentGlow = 'var(--secondary)',
   showAccentGlow = true,
   primaryButtonBg = 'var(--flame-orange)',
   primaryButtonText = 'var(--black-beauty)',
-  secondaryButtonBg = 'var(--mountain-view)',
+  secondaryButtonBg = 'var(--secondary)',
   secondaryButtonText = 'var(--foreground)',
   primaryButtonClassName,
   secondaryButtonClassName,
@@ -70,7 +70,7 @@ export function InspirationCTASection({
         Text={lead}
         className={cn(
           'mx-auto mb-8 max-w-2xl pb-0 text-center md:pb-0 lg:pb-0',
-          'text-ancient-water',
+          'text-secondary',
           leadClassName
         )}
       />
@@ -80,7 +80,7 @@ export function InspirationCTASection({
           backgroundColor={primaryButtonBg}
           textColor={primaryButtonText}
           className={cn(
-            'group dark:border-dark-primary/24 min-h-14 border border-primary/24 px-8 py-4 text-base leading-4 font-bold tracking-normal shadow-xl transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105',
+            'group border-primary/24 min-h-14 border border-primary/24 px-8 py-4 text-base leading-4 font-bold tracking-normal shadow-xl transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105',
             primaryButtonClassName
           )}
         >
@@ -94,7 +94,7 @@ export function InspirationCTASection({
           backgroundColor={secondaryButtonBg}
           textColor={secondaryButtonText}
           className={cn(
-            'dark:border-dark-background/14 min-h-14 border border-background/14 px-8 py-4 text-base leading-4 font-bold tracking-normal shadow-xl transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105',
+            'border-background/14 min-h-14 border border-background/14 px-8 py-4 text-base leading-4 font-bold tracking-normal shadow-xl transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105',
             secondaryButtonClassName
           )}
         >
@@ -125,7 +125,7 @@ export function InspirationCTASection({
         style={
           showAccentGlow ?
             {
-              background: `radial-gradient(circle at 18% 12%, ${accentGlow} 0%, transparent 32%), radial-gradient(circle at 82% 20%, var(--color-soft-warm) 0%, transparent 28%)`
+              background: `radial-gradient(circle at 18% 12%, ${accentGlow} 0%, transparent 32%), radial-gradient(circle at 82% 20%, var(--accent) 0%, transparent 28%)`
             }
           : undefined
         }

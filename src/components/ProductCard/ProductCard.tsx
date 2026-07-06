@@ -171,7 +171,7 @@ export function ProductCard({
           data-track='ProductCardViewMoreClick'
           onClick={trackProductSelect}
           aria-label={`Se produkt ${product.title}`}
-          className='dark:focus-visible:outline-dark-card-foreground flex h-full w-full flex-col focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
+          className='focus-visible:outline-card-foreground flex h-full w-full flex-col focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
         >
           <CardContent className='relative p-0'>
             {product.handle === 'utekos-dun' ?
@@ -200,7 +200,7 @@ export function ProductCard({
             </AspectRatio>
           </CardContent>
 
-          <div className='dark:border-dark-card-foreground/24 flex flex-col gap-1.5 border-t border-card-foreground/24 p-3'>
+          <div className='border-card-foreground/24 flex flex-col gap-1.5 border-t border-card-foreground/24 p-3'>
             <div className='flex items-start justify-between gap-2'>
               <H3 className='line-clamp-2 min-w-0 flex-1 pb-0 text-[0.82rem] leading-snug font-semibold text-balance text-card-foreground'>
                 {product.title}
@@ -208,7 +208,7 @@ export function ProductCard({
               <BrandBadge
                 backgroundColor='var(--background)'
                 textColor='var(--foreground)'
-                className='shrink-0 border border-foreground/12 px-2 py-0.5 text-[0.65rem] font-medium tracking-wide dark:border-dark-foreground/12'
+                className='shrink-0 border border-foreground/12 px-2 py-0.5 text-[0.65rem] font-medium tracking-wide border-foreground/12'
               >
                 <InlineText>Unisex</InlineText>
               </BrandBadge>
@@ -237,13 +237,13 @@ export function ProductCard({
             data-track='ProductCardViewMoreClick'
             onClick={trackProductSelect}
             aria-label={`Se produkt ${product.title}`}
-            className='dark:focus-visible:outline-dark-card-foreground block w-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
+            className='focus-visible:outline-card-foreground block w-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
           >
             <BrandBadge
               backgroundColor='var(--background)'
               textColor='var(--foreground)'
               className={cn(
-                'absolute top-4 left-4 z-10 border border-foreground/12 px-3 py-1 text-xs font-medium tracking-wide shadow-[0_12px_28px_-22px_rgba(32,28,54,0.58)] dark:border-dark-foreground/12',
+                'absolute top-4 left-4 z-10 border border-foreground/12 px-3 py-1 text-xs font-medium tracking-wide shadow-[0_12px_28px_-22px_rgba(32,28,54,0.58)] border-foreground/12',
                 compactMobile &&
                   'top-2 left-2 px-2 py-0.5 text-[0.65rem] md:top-4 md:left-4 md:px-3 md:py-1 md:text-xs'
               )}

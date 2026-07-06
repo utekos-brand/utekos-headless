@@ -9,7 +9,7 @@ export function TrustSection() {
             <h2 className='text-3xl font-bold sm:text-4xl'>
               En garantert suksess
             </h2>
-            <p className='text-muted-foreground dark:text-dark-muted-foreground mt-4 text-lg'>
+            <p className='text-muted-foreground text-muted-foreground mt-4 text-lg'>
               Vi gjør gaveshoppingen trygg og enkel for deg.
             </p>
           </div>
@@ -19,7 +19,7 @@ export function TrustSection() {
               <h3 className='mb-2 font-semibold'>
                 14 dagers åpent kjøp
               </h3>
-              <p className='text-muted-foreground dark:text-dark-muted-foreground text-sm'>
+              <p className='text-muted-foreground text-muted-foreground text-sm'>
                 Bytt farge eller størrelse uten stress. Vi
                 hjelper deg gjerne.
               </p>
@@ -29,7 +29,7 @@ export function TrustSection() {
               <h3 className='mb-2 font-semibold'>
                 Rask levering
               </h3>
-              <p className='text-muted-foreground dark:text-dark-muted-foreground text-sm'>
+              <p className='text-muted-foreground text-muted-foreground text-sm'>
                 Vi sender raskt fra vårt lager i Norge, slik at
                 gaven kommer frem i tide.
               </p>
@@ -39,7 +39,7 @@ export function TrustSection() {
               <h3 className='mb-2 font-semibold'>
                 Trygg handel
               </h3>
-              <p className='text-muted-foreground dark:text-dark-muted-foreground text-sm'>
+              <p className='text-muted-foreground text-muted-foreground text-sm'>
                 Vil tilbyr betaling med Klarna og Vipps
               </p>
             </div>

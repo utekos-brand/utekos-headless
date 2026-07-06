@@ -112,13 +112,13 @@ export function NewsletterForm() {
 
             <BrandBadge
               asChild
-              className='font-utekos-text-medium hover:bg-primary-hover dark:hover:bg-dark-primary-hover h-12 w-full shrink-0 bg-teal-500 px-6 py-0 text-base text-primary-foreground transition-colors duration-300 sm:w-auto dark:bg-teal-500'
+              className='font-utekos-text-medium h-12 w-full shrink-0 bg-teal-500 px-6 py-0 text-base text-primary-foreground transition-colors duration-300 sm:w-auto dark:bg-teal-500'
             >
               <button
                 type='submit'
                 disabled={isPending}
                 aria-busy={isPending}
-                className='group dark:focus-visible:outline-dark-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-60'
+                className='group focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-60'
               >
                 {isPending ? 'Sender…' : 'Meld meg inn'}
                 <ArrowRight className='ml-2 size-5 transition-transform duration-300 group-hover:translate-x-1' />
