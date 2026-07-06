@@ -1,5 +1,6 @@
 // Path: src/app/inspirasjon/isbading/sections/UseCasesGrid.tsx
 
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { Card, CardContent } from '@/components/ui/card'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
 import { H2 } from '@/components/typography/TypographyH2'
@@ -52,7 +53,7 @@ export function UseCasesGrid({
       id='bruksomrader'
       className='overflow-x-clip bg-background py-16 text-foreground sm:py-20 lg:py-24'
     >
-      <div className='container mx-auto px-4 sm:px-6'>
+      <InspirationContentShell>
         <div className='mb-10 max-w-3xl sm:mb-12 lg:mb-16'>
           <H2
             ID='isbading-bruksomrader'
@@ -109,7 +110,7 @@ export function UseCasesGrid({
             )
           })}
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

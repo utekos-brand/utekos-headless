@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { Card, CardContent } from '@/components/ui/card'
 import { H2 } from '@/components/typography/TypographyH2'
 import { P } from '@/components/typography/TypographyP'
@@ -5,7 +6,7 @@ import { P } from '@/components/typography/TypographyP'
 export function SocialProof() {
   return (
     <article className='overflow-x-clip bg-background py-16 text-foreground sm:py-20 lg:py-24'>
-      <div className='container mx-auto px-4 sm:px-6'>
+      <InspirationContentShell>
         <div className='max-w-3xl'>
           <H2
             ID='batliv-kundeopplevelse'
@@ -40,7 +41,7 @@ export function SocialProof() {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

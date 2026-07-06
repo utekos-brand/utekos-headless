@@ -1,5 +1,6 @@
 'use client'
 
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { Check, ArrowRight } from 'lucide-react'
 import Image from 'next/image'
@@ -23,7 +24,7 @@ export function ProductSpotlight() {
       id='product-spotlight'
       className='overflow-x-clip bg-card py-16 text-card-foreground sm:py-20 lg:py-24'
     >
-      <div className='container mx-auto px-4 sm:px-6'>
+      <InspirationContentShell>
         <div className='grid items-center gap-12 lg:grid-cols-2'>
           <AnimatedBlock className='relative mx-auto aspect-4/5 w-full max-w-md overflow-hidden rounded-2xl border border-border shadow-2xl lg:max-w-none'>
             <Image
@@ -88,7 +89,7 @@ export function ProductSpotlight() {
             </AnimatedBlock>
           </div>
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

@@ -1,5 +1,6 @@
 // Path: src/app/inspirasjon/isbading/sections/CTASection.tsx
 
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { getProducts } from '@/api/lib/products/getProducts'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
 import { H2 } from '@/components/typography/TypographyH2'
@@ -25,7 +26,7 @@ export async function CTASection() {
 
   return (
     <article className='relative overflow-x-clip border-t border-border bg-background py-16 text-foreground sm:py-20 lg:py-24'>
-      <div className='container relative mx-auto px-4 sm:px-6'>
+      <InspirationContentShell className='relative'>
         <AnimatedBlock className='will-animate-fade-in-scale mb-10 text-center sm:mb-12'>
           <H2
             ID='isbading-cta'
@@ -43,7 +44,7 @@ export async function CTASection() {
             <ComfyrobeQuickBuy product={product} />
           </div>
         </AnimatedBlock>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { Card, CardContent } from '@/components/ui/card'
 import Image from 'next/image'
 import UtekosWordmark from '@/components/BrandComponents/utils/UtekosWordmark'
@@ -8,7 +9,7 @@ const { card } = grillSectionSurfaces
 export function GrillMasterSection() {
   return (
     <article className={card.section}>
-      <div className='container mx-auto px-4 sm:px-6'>
+      <InspirationContentShell>
         <div className='mx-auto max-w-3xl text-center'>
           <h2
             className={`mb-8 text-2xl font-semibold sm:text-3xl md:text-4xl ${card.heading}`}
@@ -48,7 +49,7 @@ export function GrillMasterSection() {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

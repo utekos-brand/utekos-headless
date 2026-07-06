@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { InspirationHeroBreadcrumb } from '@/app/inspirasjon/layout/InspirationHeroBreadcrumb'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { H1 } from '@/components/typography/TypographyH1'
@@ -15,8 +16,8 @@ export function TerraceHeroSection() {
       aria-labelledby='din-terrasse-hele-året'
       className='relative isolate overflow-x-clip border-b border-border bg-background text-foreground'
     >
-      <div className='relative z-10 w-full px-4 py-8 sm:px-6 sm:py-10 md:px-8 xl:px-10'>
-        <div className='flex max-w-7xl min-w-0 flex-col items-start gap-2 md:gap-4'>
+      <InspirationContentShell className='relative z-10 py-8 sm:py-10'>
+        <div className='flex min-w-0 flex-col items-start gap-2 md:gap-4'>
           <MotionReveal y={24} amount={0.08} className='w-full min-w-0'>
             <InspirationHeroBreadcrumb label='Terrassen' />
             <H1
@@ -85,7 +86,7 @@ export function TerraceHeroSection() {
             })}
           </div>
         </div>
-      </div>
+      </InspirationContentShell>
     </section>
   )
 }

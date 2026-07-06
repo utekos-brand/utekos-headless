@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { Card, CardContent } from '@/components/ui/card'
 import { BookOpen, Coffee, Moon } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -48,7 +49,7 @@ export function UseCasesGrid({
       id='bruksomrader'
       className='overflow-x-clip bg-card py-16 text-card-foreground sm:py-20 lg:py-24'
     >
-      <div className='container mx-auto px-4 sm:px-6'>
+      <InspirationContentShell>
         <MotionReveal className='mb-10 max-w-3xl sm:mb-12 lg:mb-16 lg:max-w-4xl'>
           <H2
             ID='terrasse-hjemmekos'
@@ -90,7 +91,7 @@ export function UseCasesGrid({
             )
           })}
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

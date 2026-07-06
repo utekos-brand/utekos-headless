@@ -1,5 +1,6 @@
 // Path: src/app/inspirasjon/isbading/sections/SocialProof.tsx
 
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import Image from 'next/image'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import {
@@ -53,7 +54,7 @@ const galleryImages = [
 export function SocialProof() {
   return (
     <article className='overflow-x-clip bg-card py-16 text-card-foreground sm:py-20 lg:py-24'>
-      <div className='container mx-auto px-4 sm:px-6'>
+      <InspirationContentShell>
         <div className='mx-auto max-w-3xl text-center'>
           <H2
             ID='isbading-gallery'
@@ -109,7 +110,7 @@ export function SocialProof() {
             className='right-2 z-10 inline-flex border-border bg-background/90 text-foreground hover:bg-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card md:-right-12.5'
           />
         </Carousel>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

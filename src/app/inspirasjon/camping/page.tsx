@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { UtekosBreadcrumbBar } from '@/components/navigation/UtekosBreadcrumbBar'
 import Link from 'next/link'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 export default function CampingPage() {
   return (
     <article className='overflow-x-clip bg-background text-foreground'>
-      <div className='container mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20'>
+      <InspirationContentShell className='max-w-3xl py-16 sm:py-20'>
         <UtekosBreadcrumbBar
           surface='transparent'
           items={[
@@ -52,7 +53,7 @@ export default function CampingPage() {
             <Link href='/inspirasjon/bobil'>Les om bobil</Link>
           </BrandBadge>
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

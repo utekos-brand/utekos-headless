@@ -1,3 +1,4 @@
+import { InspirationContentShell } from './InspirationContentShell'
 import { InspirationSeasonsTabs } from './InspirationSeasonsTabs'
 import type { InspirationSeasonDefinition } from '../theme/seasons'
 import { inspirationSurfaces } from '../theme/surfaces'
@@ -86,7 +87,7 @@ export function InspirationSeasonsSection({
         : null}
       </div>
 
-      <div className='container mx-auto px-4'>
+      <InspirationContentShell>
         <div className='animate-fade-in-up mb-16 max-w-4xl text-left'>
           <H2
             ID='inspiration-seasons-title'
@@ -139,7 +140,7 @@ export function InspirationSeasonsSection({
             showCardGlow={showCardGlow}
           />
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

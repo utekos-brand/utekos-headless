@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { Sparkles, Thermometer, Users, Wind } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { H2 } from '@/components/typography/TypographyH2'
@@ -39,7 +40,7 @@ const benefitsData: {
 export function BenefitsGrid() {
   return (
     <article className='overflow-x-clip bg-background py-16 text-foreground sm:py-20 lg:py-24'>
-      <div className='container mx-auto px-4 sm:px-6'>
+      <InspirationContentShell>
         <div className='mb-10 max-w-3xl sm:mb-12 lg:mb-16 md:max-w-4xl'>
           <H2
             ID='batliv-fordeler'
@@ -78,7 +79,7 @@ export function BenefitsGrid() {
             )
           })}
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

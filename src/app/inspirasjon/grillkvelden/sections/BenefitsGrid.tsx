@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
 import {
   HeartHandshake,
@@ -52,7 +53,7 @@ export function BenefitsGrid({
 }) {
   return (
     <article className={background.section}>
-      <div className='container mx-auto px-4 sm:px-6'>
+      <InspirationContentShell>
         <div className='mb-10 w-full sm:mb-12 lg:mb-16'>
           <H2
             ID='fordeler'
@@ -94,7 +95,7 @@ export function BenefitsGrid({
             </AnimatedBlock>
           ))}
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

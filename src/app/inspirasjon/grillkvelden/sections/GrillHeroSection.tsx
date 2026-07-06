@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { InspirationHeroBreadcrumb } from '@/app/inspirasjon/layout/InspirationHeroBreadcrumb'
 import { H1 } from '@/components/typography/TypographyH1'
 import { Lead } from '@/components/typography/Lead'
@@ -5,8 +6,8 @@ import { Lead } from '@/components/typography/Lead'
 export function GrillHeroSection() {
   return (
     <article className='relative isolate overflow-x-clip border-b border-border bg-background text-foreground'>
-      <div className='relative z-10 w-full px-4 py-8 sm:px-6 sm:py-10 md:px-8 xl:px-10'>
-        <div className='flex max-w-7xl min-w-0 flex-col items-start gap-2 md:gap-4'>
+      <InspirationContentShell className='relative z-10 py-8 sm:py-10'>
+        <div className='flex min-w-0 flex-col items-start gap-2 md:gap-4'>
           <InspirationHeroBreadcrumb label='Grillkvelden' />
           <H1
             ID='grillkvelden-som-aldri-tar-slutt'
@@ -19,7 +20,7 @@ export function GrillHeroSection() {
             siste pølsen er grillet.
           </Lead>
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

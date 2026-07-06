@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import {
   Accordion,
   AccordionContent,
@@ -32,7 +33,7 @@ export const iceBathingFaqItems = [
 export function IceBathingFAQ() {
   return (
     <article className='overflow-x-clip border-t border-border bg-card py-16 text-card-foreground sm:py-20 lg:py-24'>
-      <div className='container mx-auto max-w-3xl px-4 sm:px-6'>
+      <InspirationContentShell className='max-w-3xl'>
         <H2
           ID='isbading-faq'
           Text='Ofte stilte spørsmål'
@@ -55,7 +56,7 @@ export function IceBathingFAQ() {
             </AccordionItem>
           ))}
         </Accordion>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

@@ -1,3 +1,4 @@
+import { InspirationContentShell } from './InspirationContentShell'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
@@ -130,14 +131,14 @@ export function InspirationCTASection({
           : undefined
         }
       />
-      <div className='relative container mx-auto px-4 text-center'>
+      <InspirationContentShell className='relative text-center'>
         {disableAnimatedBlock ?
           <div>{content}</div>
         : <AnimatedBlock className='will-animate-fade-in-scale'>
             {content}
           </AnimatedBlock>
         }
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

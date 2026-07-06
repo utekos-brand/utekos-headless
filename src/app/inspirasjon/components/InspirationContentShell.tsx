@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils/className'
 import type { ReactNode } from 'react'
-import { ContentShellClassName } from '../hytte/ContentShellClassName'
+import { ContentShellClassName } from './ContentShellClassName'
 
 export function InspirationContentShell({
   children,

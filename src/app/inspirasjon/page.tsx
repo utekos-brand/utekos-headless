@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { UtekosBreadcrumbBar } from '@/components/navigation/UtekosBreadcrumbBar'
 import Link from 'next/link'
@@ -24,7 +25,7 @@ export const metadata = {
 export default function InspirationPage() {
   return (
     <article className='overflow-x-clip bg-background text-foreground'>
-      <div className='container mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20'>
+      <InspirationContentShell className='max-w-4xl py-16 sm:py-20'>
         <UtekosBreadcrumbBar
           embedded
           surface='transparent'
@@ -65,7 +66,7 @@ export default function InspirationPage() {
             </BrandBadge>
           </div>
         </div>
-      </div>
+      </InspirationContentShell>
 
       <InspirationPageCards />
     </article>

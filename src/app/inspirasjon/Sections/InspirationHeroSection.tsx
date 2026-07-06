@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { inspirationPages } from '../layout/inspirationPages'
@@ -8,7 +9,7 @@ export function InspirationPageCards() {
       aria-labelledby='inspirasjon-utforsk-temaer'
       className='overflow-x-clip border-t border-border bg-card py-16 text-card-foreground sm:py-20 lg:py-24'
     >
-      <div className='container mx-auto w-full px-4 sm:px-6'>
+      <InspirationContentShell>
         <div className='mb-10 w-full text-center sm:mb-12'>
           <h2
             id='inspirasjon-utforsk-temaer'
@@ -56,7 +57,7 @@ export function InspirationPageCards() {
             )
           })}
         </ul>
-      </div>
+      </InspirationContentShell>
     </section>
   )
 }

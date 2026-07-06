@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import Image from 'next/image'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
 import { H1 } from '@/components/typography/TypographyH1'
@@ -31,8 +32,8 @@ export function IceBathingHeroSection() {
         <div className='absolute inset-0 bg-background/68' />
       </div>
 
-      <div className='container relative z-10 mx-auto px-4 py-24 sm:px-6'>
-        <div className='mx-auto max-w-5xl text-center'>
+      <InspirationContentShell className='relative z-10 py-24 text-center'>
+        <div className='mx-auto max-w-5xl'>
           <header className='flex flex-col gap-10 md:gap-12'>
             <AnimatedBlock
               className='will-animate-fade-in-up flex justify-center'
@@ -76,7 +77,7 @@ export function IceBathingHeroSection() {
             />
           </AnimatedBlock>
         </div>
-      </div>
+      </InspirationContentShell>
     </section>
   )
 }

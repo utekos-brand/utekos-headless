@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { Card, CardContent } from '@/components/ui/card'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
 import { Flame, Moon, Users } from 'lucide-react'
@@ -50,7 +51,7 @@ export function UseCasesGrid({
 }) {
   return (
     <article id='bruksomrader' className={card.section}>
-      <div className='container mx-auto px-4 sm:px-6'>
+      <InspirationContentShell>
         <div className='mb-10 max-w-4xl sm:mb-12 lg:mb-16'>
           <H2
             ID='bruksomrader'
@@ -101,7 +102,7 @@ export function UseCasesGrid({
             </AnimatedBlock>
           ))}
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

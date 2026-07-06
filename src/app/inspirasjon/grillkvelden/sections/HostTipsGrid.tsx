@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { Card, CardContent } from '@/components/ui/card'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
 import type { HostTip } from '../types'
@@ -40,7 +41,7 @@ export const hostTipsData: HostTip[] = [
 export function HostTipsGrid({ tips }: { tips: HostTip[] }) {
   return (
     <article className={background.section}>
-      <div className='container mx-auto px-4 sm:px-6'>
+      <InspirationContentShell>
         <div className='mb-10 sm:mb-12 lg:mb-16'>
           <H2
             ID='vertens-sjekkliste'
@@ -94,7 +95,7 @@ export function HostTipsGrid({ tips }: { tips: HostTip[] }) {
             )
           })}
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

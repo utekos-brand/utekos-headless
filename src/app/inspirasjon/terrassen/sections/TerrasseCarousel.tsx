@@ -1,5 +1,6 @@
 'use client'
 
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import Image from 'next/image'
 import { Camera } from 'lucide-react'
 import * as React from 'react'
@@ -95,8 +96,8 @@ export function TerrasseCarousel() {
   }
 
   return (
-    <article className='relative isolate mx-auto overflow-x-clip bg-card px-4 py-16 text-card-foreground sm:px-6 sm:py-20 lg:py-24'>
-      <div className='container mx-auto max-w-7xl'>
+    <article className='relative isolate overflow-x-clip bg-card py-16 text-card-foreground sm:py-20 lg:py-24'>
+      <InspirationContentShell>
         <div className='mb-8 max-w-3xl text-left sm:mb-10 lg:mb-12'>
           <BrandBadge
             backgroundColor='var(--secondary)'
@@ -183,7 +184,7 @@ export function TerrasseCarousel() {
             </div>
           </div>
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

@@ -1,3 +1,4 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { Card, CardContent } from '@/components/ui/card'
 import Image from 'next/image'
 import { H2 } from '@/components/typography/TypographyH2'
@@ -7,7 +8,7 @@ import { MotionReveal } from './TerraceMotion'
 export function SocialProof() {
   return (
     <article className='overflow-x-clip bg-background py-16 text-foreground sm:py-20 lg:py-24'>
-      <div className='container mx-auto px-4 sm:px-6'>
+      <InspirationContentShell>
         <MotionReveal className='max-w-3xl'>
           <H2
             ID='terrasse-kundeopplevelse'
@@ -48,7 +49,7 @@ export function SocialProof() {
             </CardContent>
           </Card>
         </MotionReveal>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }
