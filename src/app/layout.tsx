@@ -1,3 +1,5 @@
+// Path: src/app/layout.tsx
+
 import '../globals.css'
 import {
   utekosText,
