@@ -4,9 +4,9 @@ import type { Destination } from '../types'
 import { bobilDestinationCardTheme as theme } from '../utils/destinationCardThemes'
 import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { H2 } from '@/components/typography/TypographyH2'
+import { H3 } from '@/components/typography/TypographyH3'
 import { Lead } from '@/components/typography/Lead'
 import { P } from '@/components/typography/TypographyP'
-import { H3 } from '@/components/typography/TypographyH3'
 
 export function DestinationsGrid({
   destinations
@@ -72,21 +72,21 @@ export function DestinationsGrid({
                     </div>
 
                     <div className='relative z-10 flex grow flex-col px-8 py-5 sm:px-9 sm:py-6'>
-                      <div className='mb-5 flex min-w-0 items-start gap-4'>
-                        <div
-                          className={`flex size-10 shrink-0 items-center justify-center rounded-full transition-transform duration-300 motion-safe:group-hover:-translate-y-0.5 ${theme.iconBackground}`}
+                      <H3
+                        className={`mb-5 flex min-w-0 items-center gap-3 pb-0 text-base leading-snug font-semibold tracking-[-0.01em] sm:gap-4 sm:text-lg md:text-base lg:text-lg ${theme.text}`}
+                      >
+                        <span
+                          className={`flex size-9 shrink-0 items-center justify-center rounded-full transition-transform duration-300 motion-safe:group-hover:-translate-y-0.5 sm:size-10 ${theme.iconBackground}`}
+                          aria-hidden='true'
                         >
                           <Icon
-                            className={`size-5 transition-colors duration-300 ${theme.iconText}`}
-                            aria-hidden='true'
+                            className={`size-4 transition-colors duration-300 sm:size-5 ${theme.iconText}`}
                           />
-                        </div>
-
-                        <H3
-                          Text={destination.name}
-                          className={`min-w-0 pb-0 text-lg leading-tight tracking-[-0.01em] sm:text-xl ${theme.text}`}
-                        />
-                      </div>
+                        </span>
+                        <span className='min-w-0 flex-1 wrap-break-word'>
+                          {destination.name}
+                        </span>
+                      </H3>
 
                       <P
                         Text={destination.highlight}

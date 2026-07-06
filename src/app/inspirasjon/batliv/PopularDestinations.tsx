@@ -69,18 +69,18 @@ export function PopularDestinations({
               <Card className='h-full rounded-lg border border-border bg-background text-foreground shadow-sm transition-colors duration-300 hover:bg-muted/40 motion-reduce:transition-none'>
                 <CardContent className='p-6'>
                   <div className='mb-3 flex items-start justify-between gap-3'>
-                    <h3 className='text-lg font-semibold text-foreground'>
+                    <p className='text-lg font-utekos-text-medium text-foreground'>
                       {destination.name}
-                    </h3>
+                    </p>
                     <MapPinIcon
                       className='size-5 shrink-0 text-secondary-foreground'
                       aria-hidden='true'
                     />
                   </div>
-                  <P className='mb-2 text-sm text-muted-foreground not-first:mt-0'>
+                  <P className='mb-2 text-sm font-utekos-text text-muted-foreground not-first:mt-0'>
                     {destination.season}
                   </P>
-                  <P className='text-sm leading-relaxed text-foreground/80 not-first:mt-0'>
+                  <P className='text-sm font-utekos-text text-foreground/80 not-first:mt-0'>
                     {destination.highlight}
                   </P>
                 </CardContent>
