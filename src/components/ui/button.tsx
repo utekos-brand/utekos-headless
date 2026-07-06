@@ -13,8 +13,14 @@ const buttonVariants = cva(
           'bg-alternate-button text-foreground hover:scale-104 hover:bg-[#12403C]',
         checkout:
           'bg-primary text-foreground hover:text-foreground/90 dark:bg-primary dark:text-foreground',
+        'commerce-primary':
+          'bg-commerce-primary dark:bg-dark-commerce-primary text-commerce-primary-foreground dark:text-dark-commerce-primary-foreground hover:bg-commerce-primary-hover dark:hover:bg-dark-commerce-primary-hover hover:text-commerce-primary-hover-foreground dark:hover:text-dark-commerce-primary-hover-foreground',
+        'commerce-secondary':
+          'border-commerce-secondary dark:border-dark-commerce-secondary bg-commerce-secondary dark:bg-dark-commerce-secondary text-commerce-secondary-foreground dark:text-dark-commerce-secondary-foreground hover:bg-commerce-secondary-hover dark:hover:bg-dark-commerce-secondary-hover hover:text-commerce-secondary-hover-foreground dark:hover:text-dark-commerce-secondary-hover-foreground',
         default:
           'hover:bg-primary-hover bg-primary text-primary-foreground dark:bg-primary',
+        outline:
+          'border-input dark:border-dark-input bg-background dark:bg-dark-background hover:bg-accent dark:hover:bg-dark-accent hover:text-accent-foreground dark:hover:text-dark-accent-foreground',
         seeProduct:
           'border-border bg-sidebar-primary text-foreground shadow-xs aria-expanded:bg-accent aria-expanded:text-accent-foreground dark:border-border dark:bg-sidebar-primary dark:aria-expanded:bg-accent dark:aria-expanded:text-accent-foreground',
         secondary:
