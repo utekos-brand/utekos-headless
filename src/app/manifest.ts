@@ -6,11 +6,11 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'Utekos',
     short_name: 'Utekos',
     description:
-      'Forleng kveldene på hytten, i bobilen eller på terrassen. Utekos lager komfortplagg av høy kvalitet.',
+    'Utekos er en norsk merkevare som designer funksjonelt yttertøy for kompromissløs komfort og overlegen allsidighet. Perfekt for hytteliv, bobilferie, telttur, i båt og terrasseliv.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#0b051d',
-    theme_color: '#ffffff',
+    background_color: '#001212',
+    theme_color: '#0a3c3c',
     icons: [
       {
         src: '/icon.png',
