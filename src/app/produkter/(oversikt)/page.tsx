@@ -4,29 +4,18 @@ import { ProductsPageFooter } from '@/app/produkter/(oversikt)/components/Produc
 import { ProductsPageHeader } from '@/app/produkter/(oversikt)/components/ProductsPageHeader'
 import { LazyFeaturedProductCarousel } from '@/components/ProductCard/LazyFeaturedProductCarousel'
 import { ComfyrobeFeatureSection } from './components/ComfyrobeFeatureSection'
-import { VideoSkeleton } from './components/VideoSkeleton'
-import { Suspense } from 'react'
 import { StapperFeatureSection } from './components/StapperFeatureSection/StapperFeatureSection'
-import { ProductVideoSection } from './components/Video/ProductVideoSection'
 import { LazyTechDownFeatureSection } from './components/LazyTechDownFeatureSection'
 import { MikrofiberSection } from './components/MicrofiberSection/MikrofiberSection'
 
 const ProductsPage = async () => {
   return (
     <>
-      <article className='container mx-auto px-4 py-16 sm:py-24'>
         <ProductsPageHeader />
         <HelpChooseSection />
-
-        <Suspense fallback={<VideoSkeleton />}>
-          <ProductVideoSection />
-        </Suspense>
-
         <LazyTechDownFeatureSection />
-
         <ComparisonTeaser />
-
-        <article className='mb-24'>
+        <article className='px-4 max-w-8xl mx-auto py-12 md:py-16'>
           <LazyFeaturedProductCarousel
             trackingEventName='ViewCategory'
             itemListId='produkter-kolleksjon'
@@ -34,7 +23,6 @@ const ProductsPage = async () => {
             contentCategory='Utekos produktkategori'
           />
         </article>
-
         <ComfyrobeFeatureSection />
 
         <MikrofiberSection />
@@ -42,7 +30,6 @@ const ProductsPage = async () => {
         <StapperFeatureSection />
 
         <ProductsPageFooter />
-      </article>
     </>
   )
 }

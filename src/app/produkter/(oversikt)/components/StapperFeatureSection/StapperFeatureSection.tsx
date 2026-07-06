@@ -15,7 +15,7 @@ export function StapperFeatureSection() {
     <Card className='relative isolate min-h-88 overflow-hidden rounded-3xl border-foreground/12 bg-foreground/[0.035] py-0 shadow-none backdrop-blur-[2px] sm:min-h-104 lg:min-h-132'>
       <CardContent className='relative flex size-full min-h-[inherit] items-center justify-center p-0'>
         <div className='absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,color-mix(in_oklab,var(--secondary)_18%,transparent),transparent_44%)]' />
-        <div className='bg-background/55 absolute inset-x-10 bottom-8 h-24 rounded-full bg-background/55 blur-3xl' />
+        <div className='bg-background/55 absolute inset-x-10 bottom-8 h-24 rounded-full blur-3xl' />
         <div className='absolute top-8 right-8 hidden rounded-full border border-border bg-card px-4 py-2 text-xs font-medium text-card-foreground uppercase sm:block'>
           100 g
         </div>
@@ -31,7 +31,7 @@ export function StapperFeatureSection() {
   )
 
   return (
-    <article className='relative mb-8 overflow-hidden rounded-[1.75rem] border border-foreground/12 bg-[radial-gradient(circle_at_14%_18%,color-mix(in_oklab,var(--secondary)_14%,transparent),transparent_30%),linear-gradient(135deg,var(--card)_0%,var(--background)_48%,var(--card)_100%)] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 xl:px-12'>
+    <article className='px-4 max-w-8xl mx-auto py-12 md:py-16 relative overflow-hidden rounded-[1.75rem] border border-foreground/12 bg-[radial-gradient(circle_at_14%_18%,color-mix(in_oklab,var(--secondary)_14%,transparent),transparent_30%),linear-gradient(135deg,var(--card)_0%,var(--background)_48%,var(--card)_100%)]'>
       <div
         aria-hidden='true'
         className='absolute inset-0 -z-10'
@@ -49,7 +49,7 @@ export function StapperFeatureSection() {
             <AnimatedBlock className='will-animate-fade-in-up'>
               <Badge
                 variant='outline'
-                className='bg-muted text-muted-foreground mb-5 border-border bg-muted px-3.5 py-1.5 text-muted-foreground'
+                className='mb-5 border-border bg-muted px-3.5 py-1.5 text-muted-foreground'
               >
                 Utekos Stapper™
               </Badge>
@@ -79,7 +79,7 @@ export function StapperFeatureSection() {
                 asChild
                 backgroundColor='var(--primary)'
                 textColor='var(--background)'
-                className='group border-primary/18 min-h-14 justify-center border border-primary/18 px-7 text-base shadow-[0_16px_36px_-24px_rgba(232,178,66,0.55)] transition-transform duration-200 hover:-translate-y-0.5 hover:brightness-105 lg:justify-start'
+                className='group min-h-14 justify-center border border-primary/18 px-7 text-base shadow-[0_16px_36px_-24px_rgba(232,178,66,0.55)] transition-transform duration-200 hover:-translate-y-0.5 hover:brightness-105 lg:justify-start'
               >
                 <Link
                   href={'/produkter/utekos-stapper' as Route}

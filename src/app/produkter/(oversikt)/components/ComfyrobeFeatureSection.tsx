@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { LazyComfyrobeImageCarousel } from '@/app/produkter/(oversikt)/components/LazyComfyrobeImageCarousel'
 import { ArrowRight, Wind } from 'lucide-react'
 import { comfyrobeFeatures } from '@/app/produkter/(oversikt)/utils/comfyrobeFeatures'
-
+import { PageSection } from '@/components/layout/PageSection'
 const featureSurfaceStyles = {
   weather: {
     background: 'var(--card)',
@@ -38,10 +38,9 @@ export function ComfyrobeFeatureSection() {
   return (
     <article
       aria-labelledby='comfyrobe-feature-heading'
-      className='w-full py-16 sm:py-24 md:mb-24'
+      className='py-12 md:py-16 '
     >
-      <div className='container mx-auto px-4'>
-        <div className='border-ceramic bg-background relative overflow-hidden rounded-[1.75rem] border bg-background p-5 shadow-[0_28px_90px_-62px_color-mix(in_oklch,var(--background)_90%,transparent)] sm:p-8 lg:p-12'>
+        <div className='border-ceramic bg-background relative overflow-hidden rounded-[1.75rem] border p-5 shadow-[0_28px_90px_-62px_color-mix(in_oklch,var(--background)_90%,transparent)] sm:p-8 lg:p-12'>
           <div className='pointer-events-none absolute inset-0 opacity-70'>
             <div
               className='size-136rounded-full absolute top-0 -left-24 blur-3xl'
@@ -106,7 +105,7 @@ export function ComfyrobeFeatureSection() {
                     className='will-animate-fade-in-up'
                     delay='0.1s'
                   >
-                    <p className='leading-text-paragraph text-foreground/88 mt-6 max-w-2xl text-lg text-foreground/88'>
+                    <p className='leading-text-paragraph text-foreground/88 mt-6 max-w-2xl text-lg'>
                       Comfyrobe™ er den ultimate allværskåpen for
                       livsnyteren. Den kombinerer den urokkelige
                       beskyttelsen til en teknisk skalljakke med
@@ -171,7 +170,7 @@ export function ComfyrobeFeatureSection() {
                                 </h3>
                               </div>
 
-                              <p className='leading-text-paragraph text-foreground/78 mt-3 text-sm text-foreground/78 sm:mt-2'>
+                              <p className='leading-text-paragraph text-foreground/78 mt-3 text-sm sm:mt-2'>
                                 {feature.description}
                               </p>
                             </div>
@@ -211,7 +210,7 @@ export function ComfyrobeFeatureSection() {
             </AnimatedBlock>
           </div>
         </div>
-      </div>
     </article>
+
   )
 }

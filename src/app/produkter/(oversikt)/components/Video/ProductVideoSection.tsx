@@ -4,14 +4,13 @@ import { TensorPixVideoCacheWrapper } from './TensorPixVideoCacheWrapper'
 import { TypographyVideoSectionH2 } from './TypographyVideoSectionH2'
 import { TypographyVideoSectionLead } from './TypographyVideoSectionLead'
 import { NavigationButton } from './NavigationButton'
-import { PageSection } from '@/components/layout/PageSection'
 
 export function ProductVideoSection() {
   return (
-    <article className='relative overflow-hidden py-20 sm:py-32'>
-      <div className='pointer-events-none absolute inset-0 -z-10 bg-[color-mix(in_oklab,var(--card)_85%,#050508)]' />
-      <div className='absolute top-0 left-0 h-px w-full bg-linear-to-r from-transparent via-white/10 to-transparent opacity-60' />
-      <PageSection as='div'>
+    <article className='relative overflow-hidden'>
+      <div className='pointer-events-none absolute inset-0 -z-10' />
+      <div className='absolute top-0 left-0 h-px w-full' />
+      <div className='relative mx-auto w-full max-w-7xl'>
         <div className='grid grid-cols-1 items-center gap-x-16 gap-y-16 lg:grid-cols-2'>
           <div className='relative mx-auto w-full max-w-sm'>
             <div className='from-secondary/10 to-card/30 absolute -inset-4 -z-10 rounded-[2.5rem] bg-linear-to-tr blur-3xl' />
@@ -35,7 +34,7 @@ export function ProductVideoSection() {
             <div className='animate-header-item'>
               <div className='mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start'>
                 <div className='group  flex items-center gap-4 rounded-lg border-white/10 bg-card p-4 text-nowrap shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:opacity-90'>
-                  <div className='border-foreground flex size-12 shrink-0 items-center justify-center rounded-xl border border-foreground bg-linear-to-br from-white/10 to-transparent text-foreground shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] transition-transform duration-500 group-hover:scale-110'>
+                  <div className='border-foreground flex size-12 shrink-0 items-center justify-center rounded-xl border bg-linear-to-br from-white/10 to-transparent text-foreground shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] transition-transform duration-500 group-hover:scale-110'>
                     <Sun className='h-5 stroke-[1.5]' />
                   </div>
                   <div className='text-left'>
@@ -48,8 +47,8 @@ export function ProductVideoSection() {
                   </div>
                 </div>
 
-                <div className='group border-card/20  flex items-center gap-4 rounded-lg border-card/20 bg-card p-4 shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:opacity-90'>
-                  <div className='border-card/20 from-card/50  flex size-12 shrink-0 items-center justify-center rounded-xl border border-card/20 bg-linear-to-br from-card/50 to-transparent text-card shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] transition-transform duration-500 group-hover:scale-110'>
+                <div className='group border-card/20  flex items-center gap-4 rounded-lg bg-card p-4 shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:opacity-90'>
+                  <div className='border-card/20 from-card/50  flex size-12 shrink-0 items-center justify-center rounded-xl border bg-linear-to-br to-transparent text-card shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] transition-transform duration-500 group-hover:scale-110'>
                     <Layers className='size-5 stroke-[1.5] text-foreground' />
                   </div>
                   <div className='text-left'>
@@ -66,7 +65,7 @@ export function ProductVideoSection() {
             </div>
           </div>
         </div>
-      </PageSection>
+      </div>
     </article>
   )
 }

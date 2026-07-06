@@ -43,16 +43,13 @@ export function TestimonialConstellation() {
                 duration: 0.9,
                 ease: [0.22, 1, 0.36, 1]
               }}
-              className='shadow-background/20 mb-8 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-card-foreground shadow-lg shadow-background/20'
+              className='shadow-background/20 mb-8 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-card-foreground shadow-lg'
               style={{
                 backgroundColor: 'var(--card)',
                 borderColor: 'var(--color-blue-green)'
               }}
             >
-              <div
-                className='flex gap-0.5 drop-shadow-sm'
-                style={{ color: 'var(--accent)' }}
-              >
+              <div className='flex gap-0.5 text-yellow-400 drop-shadow-sm'>
                 {[...Array(5)].map((_, i) =>
                   i < 4 ?
                     <Star

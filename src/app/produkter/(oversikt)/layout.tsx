@@ -36,8 +36,10 @@ export default function ProductListLayout({ children }: { children: ReactNode })
       <ProductOverviewBreadcrumbJsonLd />
       <ProductListJsonLd />
       <ProductOverviewBreadcrumbs />
+      <article className='px-4 max-w-screen lg:max-w-8xl md:max-w-7xl w-full mx-auto'>
 
       {children}
+      </article>
     </>
   )
 }

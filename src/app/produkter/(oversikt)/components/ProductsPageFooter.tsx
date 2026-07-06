@@ -5,14 +5,14 @@ import Link from 'next/link'
 
 export function ProductsPageFooter() {
   return (
-    <article>
-      <div className='mt-12 grid grid-cols-1 gap-8 md:mt-2 md:grid-cols-2'>
-        <Card className='border-neutral-800 bg-foreground'>
+    <article className='w-full py-12 md:py-16 lg:py-24 border-b border-t border-border'>
+      <div className='container mx-auto grid grid-cols-1 gap-8 md:grid-cols-2'>
+        <Card className='border-neutral-800 bg-card'>
           <CardContent className='p-8'>
-            <h3 className='font-utekos-text-medium text-xl text-background'>
+            <h3 className='font-utekos-text-medium text-xl text-card-foreground'>
               Usikker på størrelsen?
             </h3>
-            <p className='mt-2 font-utekos-text-medium text-background'>
+            <p className='mt-2 font-utekos-text-medium text-card-foreground'>
               Se vår størrelsesguide og finn den perfekte
               passformen for deg.
             </p>
@@ -26,12 +26,12 @@ export function ProductsPageFooter() {
             </Button>
           </CardContent>
         </Card>
-        <Card className='border-neutral-800 bg-foreground'>
+        <Card className='border-neutral-800 bg-card'>
           <CardContent className='p-8'>
-            <h3 className='font-utekos-text-medium text-xl text-background'>
+              <h3 className='font-utekos-text-medium text-xl text-card-foreground'>
               Nysgjerrig på teknologien?
             </h3>
-            <p className='mt-2 font-utekos-text-medium text-background'>
+            <p className='mt-2 font-utekos-text-medium text-card-foreground'>
               Les om materialene og designfilosofien som holder
               deg varm.
             </p>

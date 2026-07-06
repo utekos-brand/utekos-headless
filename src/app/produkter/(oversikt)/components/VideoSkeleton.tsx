@@ -1,9 +1,9 @@
 export function VideoSkeleton() {
   return (
-    <div className='bg-neutral-950 py-16 sm:py-24'>
-      <div className='container mx-auto px-4'>
+    <div className='bg-[color-mix(in_oklab,var(--card)_85%,#050508)]'>
+      <div className='mx-auto w-full max-w-7xl'>
         <div className='grid grid-cols-1 items-center gap-12 lg:grid-cols-2'>
-          <div className='aspect-[9/16] w-full max-w-sm mx-auto animate-pulse rounded-3xl border-4 border-neutral-700 bg-neutral-800 p-2' />
+          <div className='aspect-9/16 w-full max-w-sm mx-auto animate-pulse rounded-3xl border-4 border-neutral-700 bg-neutral-800 p-2' />
 
           <div className='space-y-6'>
             <div className='h-10 w-3/4 rounded-lg bg-neutral-800' />

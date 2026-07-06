@@ -8,6 +8,8 @@ import {
   Layers
 } from 'lucide-react'
 import { cn } from '@/lib/utils/className'
+import { H2 } from '@/components/typography/TypographyH2'
+import { Lead } from '@/components/typography/Lead'
 
 const models = [
   {
@@ -62,23 +64,18 @@ const models = [
 
 export function ComparisonTeaser() {
   return (
-    <article className='mb-24 px-4 py-12 md:py-16'>
-      <div className='bg-muted container mx-auto overflow-hidden rounded-3xl border border-white/5 shadow-2xl'>
+    <article className='mx-auto py-12 md:py-16'>
+      <div className='bg-muted relative container mx-auto overflow-hidden rounded-3xl border border-white/5 shadow-2xl'>
         <div className='absolute inset-0 -z-10 opacity-20'>
           <div className='absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[24px_24px]' />
         </div>
 
-        <div className='p-6 text-center max-sm:text-left md:p-16'>
-          <h2 className='text-card font-sans text-4xl font-bold sm:text-5xl md:text-6xl'>
+        <div className='p-6 text-left md:p-16'>
+          <H2 ID='comparison-teaser-title' Text='Usikker på hvilken Utekos du skal velge?'>
             Usikker på hvilken Utekos du skal velge?
-          </h2>
+          </H2>
 
-          <p className='utekos-section-lead text-card mx-auto mt-6 max-w-4xl text-[1.2rem] leading-relaxed'>
-            Alle Utekos-modellene har justerbar passform og
-            ventilasjon, men har ellers ulike egenskaper og
-            styrker. Se vår sammenligningsguide for å finne
-            modellen som passer best til dine behov.
-          </p>
+          <Lead Text='Alle Utekos-modellene har justerbar passform og ventilasjon, men har ellers ulike egenskaper og styrker. Se vår sammenligningsguide for å finne modellen som passer best til dine behov.' className="max-w-4xl text-left mt-2! pb-0!" />
 
           <div className='mt-12 grid grid-cols-1 gap-6 text-left md:grid-cols-3'>
             {models.map(model => (
@@ -95,13 +92,13 @@ export function ComparisonTeaser() {
                 <div className='mb-4 flex items-center gap-4'>
                   <div
                     className={cn(
-                      'flex size-12 items-center justify-center rounded-xl border transition-colors duration-300',
+                      'flex size-12 items-center justify-center bg-background rounded-xl border transition-colors duration-300',
                       model.iconShellClass
                     )}
                   >
                     <model.icon
                       className={cn(
-                        'size-6 transition-transform duration-300 group-hover:scale-110',
+                        'size-6 transition-transform text-background duration-300 group-hover:scale-110',
                         model.iconClass
                       )}
                     />
