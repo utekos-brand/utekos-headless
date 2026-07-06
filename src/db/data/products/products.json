@@ -1,0 +1,529 @@
+{
+  "data": {
+    "products": [
+      {
+        "productName": "Utekos Dun",
+        "productId": 7710040391928,
+        "title": "Utekos Dun™",
+        "handle": "utekos-dun",
+        "category": "Puffer Jackets",
+        "urls": {
+          "publicUrl": "https://utekos.no/produkter/utekos-dun",
+          "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710040391928"
+        },
+        "variantOptions": ["Farge", "Størrelse", "Kjønn"],
+        "variants": [
+          {
+            "id": 42903234609400,
+            "title": "Vargnatt / Medium / Unisex",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710040391928/variants/42903234609400",
+            "tracked": true,
+            "options": {
+              "Farge": "Vargnatt",
+              "Størrelse": "M",
+              "Kjønn": "Unisex"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Utekos Dun™ Vargnatt Medium Unisex",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": 42903234674936,
+            "title": "Vargnatt / Large / Unisex",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710040391928/variants/42903234674936",
+            "tracked": true,
+            "options": {
+              "Farge": "Vargnatt",
+              "Størrelse": "L",
+              "Kjønn": "Unisex"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Utekos Dun™ Vargnatt Large Unisex",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": 42903234642168,
+            "title": "Fjellblå / Medium / Unisex",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710040391928/variants/42903234642168",
+            "tracked": true,
+            "options": {
+              "Farge": "Fjellblå",
+              "Størrelse": "M",
+              "Kjønn": "Unisex"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Utekos Dun™ Fjellblå Medium Unisex",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": 42903234707704,
+            "title": "Fjellblå / Large / Unisex",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710040391928/variants/42903234707704",
+            "tracked": true,
+            "options": {
+              "Farge": "Fjellblå",
+              "Størrelse": "L",
+              "Kjønn": "Unisex"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Utekos Dun™ Fjellblå Large Unisex",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "productName": "Utekos Mikrofiber",
+        "productId": 7710040752376,
+        "title": "Utekos Mikrofiber",
+        "handle": null,
+        "category": null,
+        "urls": {
+          "publicUrl": null,
+          "adminUrl": null
+        },
+        "variantOptions": ["Farge", "Størrelse"],
+        "variants": [
+          {
+            "id": 42903231004920,
+            "title": "Vargnatt / M",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710040752376/variants/42903231004920",
+            "tracked": true,
+            "options": {
+              "Farge": "Vargnatt",
+              "Størrelse": "M"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Utekos Mikrofiber Vargnatt M",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": 42903231070456,
+            "title": "Vargnatt / L",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710040752376/variants/42903231070456",
+            "tracked": true,
+            "options": {
+              "Farge": "Vargnatt",
+              "Størrelse": "L"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Utekos Mikrofiber Vargnatt L",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": 42903231037688,
+            "title": "Fjellblå / M",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710040752376/variants/42903231037688",
+            "tracked": true,
+            "options": {
+              "Farge": "Fjellblå",
+              "Størrelse": "M"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Utekos Mikrofiber Fjellblå M",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": 42903231103224,
+            "title": "Fjellblå / L",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710040752376/variants/42903231103224",
+            "tracked": true,
+            "options": {
+              "Farge": "Fjellblå",
+              "Størrelse": "L"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Utekos Mikrofiber Fjellblå L",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "productName": "Comfyrobe",
+        "productId": 8036341448952,
+        "title": "Comfyrobe",
+        "handle": "comfyrobe",
+        "category": null,
+        "urls": {
+          "publicUrl": "https://utekos.no/produkter/comfyrobe",
+          "adminUrl": "https://admin.shopify.com/store/erling-7921/products/8036341448952"
+        },
+        "variantOptions": ["Farge", "Størrelse"],
+        "variants": [
+          {
+            "id": 43959919051000,
+            "title": "Fjellnatt / XS/S",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/8036341448952/variants/43959919051000",
+            "tracked": true,
+            "options": {
+              "Farge": "Fjellnatt",
+              "Størrelse": "XS/S"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Comfyrobe Fjellnatt XS/S",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": 43959919083768,
+            "title": "Fjellnatt / ML/L",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/8036341448952/variants/43959919083768",
+            "tracked": true,
+            "options": {
+              "Farge": "Fjellnatt",
+              "Størrelse": "ML/L"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Comfyrobe Fjellnatt ML/L",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": 43959919116536,
+            "title": "Fjellnatt / L/XL",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/8036341448952/variants/43959919116536",
+            "tracked": true,
+            "options": {
+              "Farge": "Fjellnatt",
+              "Størrelse": "L/XL"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Comfyrobe Fjellnatt L/XL",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          } 
+        ]
+      },
+      {
+        "productName": "Utekos Special Edition",
+        "productId": 7710043439352,
+        "title": "Utekos Special Edition™",
+        "handle": "utekos-special-edition",
+        "category": null,
+        "urls": {
+          "publicUrl": "https://utekos.no/produkter/utekos-special-edition",
+          "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710043439352"
+        },
+        "variantOptions": ["Farge", "Størrelse", "Kjønn"],
+        "variants": [
+          {
+            "id": 42903236903160,
+            "title": "Fjellhimmel / Medium / Unisex",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710043439352/variants/42903236903160",
+            "tracked": true,
+            "options": {
+              "Farge": "Fjellhimmel",
+              "Størrelse": "M",
+              "Kjønn": "Unisex"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Utekos Special Edition™ Fjellhimmel Medium Unisex",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": 42903236968696,
+            "title": "Fjellhimmel / Large / Unisex",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710043439352/variants/42903236968696",
+            "tracked": true,
+            "options": {
+              "Farge": "Fjellhimmel",
+              "Størrelse": "L",
+              "Kjønn": "Unisex"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Utekos Special Edition™ Fjellhimmel Large Unisex",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": 42903236870392,
+            "title": "Bålglød / Medium / Unisex",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710043439352/variants/42903236870392",
+            "tracked": true,
+            "options": {
+              "Farge": "Bålglød",
+              "Størrelse": "M",
+              "Kjønn": "Unisex"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Utekos Special Edition™ Bålglød Medium Unisex",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": 42903236935928,
+            "title": "Bålglød / Large / Unisex",
+            "adminUrl": "https://admin.shopify.com/store/erling-7921/products/7710043439352/variants/42903236935928",
+            "tracked": true,
+            "options": {
+              "Farge": "Bålglød",
+              "Størrelse": "L",
+              "Kjønn": "Unisex"
+            },
+            "metafield": {
+              "key": "bridgeFor.VariantHandler",
+              "value": "Utekos Special Edition™ Bålglød Large Unisex",
+              "metaobject": {
+                "name": "VaultVariant",
+                "type": "vaultvariant",
+                "fields": [
+                  {
+                    "key": "color_label",
+                    "useAsFilter": true
+                  },
+                  {
+                    "key": "vaultvariant.active",
+                    "type": "boolean",
+                    "useAsFilter": true
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "productName": "Kompresjonsbag",
+        "productId": 7710325899512,
+        "title": "Kompresjonsbag",
+        "handle": null,
+        "category": null,
+        "urls": {
+          "publicUrl": null,
+          "adminUrl": null
+        },
+        "variantOptions": ["Stil"],
+        "variants": [
+          {
+            "id": null,
+            "title": "Svart med oransje logo",
+            "adminUrl": null,
+            "tracked": true,
+            "options": {
+              "Stil": "Svart med oransje logo"
+            },
+            "metafield": null
+          }
+        ]
+      }
+    ]
+  }
+}

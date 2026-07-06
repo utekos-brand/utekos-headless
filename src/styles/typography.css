@@ -1,0 +1,127 @@
+/* src/styles/typography.css */
+
+.utekos-text {
+    font-family: var(--font-utekos-text, system-ui), sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.1rem;
+  }
+  
+  .utekos-medium {
+    font-family:
+      var(--font-utekos-text-medium, system-ui), sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 1.1rem;
+  }
+  
+  .font-sans {
+    font-family: var(--font-sans, system-ui), sans-serif;
+  }
+  
+  .font-sans-grade {
+    font-family: var(--font-sans, system-ui), sans-serif;
+    font-optical-sizing: auto;
+    font-variation-settings: 'GRAD' var(--gs-grad, 0);
+  }
+  
+  .font-sans-normal {
+    font-family: var(--font-sans, system-ui), sans-serif;
+    font-optical-sizing: auto;
+    font-variation-settings: 'GRAD' 0;
+  }
+  
+  .font-utekos-text {
+    font-family: var(--font-utekos-text, system-ui), sans-serif;
+  }
+  
+  .font-utekos-text-medium {
+    font-family:
+      var(--font-utekos-text-medium, system-ui), sans-serif;
+  }
+  
+  .leading-text-paragraph {
+    line-height: var(--leading-text-paragraph);
+  }
+  
+  .brand-tracking-normal {
+    letter-spacing: 0;
+  }
+  
+  .brand-tracking-wide {
+    letter-spacing: -0.025em;
+  }
+  
+  .brand-tracking-tight {
+    letter-spacing: -0.02em;
+  }
+  
+  .utekos-section-lead {
+    font-family: var(--font-utekos-text, system-ui), sans-serif;
+    font-size: var(--text-section-lead);
+    line-height: var(--text-section-lead--line-height);
+    letter-spacing: var(--text-section-lead--letter-spacing);
+    font-weight: var(--text-section-lead--font-weight);
+  }
+  
+  .text-responsive-title {
+    font-size: clamp(2.8125rem, 1.875rem + 3.75vw, 4.6875rem);
+  }
+  
+  .text-responsive-heading-level-two {
+    font-size: clamp(2.25rem, 1.5rem + 3vw, 3.75rem);
+  }
+  
+  .text-fluid-display {
+    font-size: clamp(2.25rem, 1.5rem + 3vw, 3.75rem);
+    line-height: 1.1;
+  }
+  
+  .text-fluid-display-bold {
+    font-size: var(--text-title);
+    line-height: var(--leading-utekos-heading-level-two);
+    letter-spacing: var(--text-title--letter-spacing);
+    font-weight: var(--text-title--font-weight);
+  }
+  
+  .utekos-heading-level-one {
+    font-size: var(--text-heading-level-one);
+    line-height: var(--text-heading-level-one--line-height);
+    letter-spacing: var(--text-heading-level-one--letter-spacing);
+    font-weight: var(--text-heading-level-one--font-weight);
+  }
+  
+  .chat-bubble-text {
+    font-size: clamp(0.875rem, 0.75rem + 0.5vw, 1rem);
+    line-height: 1.3;
+    letter-spacing: var(--tracking-wide);
+    font-family: var(--font-utekos-text, system-ui), sans-serif;
+  }
+  
+  .inspirational-page-hero-card-heading {
+    font-size: var(--text-inspirational-page-hero-card-heading);
+    line-height: var(
+      --text-inspirational-page-hero-card-heading--line-height
+    );
+    letter-spacing: var(
+      --text-inspirational-page-hero-card-heading--letter-spacing
+    );
+    font-weight: var(
+      --font-weight-inspirational-page-hero-card-heading
+    );
+  }
+  
+  .inspirational-page-hero-card-description {
+    font-size: var(--text-inspirational-page-hero-card-description);
+    line-height: var(
+      --text-inspirational-page-hero-card-description--line-height
+    );
+    letter-spacing: var(
+      --text-inspirational-page-hero-card-description--letter-spacing
+    );
+    font-weight: var(
+      --font-weight-inspirational-page-hero-card-description
+    );
+  }

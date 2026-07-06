@@ -1,0 +1,25 @@
+/* src/styles/routes/grill.css */
+
+.grill-seasons-glow-pulse {
+    animation: seasons-pulse-glow 8s ease-in-out infinite;
+  }
+  
+  .grill-seasons-fade-in-delayed {
+    animation: fadeInUp 0.7s ease-out 0.2s both;
+  }
+  
+  .grill-seasons-tab-trigger {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .grill-seasons-active-glow {
+    position: absolute;
+    inset: -0.5rem -0.5rem -2rem;
+    opacity: 0.25;
+    filter: blur(2rem);
+    transition: opacity 0.3s ease;
+  }
+  
+  .grill-seasons-tab-content-enter {
+    animation: seasons-tab-fade-in 0.3s ease-out;
+  }

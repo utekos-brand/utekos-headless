@@ -1,0 +1,16 @@
+allowBuilds:
+  '@sentry-internal/node-cpu-profiler': true
+  '@sentry/cli': true
+  '@vygruppen/spor-react': true
+  core-js: false
+  esbuild: true
+  protobufjs: true
+  sharp: true
+  unrs-resolver: true
+
+allowedDeprecatedVersions:
+  node-domexception: 1.0.0
+  tsconfck: 3.1.6
+
+patchedDependencies:
+  '@vygruppen/spor-react@13.4.3': patches/@vygruppen__spor-react@13.4.3.patch

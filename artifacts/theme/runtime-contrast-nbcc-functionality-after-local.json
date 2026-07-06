@@ -1,0 +1,137 @@
+{
+  "ok": false,
+  "baseUrl": "http://localhost:3000",
+  "routes": [
+    "/nbcc",
+    "/handlehjelp/funksjonalitet"
+  ],
+  "modes": [
+    "light",
+    "dark"
+  ],
+  "viewports": [
+    {
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "summary": {
+    "failures": 3,
+    "warnings": 0,
+    "emittedFailures": 3,
+    "emittedWarnings": 0
+  },
+  "failureGroups": {
+    "bySurface": [
+      {
+        "count": 3,
+        "key": {
+          "kind": "control-border-contrast",
+          "selector": "button.h-1\\.5.rounded-full.transition-all",
+          "text": "Bilde 1",
+          "foreground": null,
+          "background": "rgb(255, 255, 255)",
+          "borderColor": "lab(94.1529 0.044167 2.67328)"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "borderColors": [
+          "lab(94.1529 0.044167 2.67328)"
+        ]
+      }
+    ],
+    "byRouteMode": [
+      {
+        "count": 3,
+        "key": {
+          "route": "/nbcc",
+          "mode": "dark",
+          "kind": "control-border-contrast",
+          "selector": "button.h-1\\.5.rounded-full.transition-all",
+          "text": "Bilde 1"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "borderColors": [
+          "lab(94.1529 0.044167 2.67328)"
+        ]
+      }
+    ]
+  },
+  "failures": [
+    {
+      "route": "/nbcc",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "button.h-1\\.5.rounded-full.transition-all",
+      "text": "Bilde 1",
+      "ratio": 1.16,
+      "required": 3,
+      "borderColor": "lab(94.1529 0.044167 2.67328)",
+      "background": "rgb(255, 255, 255)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "button.h-1\\.5.rounded-full.transition-all",
+      "text": "Bilde 1",
+      "ratio": 1.16,
+      "required": 3,
+      "borderColor": "lab(94.1529 0.044167 2.67328)",
+      "background": "rgb(255, 255, 255)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "button.h-1\\.5.rounded-full.transition-all",
+      "text": "Bilde 1",
+      "ratio": 1.16,
+      "required": 3,
+      "borderColor": "lab(94.1529 0.044167 2.67328)",
+      "background": "rgb(255, 255, 255)"
+    }
+  ],
+  "warnings": []
+}

@@ -1,0 +1,29 @@
+-- Row Level Security: deny-by-default posture.
+--
+-- These tables live in the `marketing`, `partner` and `ops` schemas, which are
+-- NOT exposed via the Data API (see api.schemas in config.toml). They are written
+-- and read exclusively server-side using the `service_role` key, which bypasses RLS.
+--
+-- Enabling RLS with NO policies is intentional: `anon` and `authenticated` get zero
+-- access (defense-in-depth), while backend access via service_role keeps working.
+-- Do NOT add anon/authenticated policies here unless a table is deliberately exposed
+-- to the client; that would weaken the security model.
+
+alter table marketing.leads enable row level security;
+alter table marketing.attribution_events enable row level security;
+alter table marketing.website_visitor_events enable row level security;
+alter table marketing.consent_snapshots enable row level security;
+alter table marketing.event_ledger enable row level security;
+alter table marketing.meta_quality_snapshots enable row level security;
+
+alter table partner.sources enable row level security;
+alter table partner.referrals enable row level security;
+
+alter table ops.integration_events enable row level security;
+alter table ops.provider_dispatch_attempts enable row level security;
+alter table ops.slo_incidents enable row level security;
+alter table ops.dead_letter_events enable row level security;
+
+alter table analytics.event_ledger_archive enable row level security;
+alter table ops.web_vitals enable row level security;
+alter table ops.integration_job_leases enable row level security;

@@ -1,0 +1,118 @@
+@layer components {
+    .wordmark {
+      --utekos-wordmark-size: 4rem;
+      --utekos-wordmark-color: currentColor;
+      display: inline-block;
+      color: var(--utekos-wordmark-color);
+      font-family: var(--font-sans, system-ui), sans-serif;
+      font-size: var(--utekos-wordmark-size);
+      font-style: italic;
+      font-weight: 900;
+      letter-spacing: 0;
+      line-height: 0.76;
+      text-rendering: geometricPrecision;
+      transform: skewX(-5deg) scaleX(1.05);
+      transform-origin: left center;
+      white-space: nowrap;
+    }
+  
+    .wordmark::first-letter {
+      font-size: 1.1em;
+    }
+  
+    .color-swatch-container {
+      position: relative;
+      width: 2rem;
+      height: 2rem;
+      overflow: hidden;
+      border-radius: 100%;
+      border: 1px solid
+        color-mix(in oklch, var(--white) 10%, transparent);
+      background-color: var(--swatch-bg, transparent);
+    }
+  
+    .color-swatch-dot {
+      background-color: var(--swatch-dot-color, transparent);
+    }
+  
+    .btn-variant-swatch {
+      position: relative;
+      width: 2rem;
+      height: 2rem;
+      overflow: hidden;
+      border-radius: 100%;
+      border: 1px solid
+        color-mix(in oklch, var(--white) 10%, transparent);
+      background-color: var(--swatch-bg, transparent);
+      transition: all 0.3s ease-in-out;
+  
+      &:hover {
+        border-color: var(--primary);
+        background-color: var(--swatch-color, transparent);
+      }
+    }
+  
+    .product-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border: 1px solid
+        color-mix(in oklch, var(--brand-dark) 10%, transparent);
+      transition: all 0.3s ease-in-out;
+  
+      &:hover {
+        transform: translateY(-0.25rem);
+        box-shadow: 0 0 0 2px
+          color-mix(in oklch, var(--primary) 5%, transparent);
+      }
+    }
+  
+    .brand-badge {
+      background-color: var(--brand-night);
+      border-radius: var(--radius-full);
+      padding: --spacing(6);
+      box-shadow: 0 14px 32px -24px rgba(8, 10, 24, 0.62);
+    }
+  
+    .utekos-card-rail-hint {
+      position: absolute;
+      top: 0;
+      bottom: 1rem;
+      width: clamp(1.5rem, 4vw, 2.5rem);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      transition: opacity 0.2s ease;
+    }
+  
+    .utekos-card-rail-hint--start {
+      inset-inline-start: 0;
+      background: linear-gradient(
+        to inline-end,
+        color-mix(in oklch, var(--background) 92%, transparent),
+        transparent
+      );
+    }
+  
+    .utekos-card-rail-hint--end {
+      inset-inline-end: 0;
+      background: linear-gradient(
+        to inline-start,
+        color-mix(in oklch, var(--background) 92%, transparent),
+        transparent
+      );
+    }
+  
+    @container scroll-state(scrollable: inline-start) {
+      .utekos-card-rail-hint--start {
+        opacity: 1;
+      }
+    }
+  
+    @container scroll-state(scrollable: inline-end) {
+      .utekos-card-rail-hint--end {
+        opacity: 1;
+      }
+    }
+  }

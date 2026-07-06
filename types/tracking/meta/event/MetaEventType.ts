@@ -1,0 +1,20 @@
+// Path: types/tracking/meta/event/MetaEventType.ts
+
+export type MetaEventType =
+  | 'PageView'
+  | 'ViewContent'
+  | 'ViewCategory'
+  | 'ViewItemList'
+  | 'SelectItem'
+  | 'AddToCart'
+  | 'InitiateCheckout'
+  | 'Purchase'
+  | 'Search'
+  | 'CompleteRegistration'
+  | 'HeroInteract'
+  | 'InteractWithAccordion'
+  | 'OpenQuickView'
+  | 'Lead'
+  | 'LandingCTAClick'
+  | 'LandingSectionView'
+  | 'LandingScrollDepth'

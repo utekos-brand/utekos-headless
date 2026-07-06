@@ -1,0 +1,31 @@
+/**
+ * Grillkvelden — seksjonsbakgrunn og typografi.
+ *
+ * Seksjonene veksler lys/mørk i rekkefølgen de står i `page.tsx`:
+ * 1. Hero — `GrillHeroSection` (bg-background, dark:bg-dark-background egen fil)
+ * 2. UseCasesGrid — light
+ * 3. BenefitsGrid — dark
+ * 4. GrillSeasonsSection — light
+ * 5. HostTipsGrid — dark
+ * 6. GrillMasterSection — light
+ * 7. CTASection — dark
+ *
+ * Endre farger her — ikke spredt i hver seksjonsfil.
+ * Kort/faner/CTA: theme/grillInspirationTheme.ts
+ */
+export const grillSectionSurfaces = {
+  light: {
+    section: 'bg-secondary dark:bg-dark-secondary py-24 text-secondary-foreground dark:text-dark-secondary-foreground',
+    heading: 'text-secondary-foreground dark:text-dark-secondary-foreground',
+    lead: 'text-secondary-foreground dark:text-dark-secondary-foreground',
+    body: 'text-secondary-foreground dark:text-dark-secondary-foreground',
+    muted: 'text-secondary-foreground dark:text-dark-secondary-foreground'
+  },
+  dark: {
+    section: 'bg-maritime-darkest py-24 text-cloud-dancer',
+    heading: 'text-cloud-dancer',
+    lead: 'text-cloud-dancer',
+    body: 'text-cloud-dancer',
+    muted: 'text-cloud-dancer'
+  }
+} as const

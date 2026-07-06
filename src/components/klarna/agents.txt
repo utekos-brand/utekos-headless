@@ -1,0 +1,34 @@
+# Klarna — agent routing
+
+@docs_index: /src/components/klarna/llms.md
+@parent_index: /docs/agents.txt
+@doc-root: src/components/klarna
+@locale: no-NO
+@version_target: klarna-payments-api-v1
+@ai_directive: ZERO-ASSUMPTION — start med llms.md. Valider payloads med Zod. Hent live API-docs via Context7 ved tvil.
+
+| Oppgave | Start |
+| --- | --- |
+| OSM / placements | [llms.md](./llms.md) → [components/](./components/) → [on-site-messaging/](dev/docs/markdown/latest-official/on-site-messaging/) |
+| Express Checkout | [llms.md](./llms.md) → [klarna-theme/](dev/docs/klarna-theme/) → [express-checkout/](dev/docs/markdown/latest-official/web-payments/express-checkout/) |
+| Payments API | [llms.md](./llms.md) → [Klarna-Payments-API.json](dev/docs/json/API/Klarna-Payments-API.json) → [STEPS/](dev/docs/markdown/latest-official/web-payments/klarna-payments-integration/STEPS/) |
+| Order Management | [llms.md](./llms.md) → [Order-Management-API.json](dev/docs/json/API/Order-Management-API.json) |
+| EMD | [llms.md](./llms.md) → [Extra-Merchant-Data-EMD/](dev/docs/json/API/Extra-Merchant-Data-EMD/) |
+| Feil / retry | [llms.md](./llms.md) → [integration-resilience/](dev/docs/markdown/latest-official/integration-resilience/) |
+| Norge compliance | [llms.md](./llms.md) → [regulated-financing-promotion-rules-for-Norway.md](dev/docs/markdown/legal/regulated-financing-promotion-rules-for-Norway.md) |
+| Token recovery | [llms.md](./llms.md) → [recover-charge-failure.md](dev/markdown/integrate-with-klarna-payments/tokenized-payments/recover-charge-failure.md) |
+| Runtime types | [llms.md](./llms.md) → [types/index.ts](types/index.ts) |
+
+## Lokale dokumenter
+
+`dev/`, `llms.md` og `README.md` er **gitignored** — kun på lokal disk for agenter.
+Se [LOCAL_DOCS.md](./LOCAL_DOCS.md) for oppsett og `npm run index:klarna-docs`.
+
+## Verktøy
+
+| Handling | Kommando |
+| --- | --- |
+| Normaliser markdown | `npm run normalize:klarna-docs` |
+| Valider frontmatter | `npm run validate:klarna-docs` |
+| Regenerer llms.md | `npm run index:klarna-docs` |
+| Injiser TS/JSON metadata | `npm run inject:klarna-docs` |

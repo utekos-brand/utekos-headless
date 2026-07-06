@@ -1,0 +1,16 @@
+// src/app/produkter/[handle]/utils/getCachedProductForMetadata.ts
+
+import { getProduct } from '@/api/lib/products/getProduct'
+import { reshapeProductWithMetafields } from '@/hooks/useProductWithMetafields'
+
+export async function getCachedProductForMetadata(handle: string) {
+  'use cache'
+
+  const rawProduct = await getProduct(handle)
+
+  if (!rawProduct) {
+    return null
+  }
+
+  return reshapeProductWithMetafields(rawProduct) || rawProduct
+}

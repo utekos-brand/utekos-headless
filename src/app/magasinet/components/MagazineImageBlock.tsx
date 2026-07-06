@@ -1,0 +1,27 @@
+import Image from 'next/image'
+import type { MagazineBlock } from '../types'
+
+type MagazineImageBlockProps = {
+  block: Extract<MagazineBlock, { type: 'image' }>
+}
+
+export function MagazineImageBlock({ block }: MagazineImageBlockProps) {
+  return (
+    <figure className='my-14 overflow-hidden rounded-lg border border-background/10 dark:border-dark-background/10 bg-cloud-dancer shadow-[0_24px_70px_-54px_color-mix(in_oklch,var(--background)_65%,transparent)]'>
+      <Image
+        src={block.src}
+        alt={block.alt}
+        width={block.width}
+        height={block.height}
+        sizes='(max-width: 768px) calc(100vw - 32px), (max-width: 1200px) 760px, 760px'
+        className='h-auto w-full object-cover'
+        {...(block.priority ? { priority: true } : {})}
+      />
+      {block.caption && (
+        <figcaption className='px-5 py-4   text-sm leading-text-paragraph   text-background/68 dark:text-dark-background/68'>
+          {block.caption}
+        </figcaption>
+      )}
+    </figure>
+  )
+}

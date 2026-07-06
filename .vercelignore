@@ -1,0 +1,52 @@
+# env / credentials
+.env*
+mcp.json
+.vscode/settings.json
+src/api/constants/service-account.json
+src/api/lib/cloud-credentials/
+*.service-account.json
+service-account.json
+*oauth-credentials*.json
+*tag-manager-credentials*.json
+
+# local MCP / tooling output
+.agents/
+.agents/skills/
+.playwright-mcp/
+playwright-mcp/
+
+# local docs / reports / planning
+ga_docs/
+.ga_docs/
+prompt-docs/
+pagespeed-raport/
+pagespeed_raport/
+pagespeed-rapport/
+pagespeed_rapport/
+rapport.md
+PLAN.md
+AGENTS.md
+project_info_1/
+
+# environment-variables
+*.env.local
+.env*/
+/.env*/
+/env.local
+
+# Klarna local agent docs (runtime components stay deployable)
+src/components/klarna/dev/
+src/components/klarna/llms.md
+src/components/klarna/klarna-sitemap.md
+src/components/klarna/README.md
+
+# local agent/editor/documentation payloads
+.agent/skills/
+.agents/
+.cursor/
+.gemini/
+docs/
+.env.docker.example
+.env.local.incomplete.backup
+.env.mcp.example
+.env.tunnel.example

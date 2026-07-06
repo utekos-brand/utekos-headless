@@ -1,0 +1,1522 @@
+{
+  "ok": false,
+  "baseUrl": "http://localhost:3000",
+  "routes": [
+    "/"
+  ],
+  "modes": [
+    "light",
+    "dark"
+  ],
+  "viewports": [
+    {
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "summary": {
+    "failures": 20,
+    "warnings": 0,
+    "emittedFailures": 20,
+    "emittedWarnings": 0
+  },
+  "failureGroups": {
+    "bySurface": [
+      {
+        "count": 1,
+        "key": {
+          "kind": "svg-fill-contrast",
+          "selector": "svg g",
+          "text": "Klarna betalingsmetode",
+          "foreground": "rgb(10, 11, 9)",
+          "background": "lab(4.06503 0.736147 -4.02324)",
+          "borderColor": null
+        },
+        "minRatio": 1.02,
+        "maxRatio": 1.02,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 11, 9)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "svg-fill-contrast",
+          "selector": "svg path",
+          "text": "Klarna betalingsmetode",
+          "foreground": "rgb(10, 11, 9)",
+          "background": "lab(4.06503 0.736147 -4.02324)",
+          "borderColor": null
+        },
+        "minRatio": 1.02,
+        "maxRatio": 1.02,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 11, 9)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "svg-fill-contrast",
+          "selector": "svg svg",
+          "text": "Vipps betalingsmetode",
+          "foreground": "rgb(0, 0, 0)",
+          "background": "lab(4.06503 0.736147 -4.02324)",
+          "borderColor": null
+        },
+        "minRatio": 1.09,
+        "maxRatio": 1.09,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 0, 0)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "svg-fill-contrast",
+          "selector": "svg g",
+          "text": "Visa betalingsmetode",
+          "foreground": "rgb(0, 0, 0)",
+          "background": "lab(4.06503 0.736147 -4.02324)",
+          "borderColor": null
+        },
+        "minRatio": 1.09,
+        "maxRatio": 1.09,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 0, 0)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "svg-fill-contrast",
+          "selector": "svg g",
+          "text": "Klarna betalingsmetode",
+          "foreground": "rgb(10, 11, 9)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.38,
+        "maxRatio": 1.38,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 11, 9)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "svg-fill-contrast",
+          "selector": "svg path",
+          "text": "Klarna betalingsmetode",
+          "foreground": "rgb(10, 11, 9)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.38,
+        "maxRatio": 1.38,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 11, 9)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "h3.text-lg.leading-tight.font-semibold",
+          "text": "Fornøyde kunder",
+          "foreground": "rgb(10, 10, 10)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "h3.text-lg.leading-tight.font-semibold",
+          "text": "Trygg handel",
+          "foreground": "rgb(10, 10, 10)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.font-utekos-text.mt-1\\.5.max-w-prose",
+          "text": "Holder deg varm selv i fuktig og uforutsigbart vær.",
+          "foreground": "rgb(10, 10, 10)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.font-utekos-text.mt-1\\.5.max-w-prose",
+          "text": "Designet med CloudWeave™. Lukseriøs, komfortabel og luftig.",
+          "foreground": "rgb(10, 10, 10)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.font-utekos-text.mt-1\\.5.max-w-prose",
+          "text": "Et robust og lettstelt plagg for hverdagslig Utekos.",
+          "foreground": "rgb(10, 10, 10)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "small.text-foreground",
+          "text": "4.8",
+          "foreground": "rgb(10, 10, 10)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "small.text-foreground",
+          "text": "/ 5",
+          "foreground": "rgb(10, 10, 10)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "span.bg-card.bg-clip-text.text-left",
+          "text": "livsnytere?",
+          "foreground": "rgb(10, 10, 10)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "svg-fill-contrast",
+          "selector": "svg svg",
+          "text": "Vipps betalingsmetode",
+          "foreground": "rgb(0, 0, 0)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.47,
+        "maxRatio": 1.47,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 0, 0)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "svg-fill-contrast",
+          "selector": "svg g",
+          "text": "Visa betalingsmetode",
+          "foreground": "rgb(0, 0, 0)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.47,
+        "maxRatio": 1.47,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 0, 0)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-focus-outlineColor-contrast",
+          "selector": "button.inline-flex.items-center.justify-center",
+          "text": "Meld meg inn",
+          "foreground": "rgb(1, 38, 34)",
+          "background": "lab(32.6358 7.24521 -23.5222)",
+          "borderColor": null
+        },
+        "minRatio": 1.92,
+        "maxRatio": 1.92,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(1, 38, 34)"
+        ],
+        "backgrounds": [
+          "lab(32.6358 7.24521 -23.5222)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "svg-fill-contrast",
+          "selector": "svg path",
+          "text": "Visa betalingsmetode",
+          "foreground": "rgb(0, 87, 159)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 1.95,
+        "maxRatio": 1.95,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 87, 159)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-focus-outlineColor-contrast",
+          "selector": "a.font-normal.text-card-foreground.underline",
+          "text": "personvernserklæring",
+          "foreground": "rgb(0, 95, 204)",
+          "background": "lab(17.1047 3.42436 -13.1651)",
+          "borderColor": null
+        },
+        "minRatio": 2.39,
+        "maxRatio": 2.39,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 95, 204)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "svg-fill-contrast",
+          "selector": "svg path",
+          "text": "Visa betalingsmetode",
+          "foreground": "rgb(0, 87, 159)",
+          "background": "lab(4.06503 0.736147 -4.02324)",
+          "borderColor": null
+        },
+        "minRatio": 2.63,
+        "maxRatio": 2.63,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 87, 159)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      }
+    ],
+    "byRouteMode": [
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "dark",
+          "kind": "svg-fill-contrast",
+          "selector": "svg g",
+          "text": "Klarna betalingsmetode"
+        },
+        "minRatio": 1.02,
+        "maxRatio": 1.02,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 11, 9)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "dark",
+          "kind": "svg-fill-contrast",
+          "selector": "svg path",
+          "text": "Klarna betalingsmetode"
+        },
+        "minRatio": 1.02,
+        "maxRatio": 1.02,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 11, 9)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "dark",
+          "kind": "svg-fill-contrast",
+          "selector": "svg svg",
+          "text": "Vipps betalingsmetode"
+        },
+        "minRatio": 1.09,
+        "maxRatio": 1.09,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 0, 0)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "dark",
+          "kind": "svg-fill-contrast",
+          "selector": "svg g",
+          "text": "Visa betalingsmetode"
+        },
+        "minRatio": 1.09,
+        "maxRatio": 1.09,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 0, 0)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "svg-fill-contrast",
+          "selector": "svg g",
+          "text": "Klarna betalingsmetode"
+        },
+        "minRatio": 1.38,
+        "maxRatio": 1.38,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 11, 9)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "svg-fill-contrast",
+          "selector": "svg path",
+          "text": "Klarna betalingsmetode"
+        },
+        "minRatio": 1.38,
+        "maxRatio": 1.38,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 11, 9)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "h3.text-lg.leading-tight.font-semibold",
+          "text": "Fornøyde kunder"
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "h3.text-lg.leading-tight.font-semibold",
+          "text": "Trygg handel"
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "p.font-utekos-text.mt-1\\.5.max-w-prose",
+          "text": "Holder deg varm selv i fuktig og uforutsigbart vær."
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "p.font-utekos-text.mt-1\\.5.max-w-prose",
+          "text": "Designet med CloudWeave™. Lukseriøs, komfortabel og luftig."
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "p.font-utekos-text.mt-1\\.5.max-w-prose",
+          "text": "Et robust og lettstelt plagg for hverdagslig Utekos."
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "small.text-foreground",
+          "text": "4.8"
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "small.text-foreground",
+          "text": "/ 5"
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "span.bg-card.bg-clip-text.text-left",
+          "text": "livsnytere?"
+        },
+        "minRatio": 1.39,
+        "maxRatio": 1.39,
+        "required": 4.5,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "svg-fill-contrast",
+          "selector": "svg svg",
+          "text": "Vipps betalingsmetode"
+        },
+        "minRatio": 1.47,
+        "maxRatio": 1.47,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 0, 0)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "svg-fill-contrast",
+          "selector": "svg g",
+          "text": "Visa betalingsmetode"
+        },
+        "minRatio": 1.47,
+        "maxRatio": 1.47,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 0, 0)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "dark",
+          "kind": "control-focus-outlineColor-contrast",
+          "selector": "button.inline-flex.items-center.justify-center",
+          "text": "Meld meg inn"
+        },
+        "minRatio": 1.92,
+        "maxRatio": 1.92,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(1, 38, 34)"
+        ],
+        "backgrounds": [
+          "lab(32.6358 7.24521 -23.5222)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "svg-fill-contrast",
+          "selector": "svg path",
+          "text": "Visa betalingsmetode"
+        },
+        "minRatio": 1.95,
+        "maxRatio": 1.95,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 87, 159)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "light",
+          "kind": "control-focus-outlineColor-contrast",
+          "selector": "a.font-normal.text-card-foreground.underline",
+          "text": "personvernserklæring"
+        },
+        "minRatio": 2.39,
+        "maxRatio": 2.39,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 95, 204)"
+        ],
+        "backgrounds": [
+          "lab(17.1047 3.42436 -13.1651)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/",
+          "mode": "dark",
+          "kind": "svg-fill-contrast",
+          "selector": "svg path",
+          "text": "Visa betalingsmetode"
+        },
+        "minRatio": 2.63,
+        "maxRatio": 2.63,
+        "required": 3,
+        "routes": [
+          "/"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(0, 87, 159)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      }
+    ]
+  },
+  "failures": [
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "h3.text-lg.leading-tight.font-semibold",
+      "text": "Fornøyde kunder",
+      "ratio": 1.39,
+      "required": 4.5,
+      "foreground": "rgb(10, 10, 10)",
+      "background": "lab(17.1047 3.42436 -13.1651)"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "h3.text-lg.leading-tight.font-semibold",
+      "text": "Trygg handel",
+      "ratio": 1.39,
+      "required": 4.5,
+      "foreground": "rgb(10, 10, 10)",
+      "background": "lab(17.1047 3.42436 -13.1651)"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.font-utekos-text.mt-1\\.5.max-w-prose",
+      "text": "Holder deg varm selv i fuktig og uforutsigbart vær.",
+      "ratio": 1.39,
+      "required": 4.5,
+      "foreground": "rgb(10, 10, 10)",
+      "background": "lab(17.1047 3.42436 -13.1651)"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.font-utekos-text.mt-1\\.5.max-w-prose",
+      "text": "Designet med CloudWeave™. Lukseriøs, komfortabel og luftig.",
+      "ratio": 1.39,
+      "required": 4.5,
+      "foreground": "rgb(10, 10, 10)",
+      "background": "lab(17.1047 3.42436 -13.1651)"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.font-utekos-text.mt-1\\.5.max-w-prose",
+      "text": "Et robust og lettstelt plagg for hverdagslig Utekos.",
+      "ratio": 1.39,
+      "required": 4.5,
+      "foreground": "rgb(10, 10, 10)",
+      "background": "lab(17.1047 3.42436 -13.1651)"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "small.text-foreground",
+      "text": "4.8",
+      "ratio": 1.39,
+      "required": 4.5,
+      "foreground": "rgb(10, 10, 10)",
+      "background": "lab(17.1047 3.42436 -13.1651)"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "small.text-foreground",
+      "text": "/ 5",
+      "ratio": 1.39,
+      "required": 4.5,
+      "foreground": "rgb(10, 10, 10)",
+      "background": "lab(17.1047 3.42436 -13.1651)"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "span.bg-card.bg-clip-text.text-left",
+      "text": "livsnytere?",
+      "ratio": 1.39,
+      "required": 4.5,
+      "foreground": "rgb(10, 10, 10)",
+      "background": "lab(17.1047 3.42436 -13.1651)"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-focus-outlineColor-contrast",
+      "selector": "a.font-normal.text-card-foreground.underline",
+      "text": "personvernserklæring",
+      "ratio": 2.39,
+      "required": 3,
+      "foreground": "rgb(0, 95, 204)",
+      "background": "lab(17.1047 3.42436 -13.1651)"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "svg-fill-contrast",
+      "selector": "svg g",
+      "text": "Klarna betalingsmetode",
+      "ratio": 1.38,
+      "required": 3,
+      "foreground": "rgb(10, 11, 9)",
+      "background": "lab(17.1047 3.42436 -13.1651)",
+      "colorProperty": "fill"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "svg-fill-contrast",
+      "selector": "svg path",
+      "text": "Klarna betalingsmetode",
+      "ratio": 1.38,
+      "required": 3,
+      "foreground": "rgb(10, 11, 9)",
+      "background": "lab(17.1047 3.42436 -13.1651)",
+      "colorProperty": "fill"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "svg-fill-contrast",
+      "selector": "svg svg",
+      "text": "Vipps betalingsmetode",
+      "ratio": 1.47,
+      "required": 3,
+      "foreground": "rgb(0, 0, 0)",
+      "background": "lab(17.1047 3.42436 -13.1651)",
+      "colorProperty": "fill"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "svg-fill-contrast",
+      "selector": "svg g",
+      "text": "Visa betalingsmetode",
+      "ratio": 1.47,
+      "required": 3,
+      "foreground": "rgb(0, 0, 0)",
+      "background": "lab(17.1047 3.42436 -13.1651)",
+      "colorProperty": "fill"
+    },
+    {
+      "route": "/",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "svg-fill-contrast",
+      "selector": "svg path",
+      "text": "Visa betalingsmetode",
+      "ratio": 1.95,
+      "required": 3,
+      "foreground": "rgb(0, 87, 159)",
+      "background": "lab(17.1047 3.42436 -13.1651)",
+      "colorProperty": "fill"
+    },
+    {
+      "route": "/",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-focus-outlineColor-contrast",
+      "selector": "button.inline-flex.items-center.justify-center",
+      "text": "Meld meg inn",
+      "ratio": 1.92,
+      "required": 3,
+      "foreground": "rgb(1, 38, 34)",
+      "background": "lab(32.6358 7.24521 -23.5222)"
+    },
+    {
+      "route": "/",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "svg-fill-contrast",
+      "selector": "svg g",
+      "text": "Klarna betalingsmetode",
+      "ratio": 1.02,
+      "required": 3,
+      "foreground": "rgb(10, 11, 9)",
+      "background": "lab(4.06503 0.736147 -4.02324)",
+      "colorProperty": "fill"
+    },
+    {
+      "route": "/",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "svg-fill-contrast",
+      "selector": "svg path",
+      "text": "Klarna betalingsmetode",
+      "ratio": 1.02,
+      "required": 3,
+      "foreground": "rgb(10, 11, 9)",
+      "background": "lab(4.06503 0.736147 -4.02324)",
+      "colorProperty": "fill"
+    },
+    {
+      "route": "/",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "svg-fill-contrast",
+      "selector": "svg svg",
+      "text": "Vipps betalingsmetode",
+      "ratio": 1.09,
+      "required": 3,
+      "foreground": "rgb(0, 0, 0)",
+      "background": "lab(4.06503 0.736147 -4.02324)",
+      "colorProperty": "fill"
+    },
+    {
+      "route": "/",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "svg-fill-contrast",
+      "selector": "svg g",
+      "text": "Visa betalingsmetode",
+      "ratio": 1.09,
+      "required": 3,
+      "foreground": "rgb(0, 0, 0)",
+      "background": "lab(4.06503 0.736147 -4.02324)",
+      "colorProperty": "fill"
+    },
+    {
+      "route": "/",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "svg-fill-contrast",
+      "selector": "svg path",
+      "text": "Visa betalingsmetode",
+      "ratio": 2.63,
+      "required": 3,
+      "foreground": "rgb(0, 87, 159)",
+      "background": "lab(4.06503 0.736147 -4.02324)",
+      "colorProperty": "fill"
+    }
+  ],
+  "warnings": []
+}

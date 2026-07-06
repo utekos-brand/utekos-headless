@@ -1,0 +1,70 @@
+/* src/styles/routes/boat.css */
+
+.boat-benefits-card {
+    animation: boat-benefits-fade-in-scale 0.4s ease-out both;
+  }
+  
+  .boat-destinations-card {
+    animation: fadeInUp 0.5s ease-out both;
+  }
+  
+  .boat-seasons-glow-pulse {
+    animation: seasons-pulse-glow 8s ease-in-out infinite;
+  }
+  
+  .boat-seasons-fade-in-delayed {
+    animation: fadeInUp 0.7s ease-out 0.2s both;
+  }
+  
+  .boat-seasons-tab-trigger {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .boat-seasons-active-glow {
+    position: absolute;
+    inset: -0.5rem -0.5rem -2rem;
+    opacity: 0.25;
+    filter: blur(2rem);
+    transition: opacity 0.3s ease;
+  }
+  
+  .boat-seasons-tab-content-enter {
+    animation: seasons-tab-fade-in 0.3s ease-out;
+  }
+  
+  .boat-hero-glow-1 {
+    animation: boat-hero-pulse-glow-1 10s ease-in-out infinite;
+  }
+  
+  .boat-hero-glow-2 {
+    animation: boat-hero-pulse-glow-2 12s ease-in-out infinite;
+    animation-delay: 3s;
+  }
+  
+  .boat-hero-content {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  .boat-hero-breadcrumb {
+    animation: fadeInUp 0.5s ease-out 0.1s both;
+  }
+  
+  .boat-hero-title {
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+  }
+  
+  .boat-hero-text {
+    animation: fadeInUp 0.6s ease-out 0.3s both;
+  }
+  
+  .boat-hero-buttons {
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+  }
+  
+  .boat-hero-features {
+    animation: fadeInUp 0.6s ease-out 0.5s both;
+  }
+  
+  .boat-hero-feature-glow {
+    transition: opacity 0.3s ease;
+  }

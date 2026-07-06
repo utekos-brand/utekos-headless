@@ -1,0 +1,642 @@
+{
+  "data": {
+    "products": [
+      {
+        "node": {
+          "id": "gid://shopify/ProductVariant/42903231005000",
+          "title": "Vargnatt / Medium / Unisex",
+          "currentlyNotInStock": false,
+          "selectedOptions": [
+            {
+              "name": "Farge",
+              "value": "Vargnatt"
+            },
+            {
+              "name": "Størrelse",
+              "value": "Medium"
+            },
+            {
+              "name": "Kjønn",
+              "value": "Unisex"
+            }
+          ],
+          "availableForSale": true,
+          "price": {
+            "amount": "1290.0",
+            "currencyCode": "NOK"
+          },
+          "compareAtPrice": {
+            "amount": "2290.0",
+            "currencyCode": "NOK"
+          },
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mikro__full_black_without.webp?v=1749180508",
+            "altText": null
+          },
+          "metafield": {
+            "value": "gid://shopify/Metaobject/120629723384",
+            "type": "metaobject_reference",
+            "reference": {
+              "type": "vaultvariant",
+              "fields": [
+                {
+                  "key": "background_color",
+                  "value": "radial-gradient(50px 15px ellipse at 50% 54% in oklab,oklch(0.7 0.1996 44.67) 0%, oklch(0.03 0.021 264.05) 125%)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "background_color_unselected_variants",
+                  "value": "radial-gradient(40px 200px ellipse at 50% 105% in oklab, oklch(0.7 0.1996 44.67) 1%, oklch(26% 0.12 273) 50%)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "center_to_wrist",
+                  "value": "{\"value\":85.0,\"unit\":\"CENTIMETERS\"}",
+                  "type": "dimension"
+                },
+                {
+                  "key": "color_label",
+                  "value": "Vargnatt",
+                  "type": "single_line_text_field"
+                },
+                {
+                  "key": "description",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Lettvekt møter varme i Utekos Mikrofiber™ – det perfekte alternativet for deg som ønsker allsidigheten til Utekos-serien uten dun. Denne modellen leverer \"},{\"type\":\"text\",\"value\":\"funksjonalitet og komfort uten kompromisser\",\"bold\":true},{\"type\":\"text\",\"value\":\". Med en smart syntetisk fylling av hulfiber imiterer Utekos Mikrofiber følelsen av dun, samtidig som den har sine egne fordeler: Den beholder isolasjonsevnen selv om den blir fuktig, tørker raskt etter bruk, og er et godt valg for allergikere eller de som foretrekker veganske materialer. Plagget føles robust, men er overraskende lett – en innovativ konstruksjon som gir deg stor bevegelsesfrihet på tur.\\n\\nAkkurat som sin dunfylte søskenmodell, er Utekos Mikrofiber et \"},{\"type\":\"text\",\"value\":\"flerbrukstalent\",\"bold\":true},{\"type\":\"text\",\"value\":\". Du kan gå fra å vandre i skogen til å sove under åpen himmel uten å bytte utstyr – denne jakken forvandles nemlig til en sovepose på sekunder. Det vannavvisende og flammehemmende yttermaterialet beskytter deg mot både yr og gnister fra bålet, mens den lune hulfiberpolstringen holder deg varm hele veien. Samtidig slipper du å bekymre deg for dun som klapper sammen i fuktig vær; Utekos Mikrofiber takler skiftende forhold med glans.\\n\\nVelg Utekos Mikrofiber når du skal ut på eventyr og trenger et pålitelig, moderne isolasjonsplagg. Enten det er en våt høstkveld på jaktpost, en råkald morgen i hengekøya eller bare en tur ut for å nyte nordlyset, vil denne lettvekteren sørge for at du holder varmen. Den pakkes enkelt ned i sekken og tar minimal plass. Med sin behagelige passform og smarte materialvalg leverer Utekos Mikrofiber robusthet og allsidighet for alle dine utendørsaktiviteter.\"}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "flat_width",
+                  "value": "{\"value\":66.0,\"unit\":\"CENTIMETERS\"}",
+                  "type": "dimension"
+                },
+                {
+                  "key": "functions",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"3-i-1 design:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Fleksibel bruk som parkas, sovepose og heldrakt.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Avansert syntetisk isolasjon:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Fylt med 140 g/m² syntetisk hulfiber som etterligner duns luftige følelse og varmeegenskaper.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Beskyttende ytterstoff:\",\"bold\":true},{\"type\":\"text\",\"value\":\" DWR-behandlet og flammehemmende 20D Nylon (380T) som tåler røff bruk.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Toveis YKK-glidelås:\",\"bold\":true},{\"type\":\"text\",\"value\":\" For enkel tilgang og presis temperaturregulering.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Justerbar passform:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Snorstramming i livet lar deg forme plagget for optimal komfort.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Beskyttende mansjetter:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Elastiske ermeåpninger med snøstopper som stenger kald luft ute.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Kompresjonspose:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Gjør det enkelt å pakke plagget kompakt og plassbesparende.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "images",
+                  "value": "[\"gid://shopify/MediaImage/36996672159992\",\"gid://shopify/MediaImage/36996671701240\",\"gid://shopify/MediaImage/36996673569016\",\"gid://shopify/MediaImage/36996674060536\",\"gid://shopify/MediaImage/36996674126072\",\"gid://shopify/MediaImage/36996673503480\",\"gid://shopify/MediaImage/36996674093304\",\"gid://shopify/MediaImage/36996672946424\",\"gid://shopify/MediaImage/36996671734008\"]",
+                  "type": "list.file_reference"
+                },
+                {
+                  "key": "length",
+                  "value": "{\"value\":170.0,\"unit\":\"CENTIMETERS\"}",
+                  "type": "dimension"
+                },
+                {
+                  "key": "materials",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fôrstoff: \",\"bold\":true},{\"type\":\"text\",\"value\":\"Taffeta\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skallstoff\",\"bold\":true},{\"type\":\"text\",\"value\":\": downproof nylon taft DWR\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Belegg:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Durable Water Repellent (inkl. flammehemming) \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skallstoff:\",\"bold\":true},{\"type\":\"text\",\"value\":\" downproof nylon taft DWR \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Trådtetthet: \",\"bold\":true},{\"type\":\"text\",\"value\":\"380T \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Trådtykkelse:\",\"bold\":true},{\"type\":\"text\",\"value\":\" 20D \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Vekt:\",\"bold\":true},{\"type\":\"text\",\"value\":\" ca. 800g\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Glidelåser:\",\"bold\":true},{\"type\":\"text\",\"value\":\" YKK toveis glidelås\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "mobile_images",
+                  "value": "[\"gid://shopify/MediaImage/36996674715896\",\"gid://shopify/MediaImage/36996674617592\",\"gid://shopify/MediaImage/36996674650360\",\"gid://shopify/MediaImage/36996674683128\",\"gid://shopify/MediaImage/36996674552056\",\"gid://shopify/MediaImage/36996674781432\",\"gid://shopify/MediaImage/36996674093304\",\"gid://shopify/MediaImage/36996674748664\",\"gid://shopify/MediaImage/36996679270648\"]",
+                  "type": "list.file_reference"
+                },
+                {
+                  "key": "properties",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skapt for fuktig vær:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Den avanserte, syntetiske isolasjonen er konstruert for å prestere optimalt i fuktige og ustabile forhold. Den beholder sin isolerende evne når den blir våt og tørker svært raskt.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Lett, praktisk og vedlikeholdsfri:\",\"bold\":true},{\"type\":\"text\",\"value\":\" En lettvekter som enkelt komprimeres i den medfølgende posen. Den tar minimalt med plass i sekken og krever lite vedlikehold – alltid klar for neste eventyr.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"100% dunfri og allergivennlig:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Et gjennomtenkt, vegansk valg som gir full trygghet og komfort for deg med dunallergi eller som foretrekker dyrefrie produkter.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Robust og allsidig:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Bygget for å tåle alt fra gnister fra leirbålet til våte høstturer. Bruk den på jakt, padletur, festival eller som en pålitelig varmekilde på hytta.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Ubegrenset bevegelsesfrihet:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Den romslige unisex-passformen gir deg full frihet til å bevege deg og har god plass til ekstra lag med klær under.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "related_products",
+                  "value": "[\"gid://shopify/Product/8036341448952\",\"gid://shopify/Product/7710040391928\"]",
+                  "type": "list.product_reference"
+                },
+                {
+                  "key": "size_fit",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Rom for bevegelse og ekstra lag: \",\"bold\":true},{\"type\":\"text\",\"value\":\"Utekos Mikrofiber™ er designet med sjenerøs passform som gir deg full bevegelsesfrihet og gjør det enkelt å ha flere lag under uten at det føles trangt.\\n\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fra parkas til sovepose på sekunder:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Med smarte snorstramminger justerer du enkelt passformen for optimal varme og komfort. Gå fra en luftig, beskyttende parkas til en tett og varmende kokong.\\n\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Finn din perfekte match! \",\"bold\":true},{\"type\":\"text\",\"value\":\"Klikk på en størrelse i menyen over for å se de nøyaktige målene.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "storage_and_maintenance",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Maskinvask på maks 30°C: \",\"bold\":true},{\"type\":\"text\",\"value\":\"Bruk mild såpe.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke blekes.\",\"bold\":true}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke tørkes i tørketrommel: \",\"bold\":true},{\"type\":\"text\",\"value\":\"La den heller lufttørke (noe den gjør raskt).\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke renses.\",\"bold\":true}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke strykes.\",\"bold\":true}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Viktig:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Oppbevares tørt. Materialet vil absorbere fuktighet under normal bruk, så sørg for at den tørkes godt etter bruk i fuktige omgivelser. For lengre lagring anbefales det å oppbevare plagget ukomprimert (hengende eller løst foldet) for å bevare loft og form. Vask kun når nødvendig.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "swatch_color_unselected_variants",
+                  "value": "oklch(0.1807 0.117 266.28)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "swatch_color_variant",
+                  "value": "oklch(0.0304 0.021 264.05)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "swatch_hexcolor_for_unselected_variant",
+                  "value": "#020244",
+                  "type": "color"
+                },
+                {
+                  "key": "swatch_hexcolor_for_variant",
+                  "value": "#000001",
+                  "type": "color"
+                },
+                {
+                  "key": "tags",
+                  "value": "unisex\nutekos\nfriluftsliv\ncamping\nbobil\nutendørsbekledning\nvinter\nkvalitet\nnyhet\nfjell\nmørk\nmikrofiber  \ndyrefri  \ndunfri  \nvegansk  \nsyntetisk  \npakkbar  \ndunalternativ  \nvarmeplagg  \nkomfortplagg  \nutendørskåpe  \nmultiplagg  \nvinterkåpe  \nisolasjonsplagg  \nallvær  \nvannavvisende  \nhytteplagg  \ntribunekåpe  \ntermokåpe  \nbålkåpe  \nturkomfort  \nvinterkos  \nbobilvennlig  \nuteliv  \nsoveposeplagg\n",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "title",
+                  "value": "Utekos™ Vargnatt Mikrofiber Størrelse M",
+                  "type": "single_line_text_field"
+                },
+                {
+                  "key": "usage",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Campingtur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Aktiv vandring\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Isbading\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"I hengekøye\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"På båttur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Generelt friluftsbruk\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Jakt\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fisking\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Isfiske\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Topptur på ski\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fjellsport\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Isklatring\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Bobilferie\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Telttur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fotooppdrag i kulden\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Som \\\"kosejakke\\\" på terrassen eller hytten\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Seiling\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skitur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Pauser og bålkos\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Som tilskuer på kalde tribuner\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "various_descritive_texts",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Din egen fantasi setter begrensningene. Ideel når rask tørketid og lav vekt er viktig. Bruk den på våte fotturer, padleturer, i kystnære strøk med mye fuktighet, eller når du vet at plagget kan bli utsatt for regn eller fuktighet. Den er også perfekt for reiser der du trenger en allsidig jakke som tørker raskt over natten. Super for festivaler og utendørs arrangementer, der du kan holde deg varm utover kvelden. Like fin å krype inn i på hytteterrassen en kjølig kveld som å ha rundt kroppen ved morgengry når du tar kaffekoppen ute.\"}]}]}",
+                  "type": "rich_text_field"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/ProductVariant/42903231070456",
+          "title": "Vargnatt / Large / Unisex",
+          "currentlyNotInStock": false,
+          "selectedOptions": [
+            {
+              "name": "Farge",
+              "value": "Vargnatt"
+            },
+            {
+              "name": "Størrelse",
+              "value": "Large"
+            },
+            {
+              "name": "Kjønn",
+              "value": "Unisex"
+            }
+          ],
+          "availableForSale": true,
+          "price": {
+            "amount": "1290.0",
+            "currencyCode": "NOK"
+          },
+          "compareAtPrice": {
+            "amount": "2290.0",
+            "currencyCode": "NOK"
+          },
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mikro__full_black_without.webp?v=1749180508",
+            "altText": null
+          },
+          "metafield": {
+            "value": "gid://shopify/Metaobject/121308053752",
+            "type": "metaobject_reference",
+            "reference": {
+              "type": "vaultvariant",
+              "fields": [
+                {
+                  "key": "background_color",
+                  "value": "radial-gradient(50px 15px ellipse at 50% 54% in oklab,oklch(0.7 0.1996 44.67) 0%, oklch(0.03 0.021 264.05) 125%)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "background_color_unselected_variants",
+                  "value": "radial-gradient(40px 200px ellipse at 50% 105% in oklab, oklch(0.7 0.1996 44.67) 1%, oklch(26% 0.12 273) 50%)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "center_to_wrist",
+                  "value": "{\"value\":100.0,\"unit\":\"CENTIMETERS\"}",
+                  "type": "dimension"
+                },
+                {
+                  "key": "color_label",
+                  "value": "Vargnatt",
+                  "type": "single_line_text_field"
+                },
+                {
+                  "key": "description",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Lettvekt møter varme i Utekos Mikrofiber™ – det perfekte alternativet for deg som ønsker allsidigheten til Utekos-serien uten dun. Denne modellen leverer \"},{\"type\":\"text\",\"value\":\"funksjonalitet og komfort uten kompromisser\",\"bold\":true},{\"type\":\"text\",\"value\":\". Med en smart syntetisk fylling av hulfiber imiterer Utekos Mikrofiber følelsen av dun, samtidig som den har sine egne fordeler: Den beholder isolasjonsevnen selv om den blir fuktig, tørker raskt etter bruk, og er et godt valg for allergikere eller de som foretrekker veganske materialer. Plagget føles robust, men er overraskende lett – en innovativ konstruksjon som gir deg stor bevegelsesfrihet på tur.\\n\\nAkkurat som sin dunfylte søskenmodell, er Utekos Mikrofiber et \"},{\"type\":\"text\",\"value\":\"flerbrukstalent\",\"bold\":true},{\"type\":\"text\",\"value\":\". Du kan gå fra å vandre i skogen til å sove under åpen himmel uten å bytte utstyr – denne jakken forvandles nemlig til en sovepose på sekunder. Det vannavvisende og flammehemmende yttermaterialet beskytter deg mot både yr og gnister fra bålet, mens den lune hulfiberpolstringen holder deg varm hele veien. Samtidig slipper du å bekymre deg for dun som klapper sammen i fuktig vær; Utekos Mikrofiber takler skiftende forhold med glans.\\n\\nVelg Utekos Mikrofiber når du skal ut på eventyr og trenger et pålitelig, moderne isolasjonsplagg. Enten det er en våt høstkveld på jaktpost, en råkald morgen i hengekøya eller bare en tur ut for å nyte nordlyset, vil denne lettvekteren sørge for at du holder varmen. Den pakkes enkelt ned i sekken og tar minimal plass. Med sin behagelige passform og smarte materialvalg leverer Utekos Mikrofiber robusthet og allsidighet for alle dine utendørsaktiviteter.\"}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "flat_width",
+                  "value": "{\"value\":75.0,\"unit\":\"CENTIMETERS\"}",
+                  "type": "dimension"
+                },
+                {
+                  "key": "functions",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"3-i-1 design:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Fleksibel bruk som parkas, sovepose og heldrakt.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Avansert syntetisk isolasjon:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Fylt med 140 g/m² syntetisk hulfiber som etterligner duns luftige følelse og varmeegenskaper.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Beskyttende ytterstoff:\",\"bold\":true},{\"type\":\"text\",\"value\":\" DWR-behandlet og flammehemmende 20D Nylon (380T) som tåler røff bruk.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Toveis YKK-glidelås:\",\"bold\":true},{\"type\":\"text\",\"value\":\" For enkel tilgang og presis temperaturregulering.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Justerbar passform:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Snorstramming i livet lar deg forme plagget for optimal komfort.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Beskyttende mansjetter:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Elastiske ermeåpninger med snøstopper som stenger kald luft ute.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Kompresjonspose:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Gjør det enkelt å pakke plagget kompakt og plassbesparende\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "images",
+                  "value": "[\"gid://shopify/MediaImage/36996672159992\",\"gid://shopify/MediaImage/36996673569016\",\"gid://shopify/MediaImage/36996671701240\",\"gid://shopify/MediaImage/36996674584824\",\"gid://shopify/MediaImage/36996672946424\",\"gid://shopify/MediaImage/36996673503480\",\"gid://shopify/MediaImage/36996674126072\",\"gid://shopify/MediaImage/36996674093304\",\"gid://shopify/MediaImage/36996674060536\",\"gid://shopify/MediaImage/36996679762168\",\"gid://shopify/MediaImage/36996682285304\"]",
+                  "type": "list.file_reference"
+                },
+                {
+                  "key": "length",
+                  "value": "{\"value\":200.0,\"unit\":\"CENTIMETERS\"}",
+                  "type": "dimension"
+                },
+                {
+                  "key": "materials",
+                  "value": "{\"type\":\"root\",\"children\":[{\"listType\":\"unordered\",\"type\":\"list\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fôrstoff: \",\"bold\":true},{\"type\":\"text\",\"value\":\"Taffeta\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skallstoff\",\"bold\":true},{\"type\":\"text\",\"value\":\": downproof nylon taft DWR\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Belegg:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Durable Water Repellent (inkl. flammehemming) \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skallstoff:\",\"bold\":true},{\"type\":\"text\",\"value\":\" downproof nylon taft DWR \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Trådtetthet: \",\"bold\":true},{\"type\":\"text\",\"value\":\"380T \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Trådtykkelse:\",\"bold\":true},{\"type\":\"text\",\"value\":\" 20D \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Vekt:\",\"bold\":true},{\"type\":\"text\",\"value\":\" ca. 800g\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Glidelåser:\",\"bold\":true},{\"type\":\"text\",\"value\":\" YKK toveis glidelås\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "mobile_images",
+                  "value": "[\"gid://shopify/MediaImage/36996674715896\",\"gid://shopify/MediaImage/36996674650360\",\"gid://shopify/MediaImage/36996674552056\",\"gid://shopify/MediaImage/36996674617592\",\"gid://shopify/MediaImage/36996674781432\",\"gid://shopify/MediaImage/36996674748664\",\"gid://shopify/MediaImage/36996674683128\",\"gid://shopify/MediaImage/36996679270648\",\"gid://shopify/MediaImage/36996682252536\"]",
+                  "type": "list.file_reference"
+                },
+                {
+                  "key": "properties",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skapt for fuktig vær:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Den avanserte, syntetiske isolasjonen er konstruert for å prestere optimalt i fuktige og ustabile forhold. Den beholder sin isolerende evne når den blir våt og tørker svært raskt.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Lett, praktisk og vedlikeholdsfri:\",\"bold\":true},{\"type\":\"text\",\"value\":\" En lettvekter som enkelt komprimeres i den medfølgende posen. Den tar minimalt med plass i sekken og krever lite vedlikehold – alltid klar for neste eventyr.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"100% dunfri og allergivennlig:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Et gjennomtenkt, vegansk valg som gir full trygghet og komfort for deg med dunallergi eller som foretrekker dyrefrie produkter.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Robust og allsidig:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Bygget for å tåle alt fra gnister fra leirbålet til våte høstturer. Bruk den på jakt, padletur, festival eller som en pålitelig varmekilde på hytta.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Ubegrenset bevegelsesfrihet:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Den romslige unisex-passformen gir deg full frihet til å bevege deg og har god plass til ekstra lag med klær under.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "related_products",
+                  "value": "[\"gid://shopify/Product/8036341448952\",\"gid://shopify/Product/7710040391928\"]",
+                  "type": "list.product_reference"
+                },
+                {
+                  "key": "size_fit",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Rom for bevegelse og ekstra lag: \",\"bold\":true},{\"type\":\"text\",\"value\":\"Utekos Mikrofiber™ er designet med sjenerøs passform som gir deg full bevegelsesfrihet og gjør det enkelt å ha flere lag under uten at det føles trangt.\\n\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fra parkas til sovepose på sekunder:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Med smarte snorstramminger justerer du enkelt passformen for optimal varme og komfort. Gå fra en luftig, beskyttende parkas til en tett og varmende kokong.\\n\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Finn din perfekte match! \",\"bold\":true},{\"type\":\"text\",\"value\":\"Klikk på en størrelse i menyen over for å se de nøyaktige målene.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "storage_and_maintenance",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Maskinvask på maks 30°C: \",\"bold\":true},{\"type\":\"text\",\"value\":\"Bruk mild såpe.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke blekes.\",\"bold\":true}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke tørkes i tørketrommel: \",\"bold\":true},{\"type\":\"text\",\"value\":\"La den heller lufttørke (noe den gjør raskt).\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke renses.\",\"bold\":true}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke strykes.\",\"bold\":true}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Viktig:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Oppbevares tørt. Materialet vil absorbere fuktighet under normal bruk, så sørg for at den tørkes godt etter bruk i fuktige omgivelser. For lengre lagring anbefales det å oppbevare plagget ukomprimert (hengende eller løst foldet) for å bevare loft og form. Vask kun når nødvendig.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "swatch_color_unselected_variants",
+                  "value": "oklch(0.18 0.1175 266.28)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "swatch_color_variant",
+                  "value": "oklch(0.0408 0.0191 291.1)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "swatch_hexcolor_for_unselected_variant",
+                  "value": "#020244",
+                  "type": "color"
+                },
+                {
+                  "key": "swatch_hexcolor_for_variant",
+                  "value": "#000001",
+                  "type": "color"
+                },
+                {
+                  "key": "tags",
+                  "value": "eventyr\nfjell\nvinter\nhøst\ndesign\ncamping\nutendørsbekledning\njakke\nsovepose\nhytte\ntelttur\nkvalitet\nutstyr\nmikrofiber  \ndyrefri  \ndunfri  \nvegansk  \nsyntetisk  \npakkbar  \ndunalternativ  \nvarmeplagg  \nkomfortplagg  \nutendørskåpe  \nmultiplagg  \nvinterkåpe  \nisolasjonsplagg  \nallvær  \nvannavvisende  \nhytteplagg  \ntribunekåpe  \ntermokåpe  \nbålkåpe  \nturkomfort  \nvinterkos  \nbobilvennlig  \nuteliv  \nsoveposeplagg",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "title",
+                  "value": "Utekos™ Vargnatt Mikrofiber Størrelse L",
+                  "type": "single_line_text_field"
+                },
+                {
+                  "key": "usage",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Campingtur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Aktiv vandring\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Isbading\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"I hengekøye\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"På båttur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Generelt friluftsbruk\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Jakt\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fisking\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Isfiske\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Topptur på ski\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fjellsport\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Isklatring\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Bobilferie\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Telttur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fotooppdrag i kulden\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Som \\\"kosejakke\\\" på terrassen eller hytten\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Seiling\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skitur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Pauser og bålkos\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Som tilskuer på kalde tribuner\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "various_descritive_texts",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Din egen fantasi setter begrensningene. Ideel når rask tørketid og lav vekt er viktig. Bruk den på våte fotturer, padleturer, i kystnære strøk med mye fuktighet, eller når du vet at plagget kan bli utsatt for regn eller fuktighet. Den er også perfekt for reiser der du trenger en allsidig jakke som tørker raskt over natten. Super for festivaler og utendørs arrangementer, der du kan holde deg varm utover kvelden. Like fin å krype inn i på hytteterrassen en kjølig kveld som å ha rundt kroppen ved morgengry når du tar kaffekoppen ute.\"}]}]}",
+                  "type": "rich_text_field"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/ProductVariant/42903231037688",
+          "title": "Fjellblå / Medium / Unisex",
+          "currentlyNotInStock": false,
+          "selectedOptions": [
+            {
+              "name": "Farge",
+              "value": "Fjellblå"
+            },
+            {
+              "name": "Størrelse",
+              "value": "Medium"
+            },
+            {
+              "name": "Kjønn",
+              "value": "Unisex"
+            }
+          ],
+          "availableForSale": true,
+          "price": {
+            "amount": "1290.0",
+            "currencyCode": "NOK"
+          },
+          "compareAtPrice": {
+            "amount": "2290.0",
+            "currencyCode": "NOK"
+          },
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mikro_blue_front_without.webp?v=1749180508",
+            "altText": null
+          },
+          "metafield": {
+            "value": "gid://shopify/Metaobject/120632606968",
+            "type": "metaobject_reference",
+            "reference": {
+              "type": "vaultvariant",
+              "fields": [
+                {
+                  "key": "background_color",
+                  "value": "radial-gradient(40px 200px ellipse at 50% 105% in oklab, oklch(0.7 0.1996 44.67) 1%, oklch(26% 0.12 273) 50%)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "background_color_unselected_variants",
+                  "value": "radial-gradient(50px 15px ellipse at 50% 54% in oklab,oklch(0.7 0.1996 44.67) 0%, oklch(0.03 0.021 264.05) 125%)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "center_to_wrist",
+                  "value": "{\"value\":85.0,\"unit\":\"CENTIMETERS\"}",
+                  "type": "dimension"
+                },
+                {
+                  "key": "color_label",
+                  "value": "Fjellblå",
+                  "type": "single_line_text_field"
+                },
+                {
+                  "key": "description",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Lettvekt møter varme i Utekos Mikrofiber™ – det perfekte alternativet for deg som ønsker allsidigheten til Utekos-serien uten dun. Denne modellen leverer \"},{\"type\":\"text\",\"value\":\"funksjonalitet og komfort uten kompromisser\",\"bold\":true},{\"type\":\"text\",\"value\":\". Med en smart syntetisk fylling av hulfiber imiterer Utekos Mikrofiber følelsen av dun, samtidig som den har sine egne fordeler: Den beholder isolasjonsevnen selv om den blir fuktig, tørker raskt etter bruk, og er et godt valg for allergikere eller de som foretrekker veganske materialer. Plagget føles robust, men er overraskende lett – en innovativ konstruksjon som gir deg stor bevegelsesfrihet på tur.\\n\\nAkkurat som sin dunfylte søskenmodell, er Utekos Mikrofiber et \"},{\"type\":\"text\",\"value\":\"flerbrukstalent\",\"bold\":true},{\"type\":\"text\",\"value\":\". Du kan gå fra å vandre i skogen til å sove under åpen himmel uten å bytte utstyr – denne jakken forvandles nemlig til en sovepose på sekunder. Det vannavvisende og flammehemmende yttermaterialet beskytter deg mot både yr og gnister fra bålet, mens den lune hulfiberpolstringen holder deg varm hele veien. Samtidig slipper du å bekymre deg for dun som klapper sammen i fuktig vær; Utekos Mikrofiber takler skiftende forhold med glans.\\n\\nVelg Utekos Mikrofiber når du skal ut på eventyr og trenger et pålitelig, moderne isolasjonsplagg. Enten det er en våt høstkveld på jaktpost, en råkald morgen i hengekøya eller bare en tur ut for å nyte nordlyset, vil denne lettvekteren sørge for at du holder varmen. Den pakkes enkelt ned i sekken og tar minimal plass. Med sin behagelige passform og smarte materialvalg leverer Utekos Mikrofiber robusthet og allsidighet for alle dine utendørsaktiviteter.\"}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "flat_width",
+                  "value": "{\"value\":66.0,\"unit\":\"CENTIMETERS\"}",
+                  "type": "dimension"
+                },
+                {
+                  "key": "functions",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"3-i-1 design:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Fleksibel bruk som parkas, sovepose og heldrakt.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Avansert syntetisk isolasjon:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Fylt med 140 g/m² syntetisk hulfiber som etterligner duns luftige følelse og varmeegenskaper.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Beskyttende ytterstoff:\",\"bold\":true},{\"type\":\"text\",\"value\":\" DWR-behandlet og flammehemmende 20D Nylon (380T) som tåler røff bruk.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Toveis YKK-glidelås:\",\"bold\":true},{\"type\":\"text\",\"value\":\" For enkel tilgang og presis temperaturregulering.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Justerbar passform:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Snorstramming i livet lar deg forme plagget for optimal komfort.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Beskyttende mansjetter:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Elastiske ermeåpninger med snøstopper som stenger kald luft ute.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Kompresjonspose inkludert:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Gjør det enkelt å pakke plagget kompakt og plassbesparende.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "images",
+                  "value": "[\"gid://shopify/MediaImage/36996783046904\",\"gid://shopify/MediaImage/36996669538552\",\"gid://shopify/MediaImage/36996666884344\",\"gid://shopify/MediaImage/36996669178104\",\"gid://shopify/MediaImage/36996670980344\",\"gid://shopify/MediaImage/36996667801848\",\"gid://shopify/MediaImage/36996670193912\",\"gid://shopify/MediaImage/36996670030072\",\"gid://shopify/MediaImage/36996679500024\"]",
+                  "type": "list.file_reference"
+                },
+                {
+                  "key": "length",
+                  "value": "{\"value\":170.0,\"unit\":\"CENTIMETERS\"}",
+                  "type": "dimension"
+                },
+                {
+                  "key": "materials",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fôrstoff: \",\"bold\":true},{\"type\":\"text\",\"value\":\"Taffeta\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skallstoff\",\"bold\":true},{\"type\":\"text\",\"value\":\": downproof nylon taft DWR\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Belegg:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Durable Water Repellent (inkl. flammehemming) \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skallstoff:\",\"bold\":true},{\"type\":\"text\",\"value\":\" downproof nylon taft DWR \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Trådtetthet: \",\"bold\":true},{\"type\":\"text\",\"value\":\"380T \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Trådtykkelse:\",\"bold\":true},{\"type\":\"text\",\"value\":\" 20D \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Vekt:\",\"bold\":true},{\"type\":\"text\",\"value\":\" ca. 800g\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Glidelåser:\",\"bold\":true},{\"type\":\"text\",\"value\":\" YKK toveis glidelås\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "mobile_images",
+                  "value": "[\"gid://shopify/MediaImage/36996668948728\",\"gid://shopify/MediaImage/36996668850424\",\"gid://shopify/MediaImage/36996668752120\",\"gid://shopify/MediaImage/36996668915960\",\"gid://shopify/MediaImage/36996669014264\",\"gid://shopify/MediaImage/36996668981496\",\"gid://shopify/MediaImage/36996669079800\",\"gid://shopify/MediaImage/36996668784888\",\"gid://shopify/MediaImage/36996679237880\"]",
+                  "type": "list.file_reference"
+                },
+                {
+                  "key": "properties",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skapt for fuktig vær:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Den avanserte, syntetiske isolasjonen er konstruert for å prestere optimalt i fuktige og ustabile forhold. Den beholder sin isolerende evne når den blir våt og tørker svært raskt.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Lett, praktisk og vedlikeholdsfri:\",\"bold\":true},{\"type\":\"text\",\"value\":\" En lettvekter som enkelt komprimeres i den medfølgende posen. Den tar minimalt med plass i sekken og krever lite vedlikehold – alltid klar for neste eventyr.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"100% dunfri og allergivennlig:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Et gjennomtenkt, vegansk valg som gir full trygghet og komfort for deg med dunallergi eller som foretrekker dyrefrie produkter.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Robust og allsidig:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Bygget for å tåle alt fra gnister fra leirbålet til våte høstturer. Bruk den på jakt, padletur, festival eller som en pålitelig varmekilde på hytta.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Ubegrenset bevegelsesfrihet:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Den romslige unisex-passformen gir deg full frihet til å bevege deg og har god plass til ekstra lag med klær under.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "related_products",
+                  "value": "[\"gid://shopify/Product/8036341448952\",\"gid://shopify/Product/7710040391928\"]",
+                  "type": "list.product_reference"
+                },
+                {
+                  "key": "size_fit",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Rom for bevegelse og ekstra lag: \",\"bold\":true},{\"type\":\"text\",\"value\":\"Utekos Mikrofiber™ er designet med sjenerøs passform som gir deg full bevegelsesfrihet og gjør det enkelt å ha flere lag under uten at det føles trangt.\\n\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fra parkas til sovepose på sekunder:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Med smarte snorstramminger justerer du enkelt passformen for optimal varme og komfort. Gå fra en luftig, beskyttende parkas til en tett og varmende kokong.\\n\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Finn din perfekte match! \",\"bold\":true},{\"type\":\"text\",\"value\":\"Klikk på en størrelse i menyen over for å se de nøyaktige målene.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "storage_and_maintenance",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Maskinvask på maks 30°C: \",\"bold\":true},{\"type\":\"text\",\"value\":\"Bruk mild såpe.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke blekes.\",\"bold\":true}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke tørkes i tørketrommel: \",\"bold\":true},{\"type\":\"text\",\"value\":\"La den heller lufttørke (noe den gjør raskt).\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke renses.\",\"bold\":true}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke strykes.\",\"bold\":true}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Viktig:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Oppbevares tørt. Materialet vil absorbere fuktighet under normal bruk, så sørg for at den tørkes godt etter bruk i fuktige omgivelser. For lengre lagring anbefales det å oppbevare plagget ukomprimert (hengende eller løst foldet) for å bevare loft og form. Vask kun når nødvendig.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "swatch_color_unselected_variants",
+                  "value": "oklch(0.0408 0.0191 291.1)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "swatch_color_variant",
+                  "value": "oklch(0.18 0.1175 266.28)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "swatch_hexcolor_for_unselected_variant",
+                  "value": "#000001",
+                  "type": "color"
+                },
+                {
+                  "key": "swatch_hexcolor_for_variant",
+                  "value": "#020244",
+                  "type": "color"
+                },
+                {
+                  "key": "tags",
+                  "value": "eventyr\nfjell\nvinter\nhøst\ndesign\ncamping\nutendørsbekledning\njakke\nsovepose\nhytte\ntelttur\nkvalitet\nutstyr\nmikrofiber  \ndyrefri  \ndunfri  \nvegansk  \nsyntetisk  \npakkbar  \ndunalternativ  \nvarmeplagg  \nkomfortplagg  \nutendørskåpe  \nmultiplagg  \nvinterkåpe  \nisolasjonsplagg  \nallvær  \nvannavvisende  \nhytteplagg  \ntribunekåpe  \ntermokåpe  \nbålkåpe  \nturkomfort  \nvinterkos  \nbobilvennlig  \nuteliv  \nsoveposeplagg",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "title",
+                  "value": "Utekos™ Fjellblå Mikrofiber Størrelse M",
+                  "type": "single_line_text_field"
+                },
+                {
+                  "key": "usage",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Campingtur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Aktiv vandring\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Isbading\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"I hengekøye\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"På båttur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Generelt friluftsbruk\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Jakt\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fisking\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Isfiske\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Topptur på ski\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fjellsport\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Isklatring\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Bobilferie\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Telttur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fotooppdrag i kulden\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Som \\\"kosejakke\\\" på terrassen eller hytten\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Seiling\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skitur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Pauser og bålkos\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Som tilskuer på kalde tribuner\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "various_descritive_texts",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Din egen fantasi setter begrensningene. Ideel når rask tørketid og lav vekt er viktig. Bruk den på våte fotturer, padleturer, i kystnære strøk med mye fuktighet, eller når du vet at plagget kan bli utsatt for regn eller fuktighet. Den er også perfekt for reiser der du trenger en allsidig jakke som tørker raskt over natten. Super for festivaler og utendørs arrangementer, der du kan holde deg varm utover kvelden. Like fin å krype inn i på hytteterrassen en kjølig kveld som å ha rundt kroppen ved morgengry når du tar kaffekoppen ute.\"}]}]}",
+                  "type": "rich_text_field"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/ProductVariant/42903231103224",
+          "title": "Fjellblå / Large / Unisex",
+          "currentlyNotInStock": false,
+          "selectedOptions": [
+            {
+              "name": "Farge",
+              "value": "Fjellblå"
+            },
+            {
+              "name": "Størrelse",
+              "value": "Large"
+            },
+            {
+              "name": "Kjønn",
+              "value": "Unisex"
+            }
+          ],
+          "availableForSale": true,
+          "price": {
+            "amount": "1290.0",
+            "currencyCode": "NOK"
+          },
+          "compareAtPrice": {
+            "amount": "2290.0",
+            "currencyCode": "NOK"
+          },
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_front90.webp?v=1749148124",
+            "altText": null
+          },
+          "metafield": {
+            "value": "gid://shopify/Metaobject/121304842488",
+            "type": "metaobject_reference",
+            "reference": {
+              "type": "vaultvariant",
+              "fields": [
+                {
+                  "key": "background_color",
+                  "value": "radial-gradient(40px 200px ellipse at 50% 105% in oklab, oklch(0.7 0.1996 44.67) 1%, oklch(26% 0.12 273) 50%)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "background_color_unselected_variants",
+                  "value": "radial-gradient(50px 15px ellipse at 50% 54% in oklab,oklch(0.7 0.1996 44.67) 0%, oklch(0.03 0.021 264.05) 125%)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "center_to_wrist",
+                  "value": "{\"value\":100.0,\"unit\":\"CENTIMETERS\"}",
+                  "type": "dimension"
+                },
+                {
+                  "key": "color_label",
+                  "value": "Fjellblå",
+                  "type": "single_line_text_field"
+                },
+                {
+                  "key": "description",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Lettvekt møter varme i Utekos Mikrofiber™ – det perfekte alternativet for deg som ønsker allsidigheten til Utekos-serien uten dun. Denne modellen leverer \"},{\"type\":\"text\",\"value\":\"funksjonalitet og komfort uten kompromisser\",\"bold\":true},{\"type\":\"text\",\"value\":\". Med en smart syntetisk fylling av hulfiber imiterer Utekos Mikrofiber følelsen av dun, samtidig som den har sine egne fordeler: Den beholder isolasjonsevnen selv om den blir fuktig, tørker raskt etter bruk, og er et godt valg for allergikere eller de som foretrekker veganske materialer. Plagget føles robust, men er overraskende lett – en innovativ konstruksjon som gir deg stor bevegelsesfrihet på tur.\\n\\nAkkurat som sin dunfylte søskenmodell, er Utekos Mikrofiber et \"},{\"type\":\"text\",\"value\":\"flerbrukstalent\",\"bold\":true},{\"type\":\"text\",\"value\":\". Du kan gå fra å vandre i skogen til å sove under åpen himmel uten å bytte utstyr – denne jakken forvandles nemlig til en sovepose på sekunder. Det vannavvisende og flammehemmende yttermaterialet beskytter deg mot både yr og gnister fra bålet, mens den lune hulfiberpolstringen holder deg varm hele veien. Samtidig slipper du å bekymre deg for dun som klapper sammen i fuktig vær; Utekos Mikrofiber takler skiftende forhold med glans.\\n\\nVelg Utekos Mikrofiber når du skal ut på eventyr og trenger et pålitelig, moderne isolasjonsplagg. Enten det er en våt høstkveld på jaktpost, en råkald morgen i hengekøya eller bare en tur ut for å nyte nordlyset, vil denne lettvekteren sørge for at du holder varmen. Den pakkes enkelt ned i sekken og tar minimal plass. Med sin behagelige passform og smarte materialvalg leverer Utekos Mikrofiber robusthet og allsidighet for alle dine utendørsaktiviteter.\"}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "flat_width",
+                  "value": "{\"value\":75.0,\"unit\":\"CENTIMETERS\"}",
+                  "type": "dimension"
+                },
+                {
+                  "key": "functions",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"3-i-1 design:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Fleksibel bruk som parkas, sovepose og heldrakt.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Avansert syntetisk isolasjon:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Fylt med 140 g/m² syntetisk hulfiber som etterligner duns luftige følelse og varmeegenskaper.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Beskyttende ytterstoff:\",\"bold\":true},{\"type\":\"text\",\"value\":\" DWR-behandlet og flammehemmende 20D Nylon (380T) som tåler røff bruk.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Toveis YKK-glidelås:\",\"bold\":true},{\"type\":\"text\",\"value\":\" For enkel tilgang og presis temperaturregulering.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Justerbar passform:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Snorstramming i livet lar deg forme plagget for optimal komfort.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Beskyttende mansjetter:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Elastiske ermeåpninger med snøstopper som stenger kald luft ute.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Kompresjonspose:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Gjør det enkelt å pakke plagget kompakt og plassbesparende.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "images",
+                  "value": "[\"gid://shopify/MediaImage/36996783046904\",\"gid://shopify/MediaImage/36996669538552\",\"gid://shopify/MediaImage/36996666884344\",\"gid://shopify/MediaImage/36996670980344\",\"gid://shopify/MediaImage/36996670193912\",\"gid://shopify/MediaImage/36996670030072\",\"gid://shopify/MediaImage/36996669178104\",\"gid://shopify/MediaImage/36996668489976\",\"gid://shopify/MediaImage/36991418237176\",\"gid://shopify/MediaImage/36996679237880\",\"gid://shopify/MediaImage/36996679696632\",\"gid://shopify/MediaImage/36996679336184\"]",
+                  "type": "list.file_reference"
+                },
+                {
+                  "key": "length",
+                  "value": "{\"value\":200.0,\"unit\":\"CENTIMETERS\"}",
+                  "type": "dimension"
+                },
+                {
+                  "key": "materials",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fôrstoff: \",\"bold\":true},{\"type\":\"text\",\"value\":\"Taffeta\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skallstoff\",\"bold\":true},{\"type\":\"text\",\"value\":\": downproof nylon taft DWR\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Belegg:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Durable Water Repellent (inkl. flammehemming) \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skallstoff:\",\"bold\":true},{\"type\":\"text\",\"value\":\" downproof nylon taft DWR \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Trådtetthet: \",\"bold\":true},{\"type\":\"text\",\"value\":\"380T \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Trådtykkelse:\",\"bold\":true},{\"type\":\"text\",\"value\":\" 20D \"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Vekt:\",\"bold\":true},{\"type\":\"text\",\"value\":\" ca. 800g\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Glidelåser:\",\"bold\":true},{\"type\":\"text\",\"value\":\" YKK toveis glidelås\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "mobile_images",
+                  "value": "[\"gid://shopify/MediaImage/36996668817656\",\"gid://shopify/MediaImage/36996679336184\",\"gid://shopify/MediaImage/36996679696632\",\"gid://shopify/MediaImage/36996668883192\",\"gid://shopify/MediaImage/36996668752120\",\"gid://shopify/MediaImage/36996668850424\",\"gid://shopify/MediaImage/36996668784888\",\"gid://shopify/MediaImage/36996669079800\",\"gid://shopify/MediaImage/36996681728248\",\"gid://shopify/MediaImage/36996669014264\",\"gid://shopify/MediaImage/36996668981496\"]",
+                  "type": "list.file_reference"
+                },
+                {
+                  "key": "properties",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skapt for fuktig vær:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Den avanserte, syntetiske isolasjonen er konstruert for å prestere optimalt i fuktige og ustabile forhold. Den beholder sin isolerende evne når den blir våt og tørker svært raskt.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Lett, praktisk og vedlikeholdsfri:\",\"bold\":true},{\"type\":\"text\",\"value\":\" En lettvekter som enkelt komprimeres i den medfølgende posen. Den tar minimalt med plass i sekken og krever lite vedlikehold – alltid klar for neste eventyr.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"100% dunfri og allergivennlig:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Et gjennomtenkt, vegansk valg som gir full trygghet og komfort for deg med dunallergi eller som foretrekker dyrefrie produkter.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Robust og allsidig:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Bygget for å tåle alt fra gnister fra leirbålet til våte høstturer. Bruk den på jakt, padletur, festival eller som en pålitelig varmekilde på hytta.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Ubegrenset bevegelsesfrihet:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Den romslige unisex-passformen gir deg full frihet til å bevege deg og har god plass til ekstra lag med klær under.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "related_products",
+                  "value": "[\"gid://shopify/Product/7710040391928\",\"gid://shopify/Product/8036341448952\"]",
+                  "type": "list.product_reference"
+                },
+                {
+                  "key": "size_fit",
+                  "value": "{\"type\":\"root\",\"children\":[{\"listType\":\"unordered\",\"type\":\"list\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Rom for bevegelse og ekstra lag: \",\"bold\":true},{\"type\":\"text\",\"value\":\"Utekos Mikrofiber™ er designet med sjenerøs passform som gir deg full bevegelsesfrihet og gjør det enkelt å ha flere lag under uten at det føles trangt.\\n\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fra parkas til sovepose på sekunder:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Med smarte snorstramminger justerer du enkelt passformen for optimal varme og komfort. Gå fra en luftig, beskyttende parkas til en tett og varmende kokong.\\n\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Finn din perfekte match! \",\"bold\":true},{\"type\":\"text\",\"value\":\"Klikk på en størrelse i menyen over for å se de nøyaktige målene.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "storage_and_maintenance",
+                  "value": "{\"type\":\"root\",\"children\":[{\"listType\":\"unordered\",\"type\":\"list\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Maskinvask på maks 30°C: \",\"bold\":true},{\"type\":\"text\",\"value\":\"Bruk mild såpe.\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke blekes.\",\"bold\":true}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke tørkes i tørketrommel: \",\"bold\":true},{\"type\":\"text\",\"value\":\"La den heller lufttørke (noe den gjør raskt).\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke renses.\",\"bold\":true}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Må ikke strykes.\",\"bold\":true}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Viktig:\",\"bold\":true},{\"type\":\"text\",\"value\":\" Oppbevares tørt. Materialet vil absorbere fuktighet under normal bruk, så sørg for at den tørkes godt etter bruk i fuktige omgivelser. For lengre lagring anbefales det å oppbevare plagget ukomprimert (hengende eller løst foldet) for å bevare loft og form. Vask kun når nødvendig.\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "swatch_color_unselected_variants",
+                  "value": "oklch(0.0408 0.0191 291.1)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "swatch_color_variant",
+                  "value": "oklch(0.18 0.1175 266.28)",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "swatch_hexcolor_for_unselected_variant",
+                  "value": "#000001",
+                  "type": "color"
+                },
+                {
+                  "key": "swatch_hexcolor_for_variant",
+                  "value": "#020244",
+                  "type": "color"
+                },
+                {
+                  "key": "tags",
+                  "value": "eventyr\nfjell\nvinter\nhøst\ndesign\ncamping\nutendørsbekledning\njakke\nsovepose\nhytte\ntelttur\nkvalitet\nutstyr\nmikrofiber  \ndyrefri  \ndunfri  \nvegansk  \nsyntetisk  \npakkbar  \ndunalternativ  \nvarmeplagg  \nkomfortplagg  \nutendørskåpe  \nmultiplagg  \nvinterkåpe  \nisolasjonsplagg  \nallvær  \nvannavvisende  \nhytteplagg  \ntribunekåpe  \ntermokåpe  \nbålkåpe  \nturkomfort  \nvinterkos  \nbobilvennlig  \nuteliv  \nsoveposeplagg",
+                  "type": "multi_line_text_field"
+                },
+                {
+                  "key": "title",
+                  "value": "Utekos™ Fjellblå Mikrofiber Størrelse L",
+                  "type": "single_line_text_field"
+                },
+                {
+                  "key": "usage",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"list\",\"listType\":\"unordered\",\"children\":[{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Campingtur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Aktiv vandring\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Isbading\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"I hengekøye\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"På båttur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Generelt friluftsbruk\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Jakt\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fisking\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Isfiske\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Topptur på ski\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fjellsport\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Isklatring\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Bobilferie\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Telttur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Fotooppdrag i kulden\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Som \\\"kosejakke\\\" på terrassen eller hytten\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Seiling\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Skitur\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Pauser og bålkos\"}]},{\"type\":\"list-item\",\"children\":[{\"type\":\"text\",\"value\":\"Som tilskuer på kalde tribuner\"}]}]}]}",
+                  "type": "rich_text_field"
+                },
+                {
+                  "key": "various_descritive_texts",
+                  "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Din egen fantasi setter begrensningene. Ideel når rask tørketid og lav vekt er viktig. Bruk den på våte fotturer, padleturer, i kystnære strøk med mye fuktighet, eller når du vet at plagget kan bli utsatt for regn eller fuktighet. Den er også perfekt for reiser der du trenger en allsidig jakke som tørker raskt over natten. Super for festivaler og utendørs arrangementer, der du kan holde deg varm utover kvelden. Like fin å krype inn i på hytteterrassen en kjølig kveld som å ha rundt kroppen ved morgengry når du tar kaffekoppen ute.\"}]}]}",
+                  "type": "rich_text_field"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "seo": {
+    "description": "Unik 3-i-1-drakt som kombinerer sovepose, parkas og koseplagg. Utekos Mikrofiber™ gir varme, frihet og ro – uansett hvor, uansett når.",
+    "title": "Utekos Mikrofiber™ – 3-i-1 friluftsdrakt for ro, varme og frihet"
+  }
+}

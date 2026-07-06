@@ -1,0 +1,68 @@
+---
+title: 'Utekos sin historie og løfte til deg'
+description:
+  'Drevet av kalde kvelder og et løfte om å aldri la været stoppe
+  de gode øyeblikkene.'
+canonical: '/om-oss'
+rawMarkdownPath: '/om-oss.md'
+siteName: 'Utekos'
+locale: 'no_NO'
+inLanguage: 'no'
+publishedTime: '2025-10-01T08:00:00+02:00'
+modifiedTime: '2026-06-22T12:00:00+02:00'
+ogImage:
+  url: '/about-use-hero-gemini.png'
+  width: 1200
+  height: 630
+  alt: 'Stemningsfullt bilde av norsk natur i skumringen'
+breadcrumbs:
+  - name: 'Forsiden'
+    path: '/'
+  - name: 'Om oss'
+    path: '/om-oss'
+dependencies:
+  - 'Next.js MDX guide: /docs/app/guides/mdx'
+  - 'Next.js Metadata API:
+    /docs/app/api-reference/functions/generate-metadata'
+  - 'Next.js JSON-LD guide: /docs/app/guides/json-ld'
+  - 'Google Search structured data guidelines'
+ai_directive:
+  'Canonical Utekos about-page source for page copy, SEO
+  metadata, JSON-LD, and the /om-oss.md raw markdown endpoint.'
+---
+
+import { AboutBreadcrumbBar } from './components/AboutBreadcrumbBar'
+import { AboutCta } from './components/mdx/AboutCta'
+import { AboutEvents } from './components/mdx/AboutEvents'
+import { AboutFounder } from './components/mdx/AboutFounder'
+import { AboutGallery } from './components/mdx/AboutGallery'
+import { AboutHero } from './components/mdx/AboutHero'
+import { AboutPageShell } from './components/mdx/AboutPageShell'
+import { AboutPrinciples } from './components/mdx/AboutPrinciples'
+import { AboutPromise } from './components/mdx/AboutPromise'
+import { AboutRetailer } from './components/mdx/AboutRetailer'
+import {
+  AboutPageJsonLd,
+  buildAboutPageMetadata
+} from './seo/aboutPageSeo'
+
+export const metadata = buildAboutPageMetadata(frontmatter)
+
+<AboutPageShell>
+  <AboutPageJsonLd frontmatter={frontmatter} />
+  <AboutBreadcrumbBar items={frontmatter.breadcrumbs} />
+  <AboutHero
+    eyebrow='Skreddersy varmen'
+    title='Om Utekos'
+    description={frontmatter.description}
+    imageSrc={frontmatter.ogImage.url}
+    imageAlt={frontmatter.ogImage.alt}
+  />
+  <AboutFounder />
+  <AboutPrinciples />
+  <AboutPromise />
+  <AboutGallery />
+  <AboutEvents />
+  <AboutRetailer />
+  <AboutCta />
+</AboutPageShell>

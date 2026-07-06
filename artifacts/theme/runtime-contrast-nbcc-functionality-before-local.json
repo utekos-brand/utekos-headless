@@ -1,0 +1,2654 @@
+{
+  "ok": false,
+  "baseUrl": "http://localhost:3000",
+  "routes": [
+    "/nbcc",
+    "/handlehjelp/funksjonalitet"
+  ],
+  "modes": [
+    "light",
+    "dark"
+  ],
+  "viewports": [
+    {
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "summary": {
+    "failures": 39,
+    "warnings": 0,
+    "emittedFailures": 39,
+    "emittedWarnings": 0
+  },
+  "failureGroups": {
+    "bySurface": [
+      {
+        "count": 3,
+        "key": {
+          "kind": "control-border-contrast",
+          "selector": "button.h-1\\.5.rounded-full.transition-all",
+          "text": "Bilde 1",
+          "foreground": null,
+          "background": "rgb(23, 19, 15)",
+          "borderColor": "rgb(10, 10, 10)"
+        },
+        "minRatio": 1.07,
+        "maxRatio": 1.07,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "rgb(23, 19, 15)"
+        ],
+        "borderColors": [
+          "rgb(10, 10, 10)"
+        ]
+      },
+      {
+        "count": 3,
+        "key": {
+          "kind": "control-border-contrast",
+          "selector": "[data-track=\"NbccProductCardCtaClick\"]",
+          "text": "Produktside",
+          "foreground": null,
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": [
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)"
+        ]
+      },
+      {
+        "count": 2,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "span.bg-linear-to-r.from-sky-800.via-cyan-700",
+          "text": "Tre opplevelser.",
+          "foreground": "rgba(0, 0, 0, 0)",
+          "background": "lab(7.01406 1.6607 -7.15416)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/handlehjelp/funksjonalitet"
+        ],
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgba(0, 0, 0, 0)"
+        ],
+        "backgrounds": [
+          "lab(7.01406 1.6607 -7.15416)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.max-w-2xl.text-base.text-foreground",
+          "text": "For noen ligger den største gleden i friheten til å våkne til ny utsikt, for andre er det det trygge fellesskapet på fas",
+          "foreground": "lab(94.1529 0.044167 2.67328)",
+          "background": "rgb(245, 239, 228)",
+          "borderColor": null
+        },
+        "minRatio": 1.01,
+        "maxRatio": 1.01,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "backgrounds": [
+          "rgb(245, 239, 228)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "span.text-sm.font-semibold.text-neutral-950",
+          "text": "Medlemsfordel",
+          "foreground": "lab(2.75381 0 0)",
+          "background": "lab(4.06503 0.736147 -4.02324)",
+          "borderColor": null
+        },
+        "minRatio": 1.03,
+        "maxRatio": 1.03,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(2.75381 0 0)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "h1.text-4xl.font-bold.text-foreground",
+          "text": "Ett plagg.",
+          "foreground": "rgb(10, 10, 10)",
+          "background": "lab(7.01406 1.6607 -7.15416)",
+          "borderColor": null
+        },
+        "minRatio": 1.09,
+        "maxRatio": 1.09,
+        "required": 4.5,
+        "routes": [
+          "/handlehjelp/funksjonalitet"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(7.01406 1.6607 -7.15416)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.text-muted-foreground.text-lg",
+          "text": "Gjelder modellene TechDown, Dun og Mikrofiber.",
+          "foreground": "rgb(10, 10, 10)",
+          "background": "lab(7.01406 1.6607 -7.15416)",
+          "borderColor": null
+        },
+        "minRatio": 1.09,
+        "maxRatio": 1.09,
+        "required": 4.5,
+        "routes": [
+          "/handlehjelp/funksjonalitet"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(7.01406 1.6607 -7.15416)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.text-sm.font-semibold.tracking-\\[0\\.18em\\]",
+          "text": "Campinglivet har mange former",
+          "foreground": "lab(100 0 0)",
+          "background": "rgb(245, 239, 228)",
+          "borderColor": null
+        },
+        "minRatio": 1.14,
+        "maxRatio": 1.14,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(100 0 0)"
+        ],
+        "backgrounds": [
+          "rgb(245, 239, 228)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "h1.text-balance.text-5xl.font-semibold",
+          "text": "NBCC-medlemsfordel hos Utekos",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "h3.font-semibold.text-white",
+          "text": "Din NBCC-fordel",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "h3.font-semibold.text-white",
+          "text": "Bred campingrelevans",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "h3.font-semibold.text-white",
+          "text": "Klar for neste samling",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "#base-ui-_R_1jpbnqbmr7lbH2_",
+          "text": "Hvor finner jeg fordelskoden?",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "#base-ui-_R_2jpbnqbmr7lbH2_",
+          "text": "Kan plagget brukes av både kvinner og menn?",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "#base-ui-_R_3jpbnqbmr7lbH2_",
+          "text": "Hvilket Utekos-produkt passer best på camping?",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "#base-ui-_R_4jpbnqbmr7lbH2_",
+          "text": "Kan jeg bruke Utekos i forteltet?",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "#base-ui-_R_5jpbnqbmr7lbH2_",
+          "text": "Hva hvis størrelsen ikke passer?",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-text-contrast",
+          "selector": "#base-ui-_R_1jpbnqbmr7lbH2_",
+          "text": "Hvor finner jeg fordelskoden?",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-text-contrast",
+          "selector": "#base-ui-_R_2jpbnqbmr7lbH2_",
+          "text": "Kan plagget brukes av både kvinner og menn?",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-text-contrast",
+          "selector": "#base-ui-_R_3jpbnqbmr7lbH2_",
+          "text": "Hvilket Utekos-produkt passer best på camping?",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-text-contrast",
+          "selector": "#base-ui-_R_4jpbnqbmr7lbH2_",
+          "text": "Kan jeg bruke Utekos i forteltet?",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-text-contrast",
+          "selector": "#base-ui-_R_5jpbnqbmr7lbH2_",
+          "text": "Hva hvis størrelsen ikke passer?",
+          "foreground": "rgb(255, 255, 255)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-border-contrast",
+          "selector": "[data-track=\"NbccHeroHowToAiClick\"]",
+          "text": "Få rabattveiledning",
+          "foreground": null,
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": "oklab(0.999994 0.0000455678 0.0000200868 / 0.25)"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": [
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.25)"
+        ]
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-border-contrast",
+          "selector": "button.rounded-md.border.px-3",
+          "text": "Middels",
+          "foreground": null,
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": "lab(77.9505 -26.5396 -1.29427)"
+        },
+        "minRatio": 1.55,
+        "maxRatio": 1.55,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": [
+          "lab(77.9505 -26.5396 -1.29427)"
+        ]
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-border-contrast",
+          "selector": "button.rounded-md.border.px-3",
+          "text": "Medium",
+          "foreground": null,
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": "lab(77.9505 -26.5396 -1.29427)"
+        },
+        "minRatio": 1.55,
+        "maxRatio": 1.55,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": [
+          "lab(77.9505 -26.5396 -1.29427)"
+        ]
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.mb-4.text-sm.font-medium",
+          "text": "For raske ærend og innendørs bruk",
+          "foreground": "lab(80.8059 21.7313 50.4455)",
+          "background": "lab(100 0 0)",
+          "borderColor": null
+        },
+        "minRatio": 1.69,
+        "maxRatio": 1.69,
+        "required": 4.5,
+        "routes": [
+          "/handlehjelp/funksjonalitet"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(80.8059 21.7313 50.4455)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.mb-4.text-sm.font-medium",
+          "text": "For turer og aktiv eleganse",
+          "foreground": "lab(77.9505 -26.5396 -1.29427)",
+          "background": "lab(100 0 0)",
+          "borderColor": null
+        },
+        "minRatio": 1.8,
+        "maxRatio": 1.8,
+        "required": 4.5,
+        "routes": [
+          "/handlehjelp/funksjonalitet"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(77.9505 -26.5396 -1.29427)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.mt-2.text-sm.leading-6",
+          "text": "For deg som ønsker kompromissløs komfort og overlegen allsidighet.",
+          "foreground": "lab(66.128 -0.0000298023 0.0000119209)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 2.24,
+        "maxRatio": 2.24,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(66.128 -0.0000298023 0.0000119209)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.mt-2.text-sm.leading-6",
+          "text": "Egner seg som hånd i hanske for camping- og bobiltilværelsen, men også hjemme på terrassen!",
+          "foreground": "lab(66.128 -0.0000298023 0.0000119209)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 2.24,
+        "maxRatio": 2.24,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(66.128 -0.0000298023 0.0000119209)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.mt-2.text-sm.leading-6",
+          "text": "Invester i alt du elsker med campinglivet og tilrettelegg for enda bedre og langvarige opplevelser.",
+          "foreground": "lab(66.128 -0.0000298023 0.0000119209)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 2.24,
+        "maxRatio": 2.24,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(66.128 -0.0000298023 0.0000119209)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "[data-track=\"NbccHeroProductsClick\"]",
+          "text": "Finn din favoritt",
+          "foreground": "rgb(25, 20, 13)",
+          "background": "lab(38.8999 -28.7269 -2.07451)",
+          "borderColor": null
+        },
+        "minRatio": 2.74,
+        "maxRatio": 2.74,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(25, 20, 13)"
+        ],
+        "backgrounds": [
+          "lab(38.8999 -28.7269 -2.07451)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-text-contrast",
+          "selector": "[data-track=\"NbccHeroProductsClick\"]",
+          "text": "Finn din favoritt",
+          "foreground": "rgb(25, 20, 13)",
+          "background": "lab(38.8999 -28.7269 -2.07451)",
+          "borderColor": null
+        },
+        "minRatio": 2.74,
+        "maxRatio": 2.74,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(25, 20, 13)"
+        ],
+        "backgrounds": [
+          "lab(38.8999 -28.7269 -2.07451)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-border-contrast",
+          "selector": "button.rounded-md.border.px-3",
+          "text": "Middels",
+          "foreground": null,
+          "background": "rgb(10, 10, 10)",
+          "borderColor": "lab(38.8999 -28.7269 -2.07451)"
+        },
+        "minRatio": 2.96,
+        "maxRatio": 2.96,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "borderColors": [
+          "lab(38.8999 -28.7269 -2.07451)"
+        ]
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-border-contrast",
+          "selector": "button.rounded-md.border.px-3",
+          "text": "Medium",
+          "foreground": null,
+          "background": "rgb(10, 10, 10)",
+          "borderColor": "lab(38.8999 -28.7269 -2.07451)"
+        },
+        "minRatio": 2.96,
+        "maxRatio": 2.96,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "borderColors": [
+          "lab(38.8999 -28.7269 -2.07451)"
+        ]
+      }
+    ],
+    "byRouteMode": [
+      {
+        "count": 3,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "control-border-contrast",
+          "selector": "button.h-1\\.5.rounded-full.transition-all",
+          "text": "Bilde 1"
+        },
+        "minRatio": 1.07,
+        "maxRatio": 1.07,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "rgb(23, 19, 15)"
+        ],
+        "borderColors": [
+          "rgb(10, 10, 10)"
+        ]
+      },
+      {
+        "count": 3,
+        "key": {
+          "route": "/nbcc",
+          "mode": "dark",
+          "kind": "control-border-contrast",
+          "selector": "[data-track=\"NbccProductCardCtaClick\"]",
+          "text": "Produktside"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": [
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)"
+        ]
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "dark",
+          "kind": "text-contrast",
+          "selector": "p.max-w-2xl.text-base.text-foreground",
+          "text": "For noen ligger den største gleden i friheten til å våkne til ny utsikt, for andre er det det trygge fellesskapet på fas"
+        },
+        "minRatio": 1.01,
+        "maxRatio": 1.01,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "backgrounds": [
+          "rgb(245, 239, 228)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "dark",
+          "kind": "text-contrast",
+          "selector": "span.text-sm.font-semibold.text-neutral-950",
+          "text": "Medlemsfordel"
+        },
+        "minRatio": 1.03,
+        "maxRatio": 1.03,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(2.75381 0 0)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/handlehjelp/funksjonalitet",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "h1.text-4xl.font-bold.text-foreground",
+          "text": "Ett plagg."
+        },
+        "minRatio": 1.09,
+        "maxRatio": 1.09,
+        "required": 4.5,
+        "routes": [
+          "/handlehjelp/funksjonalitet"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(7.01406 1.6607 -7.15416)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/handlehjelp/funksjonalitet",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "p.text-muted-foreground.text-lg",
+          "text": "Gjelder modellene TechDown, Dun og Mikrofiber."
+        },
+        "minRatio": 1.09,
+        "maxRatio": 1.09,
+        "required": 4.5,
+        "routes": [
+          "/handlehjelp/funksjonalitet"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "backgrounds": [
+          "lab(7.01406 1.6607 -7.15416)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "p.text-sm.font-semibold.tracking-\\[0\\.18em\\]",
+          "text": "Campinglivet har mange former"
+        },
+        "minRatio": 1.14,
+        "maxRatio": 1.14,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(100 0 0)"
+        ],
+        "backgrounds": [
+          "rgb(245, 239, 228)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "h1.text-balance.text-5xl.font-semibold",
+          "text": "NBCC-medlemsfordel hos Utekos"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "h3.font-semibold.text-white",
+          "text": "Din NBCC-fordel"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "h3.font-semibold.text-white",
+          "text": "Bred campingrelevans"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "h3.font-semibold.text-white",
+          "text": "Klar for neste samling"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "#base-ui-_R_1jpbnqbmr7lbH2_",
+          "text": "Hvor finner jeg fordelskoden?"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "#base-ui-_R_2jpbnqbmr7lbH2_",
+          "text": "Kan plagget brukes av både kvinner og menn?"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "#base-ui-_R_3jpbnqbmr7lbH2_",
+          "text": "Hvilket Utekos-produkt passer best på camping?"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "#base-ui-_R_4jpbnqbmr7lbH2_",
+          "text": "Kan jeg bruke Utekos i forteltet?"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "#base-ui-_R_5jpbnqbmr7lbH2_",
+          "text": "Hva hvis størrelsen ikke passer?"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "control-text-contrast",
+          "selector": "#base-ui-_R_1jpbnqbmr7lbH2_",
+          "text": "Hvor finner jeg fordelskoden?"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "control-text-contrast",
+          "selector": "#base-ui-_R_2jpbnqbmr7lbH2_",
+          "text": "Kan plagget brukes av både kvinner og menn?"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "control-text-contrast",
+          "selector": "#base-ui-_R_3jpbnqbmr7lbH2_",
+          "text": "Hvilket Utekos-produkt passer best på camping?"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "control-text-contrast",
+          "selector": "#base-ui-_R_4jpbnqbmr7lbH2_",
+          "text": "Kan jeg bruke Utekos i forteltet?"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "control-text-contrast",
+          "selector": "#base-ui-_R_5jpbnqbmr7lbH2_",
+          "text": "Hva hvis størrelsen ikke passer?"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(255, 255, 255)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/handlehjelp/funksjonalitet",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "span.bg-linear-to-r.from-sky-800.via-cyan-700",
+          "text": "Tre opplevelser."
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/handlehjelp/funksjonalitet"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgba(0, 0, 0, 0)"
+        ],
+        "backgrounds": [
+          "lab(7.01406 1.6607 -7.15416)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "dark",
+          "kind": "control-border-contrast",
+          "selector": "[data-track=\"NbccHeroHowToAiClick\"]",
+          "text": "Få rabattveiledning"
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": [
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.25)"
+        ]
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/handlehjelp/funksjonalitet",
+          "mode": "dark",
+          "kind": "text-contrast",
+          "selector": "span.bg-linear-to-r.from-sky-800.via-cyan-700",
+          "text": "Tre opplevelser."
+        },
+        "minRatio": 1.16,
+        "maxRatio": 1.16,
+        "required": 4.5,
+        "routes": [
+          "/handlehjelp/funksjonalitet"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgba(0, 0, 0, 0)"
+        ],
+        "backgrounds": [
+          "lab(7.01406 1.6607 -7.15416)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "dark",
+          "kind": "control-border-contrast",
+          "selector": "button.rounded-md.border.px-3",
+          "text": "Middels"
+        },
+        "minRatio": 1.55,
+        "maxRatio": 1.55,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": [
+          "lab(77.9505 -26.5396 -1.29427)"
+        ]
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "dark",
+          "kind": "control-border-contrast",
+          "selector": "button.rounded-md.border.px-3",
+          "text": "Medium"
+        },
+        "minRatio": 1.55,
+        "maxRatio": 1.55,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": [
+          "lab(77.9505 -26.5396 -1.29427)"
+        ]
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/handlehjelp/funksjonalitet",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "p.mb-4.text-sm.font-medium",
+          "text": "For raske ærend og innendørs bruk"
+        },
+        "minRatio": 1.69,
+        "maxRatio": 1.69,
+        "required": 4.5,
+        "routes": [
+          "/handlehjelp/funksjonalitet"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(80.8059 21.7313 50.4455)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/handlehjelp/funksjonalitet",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "p.mb-4.text-sm.font-medium",
+          "text": "For turer og aktiv eleganse"
+        },
+        "minRatio": 1.8,
+        "maxRatio": 1.8,
+        "required": 4.5,
+        "routes": [
+          "/handlehjelp/funksjonalitet"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(77.9505 -26.5396 -1.29427)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "p.mt-2.text-sm.leading-6",
+          "text": "For deg som ønsker kompromissløs komfort og overlegen allsidighet."
+        },
+        "minRatio": 2.24,
+        "maxRatio": 2.24,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(66.128 -0.0000298023 0.0000119209)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "p.mt-2.text-sm.leading-6",
+          "text": "Egner seg som hånd i hanske for camping- og bobiltilværelsen, men også hjemme på terrassen!"
+        },
+        "minRatio": 2.24,
+        "maxRatio": 2.24,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(66.128 -0.0000298023 0.0000119209)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "p.mt-2.text-sm.leading-6",
+          "text": "Invester i alt du elsker med campinglivet og tilrettelegg for enda bedre og langvarige opplevelser."
+        },
+        "minRatio": 2.24,
+        "maxRatio": 2.24,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(66.128 -0.0000298023 0.0000119209)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "[data-track=\"NbccHeroProductsClick\"]",
+          "text": "Finn din favoritt"
+        },
+        "minRatio": 2.74,
+        "maxRatio": 2.74,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(25, 20, 13)"
+        ],
+        "backgrounds": [
+          "lab(38.8999 -28.7269 -2.07451)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "control-text-contrast",
+          "selector": "[data-track=\"NbccHeroProductsClick\"]",
+          "text": "Finn din favoritt"
+        },
+        "minRatio": 2.74,
+        "maxRatio": 2.74,
+        "required": 4.5,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "rgb(25, 20, 13)"
+        ],
+        "backgrounds": [
+          "lab(38.8999 -28.7269 -2.07451)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "control-border-contrast",
+          "selector": "button.rounded-md.border.px-3",
+          "text": "Middels"
+        },
+        "minRatio": 2.96,
+        "maxRatio": 2.96,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "borderColors": [
+          "lab(38.8999 -28.7269 -2.07451)"
+        ]
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/nbcc",
+          "mode": "light",
+          "kind": "control-border-contrast",
+          "selector": "button.rounded-md.border.px-3",
+          "text": "Medium"
+        },
+        "minRatio": 2.96,
+        "maxRatio": 2.96,
+        "required": 3,
+        "routes": [
+          "/nbcc"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "rgb(10, 10, 10)"
+        ],
+        "borderColors": [
+          "lab(38.8999 -28.7269 -2.07451)"
+        ]
+      }
+    ]
+  },
+  "failures": [
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "h1.text-balance.text-5xl.font-semibold",
+      "text": "NBCC-medlemsfordel hos Utekos",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "[data-track=\"NbccHeroProductsClick\"]",
+      "text": "Finn din favoritt",
+      "ratio": 2.74,
+      "required": 4.5,
+      "foreground": "rgb(25, 20, 13)",
+      "background": "lab(38.8999 -28.7269 -2.07451)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "h3.font-semibold.text-white",
+      "text": "Din NBCC-fordel",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.mt-2.text-sm.leading-6",
+      "text": "For deg som ønsker kompromissløs komfort og overlegen allsidighet.",
+      "ratio": 2.24,
+      "required": 4.5,
+      "foreground": "lab(66.128 -0.0000298023 0.0000119209)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "h3.font-semibold.text-white",
+      "text": "Bred campingrelevans",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.mt-2.text-sm.leading-6",
+      "text": "Egner seg som hånd i hanske for camping- og bobiltilværelsen, men også hjemme på terrassen!",
+      "ratio": 2.24,
+      "required": 4.5,
+      "foreground": "lab(66.128 -0.0000298023 0.0000119209)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "h3.font-semibold.text-white",
+      "text": "Klar for neste samling",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.mt-2.text-sm.leading-6",
+      "text": "Invester i alt du elsker med campinglivet og tilrettelegg for enda bedre og langvarige opplevelser.",
+      "ratio": 2.24,
+      "required": 4.5,
+      "foreground": "lab(66.128 -0.0000298023 0.0000119209)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.text-sm.font-semibold.tracking-\\[0\\.18em\\]",
+      "text": "Campinglivet har mange former",
+      "ratio": 1.14,
+      "required": 4.5,
+      "foreground": "lab(100 0 0)",
+      "background": "rgb(245, 239, 228)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "#base-ui-_R_1jpbnqbmr7lbH2_",
+      "text": "Hvor finner jeg fordelskoden?",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "#base-ui-_R_2jpbnqbmr7lbH2_",
+      "text": "Kan plagget brukes av både kvinner og menn?",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "#base-ui-_R_3jpbnqbmr7lbH2_",
+      "text": "Hvilket Utekos-produkt passer best på camping?",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "#base-ui-_R_4jpbnqbmr7lbH2_",
+      "text": "Kan jeg bruke Utekos i forteltet?",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "#base-ui-_R_5jpbnqbmr7lbH2_",
+      "text": "Hva hvis størrelsen ikke passer?",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-text-contrast",
+      "selector": "[data-track=\"NbccHeroProductsClick\"]",
+      "text": "Finn din favoritt",
+      "ratio": 2.74,
+      "required": 4.5,
+      "foreground": "rgb(25, 20, 13)",
+      "background": "lab(38.8999 -28.7269 -2.07451)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "button.h-1\\.5.rounded-full.transition-all",
+      "text": "Bilde 1",
+      "ratio": 1.07,
+      "required": 3,
+      "borderColor": "rgb(10, 10, 10)",
+      "background": "rgb(23, 19, 15)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "button.rounded-md.border.px-3",
+      "text": "Middels",
+      "ratio": 2.96,
+      "required": 3,
+      "borderColor": "lab(38.8999 -28.7269 -2.07451)",
+      "background": "rgb(10, 10, 10)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "button.h-1\\.5.rounded-full.transition-all",
+      "text": "Bilde 1",
+      "ratio": 1.07,
+      "required": 3,
+      "borderColor": "rgb(10, 10, 10)",
+      "background": "rgb(23, 19, 15)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "button.rounded-md.border.px-3",
+      "text": "Medium",
+      "ratio": 2.96,
+      "required": 3,
+      "borderColor": "lab(38.8999 -28.7269 -2.07451)",
+      "background": "rgb(10, 10, 10)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "button.h-1\\.5.rounded-full.transition-all",
+      "text": "Bilde 1",
+      "ratio": 1.07,
+      "required": 3,
+      "borderColor": "rgb(10, 10, 10)",
+      "background": "rgb(23, 19, 15)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-text-contrast",
+      "selector": "#base-ui-_R_1jpbnqbmr7lbH2_",
+      "text": "Hvor finner jeg fordelskoden?",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-text-contrast",
+      "selector": "#base-ui-_R_2jpbnqbmr7lbH2_",
+      "text": "Kan plagget brukes av både kvinner og menn?",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-text-contrast",
+      "selector": "#base-ui-_R_3jpbnqbmr7lbH2_",
+      "text": "Hvilket Utekos-produkt passer best på camping?",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-text-contrast",
+      "selector": "#base-ui-_R_4jpbnqbmr7lbH2_",
+      "text": "Kan jeg bruke Utekos i forteltet?",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-text-contrast",
+      "selector": "#base-ui-_R_5jpbnqbmr7lbH2_",
+      "text": "Hva hvis størrelsen ikke passer?",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/handlehjelp/funksjonalitet",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "h1.text-4xl.font-bold.text-foreground",
+      "text": "Ett plagg.",
+      "ratio": 1.09,
+      "required": 4.5,
+      "foreground": "rgb(10, 10, 10)",
+      "background": "lab(7.01406 1.6607 -7.15416)"
+    },
+    {
+      "route": "/handlehjelp/funksjonalitet",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "span.bg-linear-to-r.from-sky-800.via-cyan-700",
+      "text": "Tre opplevelser.",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgba(0, 0, 0, 0)",
+      "background": "lab(7.01406 1.6607 -7.15416)"
+    },
+    {
+      "route": "/handlehjelp/funksjonalitet",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.mb-4.text-sm.font-medium",
+      "text": "For raske ærend og innendørs bruk",
+      "ratio": 1.69,
+      "required": 4.5,
+      "foreground": "lab(80.8059 21.7313 50.4455)",
+      "background": "lab(100 0 0)"
+    },
+    {
+      "route": "/handlehjelp/funksjonalitet",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.mb-4.text-sm.font-medium",
+      "text": "For turer og aktiv eleganse",
+      "ratio": 1.8,
+      "required": 4.5,
+      "foreground": "lab(77.9505 -26.5396 -1.29427)",
+      "background": "lab(100 0 0)"
+    },
+    {
+      "route": "/handlehjelp/funksjonalitet",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.text-muted-foreground.text-lg",
+      "text": "Gjelder modellene TechDown, Dun og Mikrofiber.",
+      "ratio": 1.09,
+      "required": 4.5,
+      "foreground": "rgb(10, 10, 10)",
+      "background": "lab(7.01406 1.6607 -7.15416)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "span.text-sm.font-semibold.text-neutral-950",
+      "text": "Medlemsfordel",
+      "ratio": 1.03,
+      "required": 4.5,
+      "foreground": "lab(2.75381 0 0)",
+      "background": "lab(4.06503 0.736147 -4.02324)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.max-w-2xl.text-base.text-foreground",
+      "text": "For noen ligger den største gleden i friheten til å våkne til ny utsikt, for andre er det det trygge fellesskapet på fas",
+      "ratio": 1.01,
+      "required": 4.5,
+      "foreground": "lab(94.1529 0.044167 2.67328)",
+      "background": "rgb(245, 239, 228)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "[data-track=\"NbccHeroHowToAiClick\"]",
+      "text": "Få rabattveiledning",
+      "ratio": 1.16,
+      "required": 3,
+      "borderColor": "oklab(0.999994 0.0000455678 0.0000200868 / 0.25)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "button.rounded-md.border.px-3",
+      "text": "Middels",
+      "ratio": 1.55,
+      "required": 3,
+      "borderColor": "lab(77.9505 -26.5396 -1.29427)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "[data-track=\"NbccProductCardCtaClick\"]",
+      "text": "Produktside",
+      "ratio": 1.16,
+      "required": 3,
+      "borderColor": "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "button.rounded-md.border.px-3",
+      "text": "Medium",
+      "ratio": 1.55,
+      "required": 3,
+      "borderColor": "lab(77.9505 -26.5396 -1.29427)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "[data-track=\"NbccProductCardCtaClick\"]",
+      "text": "Produktside",
+      "ratio": 1.16,
+      "required": 3,
+      "borderColor": "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/nbcc",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "[data-track=\"NbccProductCardCtaClick\"]",
+      "text": "Produktside",
+      "ratio": 1.16,
+      "required": 3,
+      "borderColor": "oklab(0.999994 0.0000455678 0.0000200868 / 0.1)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/handlehjelp/funksjonalitet",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "span.bg-linear-to-r.from-sky-800.via-cyan-700",
+      "text": "Tre opplevelser.",
+      "ratio": 1.16,
+      "required": 4.5,
+      "foreground": "rgba(0, 0, 0, 0)",
+      "background": "lab(7.01406 1.6607 -7.15416)"
+    }
+  ],
+  "warnings": []
+}

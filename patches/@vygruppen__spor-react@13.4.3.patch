@@ -1,0 +1,22 @@
+diff --git a/tsconfig.json b/tsconfig.json
+index 4e12b96ac2db1333b20b384a5d7e81e7178e54a1..078d6c8a6ec85127319dc6eb92e1c1f48690e13a 100644
+--- a/tsconfig.json
++++ b/tsconfig.json
+@@ -1,11 +1,15 @@
+ {
+-  "extends": "@vygruppen/tsconfig/react-library.json",
+   "include": ["."],
+   "exclude": ["dist", "build", "node_modules"],
+   "compilerOptions": {
+     "lib": ["dom", "es2023"],
++    "module": "ESNext",
++    "moduleResolution": "bundler",
++    "jsx": "react-jsx",
+     "rootDir": ".",
+-
++    "noEmit": true,
++    "strict": true,
++    "skipLibCheck": true,
+     "paths": { "@/*": ["./src/*"] },
+     "resolveJsonModule": true
+   }

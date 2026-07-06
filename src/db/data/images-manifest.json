@@ -1,0 +1,1701 @@
+{
+  "Blue": {
+    "main": [
+      {
+        "id": "gid://shopify/MediaImage/36991418237176",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_flat.png?v=1749074278",
+        "width": 366,
+        "height": 550,
+        "fileSize": "228.08 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36991418302712",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mikro_blue_front_without.png?v=1749149535",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "749.86 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996666884344",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_back90.webp?v=1749150098",
+        "width": 2048,
+        "height": 3072,
+        "fileSize": "182.43 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996667801848",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_flat1.webp?v=1749150461",
+        "width": 2048,
+        "height": 3078,
+        "fileSize": "197.13 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996667834616",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_front90.webp?v=1749148124",
+        "width": 2048,
+        "height": 3072,
+        "fileSize": "207.94 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996667867384",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mikro__blue_front_without.webp?v=1749148124",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "185.96 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996668489976",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_dawn_half_85.webp?v=1749150461",
+        "width": 2048,
+        "height": 3071,
+        "fileSize": "227.53 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996669178104",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_open_without85main.webp?v=1749150461",
+        "width": 2048,
+        "height": 3073,
+        "fileSize": "239.11 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996669538552",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_parkas87.webp?v=1749180508",
+        "width": 2048,
+        "height": 3071,
+        "fileSize": "210.90 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996670030072",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_pocket2.webp?v=1749150461",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "217.88 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996670193912",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_sidepocket.webp?v=1749150461",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "227.74 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996670980344",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_top_pocket85.webp?v=1749150461",
+        "width": 2048,
+        "height": 3072,
+        "fileSize": "165.28 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677206264",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_bag_snow_1333.webp?v=1749148615",
+        "width": 1333,
+        "height": 889,
+        "fileSize": "105.11 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679401720",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_zipper_top_without1333.webp?v=1749150098",
+        "width": 1362,
+        "height": 2048,
+        "fileSize": "195.74 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679500024",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/doll_blue_chest_open.webp?v=1749148671",
+        "width": 1362,
+        "height": 2048,
+        "fileSize": "189.25 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679565560",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_open_doll_w_1333.webp?v=1749150098",
+        "width": 1333,
+        "height": 2005,
+        "fileSize": "204.24 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679729400",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/dawn_doll_blue_chest_open.webp?v=1749148672",
+        "width": 1362,
+        "height": 2048,
+        "fileSize": "189.25 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679794936",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_open_doll_widthout.webp?v=1749148672",
+        "width": 2048,
+        "height": 3080,
+        "fileSize": "208.43 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679860472",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/doll_blue_chest_open_2048.webp?v=1749150098",
+        "width": 2048,
+        "height": 3080,
+        "fileSize": "292.29 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996681761016",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_bag1.webp?v=1749148719",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "216.58 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996681793784",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_bag_snow.webp?v=1749148719",
+        "width": 1024,
+        "height": 683,
+        "fileSize": "173.40 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996684644600",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/buff_blue.webp?v=1749148792",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "659.55 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996684677368",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_buff_full.webp?v=1749148793",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "989.97 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996783046904",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mikro_blue_front_without.webp?v=1749180508",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "185.96 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37067673207032",
+        "alt": "\"Fjellhimmel\"- blue leaf background",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/liggende_blad_cartoonlysebla_klar_lguvk4.png?v=1750070721",
+        "width": 600,
+        "height": 1000,
+        "fileSize": "506.24 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37101008978168",
+        "alt": "Utekos Blue Bag",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/bluebag_snow.webp?v=1750431015",
+        "width": 1024,
+        "height": 683,
+        "fileSize": "36.81 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37102528659704",
+        "alt": "Utekos Blue Bag",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/blue_bag_w.webp?v=1750451253",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "162.55 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37332894220536",
+        "alt": "Blue and Red Background Picture",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/bg-animation.webp?v=1753175313",
+        "width": 2474,
+        "height": 1804,
+        "fileSize": "27.22 KB"
+      }
+    ],
+    "Mobile": [
+      {
+        "id": "gid://shopify/MediaImage/36996668752120",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blueback.webp?v=1749180508",
+        "width": 360,
+        "height": 540,
+        "fileSize": "12.11 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996668784888",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blue_flat.webp?v=1749148195",
+        "width": 360,
+        "height": 540,
+        "fileSize": "24.60 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996668817656",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_mikro_blue_front_without.webp?v=1749148195",
+        "width": 360,
+        "height": 540,
+        "fileSize": "27.31 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996668850424",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blueparkas.webp?v=1749148196",
+        "width": 360,
+        "height": 540,
+        "fileSize": "30.62 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996668883192",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blueopen.webp?v=1749148196",
+        "width": 360,
+        "height": 540,
+        "fileSize": "43.22 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996668915960",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blue_halfopen300.webp?v=1749148195",
+        "width": 300,
+        "height": 450,
+        "fileSize": "38.30 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996668948728",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_bluefront.webp?v=1749148196",
+        "width": 360,
+        "height": 540,
+        "fileSize": "27.48 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996669079800",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blue_top_pocket.webp?v=1749148196",
+        "width": 360,
+        "height": 540,
+        "fileSize": "69.56 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996676911352",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blue_bag_snow.webp?v=1749148614",
+        "width": 360,
+        "height": 240,
+        "fileSize": "18.14 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679237880",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blue_zipper_top_without.webp?v=1749148671",
+        "width": 360,
+        "height": 541,
+        "fileSize": "26.96 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679303416",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blue_open_doll_widthout.webp?v=1749148671",
+        "width": 360,
+        "height": 541,
+        "fileSize": "51.45 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679696632",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_doll_blue_chest_open.webp?v=1749148671",
+        "width": 360,
+        "height": 541,
+        "fileSize": "57.87 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996681695480",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blue_bag_snow_cdcd0e15-5738-4d16-a004-899d1c988a6d.webp?v=1749148719",
+        "width": 360,
+        "height": 240,
+        "fileSize": "33.17 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996681728248",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blue_bag.webp?v=1749148719",
+        "width": 360,
+        "height": 540,
+        "fileSize": "49.39 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996684415224",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_buff_blue.webp?v=1749148792",
+        "width": 360,
+        "height": 540,
+        "fileSize": "58.60 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996684447992",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blue_buff_full.webp?v=1749148792",
+        "width": 360,
+        "height": 540,
+        "fileSize": "78.26 KB"
+      }
+    ]
+  },
+  "Dark/Black": {
+    "main": [
+      {
+        "id": "gid://shopify/MediaImage/36318628675832",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Wordmark_Black.png?v=1742000190",
+        "width": 1281,
+        "height": 312,
+        "fileSize": "20.40 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36335596077304",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Black_W_800x200_d9d4e610-02c7-459a-ad86-4577c67c8329.png?v=1742227608",
+        "width": 800,
+        "height": 200,
+        "fileSize": "46.37 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36335613247736",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Black_W_800x200_2560_x_312_px_2060_x_350_px.svg?v=1742227907",
+        "width": 2060,
+        "height": 350,
+        "fileSize": "76.98 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996671701240",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/black_back_without95.webp?v=1749180508",
+        "width": 2048,
+        "height": 3073,
+        "fileSize": "209.68 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996671734008",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/black_flat_without85.webp?v=1749150461",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "127.07 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996672159992",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/dark_front90.webp?v=1749150098",
+        "width": 2048,
+        "height": 3071,
+        "fileSize": "220.83 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996672192760",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mikro__full_black_without.webp?v=1749180508",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "188.52 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996672946424",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/black_half_w90.webp?v=1749150461",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "197.98 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996673503480",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/dark_open85best.webp?v=1749150461",
+        "width": 2048,
+        "height": 3072,
+        "fileSize": "186.82 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996673569016",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/dark_parkas85.webp?v=1749180508",
+        "width": 2048,
+        "height": 3072,
+        "fileSize": "195.41 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996674060536",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/black_side_pocket.webp?v=1749150461",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "197.88 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996674093304",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/black_top_pocket.webp?v=1749150461",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "222.93 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996674126072",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/side_black.webp?v=1749150461",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "198.49 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996674584824",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/black_flat_without.webp?v=1749148517",
+        "width": 360,
+        "height": 540,
+        "fileSize": "51.62 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996674617592",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mb_black_back_without.webp?v=1749148517",
+        "width": 360,
+        "height": 540,
+        "fileSize": "25.13 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677304568",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/linn_elin_dark_9_16_80.webp?v=1749148615",
+        "width": 800,
+        "height": 1202,
+        "fileSize": "234.20 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679762168",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/black_half_doll_widthout_2048.webp?v=1749148672",
+        "width": 2048,
+        "height": 3080,
+        "fileSize": "193.78 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996682285304",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/black_bag.webp?v=1749148735",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "218.58 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996685660408",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/black_buff_full_w.webp?v=1749148818",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "828.62 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996685693176",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/black_buff_w.webp?v=1749148818",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "580.66 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996689035512",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/dark_special_orange_w_2048.webp?v=1749148900",
+        "width": 2048,
+        "height": 3078,
+        "fileSize": "199.94 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996854219000",
+        "alt": "Special Edition Bålglød on Doll",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/dark_special_orange_w_2048_b1847404-a847-4bb4-a1a5-9f2ef2f293de.webp?v=1749151728",
+        "width": 2048,
+        "height": 3078,
+        "fileSize": "199.94 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37074245910776",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/logo-black.svg?v=1750173795",
+        "width": 600,
+        "height": 200,
+        "fileSize": "80.65 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37338658472184",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/utekos_black_circle_logo.png?v=1753228426",
+        "width": 500,
+        "height": 500,
+        "fileSize": "17.28 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37338688225528",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/utekos_black_circle_logo_8347b0c3-7609-4a7d-9513-97d439abc345.png?v=1753229722",
+        "width": 500,
+        "height": 500,
+        "fileSize": "17.28 KB"
+      }
+    ],
+    "Mobile": [
+      {
+        "id": "gid://shopify/MediaImage/36996674552056",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_black_half.webp?v=1749148517",
+        "width": 300,
+        "height": 450,
+        "fileSize": "26.19 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996674650360",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_dark_parkas.webp?v=1749148517",
+        "width": 360,
+        "height": 540,
+        "fileSize": "33.83 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996674683128",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_dark_open.webp?v=1749148517",
+        "width": 360,
+        "height": 540,
+        "fileSize": "52.71 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996674715896",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_black_front.webp?v=1749148517",
+        "width": 393,
+        "height": 589,
+        "fileSize": "31.35 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996674748664",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_black_top_pocket.webp?v=1749148517",
+        "width": 360,
+        "height": 540,
+        "fileSize": "59.98 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996674781432",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_blackside.webp?v=1749148517",
+        "width": 360,
+        "height": 540,
+        "fileSize": "53.70 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677271800",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_linn_elin_dark_9_16.webp?v=1749148615",
+        "width": 360,
+        "height": 541,
+        "fileSize": "138.00 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679270648",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_black_half_doll_widthout.webp?v=1749148671",
+        "width": 360,
+        "height": 541,
+        "fileSize": "46.06 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996682252536",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_black_bag.webp?v=1749148734",
+        "width": 360,
+        "height": 540,
+        "fileSize": "47.55 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996685431032",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_black_buff_full_w.webp?v=1749148812",
+        "width": 360,
+        "height": 540,
+        "fileSize": "73.80 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996685463800",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_black_buff_w.webp?v=1749148812",
+        "width": 360,
+        "height": 540,
+        "fileSize": "53.27 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996688937208",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_dark_special_orange_w.webp?v=1749148900",
+        "width": 360,
+        "height": 541,
+        "fileSize": "47.98 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37021912826104",
+        "alt": "Black Utekos Bottom Part Img",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_black_flat_without.webp?v=1749492538",
+        "width": 360,
+        "height": 540,
+        "fileSize": "51.62 KB"
+      }
+    ]
+  },
+  "Comfyrobe": {
+    "main": [
+      {
+        "id": "gid://shopify/MediaImage/32043931730168",
+        "alt": "Comfyrobe i action",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Comfy2_5e3faaec-173b-43b0-9097-293a8d8daff1.jpg?v=1749150751",
+        "width": 1158,
+        "height": 1490,
+        "fileSize": "134.24 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996823449848",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/comfy_full_85.webp?v=1749150751",
+        "width": 2048,
+        "height": 3072,
+        "fileSize": "185.02 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996823810296",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/comfy_open87.webp?v=1749150751",
+        "width": 2048,
+        "height": 3073,
+        "fileSize": "323.13 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996823843064",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/comfyrobe_design.webp?v=1749150751",
+        "width": 800,
+        "height": 1200,
+        "fileSize": "219.13 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996824236280",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/comfyrobe_behind.webp?v=1749150751",
+        "width": 2048,
+        "height": 3072,
+        "fileSize": "988.82 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996829446392",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mb_comfyrobe_behind.webp?v=1749150629",
+        "width": 360,
+        "height": 540,
+        "fileSize": "21.63 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37067214979320",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/comfylogo.png?v=1750066405",
+        "width": 200,
+        "height": 200,
+        "fileSize": "76.20 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37067217142008",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/comfylogo.edit.webp?v=1750066424",
+        "width": 200,
+        "height": 200,
+        "fileSize": "20.17 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37079428464888",
+        "alt": "Comfyrobe Sketch",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/ComfyFrontSkisse.png?v=1750241383",
+        "width": 597,
+        "height": 503,
+        "fileSize": "51.82 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37079428497656",
+        "alt": "Comfyrobe Sketch Backside",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/ComfyBaksideSkisse.png?v=1750241383",
+        "width": 597,
+        "height": 503,
+        "fileSize": "36.60 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37102834548984",
+        "alt": "Erling med Comfyrobe på brygge",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/comfy_rainy.webp?v=1750452938",
+        "width": 1158,
+        "height": 1490,
+        "fileSize": "88.22 KB"
+      }
+    ],
+    "Mobile": [
+      {
+        "id": "gid://shopify/MediaImage/36996829413624",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_comfyopen.webp?v=1749150691",
+        "width": 360,
+        "height": 540,
+        "fileSize": "12.54 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996829479160",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_comfyfull.webp?v=1749150669",
+        "width": 360,
+        "height": 540,
+        "fileSize": "23.50 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996829511928",
+        "alt": "Comfyrobe Design",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_comfyrobe_design.webp?v=1749150727",
+        "width": 360,
+        "height": 540,
+        "fileSize": "113.56 KB"
+      }
+    ]
+  },
+  "Special Edition": {
+    "main": [
+      {
+        "id": "gid://shopify/MediaImage/36996677370104",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Kate_Special_Editon_800.webp?v=1749151728",
+        "width": 800,
+        "height": 1107,
+        "fileSize": "198.04 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996683038968",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/special_bag.webp?v=1749151728",
+        "width": 1362,
+        "height": 2048,
+        "fileSize": "170.87 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996683071736",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/special_bags_2048.webp?v=1749148761",
+        "width": 2048,
+        "height": 1581,
+        "fileSize": "208.46 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996689002744",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/doll_balglod_special_orange.webp?v=1749151728",
+        "width": 1333,
+        "height": 1844,
+        "fileSize": "161.80 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996689068280",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/special_orange_doll_open_widthout.webp?v=1749148900",
+        "width": 1362,
+        "height": 2048,
+        "fileSize": "270.77 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996689821944",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mb_special_turkis_doll_widthout.webp?v=1749148928",
+        "width": 360,
+        "height": 541,
+        "fileSize": "28.92 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996689854712",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/special_turkis_doll_widthout.webp?v=1749151728",
+        "width": 1362,
+        "height": 2048,
+        "fileSize": "226.73 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996854251768",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/special_orange_doll_open_widthout_6e263d20-b150-4ae0-843f-367188da8578.webp?v=1749151728",
+        "width": 1362,
+        "height": 2048,
+        "fileSize": "270.77 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37067261214968",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/kate_special_without.png?v=1750066794",
+        "width": 508,
+        "height": 703,
+        "fileSize": "113.82 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37256632893688",
+        "alt": "Kvinne og mann slapper av i gresset med sine Utekos Special Edition",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/DSC07131.webp?v=1752433697",
+        "width": 1024,
+        "height": 641,
+        "fileSize": "141.87 KB"
+      }
+    ],
+    "Mobile": [
+      {
+        "id": "gid://shopify/MediaImage/36996677239032",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_Kate_Special_Editon.webp?v=1749148615",
+        "width": 360,
+        "height": 498,
+        "fileSize": "109.74 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996682973432",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_special_bag.webp?v=1749148761",
+        "width": 360,
+        "height": 541,
+        "fileSize": "25.00 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996683006200",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_special_bags.webp?v=1749148761",
+        "width": 360,
+        "height": 278,
+        "fileSize": "43.07 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996688904440",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_doll_closed_special_orange.webp?v=1749148899",
+        "width": 360,
+        "height": 498,
+        "fileSize": "29.12 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996688969976",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_special_orange_doll_open_widthout.webp?v=1749148900",
+        "width": 360,
+        "height": 541,
+        "fileSize": "33.72 KB"
+      }
+    ]
+  },
+  "Logo/Favicon": {
+    "main": [
+      {
+        "id": "gid://shopify/MediaImage/36775591379192",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/logo.svg?v=1746711825",
+        "width": 1280,
+        "height": 1109,
+        "fileSize": "0.79 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36775593246968",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/logo-pic.svg?v=1746711849",
+        "width": 600,
+        "height": 200,
+        "fileSize": "65.33 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37338582647032",
+        "alt": "Utekos Logo",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/utekos-logo.svg?v=1753225277",
+        "width": 1280,
+        "height": 1109,
+        "fileSize": "0.79 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37338628063480",
+        "alt": "Utekos Favicon",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/utekos_logo.svg?v=1753226861",
+        "width": 500,
+        "height": 500,
+        "fileSize": "5.79 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37338630357240",
+        "alt": "Utekos Favicon",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/utekos_logo_white_bg.svg?v=1753226900",
+        "width": 500,
+        "height": 500,
+        "fileSize": "5.77 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37338654671096",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/utekos_logo_png.png?v=1753228182",
+        "width": 500,
+        "height": 500,
+        "fileSize": "19.24 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37338655817976",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/utekos_circle_logo.png?v=1753228310",
+        "width": 500,
+        "height": 500,
+        "fileSize": "18.39 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37342316462328",
+        "alt": "Utekos Favicon",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/utekos-favicon.png?v=1753277532",
+        "width": 300,
+        "height": 300,
+        "fileSize": "19.21 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37342587519224",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/favicon-48x48.png?v=1753280727",
+        "width": 48,
+        "height": 48,
+        "fileSize": "2.46 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37342587584760",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/favicon-192x192.png?v=1753280727",
+        "width": 192,
+        "height": 192,
+        "fileSize": "9.98 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37342587617528",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/favicon-32x32.png?v=1753280727",
+        "width": 32,
+        "height": 32,
+        "fileSize": "1.67 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37342587650296",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/favicon-300x300.png?v=1753280728",
+        "width": 300,
+        "height": 300,
+        "fileSize": "19.21 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37342587683064",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/favicon-512x512.png?v=1753280727",
+        "width": 512,
+        "height": 512,
+        "fileSize": "33.21 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37342587715832",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/favicon-16x16.png?v=1753280727",
+        "width": 16,
+        "height": 16,
+        "fileSize": "0.72 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37342866702584",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/nature_favicon.webp?v=1753283819",
+        "width": 512,
+        "height": 341,
+        "fileSize": "115.67 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37342907793656",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/nature_favicon_ff9a9c68-f7e3-4a84-b305-456e7f247062.webp?v=1753284439",
+        "width": 512,
+        "height": 341,
+        "fileSize": "115.68 KB"
+      }
+    ],
+    "Mobile": []
+  },
+  "Generale": {
+    "main": [
+      {
+        "id": "gid://shopify/MediaImage/30020050518264",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/DSC07171.jpg?v=1742161969",
+        "width": 620,
+        "height": 479,
+        "fileSize": "316.43 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/30020560421112",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Bilde7.jpg?v=1654271931",
+        "width": 1272,
+        "height": 860,
+        "fileSize": "232.15 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/30021595201784",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/AE924270-5C29-4B8B-A876-F54EBBDE77D4.jpg?v=1742152054",
+        "width": 1024,
+        "height": 683,
+        "fileSize": "386.78 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/30021957484792",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Utekos_jpg.png?v=1654290945",
+        "width": 1209,
+        "height": 295,
+        "fileSize": "96.22 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/30023942930680",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/800px-Klarna_Payment_Badge.svg_35434527-86e0-4a68-b589-99af537153ef.png?v=1654325483",
+        "width": 800,
+        "height": 445,
+        "fileSize": "17.21 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/30024433959160",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/5811D306-203A-4D1F-8316-D4E9CECD02A7.jpg?v=1654332247",
+        "width": 1024,
+        "height": 683,
+        "fileSize": "300.37 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/31641977454840",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/products/bag1.jpg?v=1749246030",
+        "width": 152,
+        "height": 222,
+        "fileSize": "10.72 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/31641978470648",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/products/bag1_0906769a-19c4-4b24-9c40-dd3db7d10904.jpg?v=1749246030",
+        "width": 152,
+        "height": 222,
+        "fileSize": "10.72 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/31641978503416",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/products/bilde3.jpg?v=1749246030",
+        "width": 165,
+        "height": 155,
+        "fileSize": "9.22 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/31641978536184",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/products/bilde2.jpg?v=1749246030",
+        "width": 163,
+        "height": 155,
+        "fileSize": "8.22 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/32044070863096",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/364938430_253466674283281_8933931204488339361_n_1.jpg?v=1749150751",
+        "width": 2726,
+        "height": 4096,
+        "fileSize": "987.18 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36328874770680",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Kate_og_Linn.png?v=1742155144",
+        "width": 508,
+        "height": 703,
+        "fileSize": "825.12 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36348466036984",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/UTEKOS_DUN_5.png?v=1742332774",
+        "width": 960,
+        "height": 1439,
+        "fileSize": "1372.48 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36413941514488",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/UTEKOS_SNORT.png?v=1743027251",
+        "width": 300,
+        "height": 524,
+        "fileSize": "69.31 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36641794097400",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Utekos_L_skisse.png?v=1745275020",
+        "width": 1080,
+        "height": 1920,
+        "fileSize": "164.89 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36641831616760",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Utekos_L_skisse_L.png?v=1745276039",
+        "width": 1410,
+        "height": 2250,
+        "fileSize": "476.41 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36641856356600",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Utekos_L_skisse_L_410_x_600_px.png?v=1745368118",
+        "width": 410,
+        "height": 600,
+        "fileSize": "77.22 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36648416477432",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/temp-soyle.png?v=1745356642",
+        "width": 328,
+        "height": 457,
+        "fileSize": "21.72 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36649512239352",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Soyle_Dun_Mikrofiber.png?v=1745365659",
+        "width": 300,
+        "height": 465,
+        "fileSize": "23.29 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36649512304888",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Soyle_Dun_last.png?v=1745365473",
+        "width": 300,
+        "height": 465,
+        "fileSize": "23.16 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36649512730872",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Utekos_Skisse_Strl_S.png?v=1745368572",
+        "width": 410,
+        "height": 600,
+        "fileSize": "75.75 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36649512763640",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Utekos_Skisse_Strl_M_1.png?v=1745368643",
+        "width": 410,
+        "height": 600,
+        "fileSize": "77.19 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36654151008504",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Nordic_Dun_Temp_Iphone_Max.svg?v=1745414918",
+        "width": 394,
+        "height": 492,
+        "fileSize": "113.49 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36654213824760",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Nordic_Mikrofiber_Temp_Iphone_M.svg?v=1745414943",
+        "width": 394,
+        "height": 492,
+        "fileSize": "115.86 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36658902270200",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Utekos_Skisse_Str_S_1.svg?v=1745493724",
+        "width": 410,
+        "height": 600,
+        "fileSize": "388.74 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36660838564088",
+        "alt": "Utekos Skisse Størrelse L",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Utekos_Skisse_Str_L_mettet.svg?v=1745493439",
+        "width": 410,
+        "height": 600,
+        "fileSize": "387.60 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36660839350520",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Utekos_Skisse_Str_M_mettet.svg?v=1745493700",
+        "width": 410,
+        "height": 600,
+        "fileSize": "387.46 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36784503030008",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/damentilpederbilde.png?v=1746789037",
+        "width": 354,
+        "height": 641,
+        "fileSize": "398.25 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36991466471672",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/damentilpederbilde_c0fbaf84-65d6-4217-89a3-de52837a407f.png?v=1749074738",
+        "width": 354,
+        "height": 641,
+        "fileSize": "398.25 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36995403514104",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/jente_ute_9_16_snow.jpg?v=1749149535",
+        "width": 683,
+        "height": 1024,
+        "fileSize": "359.85 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996669047032",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mb_girl_sitting_outside_coffee.webp?v=1749148196",
+        "width": 360,
+        "height": 651,
+        "fileSize": "59.07 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996676944120",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mb_ute_mail.webp?v=1749148614",
+        "width": 360,
+        "height": 240,
+        "fileSize": "64.99 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677140728",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/56DF3DCB-961F-4D08-BDC1-02430D70E54A.webp?v=1749148615",
+        "width": 1333,
+        "height": 1999,
+        "fileSize": "216.32 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677337336",
+        "alt": "Utekos med morgenkaffe",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/coffe_utekos.webp?v=1749148615",
+        "width": 1024,
+        "height": 683,
+        "fileSize": "167.20 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677402872",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/girl_onstonesnow9_16_1333.webp?v=1749148615",
+        "width": 1333,
+        "height": 2000,
+        "fileSize": "219.95 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677435640",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/eh_pointing_star_800.webp?v=1749148615",
+        "width": 800,
+        "height": 971,
+        "fileSize": "185.87 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677468408",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/cait_linn1333.webp?v=1749148615",
+        "width": 1333,
+        "height": 887,
+        "fileSize": "363.47 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677501176",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/DSC9248.webp?v=1749148615",
+        "width": 2048,
+        "height": 1363,
+        "fileSize": "343.00 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677533944",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/ute_mal_133.webp?v=1749148615",
+        "width": 1333,
+        "height": 887,
+        "fileSize": "336.57 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677566712",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/automn_walking_2048.webp?v=1749148616",
+        "width": 2048,
+        "height": 1363,
+        "fileSize": "379.58 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677599480",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/aut_beach_utekos_2048.webp?v=1749148616",
+        "width": 2048,
+        "height": 3077,
+        "fileSize": "365.88 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677632248",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/automn_caitlinn2048.webp?v=1749148616",
+        "width": 2048,
+        "height": 1363,
+        "fileSize": "628.22 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677665016",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/caitlinn_2048.webp?v=1749148616",
+        "width": 2048,
+        "height": 1363,
+        "fileSize": "528.44 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679467256",
+        "alt": "YKK-glideglås",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/ykk.webp?v=1749148671",
+        "width": 2048,
+        "height": 1638,
+        "fileSize": "188.54 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679827704",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/dun_doll_fluffy_without_2048.webp?v=1749150098",
+        "width": 2048,
+        "height": 3080,
+        "fileSize": "196.94 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996926013688",
+        "alt": "Couple enjoying the day with their Utekos",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/ke_relaxing_one_stone.webp?v=1749151599",
+        "width": 1630,
+        "height": 1227,
+        "fileSize": "469.94 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996926111992",
+        "alt": "Lady enjoying the autumn sun with her Utekos SE Fjellhimmel",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/khh_smiling.webp?v=1749151728",
+        "width": 1155,
+        "height": 1732,
+        "fileSize": "715.52 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996964647160",
+        "alt": "Couple enjoying the day with their Utekos",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/ke_stonesitting_2.3.webp?v=1749151936",
+        "width": 871,
+        "height": 1152,
+        "fileSize": "315.04 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37004351930616",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Designutennavn_2.png?v=1749246030",
+        "width": 200,
+        "height": 300,
+        "fileSize": "94.85 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37067763581176",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/kate_widthout.png?v=1750072111",
+        "width": 800,
+        "height": 1107,
+        "fileSize": "318.91 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37067805753592",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/fargerike_bla_svart_redigert.png?v=1750073320",
+        "width": 906,
+        "height": 1072,
+        "fileSize": "1443.32 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37078618767608",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Utekos_Skisse_Str_L_mettet_531c7312-331b-492c-8454-381c3b1fcdc5.svg?v=1750235701",
+        "width": 410,
+        "height": 600,
+        "fileSize": "387.60 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37101015630072",
+        "alt": "Klassegjeng runt bål med Utekosene sine",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/kvartett_outside.webp?v=1750430849",
+        "width": 1024,
+        "height": 1366,
+        "fileSize": "103.01 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37101016875256",
+        "alt": "Linn jobber med bål i Utekosen sin",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/linn_bonfire.webp?v=1750431064",
+        "width": 1024,
+        "height": 1538,
+        "fileSize": "177.75 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37101019332856",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/nylon_ripstop.webp?v=1750430958",
+        "width": 1280,
+        "height": 1280,
+        "fileSize": "105.71 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37101032407288",
+        "alt": "Girl enjoying coffee on the terrace with Utekos",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Innpakket_utekos.webp?v=1750431431",
+        "width": 1024,
+        "height": 2289,
+        "fileSize": "47.47 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37101042106616",
+        "alt": "Jente nyter livet med Utekos i vakker, snørik norsk natur",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/stone.webp?v=1750431785",
+        "width": 1333,
+        "height": 1999,
+        "fileSize": "99.82 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37102068236536",
+        "alt": "Woman taking a break in snowy nature",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/girl-snow-stone.webp?v=1750447094",
+        "width": 613,
+        "height": 653,
+        "fileSize": "81.33 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37102327169272",
+        "alt": "Customers enjoying the winter with Utekos",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/kvamskogen_45.webp?v=1750449479",
+        "width": 1024,
+        "height": 1024,
+        "fileSize": "81.56 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37102630928632",
+        "alt": "Malin og Tjommi koser seg i høstværet med Utekosene sine",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/malin_tjommi.webp?v=1750451729",
+        "width": 1024,
+        "height": 682,
+        "fileSize": "100.78 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37103200108792",
+        "alt": "Utekos Dun saving the autumn arrival",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/walking_cabin.webp?v=1750455654",
+        "width": 1154,
+        "height": 689,
+        "fileSize": "132.80 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37104199401720",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/test.webp?v=1750470350",
+        "width": 743,
+        "height": 679,
+        "fileSize": "94.40 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37104201498872",
+        "alt": "Woman with Utekos SE Fjellhimmel",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/kate_widthout.webp?v=1750470577",
+        "width": 751,
+        "height": 1044,
+        "fileSize": "80.62 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37104232399096",
+        "alt": "Kvinne slapper av med Utekosen sin",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/woman_with_utekos.webp?v=1750471220",
+        "width": 743,
+        "height": 679,
+        "fileSize": "58.70 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37256304623864",
+        "alt": "To kvinner nyter kaffe i norsk høst - med hver sin Utekos Dun",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/automn_catlinn1333.webp?v=1752425344",
+        "width": 1330,
+        "height": 885,
+        "fileSize": "306.47 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37301816819960",
+        "alt": "Kate og Linn nyter høsten i sine Utekoser",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/caitlinn_smooth16-19.webp?v=1752848624",
+        "width": 1100,
+        "height": 1653,
+        "fileSize": "376.10 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37340299100408",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/woman_with_utekos_1.webp?v=1753257305",
+        "width": 340,
+        "height": 605,
+        "fileSize": "46.28 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37340669903096",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/favico.png?v=1753259356",
+        "width": 48,
+        "height": 48,
+        "fileSize": "4.13 KB"
+      }
+    ],
+    "Mobile": [
+      {
+        "id": "gid://shopify/MediaImage/36996668981496",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_sidepocket.webp?v=1749148196",
+        "width": 360,
+        "height": 540,
+        "fileSize": "54.33 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996669014264",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_sidepocket2.webp?v=1749148196",
+        "width": 360,
+        "height": 540,
+        "fileSize": "62.16 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996676976888",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_caitlinn.webp?v=1749148615",
+        "width": 360,
+        "height": 240,
+        "fileSize": "62.15 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677009656",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_automn_walking.webp?v=1749148614",
+        "width": 360,
+        "height": 240,
+        "fileSize": "50.61 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677042424",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_automn_catlinn.webp?v=1749148615",
+        "width": 360,
+        "height": 240,
+        "fileSize": "52.20 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677075192",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_coffee_utekos.webp?v=1749148615",
+        "width": 360,
+        "height": 240,
+        "fileSize": "32.33 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677107960",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_girlsnow_stone9_16.webp?v=1749148615",
+        "width": 360,
+        "height": 540,
+        "fileSize": "72.37 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996677173496",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_aut_beach_utekos.webp?v=1749148615",
+        "width": 360,
+        "height": 541,
+        "fileSize": "75.26 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679336184",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_dun_doll_fluffy_without.webp?v=1749148671",
+        "width": 360,
+        "height": 541,
+        "fileSize": "46.41 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/36996679368952",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/mob_ykk.webp?v=1749148671",
+        "width": 360,
+        "height": 288,
+        "fileSize": "41.36 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37067338514680",
+        "alt": "Color columns background",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Fargekolonner_fargesterk_mobil_kfraxz.png?v=1750067709",
+        "width": 393,
+        "height": 852,
+        "fileSize": "101.80 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37104313532664",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Fargekolonner_fargesterk_mobil_kfraxz_d3c5d11d-c040-41de-8e36-519910dcee3d.png?v=1750471546",
+        "width": 393,
+        "height": 852,
+        "fileSize": "101.80 KB"
+      },
+      {
+        "id": "gid://shopify/MediaImage/37342919950584",
+        "alt": "",
+        "url": "https://cdn.shopify.com/s/files/1/0634/2154/6744/files/nature_fav_mob.webp?v=1753284609",
+        "width": 512,
+        "height": 341,
+        "fileSize": "120.70 KB"
+      }
+    ]
+  }
+}

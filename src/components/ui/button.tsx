@@ -1,0 +1,118 @@
+import * as React from 'react'
+import { Button as ButtonPrimitive } from '@base-ui/react/button'
+import { cva, type VariantProps } from 'class-variance-authority'
+
+import { cn } from '@/lib/utils/className'
+
+const buttonVariants = cva(
+  'group/button dark:focus-visible:border-dark-ring dark:focus-visible:ring-dark-ring/50 dark:aria-invalid:border-dark-destructive dark:aria-invalid:ring-dark-destructive/20 dark:aria-invalid:border-dark-destructive/50 dark:aria-invalid:ring-dark-destructive/40 inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
+  {
+    variants: {
+      variant: {
+        alternate:
+          'bg-alternate-button text-foreground hover:scale-104 hover:bg-[#12403C]',
+        checkout:
+          'bg-primary text-foreground hover:text-foreground/90 dark:bg-primary dark:text-foreground',
+        default:
+          'hover:bg-primary-hover bg-primary text-primary-foreground dark:bg-primary',
+        seeProduct:
+          'border-border bg-sidebar-primary text-foreground shadow-xs aria-expanded:bg-accent aria-expanded:text-accent-foreground dark:border-border dark:bg-sidebar-primary dark:aria-expanded:bg-accent dark:aria-expanded:text-accent-foreground',
+        secondary:
+          'dark:aria-expanded:text-dark-secondary-foreground bg-secondary text-secondary-foreground aria-expanded:bg-secondary aria-expanded:text-secondary-foreground dark:bg-secondary dark:aria-expanded:bg-secondary',
+        ghost:
+          'dark:aria-expanded:bg-dark-accent dark:aria-expanded:text-dark-accent-foreground text-foreground hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground dark:hover:bg-accent',
+        destructive:
+          'text-destructive-foreground dark:text-destructive-foreground dark:hover:bg-dark-destructive/90 dark:focus-visible:border-dark-destructive dark:focus-visible:ring-dark-destructive/30 bg-destructive hover:bg-destructive/90 focus-visible:border-destructive focus-visible:ring-destructive/30 dark:bg-destructive',
+        link: 'text-primary underline-offset-4 hover:underline dark:text-primary'
+      },
+      size: {
+        'default':
+          'h-9 gap-1.5 px-3 in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
+        'xs': 'h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*="size-"])]:size-3',
+        'sm': 'h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5',
+        'lg': 'h-10 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
+        'icon': 'size-9',
+        'icon-xs':
+          'size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*="size-"])]:size-3',
+        'icon-sm':
+          'size-8 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg',
+        'icon-lg': 'size-10'
+      }
+    },
+    defaultVariants: { variant: 'default', size: 'default' }
+  }
+)
+
+type ButtonProps = ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants> & { asChild?: boolean }
+
+function Button({
+  asChild = false,
+  className,
+  children,
+  nativeButton,
+  variant = 'default',
+  size = 'default',
+  ...props
+}: ButtonProps) {
+  const buttonClassName = cn(
+    buttonVariants({ variant, size, className })
+  )
+
+  if (asChild && React.isValidElement(children)) {
+    const child = React.Children.only(
+      children
+    ) as React.ReactElement<{ className?: string }>
+
+    return React.cloneElement(child, {
+      ...(props as Record<string, unknown>),
+      'data-slot': 'button',
+      'className': cn(buttonClassName, child.props.className)
+    } as React.Attributes & {
+      'className'?: string
+      'data-slot': string
+    })
+  }
+
+  return (
+    <ButtonPrimitive
+      data-slot='button'
+      className={buttonClassName}
+      nativeButton={nativeButton}
+      {...props}
+    >
+      {children}
+    </ButtonPrimitive>
+  )
+}
+
+function AddToCartButton() {
+  return (
+    <button
+      className={cn(
+        'font-utekos-text transform rounded-full px-12 py-4 font-bold tracking-normal transition-colors duration-200 hover:scale-105'
+      )}
+    >
+      Legg i handlekurv
+    </button>
+  )
+}
+
+function CheckoutButton() {
+  return (
+    <button
+      className={cn(
+        'transform rounded-full px-12 py-4 font-sans tracking-normal transition-colors duration-200 hover:scale-105'
+      )}
+    >
+      Gå til kassen
+    </button>
+  )
+}
+
+export {
+  Button,
+  buttonVariants,
+  AddToCartButton,
+  CheckoutButton
+}

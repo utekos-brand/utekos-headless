@@ -1,0 +1,69 @@
+{
+  "mcpServers": {
+    "vercel": {
+      "type": "http",
+      "url": "https://mcp.vercel.com"
+    },
+    "spor": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@vygruppen/spor-mcp-server"
+      ]
+    },
+    "utekos-frost": {
+      "url": "http://localhost:3060/api/mcp/frost",
+      "headers": {
+        "x-utekos-agent": "marketer"
+      }
+    },
+    "wcag": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "wcag-guidelines-mcp"
+      ]
+    },
+    "tailwindcss-server": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "tailwindcss-mcp-server"
+      ]
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
+    }
+  },
+  "chrome-devtools": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "chrome-devtools-mcp@latest"
+    ]
+  },
+  "mdn": {
+    "url": "https://mcp.mdn.mozilla.net/"
+  },
+  "next-devtools": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "next-devtools-mcp@latest"
+    ]
+  },
+  "playwright": {
+    "command": "npx",
+    "args": [
+      "@playwright/mcp@latest"
+    ]
+  },
+  "langchain": {
+    "type": "http",
+    "url": "https://eu.api.smith.langchain.com/mcp"
+  }
+}

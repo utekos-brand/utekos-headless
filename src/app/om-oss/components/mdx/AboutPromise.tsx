@@ -1,0 +1,59 @@
+import { Heart, ShieldCheck } from 'lucide-react'
+import { AboutBadge } from './AboutBadge'
+
+const promises = [
+  {
+    icon: Heart,
+    title: 'Mer enn et plagg',
+    text: 'Vi lover deg følelsen av umiddelbar varme og velvære. En garanti for at du kan nyte øyeblikket lenger, uten å fryse.'
+  },
+  {
+    icon: ShieldCheck,
+    title: 'En varig verdi',
+    text: 'Se på det som en investering i din egen livskvalitet. Kompromissløs komfort og overlegen allsidighet, designet for å gi deg flere timer utendørs, år etter år.'
+  }
+]
+
+export function AboutPromise() {
+  return (
+    <article className='dark:bg-dark-background bg-background px-8 py-20 text-left text-foreground sm:py-28 md:px-12 lg:px-16'>
+      <div className='max-w-5xl px-4 text-left sm:px-6 lg:px-8'>
+        <AboutBadge variant='inverse' className='mb-6'>
+          Vårt løfte
+        </AboutBadge>
+        <h2 className='text-left font-sans text-5xl leading-[0.95] font-bold text-foreground sm:text-5xl'>
+          Vårt løfte til deg
+        </h2>
+        <p className='font-utekos-text-medium mt-5 max-w-2xl text-left text-xl leading-8 text-foreground'>
+          Komforten skal merkes med en gang, og kvaliteten skal
+          fortsette å bære øyeblikkene ute.
+        </p>
+
+        <div className='mt-12 grid grid-cols-1 gap-5 md:grid-cols-2'>
+          {promises.map(item => (
+            <article
+              key={item.title}
+              className='  rounded-lg border border-border bg-card p-7 text-left'
+            >
+              <div className='flex items-center gap-4'>
+                <span className='bg-accent-primary dark:text-dark-background flex size-12 shrink-0 items-center justify-center rounded-md text-background'>
+                  <item.icon
+                    aria-hidden='true'
+                    className='size-6'
+                    strokeWidth={1.8}
+                  />
+                </span>
+                <h3 className='text-2xl font-semibold text-foreground'>
+                  {item.title}
+                </h3>
+              </div>
+              <p className='/78 mt-3 text-base leading-7 text-foreground/78'>
+                {item.text}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </article>
+  )
+}

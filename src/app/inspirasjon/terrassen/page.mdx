@@ -1,0 +1,37 @@
+export const metadata = {
+  title: 'Utekos på terrassen',
+  description:
+    'Inspirasjon til hvordan du kan maksimere bruken av terrassen eller balkongen din med Utekos.'
+}
+
+import { JsonLd } from './data/jsonLd'
+import { SocialProof } from './sections/SocialProof'
+import { SeasonsSection } from './sections/SeasonsSection'
+import { CTASection } from './sections/CTASection'
+import { TerracePageShell } from './sections/TerracePageShell'
+import { TerraceHeroSection } from './sections/TerraceHeroSection'
+import {
+  TerraceIdeasGrid,
+  terraceIdeasData
+} from './sections/TerraceIdeasGrid'
+import {
+  BenefitsGrid,
+  benefitsData
+} from './sections/BenefitsGrid'
+import {
+  UseCasesGrid,
+  useCasesData
+} from './sections/UseCasesGrid'
+import { TerrasseCarousel } from './sections/TerrasseCarousel'
+
+<JsonLd />
+<TerracePageShell>
+  <TerraceHeroSection />
+  <UseCasesGrid useCases={useCasesData} />
+  <BenefitsGrid benefits={benefitsData} />
+  <TerrasseCarousel />
+  <SeasonsSection />
+  <TerraceIdeasGrid ideas={terraceIdeasData} />
+  <SocialProof />
+  <CTASection />
+</TerracePageShell>

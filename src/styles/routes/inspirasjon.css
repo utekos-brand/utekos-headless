@@ -1,0 +1,43 @@
+/* src/styles/routes/inspirasjon.css */
+
+@media (width >= 48rem) {
+    .inspirasjon-route :where(.container) {
+      padding-inline: 1rem;
+    }
+  }
+  
+  @layer components {
+    .inspirasjon-route :where(.container) {
+      padding-inline: max(1.25rem, env(safe-area-inset-left, 0px))
+        max(1.25rem, env(safe-area-inset-right, 0px));
+    }
+  }
+  
+  .inspiration-seasons-glow-pulse {
+    animation: seasons-pulse-glow 8s ease-in-out infinite;
+  }
+  
+  .inspiration-seasons-fade-in-delayed {
+    animation: fadeInUp 0.7s ease-out 0.2s both;
+  }
+  
+  .inspiration-seasons-tab-trigger {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .inspiration-seasons-active-glow {
+    pointer-events: none;
+    position: absolute;
+    inset: -0.5rem -0.5rem -2rem;
+    opacity: 0.25;
+    filter: blur(2rem);
+    transition: opacity 0.3s ease;
+  }
+  
+  .inspiration-seasons-tab-content-enter {
+    animation: seasons-tab-fade-in 0.3s ease-out;
+  }
+  
+  .inspiration-seasons-tip-enter {
+    animation: fadeInUp 0.5s ease-out both;
+  }

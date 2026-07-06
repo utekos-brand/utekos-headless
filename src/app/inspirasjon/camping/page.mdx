@@ -1,0 +1,17 @@
+import { UtekosBreadcrumbBar } from '@/components/navigation/UtekosBreadcrumbBar'
+
+export default function CampingPage() {
+  return (
+    <article className='dark:bg-dark-background bg-background text-foreground'>
+      <UtekosBreadcrumbBar
+        surface='light'
+        items={[
+          { label: 'Forsiden', href: '/' },
+          { label: 'Inspirasjon', href: '/inspirasjon' },
+          { label: 'Camping' }
+        ]}
+      />
+      <div className='container mx-auto px-4 py-12'>Camping</div>
+    </article>
+  )
+}

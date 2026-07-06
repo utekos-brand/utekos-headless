@@ -1,0 +1,120 @@
+// Path: src/app/produkter/[handle]/ProductPageView/components/ProductDescription.tsx
+'use client'
+
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import type {
+  ProductDescriptionBlock,
+  ProductDescriptionContent
+} from '@/db/data/products/product-page-content'
+
+type ProductDescriptionProps = {
+  description: ProductDescriptionContent | undefined
+}
+
+function ProductDescriptionBlockView({
+  block
+}: {
+  block: ProductDescriptionBlock
+}) {
+  return (
+    <article className='space-y-3'>
+      {block.title && (
+        <h3 className='font-sans text-xl leading-[1.15] font-semibold tracking-normal text-card-foreground sm:text-2xl'>
+          {block.title}
+        </h3>
+      )}
+      {block.paragraphs?.map(paragraph => (
+        <p
+          key={paragraph}
+          className='/86 text-base leading-[1.6] tracking-normal text-card-foreground/86'
+        >
+          {paragraph}
+        </p>
+      ))}
+      {block.items && block.items.length > 0 && (
+        <ul className='/86 space-y-2 pl-5 text-base leading-[1.55] tracking-normal text-card-foreground/86'>
+          {block.items.map(item => (
+            <li
+              key={item}
+              className='dark:marker:text-dark-card-foreground/55 list-disc marker:text-card-foreground/55'
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
+      )}
+    </article>
+  )
+}
+
+export function ProductDescription({
+  description
+}: ProductDescriptionProps) {
+  const [isDescriptionExpanded, setIsDescriptionExpanded] =
+    useState(false)
+
+  if (!description) {
+    return null
+  }
+
+  const collapsedBlockCount = 1
+  const canExpand =
+    description.blocks.length > collapsedBlockCount
+  const visibleBlocks =
+    canExpand && !isDescriptionExpanded ?
+      description.blocks.slice(0, collapsedBlockCount)
+    : description.blocks
+
+  return (
+    <article
+      aria-labelledby='product-description-heading'
+      className='  font-utekos-text dark:shadow-dark-background/20 mt-12 rounded-[1.25rem] border border-border bg-card p-5 text-card-foreground shadow-lg shadow-background/20 sm:p-6'
+    >
+      <div
+        id='product-description-content'
+        className='max-w-prose space-y-5'
+      >
+        <div className='space-y-3'>
+          <h2
+            id='product-description-heading'
+            className='font-sans text-2xl leading-[1.1] font-semibold tracking-normal text-card-foreground sm:text-3xl'
+          >
+            {description.title}
+          </h2>
+          {description.lead && (
+            <p className='text-lg leading-normal tracking-normal text-card-foreground'>
+              {description.lead}
+            </p>
+          )}
+        </div>
+
+        <div className='space-y-6' aria-live='polite'>
+          {visibleBlocks.map((block, index) => (
+            <ProductDescriptionBlockView
+              key={`${block.title ?? 'block'}-${index}`}
+              block={block}
+            />
+          ))}
+        </div>
+      </div>
+
+      {canExpand && (
+        <div className='mt-5'>
+          <Button
+            type='button'
+            variant='link'
+            aria-expanded={isDescriptionExpanded}
+            aria-controls='product-description-content'
+            onClick={() =>
+              setIsDescriptionExpanded(prev => !prev)
+            }
+            className='dark:hover:text-dark-card-foreground min-h-11 cursor-pointer p-0 text-base font-semibold tracking-normal text-card-foreground underline-offset-4 hover:text-card-foreground hover:underline'
+          >
+            {isDescriptionExpanded ? 'Vis mindre' : 'Les mer'}
+          </Button>
+        </div>
+      )}
+    </article>
+  )
+}

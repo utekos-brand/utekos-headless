@@ -1,0 +1,116 @@
+import type { ShopifyProduct, ShopifyProductVariant } from 'types/product'
+import type { MetaContentItem } from 'types/tracking/meta'
+import type { UseFormReturn } from 'react-hook-form'
+import type { SizeOptionKey } from '@/app/inspirasjon/isbading/sizeSelectorData'
+import type { LucideIcon } from 'lucide-react'
+import type { AddToCartSchema } from '@/db/zod/schemas/AddToCartSchema'
+import { z } from '@/db/zod/zodClient'
+export type AddToCartFormValues = z.infer<typeof AddToCartSchema>
+
+export type AddToCartButtonProps = {
+  isPending: boolean
+  isDisabled: boolean
+}
+
+export type PrepareAddToCartInput = {
+  product: ShopifyProduct
+  selectedVariant: ShopifyProductVariant
+  quantity: number
+  additionalLine?: { variantId: string; quantity: number } | undefined
+}
+
+export type AddToCartEventData = {
+  eventID: string
+  contentName: string
+  contentIds: string[]
+  contents: MetaContentItem[]
+  value: number
+  currency: string
+  totalQty: number
+  mainVariantId: string
+}
+
+export type DispatchPixelsOptions = {
+  eventData: AddToCartEventData
+  product: ShopifyProduct
+  selectedVariant: ShopifyProductVariant
+}
+
+export type TrackAddToCartOptions = {
+  product: ShopifyProduct
+  selectedVariant: ShopifyProductVariant
+  quantity: number
+  additionalLine?: { variantId: string; quantity: number } | undefined
+}
+
+export type UseAddToCartActionProps = {
+  product: ShopifyProduct
+  selectedVariant: ShopifyProductVariant | null
+  additionalLine?: { variantId: string; quantity: number } | undefined
+}
+
+export type AddToCartProps = {
+  product: ShopifyProduct
+  selectedVariant: ShopifyProductVariant | null
+  additionalLine?: { variantId: string; quantity: number } | undefined
+}
+
+export type AddToCartViewProps = {
+  form: UseFormReturn<AddToCartFormValues>
+  onSubmit: (values: AddToCartFormValues) => void
+  onCheckout: (values: AddToCartFormValues) => void
+  isPending: boolean
+  isAddToCartPending: boolean
+  isCheckoutPending: boolean
+  isAvailable: boolean
+}
+
+export type CheckoutPanelProps = {
+  mainProduct: ProductOffer
+  upsellProduct: ProductOffer
+  isUpsellSelected: boolean
+  selectedSize: 'S' | 'M' | 'L'
+  productImageSrc: string
+}
+
+export type ProductOffer = {
+  id: string
+  name: string
+  price: number
+  originalPrice?: number
+  features: string[]
+}
+
+export type OfferProductProps = {
+  product: ProductOffer
+}
+
+export type OfferSectionProps = {
+  productImageSrc: string
+  selectedSize: SizeOptionKey
+}
+
+export type SizeInfoPanelProps = {
+  profile: SizeProfile
+}
+
+export type SizeProfile = {
+  id: SizeOptionKey
+  fullName: string
+  label: string
+  tagline: string
+  heightRange: string
+  idealFor: string[]
+  icon: LucideIcon
+  imageSrc?: string
+  visualScale: number
+  benefits: {
+    title: string
+    desc: string
+  }[]
+}
+
+export type OfferGalleryProps = {
+  name: string
+  mainImageSrc: string
+}

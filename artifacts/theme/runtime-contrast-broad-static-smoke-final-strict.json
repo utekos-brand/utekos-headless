@@ -1,0 +1,66 @@
+{
+  "ok": true,
+  "baseUrl": "http://localhost:3000",
+  "routes": [
+    "/",
+    "/design",
+    "/frakt-og-retur",
+    "/gaveguide",
+    "/handlehjelp/funksjonalitet",
+    "/handlehjelp/klarna",
+    "/handlehjelp/sammenlign-modeller",
+    "/handlehjelp/storrelsesguide",
+    "/handlehjelp/teknologi-materialer",
+    "/handlehjelp/vask-og-vedlikehold",
+    "/inspirasjon",
+    "/inspirasjon/batliv",
+    "/inspirasjon/bobil",
+    "/inspirasjon/camping",
+    "/inspirasjon/cardproduction",
+    "/inspirasjon/components",
+    "/inspirasjon/components/cards",
+    "/inspirasjon/grillkvelden",
+    "/inspirasjon/hytte",
+    "/inspirasjon/isbading",
+    "/inspirasjon/terrassen",
+    "/instruments",
+    "/kampanje/julegaver",
+    "/kampanje/julegaver/lokal-levering",
+    "/kjop/fullfort",
+    "/kontaktskjema",
+    "/magasinet",
+    "/magasinet/oppgradering",
+    "/mdx-test-page",
+    "/nbcc",
+    "/om-oss",
+    "/personvern",
+    "/produkter",
+    "/skreddersy-varmen",
+    "/skreddersy-varmen/utekos-orginal",
+    "/test-email",
+    "/video/tensorpix",
+    "/vilkar-betingelser"
+  ],
+  "modes": [
+    "light",
+    "dark"
+  ],
+  "viewports": [
+    {
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "summary": {
+    "failures": 0,
+    "warnings": 0,
+    "emittedFailures": 0,
+    "emittedWarnings": 0
+  },
+  "failureGroups": {
+    "bySurface": [],
+    "byRouteMode": []
+  },
+  "failures": [],
+  "warnings": []
+}

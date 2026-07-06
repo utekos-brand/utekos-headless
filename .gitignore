@@ -1,0 +1,206 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+### NextJS ###
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+**/node_modules/
+/alpha
+/docs
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+.devtools/
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# local env files
+.env*.local
+.agent-artifacts/
+.agents/gcp.json
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+*/mcp.json
+.playwright/*
+.playwright-report/
+playwright-report/
+.playwright-mcp/
+playwright-mcp/
+.cursor/*
+docs/*
+.claude/*
+.vscode/*
+.vscode/settings.json
+.vscode/settings.json
+.cursorignore
+CLAUDE.md
+devproxyrc.json
+.devproxyrc.json
+# mcp config (may contain local secrets/tokens)
+.codex/
+.devcontainer/
+.dockerignore
+.env.mcp.example
+.env.tunnel.example
+config/mcp/
+public-scan-result.md
+scripts/mcp/
+scripts/public/scan-unused-assets.ts
+mcp.json
+*/mcp.json
+.env.mcp.local
+.vscode/mcp.json
+knip.json
+tsconfig.tsbuildinfo/
+
+# vscode settings (may contain MCP secrets/tokens)
+.vscode/settings.json
+knip.json
+/knip
+/knip.json
+.prettierignore
+/prettierignore
+/prettierignore.json
+/prettierignore.json
+/tsconfig.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+.hintrc
+
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Klarna local agent doc mirror (disk-only for agents; not GitHub/Vercel)
+src/components/klarna/dev/
+src/components/klarna/llms.md
+src/components/klarna/klarna-sitemap.md
+src/components/klarna/README.md
+
+# docs
+
+/copilot-instructions
+/gemini-status
+/project_info
+/summary
+summary
+# github
+.github
+/.githubnode_modules
+.next
+.env*.local
+*.env.local
+/env.local
+!/.github/
+!/.github/dependabot.yml
+.playwright-report/
+playwright-report/
+/playwright
+*/playwright-report/
+.playwright-mcp/
+playwright-mcp/
+/playwright-mcp
+*/playwright-mcp
+
+# safe agent-insight fabric sources
+!/AGENTS.md
+!/docs/
+!/docs/agent-operating-contract.md
+!/docs/agent-context-map.md
+!/docs/context-bundle/
+!/docs/context-bundle/index.md
+!/docs/context-bundle/manifest.json
+!/config/
+!/config/mcp/
+config/mcp/*
+!/config/mcp/README.md
+!/config/mcp/chatgpt-profiles.json
+!/config/mcp/servers.base.json
+!/scripts/
+!/scripts/mcp/
+scripts/mcp/*
+!/scripts/mcp/openai-tunnel.mjs
+!/scripts/mcp/apply-chatgpt-profiles.mjs
+!/scripts/mcp/doctor-chatgpt-profiles.mjs
+!/scripts/mcp/utekos-css-insight-server.mjs
+!/scripts/mcp/doctor-utekos-css-insight-server.mjs
+!/.env.mcp.example
+!/.env.tunnel.example
+.agents/
+/.agents/
+/agents/
+# keep generated MCP outputs and local secrets ignored after safe unignore rules
+mcp.json
+*/mcp.json
+.vscode/mcp.json
+.cursor/mcp.json
+.env*.local
+*.env.local
+src/api/lib/cloud-credentials/
+supabase/md.md
+ç
+
+# Keep local agent/editor/documentation payloads out of GitHub/Vercel source.
+.agent/skills/
+/.agent/skills/
+.agents/
+/.agents/
+.cursor/
+/.cursor/
+.gemini/
+/.gemini/
+docs/
+/docs/
+.env.docker.example
+/.env.docker.example
+.env.local.incomplete.backup
+/.env.local.incomplete.backup
+.env.mcp.example
+/.env.mcp.example
+.env.tunnel.example
+/.env.tunnel.example

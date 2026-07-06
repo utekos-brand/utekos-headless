@@ -1,0 +1,1179 @@
+{
+  "ok": false,
+  "baseUrl": "http://localhost:3000",
+  "routes": [
+    "/",
+    "/design",
+    "/frakt-og-retur",
+    "/gaveguide",
+    "/handlehjelp/funksjonalitet",
+    "/handlehjelp/klarna",
+    "/handlehjelp/sammenlign-modeller",
+    "/handlehjelp/storrelsesguide",
+    "/handlehjelp/teknologi-materialer",
+    "/handlehjelp/vask-og-vedlikehold",
+    "/inspirasjon",
+    "/inspirasjon/batliv",
+    "/inspirasjon/bobil",
+    "/inspirasjon/camping",
+    "/inspirasjon/cardproduction",
+    "/inspirasjon/components",
+    "/inspirasjon/components/cards",
+    "/inspirasjon/grillkvelden",
+    "/inspirasjon/hytte",
+    "/inspirasjon/isbading",
+    "/inspirasjon/terrassen",
+    "/instruments",
+    "/kampanje/julegaver",
+    "/kampanje/julegaver/lokal-levering",
+    "/kjop/fullfort",
+    "/kontaktskjema",
+    "/magasinet",
+    "/magasinet/oppgradering",
+    "/mdx-test-page",
+    "/nbcc",
+    "/om-oss",
+    "/personvern",
+    "/produkter",
+    "/skreddersy-varmen",
+    "/skreddersy-varmen/utekos-orginal",
+    "/test-email",
+    "/video/tensorpix",
+    "/vilkar-betingelser"
+  ],
+  "modes": [
+    "light",
+    "dark"
+  ],
+  "viewports": [
+    {
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "summary": {
+    "failures": 15,
+    "warnings": 0,
+    "emittedFailures": 15,
+    "emittedWarnings": 0
+  },
+  "failureGroups": {
+    "bySurface": [
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "h1.text-4xl.leading-\\[0\\.95\\].font-bold",
+          "text": "Inspirasjon for mer utekos",
+          "foreground": "lab(94.1529 0.044167 2.67328)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "a.inline-flex.items-center.justify-center",
+          "text": "Finn riktig størrelse",
+          "foreground": "lab(94.1529 0.044167 2.67328)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-text-contrast",
+          "selector": "a.inline-flex.items-center.justify-center",
+          "text": "Finn riktig størrelse",
+          "foreground": "lab(94.1529 0.044167 2.67328)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "a.text-foreground\\/85.transition-colors.hover\\:text-primary",
+          "text": "Forsiden",
+          "foreground": "oklab(0.949298 0.000156999 0.00701982 / 0.85)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "oklab(0.949298 0.000156999 0.00701982 / 0.85)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "span.font-medium.text-foreground",
+          "text": "Inspirasjon",
+          "foreground": "lab(94.1529 0.044167 2.67328)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-text-contrast",
+          "selector": "a.text-foreground\\/85.transition-colors.hover\\:text-primary",
+          "text": "Forsiden",
+          "foreground": "oklab(0.949298 0.000156999 0.00701982 / 0.85)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "oklab(0.949298 0.000156999 0.00701982 / 0.85)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-border-contrast",
+          "selector": "a.text-foreground\\/85.transition-colors.hover\\:text-primary",
+          "text": "Forsiden",
+          "foreground": null,
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": "oklab(0.949298 0.000156999 0.00701982 / 0.85)"
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 3,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": [
+          "oklab(0.949298 0.000156999 0.00701982 / 0.85)"
+        ]
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.text-xs.text-gray-500.mt-1",
+          "text": "Tips: Bruk alias (f.eks. din.epost+test1@gmail.com) for å teste flere ganger.",
+          "foreground": "lab(47.7841 -0.393182 -10.0268)",
+          "background": "lab(4.06503 0.736147 -4.02324)",
+          "borderColor": null
+        },
+        "minRatio": 3.98,
+        "maxRatio": 3.98,
+        "required": 4.5,
+        "routes": [
+          "/test-email"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(47.7841 -0.393182 -10.0268)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "a.text-sky-600.dark\\:text-sky-400",
+          "text": "#AbstractVibes",
+          "foreground": "lab(51.7754 -11.4712 -49.8349)",
+          "background": "lab(100 0 0)",
+          "borderColor": null
+        },
+        "minRatio": 4.09,
+        "maxRatio": 4.09,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon/components/cards"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(51.7754 -11.4712 -49.8349)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "a.text-sky-600.dark\\:text-sky-400",
+          "text": "#Dreamscape",
+          "foreground": "lab(51.7754 -11.4712 -49.8349)",
+          "background": "lab(100 0 0)",
+          "borderColor": null
+        },
+        "minRatio": 4.09,
+        "maxRatio": 4.09,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon/components/cards"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(51.7754 -11.4712 -49.8349)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "a.text-sky-600.dark\\:text-sky-400",
+          "text": "#VisualPoetry",
+          "foreground": "lab(51.7754 -11.4712 -49.8349)",
+          "background": "lab(100 0 0)",
+          "borderColor": null
+        },
+        "minRatio": 4.09,
+        "maxRatio": 4.09,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon/components/cards"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(51.7754 -11.4712 -49.8349)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-text-contrast",
+          "selector": "a.text-sky-600.dark\\:text-sky-400",
+          "text": "#AbstractVibes",
+          "foreground": "lab(51.7754 -11.4712 -49.8349)",
+          "background": "lab(100 0 0)",
+          "borderColor": null
+        },
+        "minRatio": 4.09,
+        "maxRatio": 4.09,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon/components/cards"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(51.7754 -11.4712 -49.8349)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-text-contrast",
+          "selector": "a.text-sky-600.dark\\:text-sky-400",
+          "text": "#Dreamscape",
+          "foreground": "lab(51.7754 -11.4712 -49.8349)",
+          "background": "lab(100 0 0)",
+          "borderColor": null
+        },
+        "minRatio": 4.09,
+        "maxRatio": 4.09,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon/components/cards"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(51.7754 -11.4712 -49.8349)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "control-text-contrast",
+          "selector": "a.text-sky-600.dark\\:text-sky-400",
+          "text": "#VisualPoetry",
+          "foreground": "lab(51.7754 -11.4712 -49.8349)",
+          "background": "lab(100 0 0)",
+          "borderColor": null
+        },
+        "minRatio": 4.09,
+        "maxRatio": 4.09,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon/components/cards"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(51.7754 -11.4712 -49.8349)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "kind": "text-contrast",
+          "selector": "p.text-xs.text-gray-500.mt-1",
+          "text": "Tips: Bruk alias (f.eks. din.epost+test1@gmail.com) for å teste flere ganger.",
+          "foreground": "lab(47.7841 -0.393182 -10.0268)",
+          "background": "lab(94.1529 0.044167 2.67328)",
+          "borderColor": null
+        },
+        "minRatio": 4.17,
+        "maxRatio": 4.17,
+        "required": 4.5,
+        "routes": [
+          "/test-email"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(47.7841 -0.393182 -10.0268)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      }
+    ],
+    "byRouteMode": [
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "h1.text-4xl.leading-\\[0\\.95\\].font-bold",
+          "text": "Inspirasjon for mer utekos"
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "a.inline-flex.items-center.justify-center",
+          "text": "Finn riktig størrelse"
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon",
+          "mode": "light",
+          "kind": "control-text-contrast",
+          "selector": "a.inline-flex.items-center.justify-center",
+          "text": "Finn riktig størrelse"
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon",
+          "mode": "dark",
+          "kind": "text-contrast",
+          "selector": "a.text-foreground\\/85.transition-colors.hover\\:text-primary",
+          "text": "Forsiden"
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "oklab(0.949298 0.000156999 0.00701982 / 0.85)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon",
+          "mode": "dark",
+          "kind": "text-contrast",
+          "selector": "span.font-medium.text-foreground",
+          "text": "Inspirasjon"
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon",
+          "mode": "dark",
+          "kind": "control-text-contrast",
+          "selector": "a.text-foreground\\/85.transition-colors.hover\\:text-primary",
+          "text": "Forsiden"
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "oklab(0.949298 0.000156999 0.00701982 / 0.85)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon",
+          "mode": "dark",
+          "kind": "control-border-contrast",
+          "selector": "a.text-foreground\\/85.transition-colors.hover\\:text-primary",
+          "text": "Forsiden"
+        },
+        "minRatio": 1,
+        "maxRatio": 1,
+        "required": 3,
+        "routes": [
+          "/inspirasjon"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": [
+          "oklab(0.949298 0.000156999 0.00701982 / 0.85)"
+        ]
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/test-email",
+          "mode": "dark",
+          "kind": "text-contrast",
+          "selector": "p.text-xs.text-gray-500.mt-1",
+          "text": "Tips: Bruk alias (f.eks. din.epost+test1@gmail.com) for å teste flere ganger."
+        },
+        "minRatio": 3.98,
+        "maxRatio": 3.98,
+        "required": 4.5,
+        "routes": [
+          "/test-email"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(47.7841 -0.393182 -10.0268)"
+        ],
+        "backgrounds": [
+          "lab(4.06503 0.736147 -4.02324)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon/components/cards",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "a.text-sky-600.dark\\:text-sky-400",
+          "text": "#AbstractVibes"
+        },
+        "minRatio": 4.09,
+        "maxRatio": 4.09,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon/components/cards"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(51.7754 -11.4712 -49.8349)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon/components/cards",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "a.text-sky-600.dark\\:text-sky-400",
+          "text": "#Dreamscape"
+        },
+        "minRatio": 4.09,
+        "maxRatio": 4.09,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon/components/cards"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(51.7754 -11.4712 -49.8349)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon/components/cards",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "a.text-sky-600.dark\\:text-sky-400",
+          "text": "#VisualPoetry"
+        },
+        "minRatio": 4.09,
+        "maxRatio": 4.09,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon/components/cards"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(51.7754 -11.4712 -49.8349)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon/components/cards",
+          "mode": "light",
+          "kind": "control-text-contrast",
+          "selector": "a.text-sky-600.dark\\:text-sky-400",
+          "text": "#AbstractVibes"
+        },
+        "minRatio": 4.09,
+        "maxRatio": 4.09,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon/components/cards"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(51.7754 -11.4712 -49.8349)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon/components/cards",
+          "mode": "light",
+          "kind": "control-text-contrast",
+          "selector": "a.text-sky-600.dark\\:text-sky-400",
+          "text": "#Dreamscape"
+        },
+        "minRatio": 4.09,
+        "maxRatio": 4.09,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon/components/cards"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(51.7754 -11.4712 -49.8349)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/inspirasjon/components/cards",
+          "mode": "light",
+          "kind": "control-text-contrast",
+          "selector": "a.text-sky-600.dark\\:text-sky-400",
+          "text": "#VisualPoetry"
+        },
+        "minRatio": 4.09,
+        "maxRatio": 4.09,
+        "required": 4.5,
+        "routes": [
+          "/inspirasjon/components/cards"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(51.7754 -11.4712 -49.8349)"
+        ],
+        "backgrounds": [
+          "lab(100 0 0)"
+        ],
+        "borderColors": []
+      },
+      {
+        "count": 1,
+        "key": {
+          "route": "/test-email",
+          "mode": "light",
+          "kind": "text-contrast",
+          "selector": "p.text-xs.text-gray-500.mt-1",
+          "text": "Tips: Bruk alias (f.eks. din.epost+test1@gmail.com) for å teste flere ganger."
+        },
+        "minRatio": 4.17,
+        "maxRatio": 4.17,
+        "required": 4.5,
+        "routes": [
+          "/test-email"
+        ],
+        "modes": [
+          "light"
+        ],
+        "viewports": [
+          "390x844"
+        ],
+        "foregrounds": [
+          "lab(47.7841 -0.393182 -10.0268)"
+        ],
+        "backgrounds": [
+          "lab(94.1529 0.044167 2.67328)"
+        ],
+        "borderColors": []
+      }
+    ]
+  },
+  "failures": [
+    {
+      "route": "/inspirasjon",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "h1.text-4xl.leading-\\[0\\.95\\].font-bold",
+      "text": "Inspirasjon for mer utekos",
+      "ratio": 1,
+      "required": 4.5,
+      "foreground": "lab(94.1529 0.044167 2.67328)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/inspirasjon",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "a.inline-flex.items-center.justify-center",
+      "text": "Finn riktig størrelse",
+      "ratio": 1,
+      "required": 4.5,
+      "foreground": "lab(94.1529 0.044167 2.67328)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/inspirasjon",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-text-contrast",
+      "selector": "a.inline-flex.items-center.justify-center",
+      "text": "Finn riktig størrelse",
+      "ratio": 1,
+      "required": 4.5,
+      "foreground": "lab(94.1529 0.044167 2.67328)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/inspirasjon/components/cards",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "a.text-sky-600.dark\\:text-sky-400",
+      "text": "#AbstractVibes",
+      "ratio": 4.09,
+      "required": 4.5,
+      "foreground": "lab(51.7754 -11.4712 -49.8349)",
+      "background": "lab(100 0 0)"
+    },
+    {
+      "route": "/inspirasjon/components/cards",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "a.text-sky-600.dark\\:text-sky-400",
+      "text": "#Dreamscape",
+      "ratio": 4.09,
+      "required": 4.5,
+      "foreground": "lab(51.7754 -11.4712 -49.8349)",
+      "background": "lab(100 0 0)"
+    },
+    {
+      "route": "/inspirasjon/components/cards",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "a.text-sky-600.dark\\:text-sky-400",
+      "text": "#VisualPoetry",
+      "ratio": 4.09,
+      "required": 4.5,
+      "foreground": "lab(51.7754 -11.4712 -49.8349)",
+      "background": "lab(100 0 0)"
+    },
+    {
+      "route": "/inspirasjon/components/cards",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-text-contrast",
+      "selector": "a.text-sky-600.dark\\:text-sky-400",
+      "text": "#AbstractVibes",
+      "ratio": 4.09,
+      "required": 4.5,
+      "foreground": "lab(51.7754 -11.4712 -49.8349)",
+      "background": "lab(100 0 0)"
+    },
+    {
+      "route": "/inspirasjon/components/cards",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-text-contrast",
+      "selector": "a.text-sky-600.dark\\:text-sky-400",
+      "text": "#Dreamscape",
+      "ratio": 4.09,
+      "required": 4.5,
+      "foreground": "lab(51.7754 -11.4712 -49.8349)",
+      "background": "lab(100 0 0)"
+    },
+    {
+      "route": "/inspirasjon/components/cards",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-text-contrast",
+      "selector": "a.text-sky-600.dark\\:text-sky-400",
+      "text": "#VisualPoetry",
+      "ratio": 4.09,
+      "required": 4.5,
+      "foreground": "lab(51.7754 -11.4712 -49.8349)",
+      "background": "lab(100 0 0)"
+    },
+    {
+      "route": "/test-email",
+      "mode": "light",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.text-xs.text-gray-500.mt-1",
+      "text": "Tips: Bruk alias (f.eks. din.epost+test1@gmail.com) for å teste flere ganger.",
+      "ratio": 4.17,
+      "required": 4.5,
+      "foreground": "lab(47.7841 -0.393182 -10.0268)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/inspirasjon",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "a.text-foreground\\/85.transition-colors.hover\\:text-primary",
+      "text": "Forsiden",
+      "ratio": 1,
+      "required": 4.5,
+      "foreground": "oklab(0.949298 0.000156999 0.00701982 / 0.85)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/inspirasjon",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "span.font-medium.text-foreground",
+      "text": "Inspirasjon",
+      "ratio": 1,
+      "required": 4.5,
+      "foreground": "lab(94.1529 0.044167 2.67328)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/inspirasjon",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-text-contrast",
+      "selector": "a.text-foreground\\/85.transition-colors.hover\\:text-primary",
+      "text": "Forsiden",
+      "ratio": 1,
+      "required": 4.5,
+      "foreground": "oklab(0.949298 0.000156999 0.00701982 / 0.85)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/inspirasjon",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "control-border-contrast",
+      "selector": "a.text-foreground\\/85.transition-colors.hover\\:text-primary",
+      "text": "Forsiden",
+      "ratio": 1,
+      "required": 3,
+      "borderColor": "oklab(0.949298 0.000156999 0.00701982 / 0.85)",
+      "background": "lab(94.1529 0.044167 2.67328)"
+    },
+    {
+      "route": "/test-email",
+      "mode": "dark",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "kind": "text-contrast",
+      "selector": "p.text-xs.text-gray-500.mt-1",
+      "text": "Tips: Bruk alias (f.eks. din.epost+test1@gmail.com) for å teste flere ganger.",
+      "ratio": 3.98,
+      "required": 4.5,
+      "foreground": "lab(47.7841 -0.393182 -10.0268)",
+      "background": "lab(4.06503 0.736147 -4.02324)"
+    }
+  ],
+  "warnings": []
+}

@@ -1,0 +1,4181 @@
+{
+  "generatedAt": "2026-06-23T19:43:08.140Z",
+  "source": "src/color-2.css",
+  "shadeSteps": [
+    "50",
+    "100",
+    "200",
+    "300",
+    "400",
+    "500",
+    "600",
+    "700",
+    "800",
+    "900",
+    "950"
+  ],
+  "familyCount": 53,
+  "families": [
+    {
+      "id": "amethyst-orchid",
+      "title": "Amethyst Orchid",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-amethyst-orchid-50",
+          "token": "amethyst-orchid-50",
+          "oklch": "oklch(95.69% 0.009 314.78)",
+          "hex": "#f3eff5"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-amethyst-orchid-100",
+          "token": "amethyst-orchid-100",
+          "oklch": "oklch(91.45% 0.02 315.66)",
+          "hex": "#e8dfec"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-amethyst-orchid-200",
+          "token": "amethyst-orchid-200",
+          "oklch": "oklch(82.68% 0.04 314.1)",
+          "hex": "#d0bfd9"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-amethyst-orchid-300",
+          "token": "amethyst-orchid-300",
+          "oklch": "oklch(73.82% 0.062 314.42)",
+          "hex": "#b99fc6"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-amethyst-orchid-400",
+          "token": "amethyst-orchid-400",
+          "oklch": "oklch(65.02% 0.083 314.19)",
+          "hex": "#a280b3"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-amethyst-orchid-500",
+          "token": "amethyst-orchid-500",
+          "oklch": "oklch(55.76% 0.106 313.85)",
+          "hex": "#8a609f"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-amethyst-orchid-600",
+          "token": "amethyst-orchid-600",
+          "oklch": "oklch(47.77% 0.089 313.87)",
+          "hex": "#6f4d80"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-amethyst-orchid-700",
+          "token": "amethyst-orchid-700",
+          "oklch": "oklch(39.07% 0.072 313.89)",
+          "hex": "#533960"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-amethyst-orchid-800",
+          "token": "amethyst-orchid-800",
+          "oklch": "oklch(30.06% 0.051 313.42)",
+          "hex": "#372640"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-amethyst-orchid-900",
+          "token": "amethyst-orchid-900",
+          "oklch": "oklch(20.45% 0.029 315.19)",
+          "hex": "#1c1320"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-amethyst-orchid-950",
+          "token": "amethyst-orchid-950",
+          "oklch": "oklch(17.14% 0.021 314.24)",
+          "hex": "#130d16"
+        }
+      ]
+    },
+    {
+      "id": "ancient-water",
+      "title": "Ancient Water",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-ancient-water-50",
+          "token": "ancient-water-50",
+          "oklch": "oklch(95.76% 0.009 264.52)",
+          "hex": "#eef1f7"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-ancient-water-100",
+          "token": "ancient-water-100",
+          "oklch": "oklch(91.45% 0.016 262.75)",
+          "hex": "#dde3ee"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-ancient-water-200",
+          "token": "ancient-water-200",
+          "oklch": "oklch(82.94% 0.033 260.02)",
+          "hex": "#bbc8dd"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-ancient-water-300",
+          "token": "ancient-water-300",
+          "oklch": "oklch(74.04% 0.053 260.41)",
+          "hex": "#98accd"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-ancient-water-400",
+          "token": "ancient-water-400",
+          "oklch": "oklch(65.23% 0.072 259.56)",
+          "hex": "#7691bc"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-ancient-water-500",
+          "token": "ancient-water-500",
+          "oklch": "oklch(56.08% 0.093 259.92)",
+          "hex": "#5475ab"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-ancient-water-600",
+          "token": "ancient-water-600",
+          "oklch": "oklch(47.99% 0.077 259.42)",
+          "hex": "#435e89"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-ancient-water-700",
+          "token": "ancient-water-700",
+          "oklch": "oklch(39.29% 0.062 260.1)",
+          "hex": "#324667"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-ancient-water-800",
+          "token": "ancient-water-800",
+          "oklch": "oklch(30.36% 0.042 259.76)",
+          "hex": "#222f44"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-ancient-water-900",
+          "token": "ancient-water-900",
+          "oklch": "oklch(20.41% 0.024 262.26)",
+          "hex": "#111722"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-ancient-water-950",
+          "token": "ancient-water-950",
+          "oklch": "oklch(17.29% 0.018 263.93)",
+          "hex": "#0c1018"
+        }
+      ]
+    },
+    {
+      "id": "anthracite",
+      "title": "Anthracite",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-anthracite-50",
+          "token": "anthracite-50",
+          "oklch": "oklch(95.87% 0.003 286.35)",
+          "hex": "#f1f1f3"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-anthracite-100",
+          "token": "anthracite-100",
+          "oklch": "oklch(91.97% 0.004 286.32)",
+          "hex": "#e4e4e7"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-anthracite-200",
+          "token": "anthracite-200",
+          "oklch": "oklch(83.77% 0.008 286.22)",
+          "hex": "#c9c9cf"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-anthracite-300",
+          "token": "anthracite-300",
+          "oklch": "oklch(75.36% 0.013 286.09)",
+          "hex": "#aeaeb7"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-anthracite-400",
+          "token": "anthracite-400",
+          "oklch": "oklch(66.71% 0.018 285.91)",
+          "hex": "#93939f"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-anthracite-500",
+          "token": "anthracite-500",
+          "oklch": "oklch(57.78% 0.023 285.66)",
+          "hex": "#787887"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-anthracite-600",
+          "token": "anthracite-600",
+          "oklch": "oklch(49.33% 0.019 285.68)",
+          "hex": "#60606c"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-anthracite-700",
+          "token": "anthracite-700",
+          "oklch": "oklch(40.5% 0.015 285.71)",
+          "hex": "#484851"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-anthracite-800",
+          "token": "anthracite-800",
+          "oklch": "oklch(31.16% 0.011 285.77)",
+          "hex": "#303036"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-anthracite-900",
+          "token": "anthracite-900",
+          "oklch": "oklch(21.03% 0.006 285.89)",
+          "hex": "#18181b"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-anthracite-950",
+          "token": "anthracite-950",
+          "oklch": "oklch(17.85% 0.004 285.98)",
+          "hex": "#111113"
+        }
+      ]
+    },
+    {
+      "id": "ashleigh-blue",
+      "title": "Ashleigh Blue",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-ashleigh-blue-50",
+          "token": "ashleigh-blue-50",
+          "oklch": "oklch(96% 0.006 255.48)",
+          "hex": "#eff2f6"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-ashleigh-blue-100",
+          "token": "ashleigh-blue-100",
+          "oklch": "oklch(91.94% 0.012 252.09)",
+          "hex": "#dfe5ec"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-ashleigh-blue-200",
+          "token": "ashleigh-blue-200",
+          "oklch": "oklch(83.47% 0.026 255.58)",
+          "hex": "#becada"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-ashleigh-blue-300",
+          "token": "ashleigh-blue-300",
+          "oklch": "oklch(75.09% 0.039 254.61)",
+          "hex": "#9eb0c7"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-ashleigh-blue-400",
+          "token": "ashleigh-blue-400",
+          "oklch": "oklch(0.613 0.0631 255.76)",
+          "hex": "#6b86aa"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-ashleigh-blue-500",
+          "token": "ashleigh-blue-500",
+          "oklch": "oklch(0.524 0.0746 255.31)",
+          "hex": "#4c6c95"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-ashleigh-blue-600",
+          "token": "ashleigh-blue-600",
+          "oklch": "oklch(49.03% 0.059 255.8)",
+          "hex": "#4a6282"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-ashleigh-blue-700",
+          "token": "ashleigh-blue-700",
+          "oklch": "oklch(40.38% 0.045 254.83)",
+          "hex": "#384a61"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-ashleigh-blue-800",
+          "token": "ashleigh-blue-800",
+          "oklch": "oklch(0.315 0.0262 255.74)",
+          "hex": "#29323f"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-ashleigh-blue-900",
+          "token": "ashleigh-blue-900",
+          "oklch": "oklch(0.218 0.0155 252.49)",
+          "hex": "#151b21"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-ashleigh-blue-950",
+          "token": "ashleigh-blue-950",
+          "oklch": "oklch(17.63% 0.014 258.36)",
+          "hex": "#0d1117"
+        }
+      ]
+    },
+    {
+      "id": "baltic-blue",
+      "title": "Baltic Blue",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-baltic-blue-50",
+          "token": "baltic-blue-50",
+          "oklch": "oklch(96.29% 0.015 228.96)",
+          "hex": "#e9f5fb"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-baltic-blue-100",
+          "token": "baltic-blue-100",
+          "oklch": "oklch(92.44% 0.031 234.44)",
+          "hex": "#d3eaf8"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-baltic-blue-200",
+          "token": "baltic-blue-200",
+          "oklch": "oklch(85.21% 0.062 233.63)",
+          "hex": "#a7d6f1"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-baltic-blue-300",
+          "token": "baltic-blue-300",
+          "oklch": "oklch(77.98% 0.092 235.37)",
+          "hex": "#7bc1ea"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-baltic-blue-400",
+          "token": "baltic-blue-400",
+          "oklch": "oklch(71.33% 0.117 236.66)",
+          "hex": "#50ade2"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-baltic-blue-500",
+          "token": "baltic-blue-500",
+          "oklch": "oklch(64.96% 0.139 240.62)",
+          "hex": "#2498db"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-baltic-blue-600",
+          "token": "baltic-blue-600",
+          "oklch": "oklch(55.32% 0.116 239.96)",
+          "hex": "#1d7aaf"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-baltic-blue-700",
+          "token": "baltic-blue-700",
+          "oklch": "oklch(45.03% 0.094 240.34)",
+          "hex": "#155b84"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-baltic-blue-800",
+          "token": "baltic-blue-800",
+          "oklch": "oklch(34.34% 0.068 239.06)",
+          "hex": "#0e3d58"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-baltic-blue-900",
+          "token": "baltic-blue-900",
+          "oklch": "oklch(22.46% 0.04 238.57)",
+          "hex": "#071e2c"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-baltic-blue-950",
+          "token": "baltic-blue-950",
+          "oklch": "oklch(18.7% 0.03 237.31)",
+          "hex": "#05151f"
+        }
+      ]
+    },
+    {
+      "id": "blue-yonder",
+      "title": "Blue Yonder",
+      "steps": [
+        {
+          "shade": "200",
+          "cssVar": "--color-blue-yonder-200",
+          "token": "blue-yonder-200",
+          "oklch": "oklch(0.5822 0.0944 263.7)",
+          "hex": "#5e7ab3"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-blue-yonder-300",
+          "token": "blue-yonder-300",
+          "oklch": "oklch(0.5922 0.0944 263.7)",
+          "hex": "#617db6"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-blue-yonder-400",
+          "token": "blue-yonder-400",
+          "oklch": "oklch(0.6022 0.0944 263.7)",
+          "hex": "#6480ba"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-blue-yonder-500",
+          "token": "blue-yonder-500",
+          "oklch": "oklch(0.6122 0.0944 263.7)",
+          "hex": "#6683bd"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-blue-yonder-600",
+          "token": "blue-yonder-600",
+          "oklch": "oklch(0.6222 0.0944 263.7)",
+          "hex": "#6986c0"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-blue-yonder-700",
+          "token": "blue-yonder-700",
+          "oklch": "oklch(0.6322 0.0944 263.7)",
+          "hex": "#6c89c3"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-blue-yonder-800",
+          "token": "blue-yonder-800",
+          "oklch": "oklch(0.6422 0.0944 263.7)",
+          "hex": "#6f8cc7"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-blue-yonder-900",
+          "token": "blue-yonder-900",
+          "oklch": "oklch(0.6522 0.0944 263.7)",
+          "hex": "#728fca"
+        }
+      ]
+    },
+    {
+      "id": "bonnie-blue",
+      "title": "Bonnie Blue",
+      "steps": [
+        {
+          "shade": "200",
+          "cssVar": "--color-bonnie-blue-200",
+          "token": "bonnie-blue-200",
+          "oklch": "oklch(0.666968 0.144466 237.4676)",
+          "hex": "#0d9fe1"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-bonnie-blue-300",
+          "token": "bonnie-blue-300",
+          "oklch": "oklch(0.676968 0.144466 237.4676)",
+          "hex": "#16a2e5"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-bonnie-blue-400",
+          "token": "bonnie-blue-400",
+          "oklch": "oklch(0.686968 0.144466 237.4676)",
+          "hex": "#1da6e8"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-bonnie-blue-500",
+          "token": "bonnie-blue-500",
+          "oklch": "oklch(0.696968 0.144466 237.4676)",
+          "hex": "#23a9eb"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-bonnie-blue-600",
+          "token": "bonnie-blue-600",
+          "oklch": "oklch(0.706968 0.144466 237.4676)",
+          "hex": "#29acef"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-bonnie-blue-700",
+          "token": "bonnie-blue-700",
+          "oklch": "oklch(0.716968 0.144466 237.4676)",
+          "hex": "#2eaff2"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-bonnie-blue-800",
+          "token": "bonnie-blue-800",
+          "oklch": "oklch(0.726968 0.144466 237.4676)",
+          "hex": "#33b2f6"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-bonnie-blue-900",
+          "token": "bonnie-blue-900",
+          "oklch": "oklch(0.736968 0.144466 237.4676)",
+          "hex": "#37b6f9"
+        }
+      ]
+    },
+    {
+      "id": "botanical-garden",
+      "title": "Botanical Garden",
+      "steps": [
+        {
+          "shade": "200",
+          "cssVar": "--color-botanical-garden-200",
+          "token": "botanical-garden-200",
+          "oklch": "oklch(0.3394 0.0399 175.05)",
+          "hex": "#203f37"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-botanical-garden-300",
+          "token": "botanical-garden-300",
+          "oklch": "oklch(0.3494 0.0399 175.05)",
+          "hex": "#224139"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-botanical-garden-400",
+          "token": "botanical-garden-400",
+          "oklch": "oklch(0.3594 0.0399 175.05)",
+          "hex": "#25443c"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-botanical-garden-500",
+          "token": "botanical-garden-500",
+          "oklch": "oklch(0.3694 0.0399 175.05)",
+          "hex": "#28473e"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-botanical-garden-600",
+          "token": "botanical-garden-600",
+          "oklch": "oklch(0.3794 0.0399 175.05)",
+          "hex": "#2a4941"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-botanical-garden-700",
+          "token": "botanical-garden-700",
+          "oklch": "oklch(0.3894 0.0399 175.05)",
+          "hex": "#2d4c44"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-botanical-garden-800",
+          "token": "botanical-garden-800",
+          "oklch": "oklch(0.3994 0.0399 175.05)",
+          "hex": "#304f46"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-botanical-garden-900",
+          "token": "botanical-garden-900",
+          "oklch": "oklch(0.4094 0.0399 175.05)",
+          "hex": "#325149"
+        }
+      ]
+    },
+    {
+      "id": "campanula",
+      "title": "Campanula",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-campanula-50",
+          "token": "campanula-50",
+          "oklch": "oklch(95.99% 0.012 239.91)",
+          "hex": "#ebf3f9"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-campanula-100",
+          "token": "campanula-100",
+          "oklch": "oklch(92.03% 0.023 241.89)",
+          "hex": "#d8e7f3"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-campanula-200",
+          "token": "campanula-200",
+          "oklch": "oklch(83.99% 0.048 242.59)",
+          "hex": "#b0cfe8"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-campanula-300",
+          "token": "campanula-300",
+          "oklch": "oklch(76% 0.072 243.15)",
+          "hex": "#89b7dc"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-campanula-400",
+          "token": "campanula-400",
+          "oklch": "oklch(67.18% 0.103 247.96)",
+          "hex": "#609bd2"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-campanula-500",
+          "token": "campanula-500",
+          "oklch": "oklch(59.28% 0.129 249.57)",
+          "hex": "#3882c7"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-campanula-600",
+          "token": "campanula-600",
+          "oklch": "oklch(50.52% 0.107 249.41)",
+          "hex": "#2d689f"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-campanula-700",
+          "token": "campanula-700",
+          "oklch": "oklch(41.36% 0.084 249.16)",
+          "hex": "#224e77"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-campanula-800",
+          "token": "campanula-800",
+          "oklch": "oklch(31.69% 0.062 248.95)",
+          "hex": "#163450"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-campanula-900",
+          "token": "campanula-900",
+          "oklch": "oklch(21.22% 0.035 248.2)",
+          "hex": "#0b1a28"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-campanula-950",
+          "token": "campanula-950",
+          "oklch": "oklch(17.8% 0.026 249.14)",
+          "hex": "#08121c"
+        }
+      ]
+    },
+    {
+      "id": "cerulean",
+      "title": "Cerulean",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-cerulean-50",
+          "token": "cerulean-50",
+          "oklch": "oklch(96.61% 0.019 222.16)",
+          "hex": "#e7f7fd"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-cerulean-100",
+          "token": "cerulean-100",
+          "oklch": "oklch(93.14% 0.036 225.76)",
+          "hex": "#d0eefb"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-cerulean-200",
+          "token": "cerulean-200",
+          "oklch": "oklch(86.75% 0.072 225.89)",
+          "hex": "#a0def8"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-cerulean-300",
+          "token": "cerulean-300",
+          "oklch": "oklch(80.59% 0.104 227.72)",
+          "hex": "#71cdf4"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-cerulean-400",
+          "token": "cerulean-400",
+          "oklch": "oklch(75% 0.13 231.01)",
+          "hex": "#41bcf1"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-cerulean-500",
+          "token": "cerulean-500",
+          "oklch": "oklch(70.1% 0.147 235.76)",
+          "hex": "#13abed"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-cerulean-600",
+          "token": "cerulean-600",
+          "oklch": "oklch(59.56% 0.124 235.42)",
+          "hex": "#0e89be"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-cerulean-700",
+          "token": "cerulean-700",
+          "oklch": "oklch(48.49% 0.099 234.3)",
+          "hex": "#09678e"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-cerulean-800",
+          "token": "cerulean-800",
+          "oklch": "oklch(36.79% 0.072 233.05)",
+          "hex": "#08455f"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-cerulean-900",
+          "token": "cerulean-900",
+          "oklch": "oklch(23.72% 0.043 230.71)",
+          "hex": "#04222f"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-cerulean-950",
+          "token": "cerulean-950",
+          "oklch": "oklch(19.57% 0.034 226.88)",
+          "hex": "#021821"
+        }
+      ]
+    },
+    {
+      "id": "chocolate-plum",
+      "title": "Chocolate Plum",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-chocolate-plum-50",
+          "token": "chocolate-plum-50",
+          "oklch": "oklch(95.85% 0.004 360)",
+          "hex": "#f4f0f1"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-chocolate-plum-100",
+          "token": "chocolate-plum-100",
+          "oklch": "oklch(91.83% 0.008 17.3)",
+          "hex": "#e9e2e2"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-chocolate-plum-200",
+          "token": "chocolate-plum-200",
+          "oklch": "oklch(83.38% 0.018 13.17)",
+          "hex": "#d4c4c5"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-chocolate-plum-300",
+          "token": "chocolate-plum-300",
+          "oklch": "oklch(74.89% 0.027 11.79)",
+          "hex": "#bea7a9"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-chocolate-plum-400",
+          "token": "chocolate-plum-400",
+          "oklch": "oklch(66.17% 0.037 13.6)",
+          "hex": "#a88a8c"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-chocolate-plum-500",
+          "token": "chocolate-plum-500",
+          "oklch": "oklch(57.15% 0.05 13.63)",
+          "hex": "#936c6f"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-chocolate-plum-600",
+          "token": "chocolate-plum-600",
+          "oklch": "oklch(48.86% 0.04 14.18)",
+          "hex": "#755759"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-chocolate-plum-700",
+          "token": "chocolate-plum-700",
+          "oklch": "oklch(40.1% 0.032 12.79)",
+          "hex": "#584143"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-chocolate-plum-800",
+          "token": "chocolate-plum-800",
+          "oklch": "oklch(30.8% 0.024 14.36)",
+          "hex": "#3b2b2c"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-chocolate-plum-900",
+          "token": "chocolate-plum-900",
+          "oklch": "oklch(20.88% 0.011 18.1)",
+          "hex": "#1d1616"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-chocolate-plum-950",
+          "token": "chocolate-plum-950",
+          "oklch": "oklch(17.66% 0.01 6.94)",
+          "hex": "#150f10"
+        }
+      ]
+    },
+    {
+      "id": "cloud-dancer",
+      "title": "Cloud Dancer",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-cloud-dancer-50",
+          "token": "cloud-dancer-50",
+          "oklch": "oklch(96.49% 0.005 78.3)",
+          "hex": "#f5f3f0"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-cloud-dancer-100",
+          "token": "cloud-dancer-100",
+          "oklch": "oklch(93.06% 0.01 93.57)",
+          "hex": "#eae8e1"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-cloud-dancer-200",
+          "token": "cloud-dancer-200",
+          "oklch": "oklch(85.85% 0.02 87.52)",
+          "hex": "#d6d0c2"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-cloud-dancer-300",
+          "token": "cloud-dancer-300",
+          "oklch": "oklch(78.66% 0.03 89.61)",
+          "hex": "#c1b9a4"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-cloud-dancer-400",
+          "token": "cloud-dancer-400",
+          "oklch": "oklch(71.11% 0.04 88.49)",
+          "hex": "#aca186"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-cloud-dancer-500",
+          "token": "cloud-dancer-500",
+          "oklch": "oklch(63.68% 0.052 88.76)",
+          "hex": "#988a67"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-cloud-dancer-600",
+          "token": "cloud-dancer-600",
+          "oklch": "oklch(54.11% 0.042 88.45)",
+          "hex": "#796e53"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-cloud-dancer-700",
+          "token": "cloud-dancer-700",
+          "oklch": "oklch(44.4% 0.034 89.64)",
+          "hex": "#5b533e"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-cloud-dancer-800",
+          "token": "cloud-dancer-800",
+          "oklch": "oklch(33.87% 0.025 87.53)",
+          "hex": "#3d3729"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-cloud-dancer-900",
+          "token": "cloud-dancer-900",
+          "oklch": "oklch(22.62% 0.013 93.96)",
+          "hex": "#1e1c15"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-cloud-dancer-950",
+          "token": "cloud-dancer-950",
+          "oklch": "oklch(18.72% 0.01 88.81)",
+          "hex": "#15130e"
+        }
+      ]
+    },
+    {
+      "id": "custom",
+      "title": "Custom",
+      "steps": [
+        {
+          "shade": "100",
+          "cssVar": "--color-custom-100",
+          "token": "custom-100",
+          "oklch": "oklch(0.5348 0.1047 246.08)",
+          "hex": "#3272a6"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-custom-200",
+          "token": "custom-200",
+          "oklch": "oklch(0.5448 0.1047 246.08)",
+          "hex": "#3575a9"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-custom-300",
+          "token": "custom-300",
+          "oklch": "oklch(0.5548 0.1047 246.08)",
+          "hex": "#3878ac"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-custom-400",
+          "token": "custom-400",
+          "oklch": "oklch(0.5648 0.1047 246.08)",
+          "hex": "#3b7bb0"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-custom-500",
+          "token": "custom-500",
+          "oklch": "oklch(0.5748 0.1047 246.08)",
+          "hex": "#3e7eb3"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-custom-600",
+          "token": "custom-600",
+          "oklch": "oklch(0.5848 0.1047 246.08)",
+          "hex": "#4281b6"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-custom-700",
+          "token": "custom-700",
+          "oklch": "oklch(0.5948 0.1047 246.08)",
+          "hex": "#4584b9"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-custom-800",
+          "token": "custom-800",
+          "oklch": "oklch(0.6048 0.1047 246.08)",
+          "hex": "#4887bc"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-custom-900",
+          "token": "custom-900",
+          "oklch": "oklch(0.5675 0.0835 260.58)",
+          "hex": "#5a77a8"
+        }
+      ]
+    },
+    {
+      "id": "dark-amethyst",
+      "title": "Dark Amethyst",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-dark-amethyst-50",
+          "token": "dark-amethyst-50",
+          "oklch": "oklch(95.4% 0.012 301.28)",
+          "hex": "#f1eef7"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-dark-amethyst-100",
+          "token": "dark-amethyst-100",
+          "oklch": "oklch(90.49% 0.026 300.25)",
+          "hex": "#e2dcef"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-dark-amethyst-200",
+          "token": "dark-amethyst-200",
+          "oklch": "oklch(80.8% 0.054 299.61)",
+          "hex": "#c5b9df"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-dark-amethyst-300",
+          "token": "dark-amethyst-300",
+          "oklch": "oklch(70.93% 0.084 298.73)",
+          "hex": "#a896cf"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-dark-amethyst-400",
+          "token": "dark-amethyst-400",
+          "oklch": "oklch(60.94% 0.115 297.43)",
+          "hex": "#8b73bf"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-dark-amethyst-500",
+          "token": "dark-amethyst-500",
+          "oklch": "oklch(50.95% 0.146 295.31)",
+          "hex": "#6e50af"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-dark-amethyst-600",
+          "token": "dark-amethyst-600",
+          "oklch": "oklch(43.6% 0.122 295.48)",
+          "hex": "#58408c"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-dark-amethyst-700",
+          "token": "dark-amethyst-700",
+          "oklch": "oklch(35.93% 0.096 295.75)",
+          "hex": "#423069"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-dark-amethyst-800",
+          "token": "dark-amethyst-800",
+          "oklch": "oklch(27.84% 0.069 296.21)",
+          "hex": "#2c2046"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-dark-amethyst-900",
+          "token": "dark-amethyst-900",
+          "oklch": "oklch(19.13% 0.038 297.2)",
+          "hex": "#161023"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-dark-amethyst-950",
+          "token": "dark-amethyst-950",
+          "oklch": "oklch(16.2% 0.027 297.41)",
+          "hex": "#0f0b18"
+        }
+      ]
+    },
+    {
+      "id": "dark-khaki",
+      "title": "Dark Khaki",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-dark-khaki-50",
+          "token": "dark-khaki-50",
+          "oklch": "oklch(96.65% 0.007 97.35)",
+          "hex": "#f5f4ef"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-dark-khaki-100",
+          "token": "dark-khaki-100",
+          "oklch": "oklch(93.11% 0.011 89.73)",
+          "hex": "#ebe8e0"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-dark-khaki-200",
+          "token": "dark-khaki-200",
+          "oklch": "oklch(86.31% 0.024 93.36)",
+          "hex": "#d7d2c1"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-dark-khaki-300",
+          "token": "dark-khaki-300",
+          "oklch": "oklch(79.19% 0.035 92.32)",
+          "hex": "#c3bba2"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-dark-khaki-400",
+          "token": "dark-khaki-400",
+          "oklch": "oklch(72.15% 0.048 93.61)",
+          "hex": "#afa583"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-dark-khaki-500",
+          "token": "dark-khaki-500",
+          "oklch": "oklch(64.84% 0.062 92.16)",
+          "hex": "#9c8e63"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-dark-khaki-600",
+          "token": "dark-khaki-600",
+          "oklch": "oklch(55.23% 0.051 93.66)",
+          "hex": "#7c7250"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-dark-khaki-700",
+          "token": "dark-khaki-700",
+          "oklch": "oklch(45.03% 0.04 92.43)",
+          "hex": "#5d553c"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-dark-khaki-800",
+          "token": "dark-khaki-800",
+          "oklch": "oklch(34.46% 0.029 93.65)",
+          "hex": "#3e3928"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-dark-khaki-900",
+          "token": "dark-khaki-900",
+          "oklch": "oklch(22.71% 0.015 89.92)",
+          "hex": "#1f1c14"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-dark-khaki-950",
+          "token": "dark-khaki-950",
+          "oklch": "oklch(19.14% 0.012 91.79)",
+          "hex": "#16140e"
+        }
+      ]
+    },
+    {
+      "id": "dazzling-blue",
+      "title": "Dazzling Blue",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-dazzling-blue-50",
+          "token": "dazzling-blue-50",
+          "oklch": "oklch(95.24% 0.012 271.28)",
+          "hex": "#eceff8"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-dazzling-blue-100",
+          "token": "dazzling-blue-100",
+          "oklch": "oklch(90.52% 0.025 273.48)",
+          "hex": "#dadff1"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-dazzling-blue-200",
+          "token": "dazzling-blue-200",
+          "oklch": "oklch(80.64% 0.055 273.54)",
+          "hex": "#b4bee4"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-dazzling-blue-300",
+          "token": "dazzling-blue-300",
+          "oklch": "oklch(70.85% 0.084 272.54)",
+          "hex": "#8f9ed6"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-dazzling-blue-400",
+          "token": "dazzling-blue-400",
+          "oklch": "oklch(60.95% 0.117 270.78)",
+          "hex": "#697ec9"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-dazzling-blue-500",
+          "token": "dazzling-blue-500",
+          "oklch": "oklch(51.16% 0.149 268.88)",
+          "hex": "#445ebb"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-dazzling-blue-600",
+          "token": "dazzling-blue-600",
+          "oklch": "oklch(43.73% 0.125 268.97)",
+          "hex": "#364b96"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-dazzling-blue-700",
+          "token": "dazzling-blue-700",
+          "oklch": "oklch(35.96% 0.098 269.65)",
+          "hex": "#293870"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-dazzling-blue-800",
+          "token": "dazzling-blue-800",
+          "oklch": "oklch(27.77% 0.071 270.15)",
+          "hex": "#1b254b"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-dazzling-blue-900",
+          "token": "dazzling-blue-900",
+          "oklch": "oklch(19.21% 0.037 270.81)",
+          "hex": "#0e1325"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-dazzling-blue-950",
+          "token": "dazzling-blue-950",
+          "oklch": "oklch(16.24% 0.028 269.95)",
+          "hex": "#090d1a"
+        }
+      ]
+    },
+    {
+      "id": "deep-space-blue",
+      "title": "Deep Space Blue",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-deep-space-blue-50",
+          "token": "deep-space-blue-50",
+          "oklch": "oklch(95.86% 0.011 252.09)",
+          "hex": "#ecf2f9"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-deep-space-blue-100",
+          "token": "deep-space-blue-100",
+          "oklch": "oklch(91.83% 0.023 246.05)",
+          "hex": "#d8e6f3"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-deep-space-blue-200",
+          "token": "deep-space-blue-200",
+          "oklch": "oklch(83.44% 0.046 248.38)",
+          "hex": "#b2cce6"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-deep-space-blue-300",
+          "token": "deep-space-blue-300",
+          "oklch": "oklch(74.96% 0.072 249.45)",
+          "hex": "#8bb2da"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-deep-space-blue-400",
+          "token": "deep-space-blue-400",
+          "oklch": "oklch(66.75% 0.096 249.43)",
+          "hex": "#6599cd"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-deep-space-blue-500",
+          "token": "deep-space-blue-500",
+          "oklch": "oklch(58.47% 0.122 250.98)",
+          "hex": "#3e7fc1"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-deep-space-blue-600",
+          "token": "deep-space-blue-600",
+          "oklch": "oklch(49.95% 0.1 250.51)",
+          "hex": "#32669a"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-deep-space-blue-700",
+          "token": "deep-space-blue-700",
+          "oklch": "oklch(40.81% 0.081 250.96)",
+          "hex": "#254c74"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-deep-space-blue-800",
+          "token": "deep-space-blue-800",
+          "oklch": "oklch(31.39% 0.057 250.09)",
+          "hex": "#19334d"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-deep-space-blue-900",
+          "token": "deep-space-blue-900",
+          "oklch": "oklch(20.92% 0.034 251.36)",
+          "hex": "#0c1927"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-deep-space-blue-950",
+          "token": "deep-space-blue-950",
+          "oklch": "oklch(17.82% 0.023 249.16)",
+          "hex": "#09121b"
+        }
+      ]
+    },
+    {
+      "id": "delicioso",
+      "title": "Delicioso",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-delicioso-50",
+          "token": "delicioso-50",
+          "oklch": "oklch(96.21% 0.003 67.78)",
+          "hex": "#f4f2f0"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-delicioso-100",
+          "token": "delicioso-100",
+          "oklch": "oklch(92.42% 0.006 59.65)",
+          "hex": "#e9e5e2"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-delicioso-200",
+          "token": "delicioso-200",
+          "oklch": "oklch(84.54% 0.014 53.32)",
+          "hex": "#d4cac4"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-delicioso-300",
+          "token": "delicioso-300",
+          "oklch": "oklch(76.64% 0.021 55.06)",
+          "hex": "#beb0a7"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-delicioso-400",
+          "token": "delicioso-400",
+          "oklch": "oklch(68.35% 0.028 52.06)",
+          "hex": "#a8958a"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-delicioso-500",
+          "token": "delicioso-500",
+          "oklch": "oklch(60.12% 0.037 53.82)",
+          "hex": "#937b6c"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-delicioso-600",
+          "token": "delicioso-600",
+          "oklch": "oklch(51.14% 0.03 51.83)",
+          "hex": "#756257"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-delicioso-700",
+          "token": "delicioso-700",
+          "oklch": "oklch(42.06% 0.024 54.65)",
+          "hex": "#584a41"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-delicioso-800",
+          "token": "delicioso-800",
+          "oklch": "oklch(32.21% 0.018 52.82)",
+          "hex": "#3b312b"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-delicioso-900",
+          "token": "delicioso-900",
+          "oklch": "oklch(21.7% 0.009 59.18)",
+          "hex": "#1d1916"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-delicioso-950",
+          "token": "delicioso-950",
+          "oklch": "oklch(18.18% 0.008 48.27)",
+          "hex": "#15110f"
+        }
+      ]
+    },
+    {
+      "id": "demitasse",
+      "title": "Demitasse",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-demitasse-50",
+          "token": "demitasse-50",
+          "oklch": "oklch(96.29% 0.004 56.37)",
+          "hex": "#f5f2f0"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-demitasse-100",
+          "token": "demitasse-100",
+          "oklch": "oklch(92.32% 0.009 52.09)",
+          "hex": "#ebe4e0"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-demitasse-200",
+          "token": "demitasse-200",
+          "oklch": "oklch(84.65% 0.017 56.15)",
+          "hex": "#d6cac2"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-demitasse-300",
+          "token": "demitasse-300",
+          "oklch": "oklch(76.69% 0.028 54.45)",
+          "hex": "#c2afa3"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-demitasse-400",
+          "token": "demitasse-400",
+          "oklch": "oklch(68.49% 0.037 52.83)",
+          "hex": "#ad9485"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-demitasse-500",
+          "token": "demitasse-500",
+          "oklch": "oklch(60.39% 0.049 54.41)",
+          "hex": "#997a66"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-demitasse-600",
+          "token": "demitasse-600",
+          "oklch": "oklch(51.33% 0.04 52.52)",
+          "hex": "#7a6152"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-demitasse-700",
+          "token": "demitasse-700",
+          "oklch": "oklch(42.17% 0.032 53.89)",
+          "hex": "#5c493d"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-demitasse-800",
+          "token": "demitasse-800",
+          "oklch": "oklch(32.38% 0.022 55.47)",
+          "hex": "#3d3129"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-demitasse-900",
+          "token": "demitasse-900",
+          "oklch": "oklch(21.61% 0.014 51.44)",
+          "hex": "#1f1814"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-demitasse-950",
+          "token": "demitasse-950",
+          "oklch": "oklch(18.14% 0.009 59.04)",
+          "hex": "#15110e"
+        }
+      ]
+    },
+    {
+      "id": "dune",
+      "title": "Dune",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-dune-50",
+          "token": "dune-50",
+          "oklch": "oklch(96.21% 0.003 67.78)",
+          "hex": "#f4f2f0"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-dune-100",
+          "token": "dune-100",
+          "oklch": "oklch(92.62% 0.006 75.4)",
+          "hex": "#e9e6e2"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-dune-200",
+          "token": "dune-200",
+          "oklch": "oklch(84.89% 0.012 67.66)",
+          "hex": "#d3ccc5"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-dune-300",
+          "token": "dune-300",
+          "oklch": "oklch(77.2% 0.019 70.18)",
+          "hex": "#bdb3a8"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-dune-400",
+          "token": "dune-400",
+          "oklch": "oklch(69.11% 0.026 67.38)",
+          "hex": "#a7998b"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-dune-500",
+          "token": "dune-500",
+          "oklch": "oklch(61.03% 0.034 68.74)",
+          "hex": "#91806e"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-dune-600",
+          "token": "dune-600",
+          "oklch": "oklch(51.95% 0.028 67.15)",
+          "hex": "#746658"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-dune-700",
+          "token": "dune-700",
+          "oklch": "oklch(42.68% 0.022 69.84)",
+          "hex": "#574d42"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-dune-800",
+          "token": "dune-800",
+          "oklch": "oklch(32.62% 0.016 67.23)",
+          "hex": "#3a332c"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-dune-900",
+          "token": "dune-900",
+          "oklch": "oklch(21.97% 0.009 75.15)",
+          "hex": "#1d1a16"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-dune-950",
+          "token": "dune-950",
+          "oklch": "oklch(18.34% 0.007 78.14)",
+          "hex": "#14120f"
+        }
+      ]
+    },
+    {
+      "id": "dutch-blue",
+      "title": "Dutch Blue",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-dutch-blue-50",
+          "token": "dutch-blue-50",
+          "oklch": "oklch(95.73% 0.007 260.73)",
+          "hex": "#eef1f6"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-dutch-blue-100",
+          "token": "dutch-blue-100",
+          "oklch": "oklch(91.49% 0.015 264.49)",
+          "hex": "#dee3ed"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-dutch-blue-200",
+          "token": "dutch-blue-200",
+          "oklch": "oklch(82.98% 0.031 260.7)",
+          "hex": "#bcc8dc"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-dutch-blue-300",
+          "token": "dutch-blue-300",
+          "oklch": "oklch(74.14% 0.047 261.81)",
+          "hex": "#9bacca"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-dutch-blue-400",
+          "token": "dutch-blue-400",
+          "oklch": "oklch(65.3% 0.066 260.51)",
+          "hex": "#7991b9"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-dutch-blue-500",
+          "token": "dutch-blue-500",
+          "oklch": "oklch(0.5675 0.0835 260.58)",
+          "hex": "#5a77a8"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-dutch-blue-600",
+          "token": "dutch-blue-600",
+          "oklch": "oklch(48.02% 0.071 260.32)",
+          "hex": "#465e86"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-dutch-blue-700",
+          "token": "dutch-blue-700",
+          "oklch": "oklch(39.33% 0.056 261.41)",
+          "hex": "#354664"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-dutch-blue-800",
+          "token": "dutch-blue-800",
+          "oklch": "oklch(30.38% 0.04 260.39)",
+          "hex": "#232f43"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-dutch-blue-900",
+          "token": "dutch-blue-900",
+          "oklch": "oklch(20.44% 0.022 263.92)",
+          "hex": "#121721"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-dutch-blue-950",
+          "token": "dutch-blue-950",
+          "oklch": "oklch(17.23% 0.016 261.51)",
+          "hex": "#0c1017"
+        }
+      ]
+    },
+    {
+      "id": "formal-garden",
+      "title": "Formal Garden",
+      "steps": [
+        {
+          "shade": "200",
+          "cssVar": "--color-formal-garden-200",
+          "token": "formal-garden-200",
+          "oklch": "oklch(0.3513 0.0725 145.91)",
+          "hex": "#1f4523"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-formal-garden-300",
+          "token": "formal-garden-300",
+          "oklch": "oklch(0.3613 0.0725 145.91)",
+          "hex": "#214725"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-formal-garden-400",
+          "token": "formal-garden-400",
+          "oklch": "oklch(0.3713 0.0725 145.91)",
+          "hex": "#244a28"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-formal-garden-500",
+          "token": "formal-garden-500",
+          "oklch": "oklch(0.3813 0.0725 145.91)",
+          "hex": "#274d2a"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-formal-garden-600",
+          "token": "formal-garden-600",
+          "oklch": "oklch(0.3913 0.0725 145.91)",
+          "hex": "#2a502d"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-formal-garden-700",
+          "token": "formal-garden-700",
+          "oklch": "oklch(0.4013 0.0725 145.91)",
+          "hex": "#2c522f"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-formal-garden-800",
+          "token": "formal-garden-800",
+          "oklch": "oklch(0.4113 0.0725 145.91)",
+          "hex": "#2f5532"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-formal-garden-900",
+          "token": "formal-garden-900",
+          "oklch": "oklch(0.4213 0.0725 145.91)",
+          "hex": "#325835"
+        }
+      ]
+    },
+    {
+      "id": "fresh-sky",
+      "title": "Fresh Sky",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-fresh-sky-50",
+          "token": "fresh-sky-50",
+          "oklch": "oklch(96.92% 0.022 217.63)",
+          "hex": "#e5f9ff"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-fresh-sky-100",
+          "token": "fresh-sky-100",
+          "oklch": "oklch(93.82% 0.043 220.52)",
+          "hex": "#ccf2ff"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-fresh-sky-200",
+          "token": "fresh-sky-200",
+          "oklch": "oklch(88.35% 0.083 220.39)",
+          "hex": "#99e6ff"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-fresh-sky-300",
+          "token": "fresh-sky-300",
+          "oklch": "oklch(83.3% 0.116 222.63)",
+          "hex": "#66d9ff"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-fresh-sky-400",
+          "token": "fresh-sky-400",
+          "oklch": "oklch(79.02% 0.14 226.17)",
+          "hex": "#33ccff"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-fresh-sky-500",
+          "token": "fresh-sky-500",
+          "oklch": "oklch(75.54% 0.153 231.64)",
+          "hex": "#04bfff"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-fresh-sky-600",
+          "token": "fresh-sky-600",
+          "oklch": "oklch(64.05% 0.129 231.05)",
+          "hex": "#0199cc"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-fresh-sky-700",
+          "token": "fresh-sky-700",
+          "oklch": "oklch(52.03% 0.104 230.1)",
+          "hex": "#007399"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-fresh-sky-800",
+          "token": "fresh-sky-800",
+          "oklch": "oklch(39.26% 0.077 228.29)",
+          "hex": "#004d66"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-fresh-sky-900",
+          "token": "fresh-sky-900",
+          "oklch": "oklch(25.02% 0.048 225.89)",
+          "hex": "#002633"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-fresh-sky-950",
+          "token": "fresh-sky-950",
+          "oklch": "oklch(20.61% 0.038 222.74)",
+          "hex": "#001b24"
+        }
+      ]
+    },
+    {
+      "id": "goldenrod",
+      "title": "Goldenrod",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-goldenrod-50",
+          "token": "goldenrod-50",
+          "oklch": "oklch(98.15% 0.027 93.1)",
+          "hex": "#fff9e5"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-goldenrod-100",
+          "token": "goldenrod-100",
+          "oklch": "oklch(96.58% 0.053 94.43)",
+          "hex": "#fff4cc"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-goldenrod-200",
+          "token": "goldenrod-200",
+          "oklch": "oklch(93.43% 0.102 94.56)",
+          "hex": "#ffe999"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-goldenrod-300",
+          "token": "goldenrod-300",
+          "oklch": "oklch(90.57% 0.143 93.99)",
+          "hex": "#ffde65"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-goldenrod-400",
+          "token": "goldenrod-400",
+          "oklch": "oklch(88.02% 0.168 92.19)",
+          "hex": "#ffd333"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-goldenrod-500",
+          "token": "goldenrod-500",
+          "oklch": "oklch(85.75% 0.175 88.49)",
+          "hex": "#ffc802"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-goldenrod-600",
+          "token": "goldenrod-600",
+          "oklch": "oklch(72.59% 0.148 88.83)",
+          "hex": "#cca002"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-goldenrod-700",
+          "token": "goldenrod-700",
+          "oklch": "oklch(58.8% 0.12 89.37)",
+          "hex": "#997801"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-goldenrod-800",
+          "token": "goldenrod-800",
+          "oklch": "oklch(44.15% 0.09 90.38)",
+          "hex": "#665001"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-goldenrod-900",
+          "token": "goldenrod-900",
+          "oklch": "oklch(28.13% 0.058 92.9)",
+          "hex": "#332800"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-goldenrod-950",
+          "token": "goldenrod-950",
+          "oklch": "oklch(22.93% 0.047 94.01)",
+          "hex": "#241c00"
+        }
+      ]
+    },
+    {
+      "id": "green-tea",
+      "title": "Green Tea",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-green-tea-50",
+          "token": "green-tea-50",
+          "oklch": "oklch(96.62% 0.009 128.56)",
+          "hex": "#f2f5ef"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-green-tea-100",
+          "token": "green-tea-100",
+          "oklch": "oklch(93.34% 0.019 133.08)",
+          "hex": "#e4ecdf"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-green-tea-200",
+          "token": "green-tea-200",
+          "oklch": "oklch(86.61% 0.039 133.26)",
+          "hex": "#c9d9bf"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-green-tea-300",
+          "token": "green-tea-300",
+          "oklch": "oklch(79.88% 0.059 132.58)",
+          "hex": "#afc69f"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-green-tea-400",
+          "token": "green-tea-400",
+          "oklch": "oklch(73.03% 0.079 133.51)",
+          "hex": "#94b380"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-green-tea-500",
+          "token": "green-tea-500",
+          "oklch": "oklch(65.86% 0.098 133.77)",
+          "hex": "#799f60"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-green-tea-600",
+          "token": "green-tea-600",
+          "oklch": "oklch(56.26% 0.083 133.9)",
+          "hex": "#61804d"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-green-tea-700",
+          "token": "green-tea-700",
+          "oklch": "oklch(45.95% 0.066 133.29)",
+          "hex": "#496039"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-green-tea-800",
+          "token": "green-tea-800",
+          "oklch": "oklch(34.97% 0.048 134.03)",
+          "hex": "#304026"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-green-tea-900",
+          "token": "green-tea-900",
+          "oklch": "oklch(23.11% 0.027 133.83)",
+          "hex": "#182013"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-green-tea-950",
+          "token": "green-tea-950",
+          "oklch": "oklch(19.16% 0.019 131.64)",
+          "hex": "#11160d"
+        }
+      ]
+    },
+    {
+      "id": "hot-spot",
+      "title": "Hot Spot",
+      "steps": [
+        {
+          "shade": "200",
+          "cssVar": "--color-hot-spot-200",
+          "token": "hot-spot-200",
+          "oklch": "oklch(0.770633 0.155467 88.1747)",
+          "hex": "#ddad0e"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-hot-spot-300",
+          "token": "hot-spot-300",
+          "oklch": "oklch(0.780633 0.155467 88.1747)",
+          "hex": "#e1b017"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-hot-spot-400",
+          "token": "hot-spot-400",
+          "oklch": "oklch(0.790633 0.155467 88.1747)",
+          "hex": "#e4b41f"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-hot-spot-500",
+          "token": "hot-spot-500",
+          "oklch": "oklch(0.800633 0.155467 88.1747)",
+          "hex": "#e7b725"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-hot-spot-600",
+          "token": "hot-spot-600",
+          "oklch": "oklch(0.810633 0.155467 88.1747)",
+          "hex": "#ebba2b"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-hot-spot-700",
+          "token": "hot-spot-700",
+          "oklch": "oklch(0.820633 0.155467 88.1747)",
+          "hex": "#eebd30"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-hot-spot-800",
+          "token": "hot-spot-800",
+          "oklch": "oklch(0.830633 0.155467 88.1747)",
+          "hex": "#f1c135"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-hot-spot-900",
+          "token": "hot-spot-900",
+          "oklch": "oklch(0.840633 0.155467 88.1747)",
+          "hex": "#f5c439"
+        }
+      ]
+    },
+    {
+      "id": "light-green",
+      "title": "Light Green",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-light-green-50",
+          "token": "light-green-50",
+          "oklch": "oklch(97.15% 0.032 148.22)",
+          "hex": "#e8fcea"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-light-green-100",
+          "token": "light-green-100",
+          "oklch": "oklch(94.64% 0.065 147.72)",
+          "hex": "#d1fad5"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-light-green-200",
+          "token": "light-green-200",
+          "oklch": "oklch(89.73% 0.126 146.88)",
+          "hex": "#a4f4ac"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-light-green-300",
+          "token": "light-green-300",
+          "oklch": "oklch(85.68% 0.184 145.74)",
+          "hex": "#76ef82"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-light-green-400",
+          "token": "light-green-400",
+          "oklch": "oklch(82.48% 0.23 144.64)",
+          "hex": "#48ea59"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-light-green-500",
+          "token": "light-green-500",
+          "oklch": "oklch(79.9% 0.258 143.42)",
+          "hex": "#1ae42f"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-light-green-600",
+          "token": "light-green-600",
+          "oklch": "oklch(67.8% 0.217 143.53)",
+          "hex": "#16b726"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-light-green-700",
+          "token": "light-green-700",
+          "oklch": "oklch(54.86% 0.174 143.59)",
+          "hex": "#10891c"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-light-green-800",
+          "token": "light-green-800",
+          "oklch": "oklch(41.12% 0.127 143.84)",
+          "hex": "#0b5b13"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-light-green-900",
+          "token": "light-green-900",
+          "oklch": "oklch(26.41% 0.077 144.55)",
+          "hex": "#052e09"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-light-green-950",
+          "token": "light-green-950",
+          "oklch": "oklch(21.48% 0.058 145.49)",
+          "hex": "#042007"
+        }
+      ]
+    },
+    {
+      "id": "maritime",
+      "title": "Maritime",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-maritime-50",
+          "token": "maritime-50",
+          "oklch": "oklch(0.97 0.008 279.42)",
+          "hex": "#f4f5fb"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-maritime-100",
+          "token": "maritime-100",
+          "oklch": "oklch(0.92 0.015 279.42)",
+          "hex": "#e2e4ef"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-maritime-200",
+          "token": "maritime-200",
+          "oklch": "oklch(0.84 0.025 279.42)",
+          "hex": "#c7c9db"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-maritime-300",
+          "token": "maritime-300",
+          "oklch": "oklch(0.74 0.032 279.42)",
+          "hex": "#a6a9bf"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-maritime-400",
+          "token": "maritime-400",
+          "oklch": "oklch(0.64 0.036 279.42)",
+          "hex": "#878aa2"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-maritime-500",
+          "token": "maritime-500",
+          "oklch": "oklch(0.54 0.036 279.42)",
+          "hex": "#6a6d84"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-maritime-600",
+          "token": "maritime-600",
+          "oklch": "oklch(0.44 0.036 279.42)",
+          "hex": "#4e5167"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-maritime-700",
+          "token": "maritime-700",
+          "oklch": "oklch(0.35 0.036 279.42)",
+          "hex": "#36394d"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-maritime-800",
+          "token": "maritime-800",
+          "oklch": "oklch(0.2884 0.0366 279.42)",
+          "hex": "#27293d"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-night",
+          "token": "night",
+          "oklch": "oklch(0.2 0.03 279.42)",
+          "hex": "#131423"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-maritime-950",
+          "token": "maritime-950",
+          "oklch": "oklch(0.12 0.02 279.42)",
+          "hex": "#05050d"
+        }
+      ]
+    },
+    {
+      "id": "maritime-shade",
+      "title": "Maritime Shade",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-maritime-shade-50",
+          "token": "maritime-shade-50",
+          "oklch": "oklch(0.2797 0.0351 279.23)",
+          "hex": "#25273a"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-maritime-shade-100",
+          "token": "maritime-shade-100",
+          "oklch": "oklch(0.2664 0.0318 278.81)",
+          "hex": "#222435"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-maritime-shade-200",
+          "token": "maritime-shade-200",
+          "oklch": "oklch(0.2534 0.0304 278.49)",
+          "hex": "#1f2131"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-maritime-shade-300",
+          "token": "maritime-shade-300",
+          "oklch": "oklch(0.2397 0.027 277.86)",
+          "hex": "#1c1e2c"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-maritime-shade-400",
+          "token": "maritime-shade-400",
+          "oklch": "oklch(0.2274 0.0252 280.77)",
+          "hex": "#1a1b28"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-maritime-shade-500",
+          "token": "maritime-shade-500",
+          "oklch": "oklch(0.2139 0.0236 280.49)",
+          "hex": "#171824"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-maritime-shade-600",
+          "token": "maritime-shade-600",
+          "oklch": "oklch(0.1996 0.0201 279.96)",
+          "hex": "#14151f"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-maritime-shade-700",
+          "token": "maritime-shade-700",
+          "oklch": "oklch(0.1856 0.0184 279.5)",
+          "hex": "#11121b"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-maritime-shade-800",
+          "token": "maritime-shade-800",
+          "oklch": "oklch(0.1708 0.0147 278.37)",
+          "hex": "#0e0f16"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-maritime-shade-900",
+          "token": "maritime-shade-900",
+          "oklch": "oklch(0.1562 0.0129 277.4)",
+          "hex": "#0b0c12"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-maritime-shade-950",
+          "token": "maritime-shade-950",
+          "oklch": "oklch(0.1418 0.0087 285.23)",
+          "hex": "#09090d"
+        }
+      ]
+    },
+    {
+      "id": "maritime-tint",
+      "title": "Maritime Tint",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-maritime-tint-50",
+          "token": "maritime-tint-50",
+          "oklch": "oklch(0.3419 0.0457 278.61)",
+          "hex": "#333650"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-maritime-tint-100",
+          "token": "maritime-tint-100",
+          "oklch": "oklch(0.3883 0.0559 280.78)",
+          "hex": "#3f4162"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-maritime-tint-200",
+          "token": "maritime-tint-200",
+          "oklch": "oklch(0.4347 0.0643 279.98)",
+          "hex": "#4a4d74"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-maritime-tint-300",
+          "token": "maritime-tint-300",
+          "oklch": "oklch(0.4811 0.0763 285.13)",
+          "hex": "#5a5787"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-maritime-tint-400",
+          "token": "maritime-tint-400",
+          "oklch": "oklch(0.4794 0.0709 279.37)",
+          "hex": "#555985"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-maritime-tint-500",
+          "token": "maritime-tint-500",
+          "oklch": "oklch(0.5244 0.0787 279.8)",
+          "hex": "#616597"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-maritime-tint-600",
+          "token": "maritime-tint-600",
+          "oklch": "oklch(0.5776 0.0723 280.11)",
+          "hex": "#7175a4"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-maritime-tint-700",
+          "token": "maritime-tint-700",
+          "oklch": "oklch(0.6327 0.0615 281.22)",
+          "hex": "#8386af"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-maritime-tint-800",
+          "token": "maritime-tint-800",
+          "oklch": "oklch(0.6886 0.0515 279.84)",
+          "hex": "#9498bb"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-maritime-tint-900",
+          "token": "maritime-tint-900",
+          "oklch": "oklch(0.742 0.0418 280.66)",
+          "hex": "#a6a9c6"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-maritime-tint-950",
+          "token": "maritime-tint-950",
+          "oklch": "oklch(0.8468 0.0249 283.32)",
+          "hex": "#cacbdd"
+        }
+      ]
+    },
+    {
+      "id": "maritime-tone",
+      "title": "Maritime Tone",
+      "steps": [
+        {
+          "shade": "100",
+          "cssVar": "--color-maritime-tone-100",
+          "token": "maritime-tone-100",
+          "oklch": "oklch(0.2928 0.0345 281.7)",
+          "hex": "#292a3d"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-maritime-tone-200",
+          "token": "maritime-tone-200",
+          "oklch": "oklch(0.2953 0.0328 279.27)",
+          "hex": "#292b3d"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-maritime-tone-300",
+          "token": "maritime-tone-300",
+          "oklch": "oklch(0.2983 0.0291 278.93)",
+          "hex": "#2a2c3c"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-maritime-tone-400",
+          "token": "maritime-tone-400",
+          "oklch": "oklch(0.2987 0.0271 281.64)",
+          "hex": "#2b2c3b"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-maritime-tone-500",
+          "token": "maritime-tone-500",
+          "oklch": "oklch(0.3018 0.0235 281.44)",
+          "hex": "#2c2d3a"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-maritime-tone-600",
+          "token": "maritime-tone-600",
+          "oklch": "oklch(0.3048 0.0198 281.06)",
+          "hex": "#2d2e39"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-maritime-tone-700",
+          "token": "maritime-tone-700",
+          "oklch": "oklch(0.3079 0.0162 280.39)",
+          "hex": "#2e2f38"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-maritime-tone-800",
+          "token": "maritime-tone-800",
+          "oklch": "oklch(0.311 0.0125 279.19)",
+          "hex": "#2f3037"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-maritime-tone-900",
+          "token": "maritime-tone-900",
+          "oklch": "oklch(0.3116 0.0106 285.77)",
+          "hex": "#303036"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-maritime-tone-950",
+          "token": "maritime-tone-950",
+          "oklch": "oklch(0.3173 0.0055 271.24)",
+          "hex": "#313235"
+        }
+      ]
+    },
+    {
+      "id": "mineral-green",
+      "title": "Mineral Green",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-mineral-green-50",
+          "token": "mineral-green-50",
+          "oklch": "oklch(96.5% 0.008 145.51)",
+          "hex": "#f0f5f0"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-mineral-green-100",
+          "token": "mineral-green-100",
+          "oklch": "oklch(0.9041 0.02 143.03)",
+          "hex": "#d8e3d7"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-mineral-green-200",
+          "token": "mineral-green-200",
+          "oklch": "oklch(85.51% 0.031 143.76)",
+          "hex": "#c4d5c3"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-mineral-green-300",
+          "token": "mineral-green-300",
+          "oklch": "oklch(0.7736 0.0618 142.75)",
+          "hex": "#9fc09c"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-mineral-green-400",
+          "token": "mineral-green-400",
+          "oklch": "oklch(70.66% 0.063 142.71)",
+          "hex": "#8aab87"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-mineral-green-500",
+          "token": "mineral-green-500",
+          "oklch": "oklch(0.6545 0.0641 142.67)",
+          "hex": "#7a9b77"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-mineral-green-600",
+          "token": "mineral-green-600",
+          "oklch": "oklch(53.71% 0.067 142.54)",
+          "hex": "#577854"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-mineral-green-700",
+          "token": "mineral-green-700",
+          "oklch": "oklch(43.92% 0.053 142.79)",
+          "hex": "#415a3f"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-mineral-green-950",
+          "token": "mineral-green-950",
+          "oklch": "oklch(18.71% 0.015 144.94)",
+          "hex": "#0f150f"
+        }
+      ]
+    },
+    {
+      "id": "nature",
+      "title": "Nature",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-nature-50",
+          "token": "nature-50",
+          "oklch": "oklch(0.96 0.015 129.42)",
+          "hex": "#eff4e9"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-nature-100",
+          "token": "nature-100",
+          "oklch": "oklch(0.91 0.03 129.42)",
+          "hex": "#dbe6d1"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-nature-200",
+          "token": "nature-200",
+          "oklch": "oklch(0.83 0.055 129.42)",
+          "hex": "#bccfa9"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-nature-300",
+          "token": "nature-300",
+          "oklch": "oklch(0.74 0.075 129.42)",
+          "hex": "#9cb582"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-nature-400",
+          "token": "nature-400",
+          "oklch": "oklch(0.64 0.09 129.42)",
+          "hex": "#7b975b"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-nature-500",
+          "token": "nature-500",
+          "oklch": "oklch(0.54 0.095 129.42)",
+          "hex": "#5d793b"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-nature-600",
+          "token": "nature-600",
+          "oklch": "oklch(0.44 0.085 129.42)",
+          "hex": "#435c25"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-nature-700",
+          "token": "nature-700",
+          "oklch": "oklch(0.35 0.07 129.42)",
+          "hex": "#2f4117"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-nature-800",
+          "token": "nature-800",
+          "oklch": "oklch(0.27 0.055 129.42)",
+          "hex": "#1e2c0c"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-nature-900",
+          "token": "nature-900",
+          "oklch": "oklch(0.19 0.04 129.42)",
+          "hex": "#0e1704"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-nature-950",
+          "token": "nature-950",
+          "oklch": "oklch(0.11 0.025 129.42)",
+          "hex": "#030600"
+        }
+      ]
+    },
+    {
+      "id": "ocean-blue",
+      "title": "Ocean Blue",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-ocean-blue-50",
+          "token": "ocean-blue-50",
+          "oklch": "oklch(96.64% 0.019 225.71)",
+          "hex": "#e7f7fe"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-ocean-blue-100",
+          "token": "ocean-blue-100",
+          "oklch": "oklch(93.48% 0.04 222.89)",
+          "hex": "#cef0fd"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-ocean-blue-200",
+          "token": "ocean-blue-200",
+          "oklch": "oklch(87.14% 0.075 224.49)",
+          "hex": "#9ee0fa"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-ocean-blue-300",
+          "token": "ocean-blue-300",
+          "oklch": "oklch(81.49% 0.108 225.98)",
+          "hex": "#6dd1f8"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-ocean-blue-400",
+          "token": "ocean-blue-400",
+          "oklch": "oklch(76.26% 0.134 229.58)",
+          "hex": "#3cc1f6"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-ocean-blue-500",
+          "token": "ocean-blue-500",
+          "oklch": "oklch(72.04% 0.15 234.49)",
+          "hex": "#0cb2f4"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-ocean-blue-600",
+          "token": "ocean-blue-600",
+          "oklch": "oklch(61% 0.126 234.27)",
+          "hex": "#0b8ec3"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-ocean-blue-700",
+          "token": "ocean-blue-700",
+          "oklch": "oklch(49.69% 0.101 233.02)",
+          "hex": "#066b92"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-ocean-blue-800",
+          "token": "ocean-blue-800",
+          "oklch": "oklch(37.42% 0.074 231.98)",
+          "hex": "#054761"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-ocean-blue-900",
+          "token": "ocean-blue-900",
+          "oklch": "oklch(24.36% 0.045 228.1)",
+          "hex": "#022431"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-ocean-blue-950",
+          "token": "ocean-blue-950",
+          "oklch": "oklch(19.96% 0.035 226.09)",
+          "hex": "#021922"
+        }
+      ]
+    },
+    {
+      "id": "overcast",
+      "title": "Overcast",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-overcast-50",
+          "token": "overcast-50",
+          "oklch": "oklch(96.41% 0.004 91.45)",
+          "hex": "#f4f3f0"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-overcast-100",
+          "token": "overcast-100",
+          "oklch": "oklch(93.06% 0.01 93.57)",
+          "hex": "#eae8e1"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-overcast-200",
+          "token": "overcast-200",
+          "oklch": "oklch(85.8% 0.019 89.37)",
+          "hex": "#d5d0c3"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-overcast-300",
+          "token": "overcast-300",
+          "oklch": "oklch(78.6% 0.029 90.95)",
+          "hex": "#c0b9a5"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-overcast-400",
+          "token": "overcast-400",
+          "oklch": "oklch(71.2% 0.038 92.92)",
+          "hex": "#aaa288"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-overcast-500",
+          "token": "overcast-500",
+          "oklch": "oklch(63.47% 0.047 91.34)",
+          "hex": "#958a6a"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-overcast-600",
+          "token": "overcast-600",
+          "oklch": "oklch(54.18% 0.04 93)",
+          "hex": "#776f55"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-overcast-700",
+          "token": "overcast-700",
+          "oklch": "oklch(44.32% 0.032 91.05)",
+          "hex": "#5a533f"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-overcast-800",
+          "token": "overcast-800",
+          "oklch": "oklch(33.79% 0.023 89.49)",
+          "hex": "#3c372a"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-overcast-900",
+          "token": "overcast-900",
+          "oklch": "oklch(22.62% 0.013 93.96)",
+          "hex": "#1e1c15"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-overcast-950",
+          "token": "overcast-950",
+          "oklch": "oklch(18.76% 0.009 84.57)",
+          "hex": "#15130f"
+        }
+      ]
+    },
+    {
+      "id": "pageant-blue",
+      "title": "Pageant Blue",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-pageant-blue-50",
+          "token": "pageant-blue-50",
+          "oklch": "oklch(95.56% 0.01 273.36)",
+          "hex": "#eef0f7"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-pageant-blue-100",
+          "token": "pageant-blue-100",
+          "oklch": "oklch(91.21% 0.019 265.98)",
+          "hex": "#dce2ef"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-pageant-blue-200",
+          "token": "pageant-blue-200",
+          "oklch": "oklch(82.09% 0.038 268.83)",
+          "hex": "#bac4de"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-pageant-blue-300",
+          "token": "pageant-blue-300",
+          "oklch": "oklch(72.96% 0.06 267.46)",
+          "hex": "#97a7ce"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-pageant-blue-400",
+          "token": "pageant-blue-400",
+          "oklch": "oklch(63.46% 0.084 267.39)",
+          "hex": "#7489be"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-pageant-blue-500",
+          "token": "pageant-blue-500",
+          "oklch": "oklch(54.08% 0.107 266.39)",
+          "hex": "#526cad"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-pageant-blue-600",
+          "token": "pageant-blue-600",
+          "oklch": "oklch(46.13% 0.09 266.54)",
+          "hex": "#41568b"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-pageant-blue-700",
+          "token": "pageant-blue-700",
+          "oklch": "oklch(38.07% 0.07 266.22)",
+          "hex": "#314168"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-pageant-blue-800",
+          "token": "pageant-blue-800",
+          "oklch": "oklch(0.2891 0.0499 267.27)",
+          "hex": "#202a44"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-pageant-blue-900",
+          "token": "pageant-blue-900",
+          "oklch": "oklch(29.31% 0.05 267.31)",
+          "hex": "#212b45"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-pageant-blue-950",
+          "token": "pageant-blue-950",
+          "oklch": "oklch(16.89% 0.02 265.79)",
+          "hex": "#0b0f18"
+        }
+      ]
+    },
+    {
+      "id": "patriot-blue",
+      "title": "Patriot Blue",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-patriot-blue-50",
+          "token": "patriot-blue-50",
+          "oklch": "oklch(95.58% 0.007 277.16)",
+          "hex": "#eff0f5"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-patriot-blue-100",
+          "token": "patriot-blue-100",
+          "oklch": "oklch(90.99% 0.015 286.1)",
+          "hex": "#e0e0eb"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-patriot-blue-200",
+          "token": "patriot-blue-200",
+          "oklch": "oklch(81.74% 0.032 283.68)",
+          "hex": "#c0c1d8"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-patriot-blue-300",
+          "token": "patriot-blue-300",
+          "oklch": "oklch(72.3% 0.049 283.77)",
+          "hex": "#a1a2c4"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-patriot-blue-400",
+          "token": "patriot-blue-400",
+          "oklch": "oklch(62.61% 0.067 283.28)",
+          "hex": "#8283b0"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-patriot-blue-500",
+          "token": "patriot-blue-500",
+          "oklch": "oklch(52.62% 0.089 281.34)",
+          "hex": "#62649d"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-patriot-blue-600",
+          "token": "patriot-blue-600",
+          "oklch": "oklch(45.04% 0.073 282.07)",
+          "hex": "#4f507d"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-patriot-blue-700",
+          "token": "patriot-blue-700",
+          "oklch": "oklch(37.1% 0.058 281.89)",
+          "hex": "#3b3c5e"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-patriot-blue-800",
+          "token": "patriot-blue-800",
+          "oklch": "oklch(28.7% 0.042 281.49)",
+          "hex": "#27283f"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-patriot-blue-900",
+          "token": "patriot-blue-900",
+          "oklch": "oklch(19.68% 0.022 284.2)",
+          "hex": "#14141f"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-patriot-blue-950",
+          "token": "patriot-blue-950",
+          "oklch": "oklch(16.79% 0.017 284.46)",
+          "hex": "#0e0e16"
+        }
+      ]
+    },
+    {
+      "id": "poppy-red",
+      "title": "Poppy Red",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-poppy-red-50",
+          "token": "poppy-red-50",
+          "oklch": "oklch(94.44% 0.029 4.52)",
+          "hex": "#ffe5ea"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-poppy-red-100",
+          "token": "poppy-red-100",
+          "oklch": "oklch(89.21% 0.059 6.48)",
+          "hex": "#ffccd5"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-poppy-red-200",
+          "token": "poppy-red-200",
+          "oklch": "oklch(0.5894 0.2343 23.93)",
+          "hex": "#e80d2e"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-poppy-red-300",
+          "token": "poppy-red-300",
+          "oklch": "oklch(0.5994 0.2343 23.93)",
+          "hex": "#eb1731"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-poppy-red-400",
+          "token": "poppy-red-400",
+          "oklch": "oklch(0.6094 0.2343 23.93)",
+          "hex": "#ef1e35"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-poppy-red-500",
+          "token": "poppy-red-500",
+          "oklch": "oklch(0.6194 0.2343 23.93)",
+          "hex": "#f32438"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-poppy-red-600",
+          "token": "poppy-red-600",
+          "oklch": "oklch(0.6294 0.2343 23.93)",
+          "hex": "#f72a3b"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-poppy-red-700",
+          "token": "poppy-red-700",
+          "oklch": "oklch(0.6394 0.2343 23.93)",
+          "hex": "#fa2f3e"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-poppy-red-800",
+          "token": "poppy-red-800",
+          "oklch": "oklch(0.6494 0.2343 23.93)",
+          "hex": "#fe3441"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-poppy-red-900",
+          "token": "poppy-red-900",
+          "oklch": "oklch(0.6594 0.2343 23.93)",
+          "hex": "#ff3844"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-poppy-red-950",
+          "token": "poppy-red-950",
+          "oklch": "oklch(16.6% 0.066 11.9)",
+          "hex": "#240007"
+        }
+      ]
+    },
+    {
+      "id": "raw-umber",
+      "title": "Raw Umber",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-raw-umber-50",
+          "token": "raw-umber-50",
+          "oklch": "oklch(97.17% 0.023 75.86)",
+          "hex": "#fff4e5"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-raw-umber-100",
+          "token": "raw-umber-100",
+          "oklch": "oklch(94.24% 0.045 72.68)",
+          "hex": "#ffe8cc"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-raw-umber-200",
+          "token": "raw-umber-200",
+          "oklch": "oklch(88.77% 0.088 71.78)",
+          "hex": "#ffd199"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-raw-umber-300",
+          "token": "raw-umber-300",
+          "oklch": "oklch(83.68% 0.129 69.87)",
+          "hex": "#ffba65"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-raw-umber-400",
+          "token": "raw-umber-400",
+          "oklch": "oklch(79.08% 0.16 65.82)",
+          "hex": "#ffa333"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-raw-umber-500",
+          "token": "raw-umber-500",
+          "oklch": "oklch(75.05% 0.179 58.28)",
+          "hex": "#ff8c01"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-raw-umber-600",
+          "token": "raw-umber-600",
+          "oklch": "oklch(63.64% 0.151 58.97)",
+          "hex": "#cc7000"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-raw-umber-700",
+          "token": "raw-umber-700",
+          "oklch": "oklch(51.68% 0.121 60.09)",
+          "hex": "#995400"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-raw-umber-800",
+          "token": "raw-umber-800",
+          "oklch": "oklch(38.99% 0.09 62.25)",
+          "hex": "#663800"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-raw-umber-900",
+          "token": "raw-umber-900",
+          "oklch": "oklch(25.16% 0.055 68.01)",
+          "hex": "#331c00"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-raw-umber-950",
+          "token": "raw-umber-950",
+          "oklch": "oklch(20.82% 0.044 72.72)",
+          "hex": "#241400"
+        }
+      ]
+    },
+    {
+      "id": "rhodamine-red",
+      "title": "Rhodamine Red",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-rhodamine-red-50",
+          "token": "rhodamine-red-50",
+          "oklch": "oklch(94.81% 0.037 336.91)",
+          "hex": "#ffe5f7"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-rhodamine-red-100",
+          "token": "rhodamine-red-100",
+          "oklch": "oklch(89.98% 0.073 337.93)",
+          "hex": "#ffccef"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-rhodamine-red-200",
+          "token": "rhodamine-red-200",
+          "oklch": "oklch(0.6112 0.2518 348.88)",
+          "hex": "#e50d9b"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-rhodamine-red-300",
+          "token": "rhodamine-red-300",
+          "oklch": "oklch(0.6212 0.2518 348.88)",
+          "hex": "#e8179e"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-rhodamine-red-400",
+          "token": "rhodamine-red-400",
+          "oklch": "oklch(0.6312 0.2518 348.88)",
+          "hex": "#ec1ea1"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-rhodamine-red-500",
+          "token": "rhodamine-red-500",
+          "oklch": "oklch(0.6412 0.2518 348.88)",
+          "hex": "#f024a4"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-rhodamine-red-600",
+          "token": "rhodamine-red-600",
+          "oklch": "oklch(0.6512 0.2518 348.88)",
+          "hex": "#f32aa8"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-rhodamine-red-700",
+          "token": "rhodamine-red-700",
+          "oklch": "oklch(0.6612 0.2518 348.88)",
+          "hex": "#f72fab"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-rhodamine-red-800",
+          "token": "rhodamine-red-800",
+          "oklch": "oklch(0.6712 0.2518 348.88)",
+          "hex": "#fb34ae"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-rhodamine-red-900",
+          "token": "rhodamine-red-900",
+          "oklch": "oklch(0.6812 0.2518 348.88)",
+          "hex": "#fe38b1"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-rhodamine-red-950",
+          "token": "rhodamine-red-950",
+          "oklch": "oklch(17.4% 0.074 343.95)",
+          "hex": "#240018"
+        }
+      ]
+    },
+    {
+      "id": "sand",
+      "title": "Sand",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-sand-50",
+          "token": "sand-50",
+          "oklch": "oklch(0.9798 0.0045 78.3)",
+          "hex": "#faf8f5"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-sand-100",
+          "token": "sand-100",
+          "oklch": "oklch(0.9393 0.0097 72.66)",
+          "hex": "#efeae4"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-sand-200",
+          "token": "sand-200",
+          "oklch": "oklch(0.8699 0.0145 74.41)",
+          "hex": "#dad3ca"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-sand-300",
+          "token": "sand-300",
+          "oklch": "oklch(0.7708 0.0197 75.28)",
+          "hex": "#bcb3a7"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-sand-400",
+          "token": "sand-400",
+          "oklch": "oklch(0.661 0.0204 75.24)",
+          "hex": "#9a9185"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-sand-500",
+          "token": "sand-500",
+          "oklch": "oklch(0.5494 0.0182 73.53)",
+          "hex": "#787066"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-sand-600",
+          "token": "sand-600",
+          "oklch": "oklch(0.4491 0.015 75.21)",
+          "hex": "#5a544c"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-sand-700",
+          "token": "sand-700",
+          "oklch": "oklch(0.3505 0.0116 78.16)",
+          "hex": "#3e3a34"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-sand-800",
+          "token": "sand-800",
+          "oklch": "oklch(0.2493 0.0102 80.61)",
+          "hex": "#24211c"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-sand-900",
+          "token": "sand-900",
+          "oklch": "oklch(0.16 0.0089 84.7)",
+          "hex": "#0f0d09"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-sand-950",
+          "token": "sand-950",
+          "oklch": "oklch(0.0986 0.0063 72.53)",
+          "hex": "#040302"
+        }
+      ]
+    },
+    {
+      "id": "sidebar",
+      "title": "Sidebar",
+      "steps": [
+        {
+          "shade": "200",
+          "cssVar": "--color-sidebar-200",
+          "token": "sidebar-200",
+          "oklch": "oklch(0.8268 0.0226 92.55)",
+          "hex": "#cbc6b6"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-sidebar-300",
+          "token": "sidebar-300",
+          "oklch": "oklch(0.8368 0.0226 92.55)",
+          "hex": "#cec9b9"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-sidebar-400",
+          "token": "sidebar-400",
+          "oklch": "oklch(0.8468 0.0226 92.55)",
+          "hex": "#d2cdbd"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-sidebar-500",
+          "token": "sidebar-500",
+          "oklch": "oklch(0.8468 0.0226 92.55)",
+          "hex": "#d2cdbd"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-sidebar-600",
+          "token": "sidebar-600",
+          "oklch": "oklch(0.8568 0.0226 92.55)",
+          "hex": "#d5d0c0"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-sidebar-700",
+          "token": "sidebar-700",
+          "oklch": "oklch(0.8668 0.0226 92.55)",
+          "hex": "#d8d3c3"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-sidebar-800",
+          "token": "sidebar-800",
+          "oklch": "oklch(0.8768 0.0226 92.55)",
+          "hex": "#dbd6c6"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-sidebar-900",
+          "token": "sidebar-900",
+          "oklch": "oklch(0.8868 0.0226 92.55)",
+          "hex": "#dfdac9"
+        }
+      ]
+    },
+    {
+      "id": "slate",
+      "title": "Slate",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-slate-50",
+          "token": "slate-50",
+          "oklch": "oklch(0.97 0.0029 264.54)",
+          "hex": "#f4f5f7"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-slate-100",
+          "token": "slate-100",
+          "oklch": "oklch(0.9291 0.0054 286.29)",
+          "hex": "#e7e7eb"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-slate-200",
+          "token": "slate-200",
+          "oklch": "oklch(0.8594 0.0082 286.23)",
+          "hex": "#d0d0d6"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-slate-300",
+          "token": "slate-300",
+          "oklch": "oklch(0.7585 0.01 279.64)",
+          "hex": "#afb0b7"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-slate-400",
+          "token": "slate-400",
+          "oklch": "oklch(0.6509 0.012 274.8)",
+          "hex": "#8d8f97"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-slate-500",
+          "token": "slate-500",
+          "oklch": "oklch(0.5401 0.0124 280.28)",
+          "hex": "#6d6e76"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-slate-600",
+          "token": "slate-600",
+          "oklch": "oklch(0.4398 0.0099 278.42)",
+          "hex": "#515258"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-slate-700",
+          "token": "slate-700",
+          "oklch": "oklch(0.3412 0.0071 274.77)",
+          "hex": "#37383c"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-slate-800",
+          "token": "slate-800",
+          "oklch": "oklch(0.2405 0.0057 285.97)",
+          "hex": "#1f1f22"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-slate-900",
+          "token": "slate-900",
+          "oklch": "oklch(0.1505 0.0042 285.88)",
+          "hex": "#0b0b0d"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-slate-950",
+          "token": "slate-950",
+          "oklch": "oklch(0.086 0.0056 285.17)",
+          "hex": "#020203"
+        }
+      ]
+    },
+    {
+      "id": "space-indigo",
+      "title": "Space Indigo",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-space-indigo-50",
+          "token": "space-indigo-50",
+          "oklch": "oklch(95.56% 0.01 273.36)",
+          "hex": "#eef0f7"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-space-indigo-100",
+          "token": "space-indigo-100",
+          "oklch": "oklch(91.21% 0.019 265.98)",
+          "hex": "#dce2ef"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-space-indigo-200",
+          "token": "space-indigo-200",
+          "oklch": "oklch(82.09% 0.038 268.83)",
+          "hex": "#bac4de"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-space-indigo-300",
+          "token": "space-indigo-300",
+          "oklch": "oklch(72.96% 0.06 267.46)",
+          "hex": "#97a7ce"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-space-indigo-400",
+          "token": "space-indigo-400",
+          "oklch": "oklch(63.46% 0.084 267.39)",
+          "hex": "#7489be"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-space-indigo-500",
+          "token": "space-indigo-500",
+          "oklch": "oklch(54.08% 0.107 266.39)",
+          "hex": "#526cad"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-space-indigo-600",
+          "token": "space-indigo-600",
+          "oklch": "oklch(46.13% 0.09 266.54)",
+          "hex": "#41568b"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-space-indigo-700",
+          "token": "space-indigo-700",
+          "oklch": "oklch(38.07% 0.07 266.22)",
+          "hex": "#314168"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-space-indigo-800",
+          "token": "space-indigo-800",
+          "oklch": "oklch(29.31% 0.05 267.31)",
+          "hex": "#212b45"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-space-indigo-900",
+          "token": "space-indigo-900",
+          "oklch": "oklch(20.1% 0.028 264.97)",
+          "hex": "#101623"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-space-indigo-950",
+          "token": "space-indigo-950",
+          "oklch": "oklch(16.89% 0.02 265.79)",
+          "hex": "#0b0f18"
+        }
+      ]
+    },
+    {
+      "id": "split",
+      "title": "Split",
+      "steps": [
+        {
+          "shade": "200",
+          "cssVar": "--color-split-200",
+          "token": "split-200",
+          "oklch": "oklch(0.31 0.0532 17.02)",
+          "hex": "#482526"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-split-300",
+          "token": "split-300",
+          "oklch": "oklch(0.32 0.0532 17.02)",
+          "hex": "#4a2729"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-split-400",
+          "token": "split-400",
+          "oklch": "oklch(0.33 0.0532 17.02)",
+          "hex": "#4d2a2b"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-split-500",
+          "token": "split-500",
+          "oklch": "oklch(0.34 0.0532 17.02)",
+          "hex": "#502c2e"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-split-600",
+          "token": "split-600",
+          "oklch": "oklch(0.35 0.0532 17.02)",
+          "hex": "#532f30"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-split-700",
+          "token": "split-700",
+          "oklch": "oklch(0.36 0.0532 17.02)",
+          "hex": "#563133"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-split-800",
+          "token": "split-800",
+          "oklch": "oklch(0.37 0.0532 17.02)",
+          "hex": "#593436"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-split-900",
+          "token": "split-900",
+          "oklch": "oklch(0.38 0.0532 17.02)",
+          "hex": "#5b3638"
+        }
+      ]
+    },
+    {
+      "id": "tannin",
+      "title": "Tannin",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-tannin-50",
+          "token": "tannin-50",
+          "oklch": "oklch(96.26% 0.005 67.76)",
+          "hex": "#f5f2ef"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-tannin-100",
+          "token": "tannin-100",
+          "oklch": "oklch(92.72% 0.01 72.66)",
+          "hex": "#ebe6e0"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-tannin-200",
+          "token": "tannin-200",
+          "oklch": "oklch(85.11% 0.019 67.56)",
+          "hex": "#d7ccc1"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-tannin-300",
+          "token": "tannin-300",
+          "oklch": "oklch(77.56% 0.03 69.06)",
+          "hex": "#c3b3a2"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-tannin-400",
+          "token": "tannin-400",
+          "oklch": "oklch(69.65% 0.041 67.08)",
+          "hex": "#af9983"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-tannin-500",
+          "token": "tannin-500",
+          "oklch": "oklch(61.87% 0.054 67.55)",
+          "hex": "#9c8063"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-tannin-600",
+          "token": "tannin-600",
+          "oklch": "oklch(52.58% 0.043 66.65)",
+          "hex": "#7c6650"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-tannin-700",
+          "token": "tannin-700",
+          "oklch": "oklch(43.17% 0.034 68.42)",
+          "hex": "#5d4d3c"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-tannin-800",
+          "token": "tannin-800",
+          "oklch": "oklch(32.96% 0.024 66.81)",
+          "hex": "#3e3328"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-tannin-900",
+          "token": "tannin-900",
+          "oklch": "oklch(22.15% 0.014 72.09)",
+          "hex": "#1f1a14"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-tannin-950",
+          "token": "tannin-950",
+          "oklch": "oklch(18.56% 0.01 67.12)",
+          "hex": "#16120e"
+        }
+      ]
+    },
+    {
+      "id": "tender-stem",
+      "title": "Tender Stem",
+      "steps": [
+        {
+          "shade": "200",
+          "cssVar": "--color-tender-stem-200",
+          "token": "tender-stem-200",
+          "oklch": "oklch(0.9043 0.0631 153.43)",
+          "hex": "#c0eccc"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-tender-stem-300",
+          "token": "tender-stem-300",
+          "oklch": "oklch(0.9143 0.0631 153.43)",
+          "hex": "#c3f0cf"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-tender-stem-400",
+          "token": "tender-stem-400",
+          "oklch": "oklch(0.9243 0.0631 153.43)",
+          "hex": "#c7f3d3"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-tender-stem-500",
+          "token": "tender-stem-500",
+          "oklch": "oklch(0.9343 0.0631 153.43)",
+          "hex": "#caf6d6"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-tender-stem-600",
+          "token": "tender-stem-600",
+          "oklch": "oklch(0.9443 0.0631 153.43)",
+          "hex": "#cdfad9"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-tender-stem-700",
+          "token": "tender-stem-700",
+          "oklch": "oklch(0.9543 0.0631 153.43)",
+          "hex": "#d0fddd"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-tender-stem-800",
+          "token": "tender-stem-800",
+          "oklch": "oklch(0.9643 0.0631 153.43)",
+          "hex": "#d4ffe0"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-tender-stem-900",
+          "token": "tender-stem-900",
+          "oklch": "oklch(0.9743 0.0631 153.43)",
+          "hex": "#d7ffe3"
+        }
+      ]
+    },
+    {
+      "id": "twilight-indigo",
+      "title": "Twilight Indigo",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-twilight-indigo-50",
+          "token": "twilight-indigo-50",
+          "oklch": "oklch(95.73% 0.007 260.73)",
+          "hex": "#eef1f6"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-twilight-indigo-100",
+          "token": "twilight-indigo-100",
+          "oklch": "oklch(91.49% 0.015 264.49)",
+          "hex": "#dee3ed"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-twilight-indigo-200",
+          "token": "twilight-indigo-200",
+          "oklch": "oklch(82.62% 0.031 267.16)",
+          "hex": "#bdc6db"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-twilight-indigo-300",
+          "token": "twilight-indigo-300",
+          "oklch": "oklch(73.76% 0.048 266.04)",
+          "hex": "#9caac9"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-twilight-indigo-400",
+          "token": "twilight-indigo-400",
+          "oklch": "oklch(64.68% 0.067 264.78)",
+          "hex": "#7a8eb8"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-twilight-indigo-500",
+          "token": "twilight-indigo-500",
+          "oklch": "oklch(55.25% 0.088 265.06)",
+          "hex": "#5971a6"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-twilight-indigo-600",
+          "token": "twilight-indigo-600",
+          "oklch": "oklch(47.34% 0.073 264.32)",
+          "hex": "#475b85"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-twilight-indigo-700",
+          "token": "twilight-indigo-700",
+          "oklch": "oklch(38.87% 0.056 265.26)",
+          "hex": "#364463"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-twilight-indigo-800",
+          "token": "twilight-indigo-800",
+          "oklch": "oklch(29.88% 0.04 266.18)",
+          "hex": "#242d42"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-twilight-indigo-900",
+          "token": "twilight-indigo-900",
+          "oklch": "oklch(20.44% 0.022 263.92)",
+          "hex": "#121721"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-twilight-indigo-950",
+          "token": "twilight-indigo-950",
+          "oklch": "oklch(17.23% 0.016 261.51)",
+          "hex": "#0c1017"
+        }
+      ]
+    },
+    {
+      "id": "utekos-yellow",
+      "title": "Utekos Yellow",
+      "steps": [
+        {
+          "shade": "200",
+          "cssVar": "--color-utekos-yellow-200",
+          "token": "utekos-yellow-200",
+          "oklch": "oklch(0.9186 0.1051 93.66)",
+          "hex": "#fbe391"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-utekos-yellow-300",
+          "token": "utekos-yellow-300",
+          "oklch": "oklch(0.9286 0.1051 93.66)",
+          "hex": "#ffe794"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-utekos-yellow-400",
+          "token": "utekos-yellow-400",
+          "oklch": "oklch(0.9386 0.1051 93.66)",
+          "hex": "#ffea98"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-utekos-yellow-500",
+          "token": "utekos-yellow-500",
+          "oklch": "oklch(0.9486 0.1051 93.66)",
+          "hex": "#ffed9b"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-utekos-yellow-600",
+          "token": "utekos-yellow-600",
+          "oklch": "oklch(0.9586 0.1051 93.66)",
+          "hex": "#fff19e"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-utekos-yellow-700",
+          "token": "utekos-yellow-700",
+          "oklch": "oklch(0.9686 0.1051 93.66)",
+          "hex": "#fff4a1"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-utekos-yellow-800",
+          "token": "utekos-yellow-800",
+          "oklch": "oklch(0.9786 0.1051 93.66)",
+          "hex": "#fff7a5"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-utekos-yellow-900",
+          "token": "utekos-yellow-900",
+          "oklch": "oklch(0.9886 0.1051 93.66)",
+          "hex": "#fffba8"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-utekos-yellow-950",
+          "token": "utekos-yellow-950",
+          "oklch": "oklch(0.8652 0.1768 90.38)",
+          "hex": "#ffcc00"
+        }
+      ]
+    },
+    {
+      "id": "very-peri",
+      "title": "Very Peri",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-very-peri-50",
+          "token": "very-peri-50",
+          "oklch": "oklch(95.41% 0.009 286.22)",
+          "hex": "#efeff6"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-very-peri-100",
+          "token": "very-peri-100",
+          "oklch": "oklch(90.51% 0.02 285.99)",
+          "hex": "#dedeed"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-very-peri-200",
+          "token": "very-peri-200",
+          "oklch": "oklch(81% 0.041 283.89)",
+          "hex": "#bdbedb"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-very-peri-300",
+          "token": "very-peri-300",
+          "oklch": "oklch(71.08% 0.064 283.63)",
+          "hex": "#9c9dc9"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-very-peri-400",
+          "token": "very-peri-400",
+          "oklch": "oklch(60.92% 0.089 282.68)",
+          "hex": "#7b7cb7"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-very-peri-500",
+          "token": "very-peri-500",
+          "oklch": "oklch(50.81% 0.113 281.01)",
+          "hex": "#5b5ca4"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-very-peri-600",
+          "token": "very-peri-600",
+          "oklch": "oklch(43.36% 0.096 280.87)",
+          "hex": "#484984"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-very-peri-700",
+          "token": "very-peri-700",
+          "oklch": "oklch(35.82% 0.075 280.9)",
+          "hex": "#363763"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-very-peri-800",
+          "token": "very-peri-800",
+          "oklch": "oklch(27.87% 0.053 280.87)",
+          "hex": "#242542"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-very-peri-900",
+          "token": "very-peri-900",
+          "oklch": "oklch(19.04% 0.03 283.16)",
+          "hex": "#121221"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-very-peri-950",
+          "token": "very-peri-950",
+          "oklch": "oklch(16.45% 0.021 283.86)",
+          "hex": "#0d0d17"
+        }
+      ]
+    },
+    {
+      "id": "vibrant-green",
+      "title": "Vibrant Green",
+      "steps": [
+        {
+          "shade": "200",
+          "cssVar": "--color-vibrant-green-200",
+          "token": "vibrant-green-200",
+          "oklch": "oklch(0.671 0.13 144.74)",
+          "hex": "#5eaa61"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-vibrant-green-300",
+          "token": "vibrant-green-300",
+          "oklch": "oklch(0.681 0.13 144.74)",
+          "hex": "#61ad64"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-vibrant-green-400",
+          "token": "vibrant-green-400",
+          "oklch": "oklch(0.691 0.13 144.74)",
+          "hex": "#64b167"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-vibrant-green-500",
+          "token": "vibrant-green-500",
+          "oklch": "oklch(0.701 0.13 144.74)",
+          "hex": "#67b46a"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-vibrant-green-600",
+          "token": "vibrant-green-600",
+          "oklch": "oklch(0.711 0.13 144.74)",
+          "hex": "#6bb76d"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-vibrant-green-700",
+          "token": "vibrant-green-700",
+          "oklch": "oklch(0.721 0.13 144.74)",
+          "hex": "#6eba70"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-vibrant-green-800",
+          "token": "vibrant-green-800",
+          "oklch": "oklch(0.731 0.13 144.74)",
+          "hex": "#71bd73"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-vibrant-green-900",
+          "token": "vibrant-green-900",
+          "oklch": "oklch(0.741 0.13 144.74)",
+          "hex": "#74c176"
+        }
+      ]
+    },
+    {
+      "id": "warm",
+      "title": "Warm",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-warm-50",
+          "token": "warm-50",
+          "oklch": "oklch(0.96 0.015 69.42)",
+          "hex": "#f9f0e7"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-warm-100",
+          "token": "warm-100",
+          "oklch": "oklch(0.9 0.035 69.42)",
+          "hex": "#eedac6"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-warm-200",
+          "token": "warm-200",
+          "oklch": "oklch(0.82 0.065 69.42)",
+          "hex": "#e0bd97"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-warm-300",
+          "token": "warm-300",
+          "oklch": "oklch(0.73 0.095 69.42)",
+          "hex": "#cf9d64"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-warm-400",
+          "token": "warm-400",
+          "oklch": "oklch(0.64 0.125 69.42)",
+          "hex": "#bc7d26"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-warm-500",
+          "token": "warm-500",
+          "oklch": "oklch(0.55 0.14 69.42)",
+          "hex": "#a45f00"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-warm-600",
+          "token": "warm-600",
+          "oklch": "oklch(0.46 0.13 69.42)",
+          "hex": "#854600"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-warm-700",
+          "token": "warm-700",
+          "oklch": "oklch(0.37 0.11 69.42)",
+          "hex": "#633100"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-warm-800",
+          "token": "warm-800",
+          "oklch": "oklch(0.28 0.085 69.42)",
+          "hex": "#421e00"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-warm-900",
+          "token": "warm-900",
+          "oklch": "oklch(0.19 0.055 69.42)",
+          "hex": "#230e00"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-warm-950",
+          "token": "warm-950",
+          "oklch": "oklch(0.11 0.03 69.42)",
+          "hex": "#0a0300"
+        }
+      ]
+    },
+    {
+      "id": "yale-blue",
+      "title": "Yale Blue",
+      "steps": [
+        {
+          "shade": "50",
+          "cssVar": "--color-yale-blue-50",
+          "token": "yale-blue-50",
+          "oklch": "oklch(96.14% 0.013 233.74)",
+          "hex": "#eaf4fa"
+        },
+        {
+          "shade": "100",
+          "cssVar": "--color-yale-blue-100",
+          "token": "yale-blue-100",
+          "oklch": "oklch(92.31% 0.028 236.18)",
+          "hex": "#d5e9f6"
+        },
+        {
+          "shade": "200",
+          "cssVar": "--color-yale-blue-200",
+          "token": "yale-blue-200",
+          "oklch": "oklch(84.5% 0.054 238.19)",
+          "hex": "#acd2ec"
+        },
+        {
+          "shade": "300",
+          "cssVar": "--color-yale-blue-300",
+          "token": "yale-blue-300",
+          "oklch": "oklch(76.97% 0.082 238.66)",
+          "hex": "#82bce3"
+        },
+        {
+          "shade": "400",
+          "cssVar": "--color-yale-blue-400",
+          "token": "yale-blue-400",
+          "oklch": "oklch(69.66% 0.107 239.78)",
+          "hex": "#59a6d9"
+        },
+        {
+          "shade": "500",
+          "cssVar": "--color-yale-blue-500",
+          "token": "yale-blue-500",
+          "oklch": "oklch(62.75% 0.13 242.49)",
+          "hex": "#2f90d0"
+        },
+        {
+          "shade": "600",
+          "cssVar": "--color-yale-blue-600",
+          "token": "yale-blue-600",
+          "oklch": "oklch(53.34% 0.109 242.29)",
+          "hex": "#2673a6"
+        },
+        {
+          "shade": "700",
+          "cssVar": "--color-yale-blue-700",
+          "token": "yale-blue-700",
+          "oklch": "oklch(43.53% 0.087 242.4)",
+          "hex": "#1c567d"
+        },
+        {
+          "shade": "800",
+          "cssVar": "--color-yale-blue-800",
+          "token": "yale-blue-800",
+          "oklch": "oklch(33.11% 0.063 242.15)",
+          "hex": "#133953"
+        },
+        {
+          "shade": "900",
+          "cssVar": "--color-yale-blue-900",
+          "token": "yale-blue-900",
+          "oklch": "oklch(22.13% 0.036 239.73)",
+          "hex": "#091d2a"
+        },
+        {
+          "shade": "950",
+          "cssVar": "--color-yale-blue-950",
+          "token": "yale-blue-950",
+          "oklch": "oklch(18.41% 0.026 239.89)",
+          "hex": "#07141d"
+        }
+      ]
+    }
+  ]
+}

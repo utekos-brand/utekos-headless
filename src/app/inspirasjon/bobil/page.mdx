@@ -1,0 +1,57 @@
+import { BobilHeroSection } from './components/BobilHeroSection'
+import {
+  BenefitsGrid,
+  benefitsData
+} from './components/BenefitsGrid'
+import { TailwindSection } from '@/app/inspirasjon/hytte/sections/Tailwind'
+import { DestinationsGrid } from './components/DestinationsGrid'
+import { InspirationGallerySection } from './components/InspirationGallerySection'
+import {
+  UseCasesGrid,
+  useCasesData
+} from './components/UseCasesGrid'
+import { destinationsData } from './utils/destinationsData'
+
+export const metadata = {
+  metadataBase: new URL('https://utekos.no'),
+  title:
+    'Bobil og Utekos | Forleng sesongen og øk komforten på turen',
+  description:
+    'Oppdag hvordan Utekos forvandler bobilopplevelsen. Fra kjølige morgener til sosiale kvelder - sikre deg komforten som lar deg nyte hvert øyeblikk av bobilturen.',
+  alternates: { canonical: '/inspirasjon/bobil' },
+  openGraph: {
+    title: 'Bobil og Utekos | Forleng sesongen og øk komforten',
+    description:
+      'Fra kjølige morgener til sosiale kvelder - oppdag hvordan Utekos blir din beste følgesvenn på bobilturen.',
+    url: '/inspirasjon/bobil',
+    siteName: 'Utekos',
+    images: [
+      {
+        url: '/og-image-bobil.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Par som koser seg utenfor bobilen med Utekos-plagg'
+      }
+    ],
+    locale: 'no_NO',
+    type: 'website'
+  }
+}
+
+export default function BobilInspirasjonPage() {
+  return (
+    <article className='flex flex-col bg-background dark:bg-dark-background text-foreground '>
+      <BobilHeroSection />
+
+      <UseCasesGrid useCases={useCasesData} />
+
+      <BenefitsGrid benefits={benefitsData} />
+
+      <DestinationsGrid destinations={destinationsData} />
+
+      <InspirationGallerySection />
+
+   <TailwindSection />
+    </article>
+
+) }

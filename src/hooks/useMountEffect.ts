@@ -1,0 +1,13 @@
+import type { EffectCallback } from 'react'
+import { useEffect } from 'react'
+
+/**
+ * UseEffect that only run on the initial mount
+ */
+export default function useMountEffect(
+  callback: EffectCallback
+) {
+  useEffect((...args) => {
+    return callback(...args)
+  }, [])
+}

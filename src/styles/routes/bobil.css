@@ -1,0 +1,9 @@
+/* src/styles/routes/bobil.css */
+
+.bobil-seasons-active-glow {
+    position: absolute;
+    inset: -0.5rem -0.5rem -2rem;
+    opacity: 0.25;
+    filter: blur(2rem);
+    transition: opacity 0.3s ease;
+  }
