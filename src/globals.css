@@ -109,7 +109,7 @@
 }
 
 .dark {
-  --background: #001212;
+  --background: oklch(0.165 0.0282 194.77);
   --foreground: oklch(0.985 0 0);
   --teal-25: oklch(0.9569 0.014 185.95);
   --badge: oklch(0.2357 0.04 194.77);

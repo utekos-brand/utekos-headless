@@ -12,6 +12,15 @@ import {
   revealPop,
   skreddersyViewport
 } from './skreddersyMotionVariants'
+import type { CSSProperties } from 'react'
+
+const MARQUEE_DURATION_STEP_S = 6
+const MARQUEE_DEFAULT_DURATION_S = 42
+const SOCIAL_PROOF_MARQUEE_SLOWER_NOTCHES = 2
+const socialProofMarqueeDuration = `${
+  MARQUEE_DEFAULT_DURATION_S +
+  MARQUEE_DURATION_STEP_S * SOCIAL_PROOF_MARQUEE_SLOWER_NOTCHES
+}s`
 
 export function SectionSocialProof() {
   const averageRating = (
@@ -23,7 +32,7 @@ export function SectionSocialProof() {
     <SkreddersyMotionProvider>
       <article
         aria-labelledby='socialproof-heading'
-        className='border-background/20  relative w-full max-w-full overflow-hidden border-t border-background/20 bg-card py-20 text-foreground md:py-28'
+        className='relative w-full max-w-full overflow-hidden border-t bg-card py-20 text-foreground md:py-28'
       >
         <div
           aria-hidden
@@ -41,7 +50,7 @@ export function SectionSocialProof() {
             variants={revealGroup}
           >
             <m.div
-              className='leading-text-paragraph border-foreground/15 bg-foreground/5 text-foreground/90 mb-5 inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-foreground/5 px-3.5 py-1.5 text-xs font-medium tracking-[-0.01em] text-foreground/90 backdrop-blur-sm'
+              className='leading-text-paragraph mb-5 inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-foreground/5 px-3.5 py-1.5 text-xs font-medium tracking-[-0.01em] text-foreground backdrop-blur-sm'
               variants={revealPop}
             >
               <span
@@ -77,7 +86,7 @@ export function SectionSocialProof() {
             </m.h2>
 
             <m.p
-              className='leading-text-paragraph text-foreground/80 mx-auto mt-5 max-w-[34ch] text-[clamp(0.875rem,3.4vw,1.125rem)] tracking-[-0.01em] text-balance wrap-break-word text-foreground/80 md:max-w-2xl'
+              className='leading-text-paragraph mx-auto mt-5 max-w-[34ch] text-[clamp(0.875rem,3.4vw,1.125rem)] tracking-[-0.01em] text-balance wrap-break-word text-foreground md:max-w-2xl'
               variants={revealItem}
             >
               Ord fra dem som allerede har byttet den snikende
@@ -99,16 +108,21 @@ export function SectionSocialProof() {
         >
           <div
             aria-hidden
-            className='from-card pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-linear-to-r from-card to-transparent md:w-24'
+            className='pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-linear-to-r from-card to-transparent md:w-24'
           />
           <div
             aria-hidden
-            className='from-card pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-linear-to-l from-card to-transparent md:w-24'
+            className='pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-linear-to-l from-card to-transparent md:w-24'
           />
 
           <div
             data-utekos-marquee
             className='flex w-max will-change-transform'
+            style={
+              {
+                '--utekos-marquee-duration': socialProofMarqueeDuration
+              } as CSSProperties
+            }
           >
             {[...reviews, ...reviews].map((review, i) => (
               <div

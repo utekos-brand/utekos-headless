@@ -49,7 +49,7 @@ export function ChatAndInfoSection() {
 
               <motion.div
                 variants={panelMotion}
-                className='relative min-h-100 overflow-hidden border-t border-foreground/10 border-foreground/10 bg-background pb-8 lg:border-t-0 lg:border-l'
+                className='relative min-h-100 overflow-hidden border-t border-foreground/10 lg:border-t-0 lg:border-l lg:border-foreground/10 bg-background'
               >
                 <AnimatedChat />
               </motion.div>

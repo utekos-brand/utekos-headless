@@ -11,36 +11,41 @@ import { InlineText } from '@/components/typography/TypographyInlineText'
 import { P } from '@/components/typography/TypographyP'
 import { cn } from '@/lib/utils/className'
 
+const trafficLightColors = [
+  'bg-[#34C759]',
+  'bg-[#FFCC00]',
+  'bg-[#FF3B30]'
+] as const
+
 const TrafficLights = ({
   variant = 'default'
 }: {
-  variant?: 'default' | 'colored' | 'card'
+  variant?: 'default' | 'traffic' | 'card'
 }) => {
   const colors =
-    variant === 'colored' ?
-      [
-        'bg-destructive',
-        'bg-chart-3 bg-chart-3',
-        'bg-chart-4 bg-chart-4'
-      ]
+    variant === 'traffic' ?
+      trafficLightColors
     : variant === 'card' ?
       [
-        'bg-card-foreground/45 bg-card-foreground/45',
-        'bg-card-foreground/65 bg-card-foreground/65',
-        'bg-card-foreground/85 bg-card-foreground/85'
+        'bg-card-foreground/45',
+        'bg-card-foreground/65',
+        'bg-card-foreground/85'
       ]
     : [
-        'bg-secondary-foreground/45 bg-secondary-foreground/45',
-        'bg-secondary-foreground/65 bg-secondary-foreground/65',
-        'bg-secondary-foreground/85 bg-secondary-foreground/85'
+        'bg-secondary-foreground/45',
+        'bg-secondary-foreground/65',
+        'bg-secondary-foreground/85'
       ]
 
   return (
-    <div className='absolute top-[11%] left-[8%] z-20 flex gap-[0.35em]'>
+    <div
+      className='absolute top-3 left-3 z-20 flex items-center gap-1.5'
+      aria-hidden
+    >
       {colors.map((color, i) => (
         <div
           key={i}
-          className={cn('aspect-square w-[0.45em] rounded-full', color)}
+          className={cn('size-2.5 shrink-0 rounded-full', color)}
         />
       ))}
     </div>
@@ -169,7 +174,7 @@ export function InfoCardStackView() {
           aria-hidden
         />
 
-        <TrafficLights variant='colored' />
+        <TrafficLights variant='traffic' />
 
         <div className='relative z-10 flex h-full min-h-0 flex-col'>
           <div className={cardContentRowClasses}>
