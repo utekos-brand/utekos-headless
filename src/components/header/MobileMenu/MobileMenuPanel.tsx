@@ -3,7 +3,6 @@
 'use client'
 
 import { MobileMenuItem } from '@/components/header/MobileMenu/MobileMenuItem'
-import { ModeToggle } from '@/components/ModeToggle'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -174,8 +173,6 @@ export function MobileMenuPanel({
                 Meny
               </SheetTitle>
             </div>
-
-            <ModeToggle showLabel className='shrink-0' />
           </div>
 
           <SheetDescription className='leading-text-paragraph /66 text-sm tracking-[-0.01em] text-foreground/66'>

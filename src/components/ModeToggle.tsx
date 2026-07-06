@@ -15,8 +15,8 @@ type ModeToggleProps = {
 }
 
 const themeOptions = [
-  { value: 'light' as const, label: 'Lys', Icon: Sun },
   { value: 'dark' as const, label: 'Mørk', Icon: Moon },
+  { value: 'light' as const, label: 'Lys', Icon: Sun },
   { value: 'system' as const, label: 'System', Icon: Monitor }
 ]
 
@@ -33,14 +33,14 @@ function getActiveTheme(
   isClient: boolean
 ): ThemeChoice {
   if (!isClient) {
-    return 'system'
+    return 'dark'
   }
 
   if (theme === 'light' || theme === 'dark' || theme === 'system') {
     return theme
   }
 
-  return 'system'
+  return 'dark'
 }
 
 export function ModeToggle({

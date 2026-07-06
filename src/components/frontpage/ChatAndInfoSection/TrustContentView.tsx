@@ -33,7 +33,7 @@ export function TrustContentView({
     <motion.div
       variants={contentMotion}
       className={cn(
-        'relative z-20 flex flex-col justify-between rounded-md bg-[color-mix(in_oklch,var(--color-card)_82%,var(--color-background)_18%)] p-4 px-8 text-card-foreground md:py-6'
+        'relative z-20 flex min-w-0 flex-col justify-between rounded-md bg-[color-mix(in_oklch,var(--color-card)_82%,var(--color-background)_18%)] p-4 px-8 text-card-foreground md:py-6'
       )}
     >
       <div className='mb-2'>
@@ -57,7 +57,7 @@ export function TrustContentView({
 
       <motion.div
         variants={revealMotion}
-        className='mt-12 lg:mt-0'
+        className='mt-12 w-full min-w-0 lg:mt-0'
       >
         <InfoCardsComponent />
       </motion.div>

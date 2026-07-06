@@ -42,7 +42,7 @@ export function ChatAndInfoSection() {
           variants={sectionMotion}
         >
           <div className='overflow-hidden rounded-xl border border-foreground/12 dark:border-dark-foreground/12 bg-card '>
-            <div className='grid lg:grid-cols-2'>
+            <div className='grid min-w-0 lg:grid-cols-2'>
               <TrustContentView
                 InfoCardsComponent={InfoCardStackView}
               />

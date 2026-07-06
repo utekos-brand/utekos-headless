@@ -36,11 +36,14 @@ const TrafficLights = ({
       ]
 
   return (
-    <div className='absolute top-3 left-3 z-20 flex gap-1.5'>
+    <div className='absolute top-[10%] left-[10%] z-20 flex gap-[0.35em]'>
       {colors.map((color, i) => (
         <div
           key={i}
-          className={cn('h-2 w-2 rounded-full', color)}
+          className={cn(
+            'aspect-square w-[0.45em] rounded-full',
+            color
+          )}
         />
       ))}
     </div>
@@ -64,13 +67,7 @@ const cardMotion = {
 } satisfies Variants
 
 const cardBaseClasses =
-  'absolute overflow-hidden rounded-xl border shadow-2xl shadow-black/16 will-change-transform'
-
-const backCardSizeClasses =
-  'h-40 w-[min(100%,17.5rem)] p-4 sm:h-48 sm:w-[min(100%,24rem)] sm:p-6'
-
-const frontCardSizeClasses =
-  'h-40 w-[min(88%,17.5rem)] p-4 sm:h-48 sm:w-[min(86%,24rem)] sm:p-6 lg:w-[min(86%,calc(100%-4.5rem))] xl:w-[min(86%,24rem)]'
+  '@container/card absolute overflow-hidden rounded-xl border p-[clamp(0.875rem,4.5cqi,1.5rem)] text-[clamp(0.75rem,3.2cqi,0.875rem)] shadow-2xl shadow-black/16 will-change-transform'
 
 const backCardClasses = cn(
   cardBaseClasses,
@@ -84,22 +81,20 @@ const frontCardClasses = cn(
 
 /* Icon chips invert each card surface; ratios in src/tokens/semantic.*.css. */
 const backCardIconClassName =
-  'flex size-8 shrink-0 items-center justify-center rounded-lg border border-card-foreground/35 dark:border-dark-card-foreground/35 bg-card-foreground -foreground text-card '
+  'flex size-[clamp(1.75rem,8cqi,2rem)] shrink-0 items-center justify-center rounded-lg border border-card-foreground/35 bg-card-foreground text-card dark:border-dark-card-foreground/35'
 
 const frontCardIconClassName =
-  'flex size-8 shrink-0 items-center justify-center rounded-lg border border-foreground/20 bg-foreground/8 text-foreground dark:border-dark-foreground/20 dark:bg-dark-foreground/10 dark:text-dark-foreground'
-
-const frontCardPositionClasses =
-  'top-28 left-10 sm:top-32 sm:left-5 md:top-32 md:left-4 lg:top-36 lg:left-[min(38%,9rem)] xl:left-[min(44%,10.5rem)]'
+  'flex size-[clamp(1.75rem,8cqi,2rem)] shrink-0 items-center justify-center rounded-lg border border-foreground/20 bg-foreground/8 text-foreground dark:border-dark-foreground/20 dark:bg-dark-foreground/10 dark:text-dark-foreground'
 
 export function InfoCardStackView() {
   return (
     <motion.div
       variants={stackMotion}
-      className='relative z-20 mx-auto h-[19rem] w-full max-w-[23rem] overflow-visible sm:h-80 sm:max-w-[25rem] lg:h-[23rem] lg:max-w-[26rem]'
+      className='@container/stack relative z-20 mx-auto w-full max-w-[min(100%,27.5rem)] [container-type:inline-size] [font-size:clamp(0.875rem,2.8cqi,1rem)]'
+      style={{ aspectRatio: '10 / 11' }}
     >
       <div
-        className='pointer-events-none absolute -inset-4 rounded-3xl bg-[radial-gradient(70%_64%_at_24%_18%,color-mix(in_oklch,var(--color-secondary-foreground)_10%,transparent),transparent_68%)]'
+        className='pointer-events-none absolute -inset-[6%] rounded-3xl bg-[radial-gradient(70%_64%_at_24%_18%,color-mix(in_oklch,var(--color-secondary-foreground)_10%,transparent),transparent_68%)]'
         aria-hidden
       />
 
@@ -108,8 +103,7 @@ export function InfoCardStackView() {
         whileHover={{ y: -4, transition: { duration: 0.24 } }}
         className={cn(
           backCardClasses,
-          'top-0 left-0',
-          backCardSizeClasses
+          'top-0 left-0 z-0 h-[52%] w-full'
         )}
       >
         <div
@@ -124,15 +118,15 @@ export function InfoCardStackView() {
           className='pointer-events-none opacity-40'
         />
         <TrafficLights variant='card' />
-        <div className='relative z-10 mt-6 flex items-start gap-3'>
+        <div className='relative z-10 mt-[18%] flex items-start gap-[0.75em]'>
           <div className={backCardIconClassName}>
-            <ShoppingBag className='h-4 w-4 stroke-[1.7] sm:h-5 sm:w-5' />
+            <ShoppingBag className='size-[1.15em] stroke-[1.7]' />
           </div>
-          <div>
-            <H3 className='pb-0 text-sm font-semibold text-card-foreground sm:text-base'>
+          <div className='min-w-0'>
+            <H3 className='pb-0 text-[1.05em] font-semibold leading-snug text-card-foreground'>
               En trygg handel
             </H3>
-            <P className='/88 mt-1 text-xs leading-snug font-normal text-card-foreground/88 not-first:mt-0 sm:text-sm'>
+            <P className='/88 mt-[0.35em] text-[0.92em] leading-snug font-normal text-card-foreground/88 not-first:mt-0'>
               Sikre betalingsløsninger og 14 dagers angrerett.
             </P>
           </div>
@@ -144,8 +138,7 @@ export function InfoCardStackView() {
         whileHover={{ y: -4, transition: { duration: 0.24 } }}
         className={cn(
           frontCardClasses,
-          frontCardPositionClasses,
-          frontCardSizeClasses
+          'top-[34%] left-[9%] z-10 h-[54%] w-[91%]'
         )}
       >
         <BackgroundRippleEffect
@@ -162,16 +155,16 @@ export function InfoCardStackView() {
 
         <TrafficLights variant='colored' />
 
-        <div className='relative z-10 flex h-full flex-col'>
-          <div className='mt-6 flex items-start gap-3'>
+        <div className='relative z-10 flex h-full min-h-0 flex-col'>
+          <div className='mt-[18%] flex items-start gap-[0.75em]'>
             <div className={frontCardIconClassName}>
-              <Lock className='size-4 stroke-[1.7] sm:size-5' />
+              <Lock className='size-[1.15em] stroke-[1.7]' />
             </div>
-            <div>
-              <H3 className='pb-0 text-sm font-semibold text-foreground sm:text-base'>
+            <div className='min-w-0'>
+              <H3 className='pb-0 text-[1.05em] font-semibold leading-snug text-foreground'>
                 Ditt personvern
               </H3>
-              <P className='mt-1 text-sm leading-snug font-normal text-foreground/88 not-first:mt-0 sm:text-base'>
+              <P className='mt-[0.35em] text-[0.92em] leading-snug font-normal text-foreground/88 not-first:mt-0'>
                 Vi tar personvern på alvor. Se hvordan vi
                 behandler dine data i vår{' '}
                 <Link
@@ -185,13 +178,13 @@ export function InfoCardStackView() {
             </div>
           </div>
 
-          <div className='mt-auto flex justify-center py-3 pt-2'>
+          <div className='mt-auto flex justify-center py-[0.5em]'>
             <Image
               src={UtekosLogo}
               alt='Utekos Logo'
               width={32}
               height={32}
-              className='size-7 sm:size-9'
+              className='size-[clamp(1.5rem,7cqi,2.25rem)]'
             />
           </div>
         </div>

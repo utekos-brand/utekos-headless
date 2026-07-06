@@ -2,7 +2,6 @@
 
 import { Cart } from '@/components/cart/Cart'
 import { HeaderSearch } from '@/components/header/HeaderSearch/HeaderSearch'
-import { ModeToggle } from '@/components/ModeToggle'
 import type { MenuItem } from '@types'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -39,11 +38,6 @@ export default function Header({ menu }: { menu: MenuItem[] }) {
         </div>
 
         <div className='flex min-w-0 items-center justify-end gap-1.5 sm:gap-2 lg:gap-3'>
-          <ModeToggle
-            showLabel={false}
-            className='hidden md:inline-flex'
-          />
-
           <HeaderSearch variant='nav' />
 
           <Link

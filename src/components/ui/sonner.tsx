@@ -11,7 +11,7 @@ function resolveSonnerTheme(theme: string | undefined): SonnerTheme {
     return theme
   }
 
-  return 'system'
+  return 'dark'
 }
 
 const Toaster = ({ theme: themeProp, ...props }: ToasterProps) => {

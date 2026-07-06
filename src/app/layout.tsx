@@ -110,8 +110,8 @@ export default async function RootLayout({
       <body className='scroll-smooth bg-background text-foreground antialiased dark:bg-background dark:text-foreground'>
         <ThemeProvider
           attribute='class'
-          defaultTheme='system'
-          enableSystem
+          defaultTheme='dark'
+          forcedTheme='dark'
           enableColorScheme
           disableTransitionOnChange
         >

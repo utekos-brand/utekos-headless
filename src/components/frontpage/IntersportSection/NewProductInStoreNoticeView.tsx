@@ -86,16 +86,16 @@ export function NewProductInStoreNoticeView({
           >
             <H2
               ID='intersport-laksevag-heading'
-              className='pb-0 text-left text-3xl leading-tight font-bold tracking-normal text-card-foreground md:text-4xl lg:text-5xl'
+              className='pb-0 text-left text-3xl leading-tight font-bold tracking-normal text-foreground md:text-4xl lg:text-5xl'
             >
               Sjekk ut Utekos på Intersport Laksevåg!
             </H2>
 
-            <P className='-mt-2 w-full max-w-4xl text-left text-xl leading-snug tracking-normal text-card-foreground sm:text-2xl'>
+            <P className='-mt-2 w-full max-w-4xl text-left text-xl leading-snug tracking-normal text-foreground sm:text-2xl'>
               Se, prøve og kjenne på{' '}
               <InlineText
                 as='strong'
-                className='font-semibold text-card-foreground'
+                className='font-semibold text-foreground'
               >
                 Utekos TechDown™
               </InlineText>{' '}

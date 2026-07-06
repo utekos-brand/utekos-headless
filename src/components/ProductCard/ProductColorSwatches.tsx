@@ -2,6 +2,9 @@ import type { Dispatch, SetStateAction } from 'react'
 import type { ShopifyProduct } from 'types/product'
 import { cn } from '@/lib/utils/className'
 
+export const variantSwatchButtonClassName =
+  'size-8 shrink-0 overflow-hidden rounded-full border transition-all duration-300 hover:scale-110'
+
 interface ProductColorSwatchesProps {
   colorOption: ShopifyProduct['options'][number]
   colorHexMap: Map<string, string>
@@ -48,11 +51,13 @@ export function ProductColorSwatches({
                 [colorOption.name]: value.name
               }))
             }}
-            className={`btn-variant-swatch hover:scale-110 ${
+            className={cn(
+              variantSwatchButtonClassName,
               isSelected ?
                 'border-coral-green ring-coral-green ring-1'
-              : 'border-card-foreground/24 dark:border-dark-card-foreground/24 hover:border-card-foreground/45 dark:hover:border-dark-card-foreground/45 hover:ring-2 hover:ring-card-foreground/24 dark:hover:ring-dark-card-foreground/24'
-            } ${swatchClassName ?? ''}`}
+              : 'border-card-foreground/24 hover:border-card-foreground/45 hover:ring-2 hover:ring-card-foreground/24 dark:border-dark-card-foreground/24 dark:hover:border-dark-card-foreground/45 dark:hover:ring-dark-card-foreground/24',
+              swatchClassName
+            )}
             style={{ backgroundColor: colorCode }}
             title={value.name}
             aria-label={`Velg farge ${value.name}`}

@@ -58,10 +58,10 @@ export default function Providers({
     <UsercentricsConsentProvider>
       <ThemeProvider
         attribute='class'
-        defaultTheme='system'
+        defaultTheme='dark'
+        forcedTheme='dark'
         disableTransitionOnChange
         enableColorScheme
-        enableSystem
       >
         <QueryClientProvider client={queryClient}>
           <HydrationBoundary state={dehydratedState}>
