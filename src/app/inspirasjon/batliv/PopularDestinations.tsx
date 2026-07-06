@@ -1,40 +1,36 @@
-// Path: src/app/inspirasjon/batliv/BoatingClientComponents.tsx
-
 import { Card, CardContent } from '@/components/ui/card'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
+import { H2 } from '@/components/typography/TypographyH2'
+import { Lead } from '@/components/typography/Lead'
+import { P } from '@/components/typography/TypographyP'
 import { MapPinIcon } from 'lucide-react'
 
 interface Destination {
   name: string
   season: string
   highlight: string
-  color: string
 }
 
 export const popularDestinationsData: Destination[] = [
   {
     name: 'Sørlandskysten',
     season: 'Sommer',
-    highlight: 'For sene kvelder i uthavn',
-    color: 'text-primary dark:text-dark-primary'
+    highlight: 'For sene kvelder i uthavn'
   },
   {
     name: 'Vestlandskysten',
     season: 'Vår/Sommer',
-    highlight: 'Perfekt i uforutsigbart vær',
-    color: 'text-emerald-500'
+    highlight: 'Perfekt i uforutsigbart vær'
   },
   {
     name: 'Oslofjorden',
     season: 'Vår/Høst',
-    highlight: 'Forleng pendlersesongen',
-    color: 'text-ancient-water'
+    highlight: 'Forleng pendlersesongen'
   },
   {
     name: 'Helgelandskysten',
     season: 'Sommer',
-    highlight: 'For lyse, men kjølige netter',
-    color: 'text-ancient-water'
+    highlight: 'For lyse, men kjølige netter'
   }
 ]
 
@@ -45,10 +41,22 @@ export function PopularDestinations({
 }) {
   return (
     <article
-      className='dark:bg-dark-background bg-background pb-24 text-foreground'
       id='populære-destinasjoner'
+      className='overflow-x-clip bg-card py-16 text-card-foreground sm:py-20 lg:py-24'
     >
-      <div className='container mx-auto px-4'>
+      <div className='container mx-auto px-4 sm:px-6'>
+        <div className='mb-10 max-w-3xl sm:mb-12 lg:mb-16 lg:max-w-4xl'>
+          <H2
+            ID='batliv-destinasjoner'
+            Text='Populære destinasjoner med Utekos'
+            className='text-card-foreground'
+          />
+          <Lead className='mt-4 max-w-2xl pb-0 text-card-foreground md:mt-6 md:pb-0 lg:pb-0'>
+            Norges vakreste kyststrekninger venter — nyt dem i komfort hele
+            sesongen.
+          </Lead>
+        </div>
+
         <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
           {destinations.map((destination, destinationIndex) => (
             <AnimatedBlock
@@ -57,22 +65,23 @@ export function PopularDestinations({
               delay={`${destinationIndex * 0.1}s`}
               threshold={0.2}
             >
-              <Card className='hover:bg-card-hover -hover border-border bg-card text-card-foreground transition-colors'>
+              <Card className='h-full rounded-lg border border-border bg-background text-foreground shadow-sm transition-colors duration-300 hover:bg-muted/40 motion-reduce:transition-none'>
                 <CardContent className='p-6'>
-                  <div className='mb-3 flex items-start justify-between'>
-                    <h3 className='text-lg font-semibold'>
+                  <div className='mb-3 flex items-start justify-between gap-3'>
+                    <h3 className='text-lg font-semibold text-foreground'>
                       {destination.name}
                     </h3>
                     <MapPinIcon
-                      className={`h-5 w-5 ${destination.color}`}
+                      className='size-5 shrink-0 text-secondary-foreground'
+                      aria-hidden='true'
                     />
                   </div>
-                  <p className='dark:text-dark-muted-foreground mb-2 text-sm text-muted-foreground'>
+                  <P className='mb-2 text-sm text-muted-foreground not-first:mt-0'>
                     {destination.season}
-                  </p>
-                  <p className='dark:text-dark-muted-foreground text-sm text-muted-foreground'>
+                  </P>
+                  <P className='text-sm leading-relaxed text-foreground/80 not-first:mt-0'>
                     {destination.highlight}
-                  </p>
+                  </P>
                 </CardContent>
               </Card>
             </AnimatedBlock>

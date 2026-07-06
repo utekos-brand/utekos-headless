@@ -1,5 +1,3 @@
-// Path: src/app/inspirasjon/terrassen/sections/TerraceIdeasGrid.tsx
-
 import { Card, CardContent } from '@/components/ui/card'
 import { BookOpen, Building2, Coffee, Sofa } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -44,44 +42,38 @@ export function TerraceIdeasGrid({
   ideas: TerraceIdea[]
 }) {
   return (
-    <article className='bg-[var(--terrace-cream)] py-24 text-[var(--terrace-ink)] md:py-32'>
-      <div className='container mx-auto px-4'>
-        <MotionReveal className='mb-16 max-w-3xl md:max-w-4xl'>
+    <article className='overflow-x-clip bg-card py-16 text-card-foreground sm:py-20 lg:py-24'>
+      <div className='container mx-auto px-4 sm:px-6'>
+        <MotionReveal className='mb-10 max-w-3xl sm:mb-12 lg:mb-16 md:max-w-4xl'>
           <H2
             ID='terrasse-ideer'
             Text='Ideer for din uteplass'
-            className='pb-0 text-left text-[clamp(3rem,6vw,5.75rem)] leading-[0.95] text-[var(--terrace-ink)]'
+            className='text-card-foreground'
           />
-          <Lead className='mt-5 max-w-2xl pb-0 text-left text-lg leading-relaxed text-[var(--terrace-muted)] md:pb-0 md:text-xl lg:pb-0 lg:text-xl'>
+          <Lead className='mt-4 max-w-2xl pb-0 text-card-foreground md:mt-6 md:pb-0 lg:pb-0'>
             Uansett størrelse på uteplassen din, kan den bli en
             oase for komfort og hygge.
           </Lead>
         </MotionReveal>
 
-        <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
+        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'>
           {ideas.map((idea, index) => {
             const Icon = idea.icon
 
             return (
-              <MotionCard
-                key={idea.name}
-                delay={index * 0.07}
-              >
-                <Card className='group h-full rounded-lg border border-[var(--terrace-line-dark)] bg-[var(--terrace-night)] text-[var(--terrace-cream)] shadow-[0_28px_78px_-60px_rgb(16_32_31/0.82)] transition-colors duration-300 hover:bg-[var(--terrace-night-soft)] motion-reduce:transition-none'>
+              <MotionCard key={idea.name} delay={index * 0.07}>
+                <Card className='group h-full rounded-lg border border-border bg-background text-foreground shadow-sm transition-colors duration-300 hover:bg-muted/40 motion-reduce:transition-none'>
                   <CardContent className='p-6'>
                     <div className='mb-3 flex items-center gap-3'>
-                      <div className='flex size-10 shrink-0 items-center justify-center rounded-lg border border-[var(--terrace-line-dark)] bg-[var(--terrace-copper)] text-[var(--terrace-night)]'>
-                        <Icon
-                          className='size-5'
-                          aria-hidden='true'
-                        />
+                      <div className='flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-secondary text-secondary-foreground'>
+                        <Icon className='size-5' aria-hidden='true' />
                       </div>
                       <H3
                         Text={idea.name}
-                        className='pb-0 text-xl leading-[1.08] text-[var(--terrace-cream)] md:text-2xl'
+                        className='min-w-0 pb-0 text-lg leading-snug text-foreground md:text-xl'
                       />
                     </div>
-                    <P className='mt-4 text-left leading-relaxed text-[var(--terrace-sage-soft)] not-first:mt-4'>
+                    <P className='mt-4 text-left leading-relaxed text-foreground/80 not-first:mt-4'>
                       {idea.highlight}
                     </P>
                   </CardContent>

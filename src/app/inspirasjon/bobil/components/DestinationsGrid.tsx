@@ -14,18 +14,18 @@ export function DestinationsGrid({
   destinations: Destination[]
 }) {
   return (
-    <SectionBox bgcolor='bg-secondary dark:bg-dark-secondary text-secondary-foreground dark:text-dark-secondary-foreground'>
-      <article className='w-full text-secondary-foreground dark:text-dark-secondary-foreground'>
+    <SectionBox bgcolor='bg-card text-card-foreground'>
+      <article className='w-full text-card-foreground'>
         <div className='container px-4'>
           <div className='mb-6 md:mb-8 lg:mb-10'>
             <H2
               Text='Populære destinasjoner med Utekos'
               ID='populære-destinasjoner-med-utekos'
-              className='text-secondary-foreground dark:text-dark-secondary-foreground'
+              className='text-card-foreground'
             />
             <Lead
               Text='Norges vakreste bobildestinasjoner venter — nyt dem i komfort hele sesongen'
-              className='text-secondary-foreground dark:text-dark-secondary-foreground'
+              className='text-card-foreground'
             />
           </div>
 
@@ -69,7 +69,7 @@ export function DestinationsGrid({
                         <div
                           className={`absolute inset-0 ${theme.glow}`}
                         />
-                        <div className='absolute inset-x-0 top-0 h-px bg-foreground/24 dark:bg-dark-foreground/24' />
+                        <div className='absolute inset-x-0 top-0 h-px bg-foreground/24' />
                       </div>
 
                       <div className='relative z-10 flex grow flex-col px-8 py-5 sm:px-9 sm:py-6'>

@@ -1,24 +1,24 @@
-export const grillSeasonsCardTheme = {
+export const terraceSeasonsCardTheme = {
   tabTriggerClassName:
-    'border-border bg-background text-foreground hover:bg-muted data-active:border-secondary data-active:bg-secondary data-active:text-secondary-foreground',
+    'border-border bg-card text-card-foreground hover:bg-muted data-active:border-secondary data-active:bg-secondary data-active:text-secondary-foreground',
   tabActiveClassName: 'text-secondary-foreground',
   tabInactiveClassName: 'text-muted-foreground',
   contentCardClassName:
-    'border-border bg-background text-foreground shadow-sm',
+    'border-border bg-card text-card-foreground shadow-sm',
   contentIconClassName:
     'border-border bg-secondary text-secondary-foreground',
   contentIconGlyphClassName: 'text-secondary-foreground',
-  contentTitleClassName: 'text-foreground',
-  contentTextClassName: 'text-foreground/80'
+  contentTitleClassName: 'text-card-foreground',
+  contentTextClassName: 'text-card-foreground/80'
 } as const
 
-export const grillCtaTheme = {
+export const terraceCtaTheme = {
   showAccentGlow: false,
   accentGlow: 'var(--secondary)',
   sectionClassName:
-    'bg-background text-foreground border-t border-border',
-  titleClassName: 'text-foreground',
-  leadClassName: 'text-foreground/80',
+    'bg-card text-card-foreground border-t border-border',
+  titleClassName: 'text-card-foreground',
+  leadClassName: 'text-card-foreground/80',
   primaryButtonBg: 'var(--primary)',
   primaryButtonText: 'var(--primary-foreground)',
   secondaryButtonBg: 'var(--secondary)',

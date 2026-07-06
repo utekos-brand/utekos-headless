@@ -2,6 +2,8 @@
 
 import { getProducts } from '@/api/lib/products/getProducts'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
+import { H2 } from '@/components/typography/TypographyH2'
+import { Lead } from '@/components/typography/Lead'
 import { ComfyrobeQuickBuy } from './ComfyrobeQuickBuy'
 
 export async function CTASection() {
@@ -22,25 +24,22 @@ export async function CTASection() {
   }
 
   return (
-    <article className='dark:bg-dark-background relative overflow-hidden border-t border-foreground/12 bg-background py-24'>
-      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,var(--ancient-water)_0%,transparent_34%),radial-gradient(circle_at_85%_10%,var(--soft-warm)_0%,transparent_28%)] opacity-[0.18]' />
-
-      <div className='relative container mx-auto px-4'>
-        <AnimatedBlock className='will-animate-fade-in-scale mb-12 text-center'>
-          <h2 className='text-fluid-display mb-4 leading-[0.95] font-bold tracking-normal text-foreground'>
-            Sikre deg varmen nå
-          </h2>
-          <p className='leading-text-paragraph text-ancient-water mx-auto max-w-2xl text-xl tracking-normal'>
-            Gjør som hundrevis av andre isbadere. Bestill din
-            Comfyrobe i dag og kjenn forskjellen.
-          </p>
+    <article className='relative overflow-x-clip border-t border-border bg-background py-16 text-foreground sm:py-20 lg:py-24'>
+      <div className='container relative mx-auto px-4 sm:px-6'>
+        <AnimatedBlock className='will-animate-fade-in-scale mb-10 text-center sm:mb-12'>
+          <H2
+            ID='isbading-cta'
+            Text='Sikre deg varmen nå'
+            className='mx-auto max-w-3xl text-foreground'
+          />
+          <Lead className='mx-auto mt-4 max-w-2xl pb-0 text-muted-foreground md:pb-0 lg:pb-0'>
+            Gjør som hundrevis av andre isbadere. Bestill din Comfyrobe i dag og
+            kjenn forskjellen.
+          </Lead>
         </AnimatedBlock>
 
-        <AnimatedBlock
-          className='will-animate-fade-in-up'
-          delay='0.2s'
-        >
-          <div className='dark:bg-dark-background mx-auto max-w-6xl rounded-3xl border border-foreground/12 bg-background p-6 shadow-2xl md:p-12'>
+        <AnimatedBlock className='will-animate-fade-in-up' delay='0.2s'>
+          <div className='mx-auto max-w-6xl rounded-3xl border border-border bg-card p-6 text-card-foreground shadow-2xl md:p-12'>
             <ComfyrobeQuickBuy product={product} />
           </div>
         </AnimatedBlock>

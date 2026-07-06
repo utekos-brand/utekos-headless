@@ -17,9 +17,9 @@ export const useCasesData: UseCase[] = [
     description:
       'Start dagen med kaffe utenfor bobilen, innhyllet i varme mens naturen våkner.',
     temperature: '5-12°C',
-    color: 'bg-card ',
-    iconColor: 'text-foreground ',
-    bgColor: 'bg-secondary dark:bg-dark-secondary'
+    color: 'bg-background',
+    iconColor: 'text-secondary-foreground',
+    bgColor: 'bg-secondary'
   },
   {
     icon: MoonIcon,
@@ -28,9 +28,9 @@ export const useCasesData: UseCase[] = [
     description:
       'Forleng kvelden med venner og familie uten å la kulden drive dere inn.',
     temperature: '8-15°C',
-    color: 'bg-card ',
-    iconColor: 'text-foreground ',
-    bgColor: 'bg-secondary dark:bg-dark-secondary'
+    color: 'bg-background',
+    iconColor: 'text-secondary-foreground',
+    bgColor: 'bg-secondary'
   },
   {
     icon: Wind,
@@ -39,9 +39,9 @@ export const useCasesData: UseCase[] = [
     description:
       'Utvid sesongen og opplev Norge når det er på sitt vakreste.',
     temperature: '3-10°C',
-    color: 'bg-card ',
-    iconColor: 'text-foreground ',
-    bgColor: 'bg-secondary dark:bg-dark-secondary'
+    color: 'bg-background',
+    iconColor: 'text-secondary-foreground',
+    bgColor: 'bg-secondary'
   }
 ]
 
@@ -51,21 +51,18 @@ export function UseCasesGrid({
   useCases: UseCase[]
 }) {
   return (
-    <SectionBox bgcolor='bg-secondary dark:bg-dark-secondary text-secondary-foreground dark:text-dark-secondary-foreground'>
-      <article
-        id='bruksomrader'
-        className='dark:text-dark-secondary-foreground text-secondary-foreground'
-      >
+    <SectionBox bgcolor='bg-card text-card-foreground'>
+      <article id='bruksomrader' className='text-card-foreground'>
         <div className='container'>
           <div className='w-full'>
             <H2
               Text='Utekos gjennom bobildøgnet'
               ID='bruksomrader-h2'
-              className='dark:text-dark-secondary-foreground text-secondary-foreground'
+              className='text-card-foreground'
             />
             <Lead
               Text='Fra soloppgang til solnedgang'
-              className='dark:text-dark-secondary-foreground text-secondary-foreground'
+              className='text-card-foreground'
             />
           </div>
 
@@ -73,7 +70,7 @@ export function UseCasesGrid({
             {useCases.map((useCase, useCaseIndex) => {
               const Icon = useCase.icon
               const iconBackgroundClass =
-                useCase.bgColor ?? 'bg-sidebar '
+                useCase.bgColor ?? 'bg-secondary'
 
               return (
                 <AnimatedBlock
@@ -99,7 +96,7 @@ export function UseCasesGrid({
                           <p className='text-sm tracking-[-0.02em] text-foreground'>
                             {useCase.time}
                           </p>
-                          <p className='text-sm font-medium tracking-[-0.02em]'>
+                          <p className='text-sm font-medium tracking-[-0.02em] text-foreground/80'>
                             {useCase.temperature}
                           </p>
                         </div>

@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion'
+import { H2 } from '@/components/typography/TypographyH2'
 
 export const iceBathingFaqItems = [
   {
@@ -30,23 +31,25 @@ export const iceBathingFaqItems = [
 
 export function IceBathingFAQ() {
   return (
-    <article className='bg-overcast border-t border-foreground/12 py-24'>
-      <div className='container mx-auto max-w-3xl px-4'>
-        <h2 className='dark:text-dark-background mb-12 text-center text-3xl leading-[1.05] font-bold tracking-normal text-background'>
-          Ofte stilte spørsmål
-        </h2>
+    <article className='overflow-x-clip border-t border-border bg-card py-16 text-card-foreground sm:py-20 lg:py-24'>
+      <div className='container mx-auto max-w-3xl px-4 sm:px-6'>
+        <H2
+          ID='isbading-faq'
+          Text='Ofte stilte spørsmål'
+          className='mb-10 text-center text-card-foreground sm:mb-12'
+        />
 
         <Accordion className='w-full'>
           {iceBathingFaqItems.map((item, index) => (
             <AccordionItem
               key={item.question}
               value={`item-${index + 1}`}
-              className='dark:border-dark-background/16 border-background/16'
+              className='border-border'
             >
-              <AccordionTrigger className='dark:text-dark-background text-left leading-[1.35] tracking-normal text-background'>
+              <AccordionTrigger className='text-left leading-[1.35] tracking-normal text-card-foreground'>
                 {item.question}
               </AccordionTrigger>
-              <AccordionContent className='text-havdyp leading-normal tracking-normal'>
+              <AccordionContent className='leading-normal tracking-normal text-card-foreground/80'>
                 {item.answer}
               </AccordionContent>
             </AccordionItem>

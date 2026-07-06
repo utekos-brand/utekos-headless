@@ -1,38 +1,38 @@
 export const grillCardThemes = [
   {
-    surface: 'bg-demitasse',
-    border: 'border-foreground/12 hover:border-foreground/24',
-    text: 'text-foreground',
-    mutedText: 'text-foreground',
-    glow: 'bg-[radial-gradient(circle_at_20%_0%,color-mix(in_oklch,var(--amphora)_16%,transparent),transparent_38%)]',
-    iconSurface: '--color-maritime-darkest',
-    iconColor: 'text-foreground'
+    surface: 'bg-card',
+    border: 'border-border hover:border-secondary/50',
+    text: 'text-card-foreground',
+    mutedText: 'text-card-foreground/80',
+    glow: 'bg-[radial-gradient(circle_at_20%_0%,color-mix(in_oklch,var(--secondary)_18%,transparent),transparent_40%)]',
+    iconSurface: 'bg-secondary',
+    iconColor: 'text-secondary-foreground'
   },
   {
-    surface: 'bg-demitasse',
-    border: 'border-foreground/12 hover:border-foreground/24',
-    text: 'text-foreground',
-    mutedText: 'text-foreground',
-    glow: 'bg-[radial-gradient(circle_at_20%_0%,color-mix(in_oklch,var(--amphora)_24%,transparent),transparent_40%)]',
-    iconSurface: '--color-maritime-darkest',
-    iconColor: 'text-foreground'
+    surface: 'bg-card',
+    border: 'border-border hover:border-secondary/50',
+    text: 'text-card-foreground',
+    mutedText: 'text-card-foreground/80',
+    glow: 'bg-[radial-gradient(circle_at_20%_0%,color-mix(in_oklch,var(--secondary)_18%,transparent),transparent_40%)]',
+    iconSurface: 'bg-secondary',
+    iconColor: 'text-secondary-foreground'
   },
   {
-    surface: 'bg-demitasse',
-    border: 'border-foreground/12 hover:border-foreground/24',
-    text: 'text-foreground',
-    mutedText: 'text-foreground',
-    glow: 'bg-[radial-gradient(circle_at_20%_0%,color-mix(in_oklch,var(--amphora)_18%,transparent),transparent_40%)]',
-    iconSurface: '--color-maritime-darkest',
-    iconColor: 'text-foreground'
+    surface: 'bg-card',
+    border: 'border-border hover:border-secondary/50',
+    text: 'text-card-foreground',
+    mutedText: 'text-card-foreground/80',
+    glow: 'bg-[radial-gradient(circle_at_20%_0%,color-mix(in_oklch,var(--secondary)_18%,transparent),transparent_40%)]',
+    iconSurface: 'bg-secondary',
+    iconColor: 'text-secondary-foreground'
   },
   {
-    surface: 'bg-demitasse',
-    border: 'border-foreground/12 hover:border-foreground/24',
-    text: 'text-foreground',
-    mutedText: 'text-foreground',
-    glow: 'bg-[radial-gradient(circle_at_20%_0%,color-mix(in_oklch,var(--amphora)_18%,transparent),transparent_40%)]',
-    iconSurface: '--color-maritime-darkest',
-    iconColor: 'text-foreground'
+    surface: 'bg-card',
+    border: 'border-border hover:border-secondary/50',
+    text: 'text-card-foreground',
+    mutedText: 'text-card-foreground/80',
+    glow: 'bg-[radial-gradient(circle_at_20%_0%,color-mix(in_oklch,var(--secondary)_18%,transparent),transparent_40%)]',
+    iconSurface: 'bg-secondary',
+    iconColor: 'text-secondary-foreground'
   }
 ] as const

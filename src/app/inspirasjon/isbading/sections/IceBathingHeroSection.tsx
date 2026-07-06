@@ -1,58 +1,82 @@
-// Path: src/app/inspirasjon/isbading/sections/IceBathingHeroSection.tsx
-
-import { Waves } from 'lucide-react'
 import Image from 'next/image'
+import { AnimatedBlock } from '@/components/AnimatedBlock'
+import { H1 } from '@/components/typography/TypographyH1'
+import { Lead } from '@/components/typography/Lead'
 import { InspirationHeroBreadcrumb } from '../../layout/InspirationHeroBreadcrumb'
-import { InspirationHero } from '../../layout/hero/InspirationHero'
-import { HeroHighlight } from '../../layout/hero/HeroHighlight'
+import { InspirationHeroFeatureGrid } from '../../layout/hero/InspirationHeroFeatureGrid'
 import { IceBathingHeroCta } from './IceBathingHeroCta'
 import { iceBathingHeroFeatures } from './iceBathingHeroFeatures'
 
-const IceBathingHeroBackground = (
-  <div className='absolute inset-0 select-none' aria-hidden='true'>
-    <Image src='/comfyrobe/comfy-isbading-1080.png' alt='' fill className='object-cover md:hidden' priority />
-    <Image
-      src='/comfyrobe/comfy-isbading-1080-master.png'
-      alt=''
-      fill
-      className='hidden object-cover md:block'
-      priority
-    />
-    <div className='absolute inset-0 bg-background/68 dark:bg-dark-background/68' />
-  </div>
-)
-
 export function IceBathingHeroSection() {
   return (
-    <InspirationHero
-      labelledById='isbading-hero-title'
-      align='center'
-      minHeight='tall'
-      containerClassName='py-24'
-      background={IceBathingHeroBackground}
-      breadcrumb={
-        <InspirationHeroBreadcrumb
-          label='Isbading'
-          color='var(--ancient-water)'
-          textColor='var(--background)'
-          icon={Waves}
+    <section
+      aria-labelledby='isbading-hero-title'
+      className='relative isolate flex min-h-[110svh] flex-col justify-center overflow-x-clip bg-background text-foreground'
+    >
+      <div className='absolute inset-0 select-none' aria-hidden='true'>
+        <Image
+          src='/comfyrobe/comfy-isbading-1080.png'
+          alt=''
+          fill
+          className='object-cover md:hidden'
+          priority
         />
-      }
-      title={
-        <>
-          Det kalde gys -{' '}
-          <HeroHighlight color='var(--ancient-water)' display='block'>
-            den varme belønningen
-          </HeroHighlight>
-        </>
-      }
-      titleClassName='max-w-4xl drop-shadow-sm md:text-[clamp(1.875rem,2.35vw,3.5rem)]'
-      leadClassName='drop-shadow-sm'
-      lead='Mestringsfølelsen etter et isbad er unik. Men turen tilbake til bilen trenger ikke være en kamp. Gjør overgangen fra null grader til full komfort umiddelbar.'
-      actions={<IceBathingHeroCta />}
-      features={iceBathingHeroFeatures}
-      featuresHeading='Høydepunkter for isbading med Utekos'
-      featuresHeadingId='isbading-hero-highlights-title'
-    />
+        <Image
+          src='/comfyrobe/comfy-isbading-1080-master.png'
+          alt=''
+          fill
+          className='hidden object-cover md:block'
+          priority
+        />
+        <div className='absolute inset-0 bg-background/68' />
+      </div>
+
+      <div className='container relative z-10 mx-auto px-4 py-24 sm:px-6'>
+        <div className='mx-auto max-w-5xl text-center'>
+          <header className='flex flex-col gap-10 md:gap-12'>
+            <AnimatedBlock
+              className='will-animate-fade-in-up flex justify-center'
+              delay='0.1s'
+            >
+              <InspirationHeroBreadcrumb label='Isbading' />
+            </AnimatedBlock>
+
+            <AnimatedBlock className='will-animate-fade-in-up' delay='0.2s'>
+              <H1
+                ID='isbading-hero-title'
+                className='mx-auto max-w-4xl text-balance text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-6xl'
+              >
+                Det kalde gys –{' '}
+                <span className='text-secondary'>den varme belønningen</span>
+              </H1>
+              <Lead className='mx-auto mt-6 max-w-3xl pb-0 text-foreground md:pb-0 lg:pb-0'>
+                Mestringsfølelsen etter et isbad er unik. Men turen tilbake til
+                bilen trenger ikke være en kamp. Gjør overgangen fra null grader
+                til full komfort umiddelbar.
+              </Lead>
+            </AnimatedBlock>
+
+            <AnimatedBlock
+              className='will-animate-fade-in-up flex justify-center'
+              delay='0.4s'
+            >
+              <IceBathingHeroCta />
+            </AnimatedBlock>
+          </header>
+
+          <AnimatedBlock
+            className='will-animate-fade-in-up mt-16 sm:mt-20'
+            delay='0.5s'
+          >
+            <InspirationHeroFeatureGrid
+              features={iceBathingHeroFeatures}
+              heading='Høydepunkter for isbading med Utekos'
+              headingId='isbading-hero-highlights-title'
+              align='center'
+            />
+          </AnimatedBlock>
+        </div>
+      </div>
+    </section>
   )
 }

@@ -10,10 +10,11 @@ import {
   CarouselPrevious
 } from '@/components/ui/carousel'
 import { CAROUSEL_SSR } from '@/components/ui/carousel-ssr'
+import { H2 } from '@/components/typography/TypographyH2'
 
 const galleryImages = [
   {
-    src: '/comfyrobe/comfy-afterbath-1080.png', // Husk å legge inn riktige bildenavn
+    src: '/comfyrobe/comfy-afterbath-1080.png',
     alt: 'En isbader kommer opp av vannet med et stort smil, klar til å ta på seg Utekos-kåpen.',
     title: 'Det øyeblikkelige rushet',
     description:
@@ -51,47 +52,46 @@ const galleryImages = [
 
 export function SocialProof() {
   return (
-    <article className='py-24'>
-      <div className='container mx-auto px-4'>
+    <article className='overflow-x-clip bg-card py-16 text-card-foreground sm:py-20 lg:py-24'>
+      <div className='container mx-auto px-4 sm:px-6'>
         <div className='mx-auto max-w-3xl text-center'>
-          <h2 className='text-fluid-display mb-4 font-bold tracking-normal'>
-            Ekte kulde, ekte varme
-          </h2>
+          <H2
+            ID='isbading-gallery'
+            Text='Ekte kulde, ekte varme'
+            className='mx-auto max-w-2xl text-balance pb-2 text-2xl font-semibold text-card-foreground sm:text-3xl md:text-4xl'
+          />
         </div>
 
         <Carousel
           slideCount={galleryImages.length}
-          ssr={CAROUSEL_SSR.responsiveThirds(
-            galleryImages.length
-          )}
+          ssr={CAROUSEL_SSR.responsiveThirds(galleryImages.length)}
           opts={{ loop: true, align: 'start' }}
-          className='mx-auto w-full max-w-5xl'
+          className='mx-auto mt-10 w-full max-w-5xl sm:mt-12'
         >
           <CarouselContent className='-ml-4'>
-            {galleryImages.map((image, index) => (
+            {galleryImages.map(image => (
               <CarouselItem
-                key={index}
+                key={image.src}
                 className='pl-4 md:basis-1/2 lg:basis-1/3'
               >
-                <div className='group p-1'>
+                <div className='group flex h-full flex-col p-1'>
                   <AspectRatio
                     ratio={1 / 1}
-                    className='dark:bg-dark-background relative overflow-hidden rounded-lg border border-foreground/12 bg-background'
+                    className='relative shrink-0 overflow-hidden rounded-lg border border-border bg-background'
                   >
                     <Image
                       src={image.src}
                       alt={image.alt}
                       fill
-                      className='transition-transform duration-500 group-hover:scale-105'
-                      style={{ objectFit: 'cover' }}
+                      className='size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100'
                       sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                     />
                   </AspectRatio>
-                  <div className='pt-4 text-left'>
-                    <h4 className='font-semibold'>
+                  <div className='flex-1 pt-4 text-left'>
+                    <h3 className='font-sans text-base leading-snug font-bold text-card-foreground sm:text-lg'>
                       {image.title}
-                    </h4>
-                    <p className='text-overcast text-sm'>
+                    </h3>
+                    <p className='mt-2 text-sm leading-relaxed text-card-foreground/80'>
                       {image.description}
                     </p>
                   </div>
@@ -100,8 +100,14 @@ export function SocialProof() {
             ))}
           </CarouselContent>
 
-          <CarouselPrevious className='left-2 z-10 inline-flex md:-left-12.5' />
-          <CarouselNext className='right-2 z-10 inline-flex md:-right-12.5' />
+          <CarouselPrevious
+            aria-label='Forrige bilde'
+            className='left-2 z-10 inline-flex border-border bg-background/90 text-foreground hover:bg-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card md:-left-12.5'
+          />
+          <CarouselNext
+            aria-label='Neste bilde'
+            className='right-2 z-10 inline-flex border-border bg-background/90 text-foreground hover:bg-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card md:-right-12.5'
+          />
         </Carousel>
       </div>
     </article>

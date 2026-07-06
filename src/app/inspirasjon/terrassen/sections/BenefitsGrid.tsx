@@ -1,5 +1,3 @@
-// Path: src/app/inspirasjon/terrassen/sections/BenefitsGrid.tsx
-
 import { Home, Sparkles, Thermometer, Users } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { H2 } from '@/components/typography/TypographyH2'
@@ -46,21 +44,21 @@ export function BenefitsGrid({
   benefits: Benefit[]
 }) {
   return (
-    <article className='bg-[var(--terrace-night-soft)] py-24 text-[var(--terrace-cream)] md:py-32'>
-      <div className='container mx-auto px-4'>
-        <MotionReveal className='mb-16 max-w-3xl md:max-w-4xl'>
+    <article className='overflow-x-clip bg-background py-16 text-foreground sm:py-20 lg:py-24'>
+      <div className='container mx-auto px-4 sm:px-6'>
+        <MotionReveal className='mb-10 max-w-3xl sm:mb-12 lg:mb-16 md:max-w-4xl'>
           <H2
             ID='terrasse-investering'
             Text='En investering i hjemmet'
-            className='pb-0 text-left text-[clamp(3rem,6vw,5.75rem)] leading-[0.95] text-[var(--terrace-cream)]'
+            className='text-foreground'
           />
-          <Lead className='mt-6 max-w-3xl pb-0 text-left text-[var(--terrace-sage-soft)] md:pb-0 lg:pb-0'>
+          <Lead className='mt-4 max-w-3xl pb-0 text-foreground md:mt-6 md:pb-0 lg:pb-0'>
             Få mer ut av uteplassen du allerede har. Utekos er
             designet for å maksimere komforten i hverdagen.
           </Lead>
         </MotionReveal>
 
-        <div className='grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4'>
+        <div className='grid grid-cols-1 gap-6 rounded-3xl bg-card p-6 text-card-foreground md:grid-cols-2 md:gap-8 md:p-8 xl:grid-cols-4'>
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon
 
@@ -70,20 +68,17 @@ export function BenefitsGrid({
                 delay={index * 0.06}
                 y={18}
               >
-                <div className='h-full rounded-lg border border-[var(--terrace-line-dark)] bg-[var(--terrace-panel-dark)] p-7 text-left text-[var(--terrace-cream)] shadow-[0_28px_74px_-58px_rgb(0_0_0/0.88)] backdrop-blur-xl sm:p-8'>
-                  <div className='mb-7 flex items-start gap-5'>
-                    <div className='flex size-14 shrink-0 items-center justify-center rounded-lg border border-[var(--terrace-line-dark)] bg-[var(--terrace-copper)] text-[var(--terrace-night)]'>
-                      <Icon
-                        className='size-7'
-                        aria-hidden='true'
-                      />
+                <div className='h-full rounded-lg border border-border bg-background p-6 text-left text-foreground shadow-sm sm:p-7'>
+                  <div className='mb-5 flex items-start gap-4 sm:mb-6 sm:gap-5'>
+                    <div className='flex size-14 shrink-0 items-center justify-center rounded-lg border border-border bg-muted text-ceramic'>
+                      <Icon className='size-7' aria-hidden='true' />
                     </div>
                     <H3
                       Text={benefit.title}
-                      className='pt-1 pb-0 text-left text-2xl leading-[1.12] text-[var(--terrace-cream)]'
+                      className='pt-1 pb-0 text-left text-xl leading-snug text-foreground sm:text-2xl'
                     />
                   </div>
-                  <P className='mt-0 text-left text-base leading-relaxed text-[var(--terrace-sage-soft)] not-first:mt-0'>
+                  <P className='mt-0 text-left text-base leading-relaxed text-foreground/80 not-first:mt-0'>
                     {benefit.description}
                   </P>
                 </div>

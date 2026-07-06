@@ -1,28 +1,26 @@
 import { Anchor, Sun, Waves } from 'lucide-react'
-import type { InspirationHeroFeature } from '../layout/hero/types'
-import { heroFeatureSurface } from '../theme/surfaces'
+import type { LucideIcon } from 'lucide-react'
 
-const headerSecondaryCard = heroFeatureSurface('var(--header-secondary)')
-const veryPeriCard = heroFeatureSurface('var(--very-peri)')
-const ancientWaterCard = heroFeatureSurface('var(--ancient-water)')
+type BoatingHeroFeature = {
+  title: string
+  description: string
+  icon: LucideIcon
+}
 
-export const boatingHeroFeatures: readonly InspirationHeroFeature[] = [
+export const boatingHeroFeatures: readonly BoatingHeroFeature[] = [
   {
     title: 'Soloppgang',
     description: 'Nyt morgenkaffeen i cockpiten',
-    icon: Sun,
-    ...headerSecondaryCard
+    icon: Sun
   },
   {
     title: 'Hele kvelden',
     description: 'Forleng tiden på dekk etter solnedgang',
-    icon: Waves,
-    ...ancientWaterCard
+    icon: Waves
   },
   {
     title: 'Lengre sesong',
     description: 'Nyt båten fra tidlig vår til sen høst',
-    icon: Anchor,
-    ...veryPeriCard
+    icon: Anchor
   }
 ] as const

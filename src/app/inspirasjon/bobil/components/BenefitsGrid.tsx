@@ -16,31 +16,31 @@ export const benefitsData: Benefit[] = [
     icon: ThermometerIcon,
     title: 'Øyeblikkelig varme',
     description: 'Fra kald morgen til koselig stund på sekunder',
-    color: 'text-primary dark:text-dark-primary',
-    bgColor: 'bg-background/24 dark:bg-dark-background/24'
+    color: 'text-ceramic',
+    bgColor: 'bg-muted'
   },
   {
     icon: SparklesIcon,
     title: 'Kompakt og praktisk',
     description:
       'Tar minimal plass i bobilen, maksimal komfort på turen',
-    color: 'text-primary dark:text-dark-primary',
-    bgColor: 'bg-background/24 dark:bg-dark-background/24'
+    color: 'text-ceramic',
+    bgColor: 'bg-muted'
   },
   {
     icon: CalendarIcon,
     title: 'Forleng sesongen',
     description:
       'Bruk bobilen fra tidlig vår til sen høst i komfort',
-    color: 'text-primary dark:text-dark-primary',
-    bgColor: 'bg-background/24 dark:bg-dark-background/24'
+    color: 'text-ceramic',
+    bgColor: 'bg-muted'
   },
   {
     icon: UsersIcon,
     title: 'Sosial magnet',
     description: 'Bli samlingspunktet på campingplassen',
-    color: 'text-primary dark:text-dark-primary',
-    bgColor: 'bg-background/24 dark:bg-dark-background/24'
+    color: 'text-ceramic',
+    bgColor: 'bg-muted'
   }
 ]
 
@@ -50,7 +50,7 @@ export function BenefitsGrid({
   benefits: Benefit[]
 }) {
   return (
-    <SectionBox bgcolor='bg-background dark:bg-dark-background border-b border-border '>
+    <SectionBox bgcolor='bg-background border-b border-border'>
       <article className='text-foreground'>
         <div className='container'>
           <div className='mb-6 md:mb-8 lg:mb-10'>
@@ -69,8 +69,7 @@ export function BenefitsGrid({
             {benefits.map((benefit, benefitIndex) => {
               const Icon = benefit.icon
               const iconBackgroundClass =
-                benefit.bgColor ??
-                'bg-background/24 dark:bg-dark-background/24'
+                benefit.bgColor ?? 'bg-muted'
 
               return (
                 <AnimatedBlock
@@ -80,7 +79,7 @@ export function BenefitsGrid({
                   threshold={0.2}
                 >
                   <div
-                    className={`${iconBackgroundClass} mx-auto mb-4 flex size-16 items-center justify-center rounded-full border border-foreground/12`}
+                    className={`${iconBackgroundClass} mx-auto mb-4 flex size-16 items-center justify-center rounded-full border border-border`}
                   >
                     <Icon
                       className={`size-8 ${benefit.color}`}
@@ -93,7 +92,7 @@ export function BenefitsGrid({
                     className='mb-2 pb-0 text-foreground'
                   />
 
-                  <p className='tracking-[-0.02em]'>
+                  <p className='tracking-[-0.02em] text-foreground/90'>
                     {benefit.description}
                   </p>
                 </AnimatedBlock>

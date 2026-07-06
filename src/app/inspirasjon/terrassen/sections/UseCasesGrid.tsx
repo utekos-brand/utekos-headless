@@ -1,5 +1,3 @@
-// Path: src/app/inspirasjon/terrassen/sections/UseCasesGrid.tsx
-
 import { Card, CardContent } from '@/components/ui/card'
 import { BookOpen, Coffee, Moon } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -48,48 +46,42 @@ export function UseCasesGrid({
   return (
     <article
       id='bruksomrader'
-      className='bg-[var(--terrace-paper)] py-24 text-[var(--terrace-ink)] md:py-32'
+      className='overflow-x-clip bg-card py-16 text-card-foreground sm:py-20 lg:py-24'
     >
-      <div className='container mx-auto px-4'>
-        <MotionReveal className='mb-16 max-w-3xl lg:max-w-4xl'>
+      <div className='container mx-auto px-4 sm:px-6'>
+        <MotionReveal className='mb-10 max-w-3xl sm:mb-12 lg:mb-16 lg:max-w-4xl'>
           <H2
             ID='terrasse-hjemmekos'
             Text='Hjemmekos, bare ute'
-            className='pb-0 text-left text-[clamp(3rem,6vw,5.75rem)] leading-[0.95] text-[var(--terrace-ink)]'
+            className='text-card-foreground'
           />
-          <Lead className='mt-6 max-w-2xl pb-0 text-left text-[var(--terrace-muted)] md:pb-0 lg:pb-0'>
+          <Lead className='mt-4 max-w-2xl pb-0 text-card-foreground md:mt-6 md:pb-0 lg:pb-0'>
             Fra en stille stund for deg selv, til sosiale lag som
             varer lenger.
           </Lead>
         </MotionReveal>
 
-        <div className='grid grid-cols-1 gap-8 md:grid-cols-3'>
+        <div className='grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8'>
           {useCases.map((useCase, index) => {
             const Icon = useCase.icon
 
             return (
-              <MotionCard
-                key={useCase.title}
-                delay={index * 0.08}
-              >
-                <Card className='group @container h-full overflow-hidden rounded-lg border border-[var(--terrace-line-dark)] bg-[var(--terrace-night)] text-[var(--terrace-cream)] shadow-[0_24px_70px_-58px_rgb(16_32_31/0.58)] transition-colors duration-300 hover:bg-[var(--terrace-night-soft)] motion-reduce:transition-none'>
-                  <CardContent className='relative p-8'>
+              <MotionCard key={useCase.title} delay={index * 0.08}>
+                <Card className='group @container h-full overflow-hidden rounded-lg border border-border bg-background text-foreground shadow-sm transition-colors duration-300 hover:bg-muted/40 motion-reduce:transition-none'>
+                  <CardContent className='relative p-6 sm:p-8'>
                     <div className='mb-6 flex items-center gap-4'>
-                      <div className='flex size-12 items-center justify-center rounded-lg border border-[var(--terrace-line-dark)] bg-[var(--terrace-copper)] text-[var(--terrace-night)]'>
-                        <Icon
-                          className='size-6'
-                          aria-hidden='true'
-                        />
+                      <div className='flex size-12 shrink-0 items-center justify-center rounded-lg border border-border bg-secondary text-secondary-foreground'>
+                        <Icon className='size-6' aria-hidden='true' />
                       </div>
-                      <P className='text-left font-utekos-text-medium leading-[1.35] text-[var(--terrace-copper)] not-first:mt-0'>
+                      <P className='text-left font-utekos-text-medium leading-snug text-secondary not-first:mt-0'>
                         {useCase.time}
                       </P>
                     </div>
                     <H3
                       Text={useCase.title}
-                      className='pb-0 text-left text-xl leading-[1.08] text-[var(--terrace-cream)] md:text-2xl'
+                      className='pb-0 text-left text-xl leading-snug text-foreground md:text-2xl'
                     />
-                    <P className='mt-4 leading-relaxed text-[var(--terrace-sage-soft)] not-first:mt-4'>
+                    <P className='mt-4 leading-relaxed text-foreground/80 not-first:mt-4'>
                       {useCase.description}
                     </P>
                   </CardContent>

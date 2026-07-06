@@ -50,15 +50,15 @@ export const metadata: Metadata = {
 }
 export default async function Page({ children }: { children: React.ReactNode }) {
   return (
-     <article>
-         <BoatingHeroSection />
-          <UseCasesGrid useCases={useCasesData} />
-          <BenefitsGrid  />
-          <BoatSeasonSection />
-          <SocialProof />
-          <PopularDestinations destinations={popularDestinationsData} />
-        <CTASection />
-        {children}
+    <article className='overflow-x-clip bg-background text-foreground'>
+      <BoatingHeroSection />
+      <UseCasesGrid useCases={useCasesData} />
+      <BenefitsGrid />
+      <BoatSeasonSection />
+      <SocialProof />
+      <PopularDestinations destinations={popularDestinationsData} />
+      <CTASection />
+      {children}
     </article>
   )
 }
