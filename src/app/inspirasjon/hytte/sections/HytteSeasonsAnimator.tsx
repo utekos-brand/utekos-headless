@@ -18,6 +18,7 @@ export type HytteSeasonAnimationPreset =
   | 'push-line'
 
 const seasonItemMotion = {
+  hidden: { opacity: 0, y: 18, scale: 0.985 },
   visible: (index: number) => ({
     opacity: 1,
     y: 0,
@@ -32,6 +33,7 @@ const seasonItemMotion = {
 } satisfies Variants
 
 const pushWordMotion = {
+  hidden: { opacity: 0, y: '100%' },
   visible: (index: number) => ({
     opacity: 1,
     y: '0%',
@@ -44,6 +46,7 @@ const pushWordMotion = {
 } satisfies Variants
 
 const zoomWordMotion = {
+  hidden: { opacity: 0, scale: 0.7 },
   visible: (index: number) => ({
     opacity: 1,
     scale: 1,
@@ -58,6 +61,7 @@ const zoomWordMotion = {
 } satisfies Variants
 
 const pushLineMotion = {
+  hidden: { opacity: 0, y: '100%' },
   visible: (index: number) => ({
     opacity: 1,
     y: '0%',
@@ -71,12 +75,12 @@ const pushLineMotion = {
 
 const textViewport = {
   once: true,
-  amount: 0.2,
-  margin: '0px 0px -48px 0px'
+  amount: 0.35,
+  margin: '0px 0px -24px 0px'
 } as const
 
 const textBlockClassName =
-  'mx-auto flex w-full max-w-[18ch] flex-col items-center justify-center gap-1 text-center font-[family-name:var(--font-flex)] text-[1.5rem] leading-[0.96] font-bold tracking-normal text-card-foreground  min-[390px]:text-[1.75rem] sm:text-4xl lg:text-[2.5rem] xl:text-5xl'
+  'mx-auto flex w-full max-w-[18ch] flex-col items-center justify-center gap-1 text-center font-[family-name:var(--font-flex)] text-[1.5rem] leading-[0.96] font-bold tracking-normal text-inherit min-[390px]:text-[1.75rem] sm:text-4xl lg:text-[2.5rem] xl:text-5xl'
 
 const textLineClassName = 'block max-w-full whitespace-nowrap'
 
@@ -152,13 +156,10 @@ export function HytteSeasonsAnimator({
           {childrenArray.map((child, index) => (
             <m.li
               key={`hytte-season-${seasonValues[index] ?? index}`}
-              className={cn(
-                'motion-safe:[transform:translateY(18px)_scale(0.985)] motion-safe:opacity-0',
-                itemClassName
-              )}
+              className={itemClassName}
               data-season={seasonValues[index]}
               custom={index}
-              initial={false}
+              initial='hidden'
               variants={seasonItemMotion}
               viewport={{
                 once: true,
@@ -190,73 +191,60 @@ function WordPresetText({
   const descriptionWords = splitWords(description)
   const variant =
     lineVariant === 'push' ? pushWordMotion : zoomWordMotion
-  const initialClassName =
-    lineVariant === 'push' ?
-      'motion-safe:[transform:translateY(100%)] motion-safe:opacity-0'
-    : 'motion-safe:[transform:scale(0.7)] motion-safe:opacity-0'
 
   return (
-    <MotionConfig reducedMotion='user'>
-      <LazyMotion features={domAnimation} strict>
-        <m.div
-          className={textBlockClassName}
-          data-season-copy={
-            lineVariant === 'push' ? 'push-word' : 'zoom-in'
-          }
-          initial={false}
-          viewport={textViewport}
-          whileInView='visible'
-        >
-          <h3
-            className={textLineClassName}
-            data-season-line='title'
-          >
-            <span className='inline-block max-w-full whitespace-nowrap'>
-              {titleWords.map((word, index) => (
-                <m.span
-                  key={`${title}-${word}-${index}`}
-                  className={cn(
-                    'inline-block will-change-transform',
-                    initialClassName,
-                    index < titleWords.length - 1 &&
-                      'mr-[0.18em]'
-                  )}
-                  custom={index}
-                  initial={false}
-                  variants={variant}
-                >
-                  {word}
-                </m.span>
-              ))}
-            </span>
-          </h3>
+    <div
+      className={textBlockClassName}
+      data-season-copy={
+        lineVariant === 'push' ? 'push-word' : 'zoom-in'
+      }
+    >
+      <h3 className={textLineClassName} data-season-line='title'>
+        <span className='inline-block max-w-full whitespace-nowrap'>
+          {titleWords.map((word, index) => (
+            <m.span
+              key={`${title}-${word}-${index}`}
+              className={cn(
+                'inline-block will-change-transform',
+                index < titleWords.length - 1 && 'mr-[0.18em]'
+              )}
+              custom={index}
+              initial='hidden'
+              variants={variant}
+              viewport={textViewport}
+              whileInView='visible'
+            >
+              {word}
+            </m.span>
+          ))}
+        </span>
+      </h3>
 
-          <p
-            className={textLineClassName}
-            data-season-line='description'
-          >
-            <span className='inline-block max-w-full whitespace-nowrap'>
-              {descriptionWords.map((word, index) => (
-                <m.span
-                  key={`${description}-${word}-${index}`}
-                  className={cn(
-                    'inline-block will-change-transform',
-                    initialClassName,
-                    index < descriptionWords.length - 1 &&
-                      'mr-[0.18em]'
-                  )}
-                  custom={titleWords.length + index}
-                  initial={false}
-                  variants={variant}
-                >
-                  {word}
-                </m.span>
-              ))}
-            </span>
-          </p>
-        </m.div>
-      </LazyMotion>
-    </MotionConfig>
+      <p
+        className={textLineClassName}
+        data-season-line='description'
+      >
+        <span className='inline-block max-w-full whitespace-nowrap'>
+          {descriptionWords.map((word, index) => (
+            <m.span
+              key={`${description}-${word}-${index}`}
+              className={cn(
+                'inline-block will-change-transform',
+                index < descriptionWords.length - 1 &&
+                  'mr-[0.18em]'
+              )}
+              custom={titleWords.length + index}
+              initial='hidden'
+              variants={variant}
+              viewport={textViewport}
+              whileInView='visible'
+            >
+              {word}
+            </m.span>
+          ))}
+        </span>
+      </p>
+    </div>
   )
 }
 
@@ -281,47 +269,41 @@ function ScrollPresetText({
       }
 
   return (
-    <MotionConfig reducedMotion='user'>
-      <LazyMotion features={domAnimation} strict>
-        <div
-          className={cn(
-            textBlockClassName,
-            'max-w-full overflow-hidden'
-          )}
-          data-season-copy='scroll'
-        >
-          <m.div
-            className='flex w-[200%] items-center whitespace-nowrap'
-            {...marqueeMotionProps}
+    <div
+      className={cn(
+        textBlockClassName,
+        'max-w-full overflow-hidden'
+      )}
+      data-season-copy='scroll'
+    >
+      <m.div
+        className='flex w-[200%] items-center whitespace-nowrap'
+        {...marqueeMotionProps}
+      >
+        <div className='flex min-w-1/2 shrink-0 flex-col items-center justify-center gap-1 px-4'>
+          <h3
+            className={textLineClassName}
+            data-season-line='title'
           >
-            <div className='flex min-w-1/2 shrink-0 flex-col items-center justify-center gap-1 px-4'>
-              <h3
-                className={textLineClassName}
-                data-season-line='title'
-              >
-                {title}
-              </h3>
-              <p
-                className={textLineClassName}
-                data-season-line='description'
-              >
-                {description}
-              </p>
-            </div>
-
-            <div
-              aria-hidden='true'
-              className='flex min-w-1/2 shrink-0 flex-col items-center justify-center gap-1 px-4'
-            >
-              <span className={textLineClassName}>{title}</span>
-              <span className={textLineClassName}>
-                {description}
-              </span>
-            </div>
-          </m.div>
+            {title}
+          </h3>
+          <p
+            className={textLineClassName}
+            data-season-line='description'
+          >
+            {description}
+          </p>
         </div>
-      </LazyMotion>
-    </MotionConfig>
+
+        <div
+          aria-hidden='true'
+          className='flex min-w-1/2 shrink-0 flex-col items-center justify-center gap-1 px-4'
+        >
+          <span className={textLineClassName}>{title}</span>
+          <span className={textLineClassName}>{description}</span>
+        </div>
+      </m.div>
+    </div>
   )
 }
 
@@ -338,42 +320,34 @@ function PushLinePresetText({
   ] as const
 
   return (
-    <MotionConfig reducedMotion='user'>
-      <LazyMotion features={domAnimation} strict>
-        <m.div
-          className={textBlockClassName}
-          data-season-copy='push-line'
-          initial={false}
-          viewport={textViewport}
-          whileInView='visible'
-        >
-          {lines.map((line, index) => {
-            const Component = line.as
+    <div className={textBlockClassName} data-season-copy='push-line'>
+      {lines.map((line, index) => {
+        const Component = line.as
 
-            return (
-              <Component
-                key={`${line.as}-${line.text}`}
-                className='block overflow-hidden whitespace-nowrap'
-                data-season-line={
-                  line.as === 'h3' ? 'title' : 'description'
-                }
-              >
-                <m.span
-                  className={cn(
-                    textLineClassName,
-                    'will-change-transform motion-safe:[transform:translateY(100%)] motion-safe:opacity-0'
-                  )}
-                  custom={index}
-                  initial={false}
-                  variants={pushLineMotion}
-                >
-                  {line.text}
-                </m.span>
-              </Component>
-            )
-          })}
-        </m.div>
-      </LazyMotion>
-    </MotionConfig>
+        return (
+          <Component
+            key={`${line.as}-${line.text}`}
+            className='block overflow-hidden whitespace-nowrap'
+            data-season-line={
+              line.as === 'h3' ? 'title' : 'description'
+            }
+          >
+            <m.span
+              className={cn(
+                textLineClassName,
+                'inline-block will-change-transform'
+              )}
+              custom={index}
+              initial='hidden'
+              variants={pushLineMotion}
+              viewport={textViewport}
+              whileInView='visible'
+            >
+              {line.text}
+            </m.span>
+          </Component>
+        )
+      })}
+    </div>
   )
 }

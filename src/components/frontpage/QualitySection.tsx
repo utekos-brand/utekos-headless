@@ -59,18 +59,18 @@ export async function QualitySection() {
               <div
                 className={cn(
                   cardClasses,
-                  'group  flex h-full flex-col justify-start bg-card p-6 sm:p-8'
+                  'group flex h-full flex-col justify-start bg-muted p-6 text-foreground sm:p-8'
                 )}
               >
                 <div className='mb-4 flex items-center gap-4'>
-                  <div className=' dark:bg-dark-primary dark:shadow-dark-card-foreground/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-primary text-primary-foreground shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] shadow-card-foreground/10 transition-transform duration-500 group-hover:scale-110'>
+                  <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-secondary-foreground shadow-sm transition-transform duration-500 group-hover:scale-110'>
                     <Feather className='size-5 stroke-[1.5]' />
                   </div>
-                  <H3 className='pb-0 text-2xl leading-none font-semibold tracking-normal text-card-foreground'>
+                  <H3 className='pb-0 text-2xl leading-none font-semibold tracking-normal text-inherit'>
                     Premium isolasjon
                   </H3>
                 </div>
-                <P className='text-lg text-card-foreground not-first:mt-0'>
+                <P className='text-lg text-inherit/90 not-first:mt-0'>
                   Kun sertifisert dun og høykvalitets syntetisk
                   fyll for optimal varme-til-vekt.
                 </P>
@@ -85,18 +85,18 @@ export async function QualitySection() {
               <div
                 className={cn(
                   cardClasses,
-                  'group  flex h-full flex-col justify-start bg-card p-6 sm:p-8'
+                  'group flex h-full flex-col justify-start bg-muted p-6 text-foreground sm:p-8'
                 )}
               >
                 <div className='mb-4 flex items-center gap-4'>
-                  <div className=' dark:bg-dark-primary dark:shadow-dark-card-foreground/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-primary text-primary-foreground shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] shadow-card-foreground/10 transition-transform duration-500 group-hover:scale-110'>
+                  <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-secondary-foreground shadow-sm transition-transform duration-500 group-hover:scale-110'>
                     <ShieldCheckIcon className='size-5 stroke-[1.5]' />
                   </div>
-                  <H3 className='pb-0 text-2xl leading-none font-semibold tracking-normal text-card-foreground'>
+                  <H3 className='pb-0 text-2xl leading-none font-semibold tracking-normal text-inherit'>
                     Bygget for å vare
                   </H3>
                 </div>
-                <P className='text-lg text-card-foreground not-first:mt-0'>
+                <P className='text-lg text-inherit/90 not-first:mt-0'>
                   Slitesterke materialer og solide sømmer som
                   tåler aktiv bruk i norske forhold.
                 </P>

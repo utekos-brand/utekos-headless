@@ -58,9 +58,9 @@ export function HytteSeasonsTabs() {
           >
             <Card
               size='sm'
-              className='  dark:ring-dark-foreground/10 relative aspect-video w-full overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-sm ring-1 ring-foreground/10 transition-shadow duration-300 [--card-spacing:0rem] group-hover:shadow-md motion-reduce:transition-none'
+              className='relative aspect-video w-full overflow-hidden rounded-lg border border-border bg-background text-foreground shadow-sm ring-1 ring-border/60 transition-shadow duration-300 [--card-spacing:0rem] group-hover:shadow-md motion-reduce:transition-none'
             >
-              <CardContent className='grid h-full place-items-center px-4 py-6 text-card-foreground sm:px-8 md:px-10'>
+              <CardContent className='grid h-full place-items-center px-4 py-6 text-inherit sm:px-8 md:px-10'>
                 <HytteSeasonAnimatedText
                   preset={season.animationPreset}
                   title={season.title}
@@ -69,7 +69,7 @@ export function HytteSeasonsTabs() {
               </CardContent>
             </Card>
 
-            <figcaption className='dark:text-dark-muted-foreground font-(family-name:--font-flex) text-2xl leading-none font-bold tracking-normal text-muted-foreground sm:text-3xl'>
+            <figcaption className='font-(family-name:--font-flex) text-2xl leading-none font-bold tracking-normal text-inherit/80 sm:text-3xl'>
               {season.label}
             </figcaption>
           </figure>

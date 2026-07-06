@@ -39,7 +39,7 @@ export function CardAspectRatioCustomContent({
         <span
           className={cn(
             justerFormNytLineClassName,
-            'text-sidebar-foreground'
+            'text-inherit'
           )}
         >
           JUSTER.
@@ -47,7 +47,7 @@ export function CardAspectRatioCustomContent({
         <span
           className={cn(
             justerFormNytLineClassName,
-            'text-sidebar-foreground'
+            'text-inherit'
           )}
         >
           FORM.
@@ -55,7 +55,7 @@ export function CardAspectRatioCustomContent({
         <span
           className={cn(
             justerFormNytLineClassName,
-            'text-sidebar-foreground'
+            'text-inherit'
           )}
         >
           NYT.

@@ -30,7 +30,7 @@ export function HyttePricingBuyButton({
     <>
       <Button
         type='button'
-        variant='commerce-primary'
+        variant='default'
         className={className}
         aria-describedby={labelledById}
         onClick={() => setIsModalOpen(true)}
