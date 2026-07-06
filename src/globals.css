@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 @import 'shadcn/tailwind.css';
-@import 'tw-merge';
 
 @custom-variant dark (&:is(.dark *));
 

@@ -1,8 +1,5 @@
 // Path: src/app/handlehjelp/sammenlign-modeller/components/CompareModelsJsonLd.tsx
-import { getProduct } from '@/api/lib/products/getProduct'
 import { productReviewBundles } from '@/db/data/reviews/productReviews'
-import { reshapeProductWithMetafields } from '@/hooks/useProductWithMetafields'
-import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { cacheLife } from 'next/cache'
 import { SITE_URL } from '@/constants'
 import type {
@@ -23,8 +20,8 @@ import type {
 } from 'schema-dts'
 import { faqItems, modelRecommendations, type ModelRecommendation } from '../utils/comparisonData'
 
-type ProductData = NonNullable<Awaited<ReturnType<typeof getProduct>>>
-type ProductVariant = ProductData['variants']['edges'][number]['node']
+type ProductData = null
+type ProductVariant = never
 type ProductOffer = Offer | AggregateOffer
 
 type ResolvedModel = {
@@ -100,23 +97,16 @@ const mapAvailability = (availableForSale: boolean): NonNullable<Offer['availabi
   availableForSale ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
 
 const getVariants = (product: ProductData | null): ProductVariant[] =>
-  product?.variants?.edges?.map(({ node }) => node) ?? []
+  []
 
 const getVariantPrices = (product: ProductData | null) =>
-  getVariants(product)
-    .map(variant => Number.parseFloat(String(variant.price?.amount ?? '')))
-    .filter(price => Number.isFinite(price) && price >= 0)
+  []
 
 const getPriceCurrency = (product: ProductData | null) =>
-  getVariants(product).find(variant => variant.price?.currencyCode)?.price?.currencyCode ?? 'NOK'
+  'NOK'
 
 const getAvailability = (product: ProductData | null) => {
-  if (!product) return undefined
-
-  const variants = getVariants(product)
-  if (variants.length === 0) return product.availableForSale
-
-  return product.availableForSale || variants.some(variant => variant.availableForSale)
+  return undefined
 }
 
 const getModelMaterial = (key: ModelRecommendation['key']) => {
@@ -321,16 +311,14 @@ const buildProductGroupOffer = (resolvedModels: ResolvedModel[]): AggregateOffer
 
 const buildModelProduct = ({ model, handle, product }: ResolvedModel): ProductSchemaWithReviews => {
   const productUrl = getProductUrl(model)
-  const cleanProductId = product?.id ? cleanShopifyId(product.id) : null
-  const productName = sanitizeText(product?.title) || model.name
-  const productDescription = sanitizeText(product?.description) || model.description
-  const featuredImage = product?.featuredImage?.url || absoluteUrl(model.imageSrc)
+  const productName = model.name
+  const productDescription = model.description
+  const featuredImage = absoluteUrl(model.imageSrc)
   const material = getModelMaterial(model.key)
 
   return {
     '@type': 'Product',
     '@id': getModelProductId(handle),
-    ...(cleanProductId ? { productID: cleanProductId } : {}),
     'name': productName,
     'alternateName': model.shortName,
     'description': productDescription,
@@ -367,25 +355,23 @@ const buildModelProduct = ({ model, handle, product }: ResolvedModel): ProductSc
   }
 }
 
+const resolveModelProduct = (model: ModelRecommendation): ResolvedModel => {
+  const handle = getHandleFromHref(model.href)
+
+  return {
+    model,
+    handle,
+    product: null
+  }
+}
+
 const serializeJsonLd = (jsonLd: Graph) => JSON.stringify(jsonLd).replace(/</g, '\\u003c')
 
 export async function CompareModelsJsonLd() {
   'use cache'
   cacheLife('max')
 
-  const resolvedModels: ResolvedModel[] = await Promise.all(
-    modelRecommendations.map(async model => {
-      const handle = getHandleFromHref(model.href)
-      const rawProduct = await getProduct(handle)
-      const product = rawProduct ? reshapeProductWithMetafields(rawProduct) || rawProduct : null
-
-      return {
-        model,
-        handle,
-        product
-      }
-    })
-  )
+  const resolvedModels: ResolvedModel[] = modelRecommendations.map(resolveModelProduct)
 
   const modelProducts = resolvedModels.map(buildModelProduct)
   const groupOffer = buildProductGroupOffer(resolvedModels)
