@@ -47,7 +47,7 @@ export function SectionThreeInOne() {
           variants={revealGroup}
         >
           <m.span
-            className='font-utekos-text-medium dark:text-dark-accent mb-3 block text-base leading-4 tracking-wide text-accent'
+            className='font-utekos-text-medium mb-3 block text-base leading-4 tracking-wide text-secondary'
             variants={revealItemLeft}
           >
             Adaptiv funksjonalitet
@@ -64,7 +64,7 @@ export function SectionThreeInOne() {
             variants={revealItem}
           >
             Det unike med Utekos
-            <span className='dark:text-dark-primary font-bold text-primary'>
+            <span className='font-bold text-secondary'>
               ®
             </span>{' '}
             er transformasjonen. Fra en isolerende kokong til en

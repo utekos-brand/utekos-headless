@@ -155,16 +155,16 @@ export function PurchaseClientViewLanding({
               >
                 <div className={choiceGridClass}>
                   {currentConfig.features.map(feature => (
-                    <BrandBadge
+                    <span
                       key={feature}
-                      tone='promo'
                       className={cn(
                         choicePillClass,
-                        'border-promo-foreground/15 dark:border-dark-promo-foreground/15 border shadow-sm'
+                        'border border-background/20 bg-background text-foreground shadow-sm',
+                        'dark:border-dark-background/20 dark:bg-dark-background dark:text-dark-foreground'
                       )}
                     >
-                      <span>{feature}</span>
-                    </BrandBadge>
+                      {feature}
+                    </span>
                   ))}
                 </div>
               </AnimatedBlock>
