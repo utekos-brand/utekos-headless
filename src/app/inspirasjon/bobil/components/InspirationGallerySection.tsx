@@ -14,13 +14,12 @@ export function InspirationGallerySection() {
   return (
     <article className='overflow-x-clip bg-background py-16 text-foreground sm:py-20 lg:py-24'>
       <div className='container mx-auto px-4 sm:px-6'>
-        <div className='mx-auto max-w-3xl text-center'>
+        <div className='mx-auto max-w-4xl text-center'>
           <H2
             Text='Utekos i sitt rette element'
             ID='utekos-i-sitt-rette-element'
-            className='mx-auto max-w-2xl text-balance pb-2 text-2xl font-semibold sm:text-3xl md:text-4xl'
           />
-          <p className='mx-auto mt-4 max-w-2xl text-base leading-relaxed text-foreground/90 sm:mt-6 sm:text-lg'>
+          <p className='mx-auto max-w-lg text-base leading-relaxed text-foreground/90 mt-2 sm:text-lg'>
             Fra morgenkaffen i soloppgang til sene kvelder under
             stjernene. La deg inspirere av ekte øyeblikk fra
             bobillivet.

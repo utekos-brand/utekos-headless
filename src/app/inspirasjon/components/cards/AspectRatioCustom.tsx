@@ -20,7 +20,7 @@ export function AspectRatioCustom({
 }
 
 const justerFormNytLineClassName =
-  'block max-w-full font-bold font-[family-name:var(--font-flex)] text-[clamp(2.5rem,min(10vw,9cqi),9rem)] leading-none tracking-tight'
+  'block max-w-full font-sans text-[clamp(5rem,min(20vw,19cqi),15rem)] leading-[0.86] font-extrabold tracking-[-0.055em]'
 
 export function CardAspectRatioCustomContent({
   className
@@ -35,11 +35,11 @@ export function CardAspectRatioCustomContent({
       )}
       ratio={141 / 122}
     >
-      <div className='flex w-full max-w-full min-w-0 flex-col items-start px-4 text-left sm:px-6'>
+      <div className='mx-auto flex w-fit max-w-full min-w-0 flex-col items-start px-4 text-left sm:px-6'>
         <span
           className={cn(
             justerFormNytLineClassName,
-            'text-inherit'
+            'text-light'
           )}
         >
           JUSTER.
@@ -47,7 +47,7 @@ export function CardAspectRatioCustomContent({
         <span
           className={cn(
             justerFormNytLineClassName,
-            'text-inherit'
+            'text-[#00957a]'
           )}
         >
           FORM.
@@ -55,7 +55,7 @@ export function CardAspectRatioCustomContent({
         <span
           className={cn(
             justerFormNytLineClassName,
-            'text-inherit'
+            'text-primary'
           )}
         >
           NYT.
@@ -73,7 +73,7 @@ export function CardAspectRatioCustom({
 }) {
   return (
     <AspectRatioCustom
-      ratio={141 / 122}
+      ratio={1 / 1}
       className={cn(
         className,
         'flex items-center justify-center overflow-hidden'
@@ -82,7 +82,7 @@ export function CardAspectRatioCustom({
       <Image
         src={KystHus}
         alt='Kysthus med Utekos-varme – juster, form og nyt uteplassen'
-        className='scale-75 object-contain'
+        className='scale-70 rounded-xl object-contain'
         width={612}
         height={705}
       />

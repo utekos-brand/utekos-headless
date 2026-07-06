@@ -1,4 +1,5 @@
 import { AnimatedBlock } from '@/components/AnimatedBlock'
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import {
   Settings2,
   HeartHandshake,
@@ -6,7 +7,8 @@ import {
   Thermometer
 } from 'lucide-react'
 import type { Benefit } from '../types'
-
+import { Lead } from '@/components/typography/Lead'
+import { H2 } from '@/components/typography/TypographyH2'
 export const benefitsData: Benefit[] = [
   {
     icon: Thermometer,
@@ -49,15 +51,10 @@ export function BenefitsGrid({
 }) {
   return (
     <article className='w-full min-w-0 overflow-x-clip border-t border-border bg-background py-24 text-foreground'>
-      <div className='container mx-auto px-4'>
+      <InspirationContentShell>
         <div className='mb-20 max-w-3xl text-left lg:max-w-4xl'>
-          <h2 className='text-fluid-display font-bold tracking-normal text-foreground'>
-            Designet for hyttelivet
-          </h2>
-          <p className='mt-5 text-lg leading-relaxed text-foreground/90'>
-            Komfort, kvalitet og smarte detaljer gjør det lett å
-            bruke hytten mer.
-          </p>
+          <H2 Text='Designet for hyttelivet' ID='benefits-grid-h2' className='mb-5' />
+          <Lead Text='Komfort, kvalitet og smarte detaljer gjør det lett å bruke hytten mer.' />
         </div>
 
         <div className='grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
@@ -85,7 +82,7 @@ export function BenefitsGrid({
             </AnimatedBlock>
           ))}
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

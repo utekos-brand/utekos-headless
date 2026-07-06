@@ -1,8 +1,10 @@
 import { HyttePricingBuyButton } from '@/app/inspirasjon/hytte/sections/HyttePricingBuyButton'
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 
 export function TailwindSection() {
   return (
-    <section className='overflow-x-clip bg-card px-6 py-24 text-card-foreground sm:py-32 lg:px-8'>
+    <section className='overflow-x-clip bg-card py-24 text-card-foreground sm:py-32'>
+      <InspirationContentShell>
       <div className='mx-auto max-w-4xl text-center'>
         <h2 className='text-base/7 font-semibold text-inherit'>
           Pris
@@ -12,7 +14,7 @@ export function TailwindSection() {
         </p>
       </div>
 
-      <p className='mx-auto mt-6 max-w-2xl text-center text-lg font-medium text-pretty text-inherit/90 sm:text-xl/8'>
+      <p className='mx-auto mt-6 max-w-2xl text-center text-lg font-utekos-text text-pretty text-inherit/90 sm:text-xl/8'>
         Velg varianten som du liker best eller egner seg til ditt
         bruksscenario for å få den beste komforten og skreddersy
         varmen etter behovene dine.
@@ -22,7 +24,7 @@ export function TailwindSection() {
         <div className='rounded-3xl rounded-t-3xl bg-background p-8 text-foreground ring-1 ring-border sm:rounded-b-none sm:p-10 lg:rounded-tr-none lg:rounded-bl-3xl'>
           <h3
             id='utekos-mikrofiber'
-            className='text-base/7 font-semibold text-inherit'
+            className='text-base/7 font-utekos-text-medium text-inherit'
           >
             Utekos Mikrofiber™
           </h3>
@@ -40,7 +42,7 @@ export function TailwindSection() {
           </p>
           <ul
             role='list'
-            className='mt-8 space-y-3 text-sm/6 text-inherit/90 sm:mt-10'
+            className='mt-8 space-y-3 text-sm/6 font-utekos-text text-inherit/90 sm:mt-10'
           >
             <li className='flex gap-x-3'>
               <svg
@@ -242,6 +244,7 @@ export function TailwindSection() {
           />
         </div>
       </div>
+      </InspirationContentShell>
     </section>
   )
 }
