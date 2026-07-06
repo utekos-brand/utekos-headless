@@ -31,11 +31,11 @@ export const CartFooter = ({ cart }: { cart: Cart | null | undefined }): React.J
     hasUnavailableLines ? 'Fjern utsolgte varer fra handlekurven før du går til kassen.' : undefined
 
   return (
-    <DrawerFooter className='border-t'>
+    <DrawerFooter className='border-t border-border bg-background'>
       {hasUnavailableLines && (
         <div
           role='alert'
-          className='rounded-md border border-destructive/20 dark:border-dark-destructive/20 bg-destructive/8 dark:bg-dark-destructive/8 px-3 py-2 text-sm leading-snug text-destructive dark:text-dark-destructive'
+          className='rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm leading-snug text-destructive'
         >
           En eller flere varer i handlekurven er ikke lenger tilgjengelige. Fjern dem før du går til kassen.
         </div>

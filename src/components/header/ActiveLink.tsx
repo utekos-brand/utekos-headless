@@ -28,10 +28,10 @@ export function ActiveLink({
       aria-current={isActive ? 'page' : undefined}
       className={cn(
         navigationMenuTriggerStyle(),
-        'text-sidebar-foreground dark:text-dark-sidebar-foreground hover:bg-sidebar-accent dark:hover:bg-dark-sidebar-accent hover:text-sidebar-accent-foreground dark:hover:text-dark-sidebar-accent-foreground focus-visible:ring-sidebar-ring dark:focus-visible:ring-dark-sidebar-ring data-[state=open]:bg-sidebar-accent dark:data-[state=open]:bg-dark-sidebar-accent data-[state=open]:text-sidebar-accent-foreground dark:data-[state=open]:text-dark-sidebar-accent-foreground',
+        'dark:hover:bg-dark-sidebar-accent dark:hover:text-dark-sidebar-accent-foreground dark:focus-visible:ring-dark-sidebar-ring dark:data-[state=open]:bg-dark-sidebar-accent dark:data-[state=open]:text-dark-sidebar-accent-foreground text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-sidebar-ring data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground',
         className,
         isActive &&
-          'bg-sidebar-accent dark:bg-dark-sidebar-accent text-sidebar-accent-foreground dark:text-dark-sidebar-accent-foreground'
+          '-accent -accent-foreground bg-sidebar-accent text-sidebar-accent-foreground'
       )}
       {...props}
     >

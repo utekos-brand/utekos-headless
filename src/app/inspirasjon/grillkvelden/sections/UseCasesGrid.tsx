@@ -15,8 +15,7 @@ export const useCasesData: UseCase[] = [
       'Hold gjestene komfortable mens de venter på den perfekte gløden.',
     color: 'bg-card ',
     iconColor: 'text-accent dark:text-dark-accent',
-    iconBackground:
-      'bg-card-foreground -foreground'
+    iconBackground: 'bg-card-foreground -foreground'
   },
   {
     icon: Users,
@@ -26,8 +25,7 @@ export const useCasesData: UseCase[] = [
       'La de gode samtalene fortsette når temperaturen faller.',
     color: 'bg-card ',
     iconColor: 'text-accent dark:text-dark-accent',
-    iconBackground:
-      'bg-card-foreground -foreground'
+    iconBackground: 'bg-card-foreground -foreground'
   },
   {
     icon: Moon,
@@ -37,8 +35,7 @@ export const useCasesData: UseCase[] = [
       'For de som blir igjen — komfort som varer til den siste samtalen.',
     color: 'bg-card ',
     iconColor: 'text-accent dark:text-dark-accent',
-    iconBackground:
-      'bg-card-foreground -foreground'
+    iconBackground: 'bg-card-foreground -foreground'
   }
 ]
 
@@ -81,7 +78,7 @@ export function UseCasesGrid({
                   <CardContent className='relative p-8'>
                     <div className='mb-6 flex items-center gap-4'>
                       <div
-                        className={`border-cloud-dancer/18 flex size-12 shrink-0 items-center justify-center rounded-full border ${useCase.iconBackground}`}
+                        className={`flex size-12 shrink-0 items-center justify-center rounded-full border border-foreground/18 ${useCase.iconBackground}`}
                       >
                         <useCase.icon
                           className={`size-6 ${useCase.iconColor}`}

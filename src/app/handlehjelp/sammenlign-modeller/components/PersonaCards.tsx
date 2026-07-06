@@ -32,7 +32,7 @@ export function PersonaCards() {
           {modelRecommendations.map(model => (
             <article
               key={model.key}
-              className='group dark:border-dark-sidebar-foreground dark:bg-dark-sidebar dark:text-dark-sidebar-foreground overflow-hidden border border-sidebar-foreground bg-sidebar text-sidebar-foreground'
+              className='group dark:border-dark-sidebar-foreground overflow-hidden border border-sidebar-foreground bg-sidebar text-sidebar-foreground'
             >
               <Link href={model.href as Route} className='block'>
                 <div className='relative aspect-4/3 overflow-hidden'>
@@ -50,27 +50,27 @@ export function PersonaCards() {
                     tone='neutral'
                     className='mb-6 px-5 py-2 text-sm'
                   />
-                  <h3 className='dark:text-dark-sidebar-foreground font-sans text-3xl leading-[0.95] font-bold tracking-[-0.01em] text-sidebar-foreground'>
+                  <h3 className='font-sans text-3xl leading-[0.95] font-bold tracking-[-0.01em] text-sidebar-foreground'>
                     {model.name}
                   </h3>
-                  <p className='dark:text-dark-sidebar-foreground mt-3 text-lg leading-[1.35] font-medium text-sidebar-foreground'>
+                  <p className='mt-3 text-lg leading-[1.35] font-medium text-sidebar-foreground'>
                     {model.bestFor}
                   </p>
-                  <p className='leading-text-paragraph dark:text-dark-sidebar-foreground mt-4 text-base text-sidebar-foreground'>
+                  <p className='leading-text-paragraph mt-4 text-base text-sidebar-foreground'>
                     {model.description}
                   </p>
-                  <ul className='dark:text-dark-sidebar-foreground mt-6 space-y-2 text-sm font-medium text-sidebar-foreground'>
+                  <ul className='mt-6 space-y-2 text-sm font-medium text-sidebar-foreground'>
                     {model.proofPoints.map(point => (
                       <li
                         key={point}
                         className='flex items-center gap-3'
                       >
-                        <span className='bg-cloud-dancer size-2 rounded-full' />
+                        <span className='size-2 rounded-full bg-foreground' />
                         {point}
                       </li>
                     ))}
                   </ul>
-                  <span className='dark:text-dark-sidebar-foreground dark:decoration-dark-sidebar-foreground dark:group-hover:text-dark-sidebar-foreground mt-7 inline-flex text-base font-medium text-sidebar-foreground underline decoration-sidebar-foreground underline-offset-8 transition-colors duration-300 group-hover:text-sidebar-foreground'>
+                  <span className='dark:decoration-dark-sidebar-foreground mt-7 inline-flex text-base font-medium text-sidebar-foreground underline decoration-sidebar-foreground underline-offset-8 transition-colors duration-300 group-hover:text-sidebar-foreground'>
                     {model.cta}
                   </span>
                 </div>

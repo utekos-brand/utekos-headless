@@ -23,7 +23,7 @@ export function ProductSpotlight() {
     >
       <div className='container mx-auto px-4'>
         <div className='grid items-center gap-12 lg:grid-cols-2'>
-          <AnimatedBlock className='border-cloud-dancer/12 relative mx-auto aspect-4/5 w-full max-w-md overflow-hidden rounded-2xl border shadow-2xl lg:max-w-none'>
+          <AnimatedBlock className='relative mx-auto aspect-4/5 w-full max-w-md overflow-hidden rounded-2xl border border-foreground/12 shadow-2xl lg:max-w-none'>
             <Image
               src={SherpaCoreImg}
               alt='Utekos Comfyrobe detaljer'
@@ -52,7 +52,7 @@ export function ProductSpotlight() {
                   delay={`${0.3 + i * 0.1}s`}
                   className='flex items-center gap-3'
                 >
-                  <div className='border-cloud-dancer/16 bg-mountain-view flex size-6 shrink-0 items-center justify-center rounded-full border'>
+                  <div className='bg-mountain-view flex size-6 shrink-0 items-center justify-center rounded-full border border-foreground/16'>
                     <Check className='size-4 text-foreground' />
                   </div>
                   <span className='leading-text-paragraph text-lg tracking-normal'>

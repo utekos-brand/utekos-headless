@@ -26,24 +26,30 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-dark-popover: var(--dark-popover);
-  --color-dark-popover-foreground: var(--dark-popover-foreground);
+  --color-dark-popover-foreground: var(
+    --dark-popover-foreground
+  );
 
   --color-light-card: var(--color-havdyp-900);
-  --color-light-card-foreground: var(--color-cloud-dancer);
+  --color-light-card-foreground: var(--color-foreground);
 
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-hover: var(--primary-hover);
   --color-primary-active: var(--primary-active);
   --color-dark-primary: var(--dark-primary);
-  --color-dark-primary-foreground: var(--dark-primary-foreground);
+  --color-dark-primary-foreground: var(
+    --dark-primary-foreground
+  );
   --color-dark-primary-hover: var(--dark-primary-hover);
   --color-dark-primary-active: var(--dark-primary-active);
 
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-dark-secondary: var(--dark-secondary);
-  --color-dark-secondary-foreground: var(--dark-secondary-foreground);
+  --color-dark-secondary-foreground: var(
+    --dark-secondary-foreground
+  );
 
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -85,13 +91,19 @@
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary-foreground: var(
+    --sidebar-primary-foreground
+  );
   --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent-foreground: var(
+    --sidebar-accent-foreground
+  );
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-dark-sidebar: var(--dark-sidebar);
-  --color-dark-sidebar-foreground: var(--dark-sidebar-foreground);
+  --color-dark-sidebar-foreground: var(
+    --dark-sidebar-foreground
+  );
   --color-dark-sidebar-primary: var(--dark-sidebar-primary);
   --color-dark-sidebar-primary-foreground: var(
     --dark-sidebar-primary-foreground
@@ -112,7 +124,9 @@
   --color-featured-foreground: var(--featured-foreground);
   --color-featured-border: var(--featured-border);
   --color-dark-featured: var(--dark-featured);
-  --color-dark-featured-foreground: var(--dark-featured-foreground);
+  --color-dark-featured-foreground: var(
+    --dark-featured-foreground
+  );
   --color-dark-featured-border: var(--dark-featured-border);
 
   --color-teal-check-product-button-background: var(
@@ -129,7 +143,9 @@
   );
 
   --color-commerce-primary: var(--commerce-primary);
-  --color-commerce-primary-foreground: var(--commerce-primary-foreground);
+  --color-commerce-primary-foreground: var(
+    --commerce-primary-foreground
+  );
   --color-commerce-primary-hover: var(--commerce-primary-hover);
   --color-commerce-primary-hover-foreground: var(
     --commerce-primary-hover-foreground
@@ -149,11 +165,15 @@
   --color-commerce-secondary-foreground: var(
     --commerce-secondary-foreground
   );
-  --color-commerce-secondary-hover: var(--commerce-secondary-hover);
+  --color-commerce-secondary-hover: var(
+    --commerce-secondary-hover
+  );
   --color-commerce-secondary-hover-foreground: var(
     --commerce-secondary-hover-foreground
   );
-  --color-dark-commerce-secondary: var(--dark-commerce-secondary);
+  --color-dark-commerce-secondary: var(
+    --dark-commerce-secondary
+  );
   --color-dark-commerce-secondary-foreground: var(
     --dark-commerce-secondary-foreground
   );
@@ -173,7 +193,9 @@
   --color-docs: var(--docs);
   --color-dark-link: var(--dark-link);
   --color-dark-badge: var(--dark-badge);
-  --color-dark-foreground-on-dark: var(--dark-foreground-on-dark);
+  --color-dark-foreground-on-dark: var(
+    --dark-foreground-on-dark
+  );
   --color-dark-heading-secondary: var(--dark-heading-secondary);
   --color-dark-paragraph: var(--dark-paragraph);
   --color-dark-split: var(--dark-split);

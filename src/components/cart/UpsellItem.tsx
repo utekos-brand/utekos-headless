@@ -2,39 +2,49 @@ import { getInitialAvailableOptions } from '@/components/ProductCard/getInitialA
 import { findMatchingVariant } from '@/components/ProductCard/findMatchingVariant'
 import { Button } from '@/components/ui/button'
 import { CartMutationContext } from '@/lib/context/CartMutationContext'
+import { cn } from '@/lib/utils/className'
 import { formatPrice } from '@/lib/utils/formatPrice'
 import type { UpsellItemProps } from 'types/cart'
 import { ArrowRightIcon, PercentIcon } from 'lucide-react'
 import Image from 'next/image'
 
-export function UpsellItem({ product, showDiscountHint }: UpsellItemProps) {
+export function UpsellItem({
+  product,
+  showDiscountHint
+}: UpsellItemProps) {
   const cartActor = CartMutationContext.useActorRef()
 
   const selectedOptions = getInitialAvailableOptions(product)
-  const selectedVariant = findMatchingVariant(product, selectedOptions)
+  const selectedVariant = findMatchingVariant(
+    product,
+    selectedOptions
+  )
 
-  const originalPrice = parseFloat(product.priceRange.minVariantPrice.amount)
-  const discountedPrice = originalPrice * 0.9 // 10% rabatt
+  const originalPrice = parseFloat(
+    product.priceRange.minVariantPrice.amount
+  )
+  const discountedPrice = originalPrice * 0.9
 
   const handleAddToCart = () => {
     if (selectedVariant) {
       cartActor.send({
         type: 'ADD_LINES',
-
         input: [{ variantId: selectedVariant.id, quantity: 1 }]
       })
     }
   }
+
   return (
     <div
-      className={`mt-4 flex flex-col gap-3 rounded-lg border ${
+      className={cn(
+        'mt-4 flex flex-col gap-3 rounded-lg border p-3',
         showDiscountHint ?
-          'border-sky-500/30 bg-sky-900/10 ring-1 ring-inset ring-sky-500/20'
-        : 'border-neutral-800 bg-neutral-900/50'
-      } p-3`}
+          'border-secondary/30 bg-secondary/10 ring-1 ring-secondary/20 ring-inset'
+        : 'border-border bg-muted/50'
+      )}
     >
       <div className='flex items-start gap-3'>
-        <div className='relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md'>
+        <div className='relative h-12 w-12 shrink-0 overflow-hidden rounded-md border border-border bg-muted'>
           {product.featuredImage && (
             <Image
               src={product.featuredImage.url}
@@ -46,23 +56,30 @@ export function UpsellItem({ product, showDiscountHint }: UpsellItemProps) {
           )}
         </div>
 
-        <div className='flex flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between min-w-0'>
-          {/* Produktinfo */}
-          <div className='flex-1 min-w-0'>
-            <p className='text-sm font-medium line-clamp-2'>{product.title}</p>
-            <div className='flex items-center gap-2 text-xs text-muted-foreground dark:text-dark-muted-foreground mt-1'>
+        <div className='flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+          <div className='min-w-0 flex-1'>
+            <p className='line-clamp-2 text-sm font-medium text-foreground'>
+              {product.title}
+            </p>
+            <div className='mt-1 flex items-center gap-2 text-xs text-muted-foreground'>
               {showDiscountHint ?
                 <>
-                  <span className='line-through'>{formatPrice(product.priceRange.minVariantPrice)}</span>
-                  <span className='font-bold text-white'>
+                  <span className='line-through'>
+                    {formatPrice(
+                      product.priceRange.minVariantPrice
+                    )}
+                  </span>
+                  <span className='font-bold text-foreground'>
                     {formatPrice({
                       amount: discountedPrice.toString(),
                       currencyCode: 'NOK'
                     })}
                   </span>
                 </>
-              : <span className='font-bold text-white'>
-                  {formatPrice(product.priceRange.minVariantPrice)}
+              : <span className='font-bold text-foreground'>
+                  {formatPrice(
+                    product.priceRange.minVariantPrice
+                  )}
                 </span>
               }
             </div>
@@ -70,9 +87,10 @@ export function UpsellItem({ product, showDiscountHint }: UpsellItemProps) {
 
           <Button
             size='sm'
+            variant='secondary'
             onClick={handleAddToCart}
             disabled={!selectedVariant}
-            className='w-full bg-ancient-water text-background dark:text-dark-background hover:bg-cloud-dancer/80 sm:w-auto sm:flex-shrink-0'
+            className='w-full sm:w-auto sm:shrink-0'
           >
             Legg til <ArrowRightIcon className='ml-2 h-4 w-4' />
           </Button>
@@ -80,8 +98,8 @@ export function UpsellItem({ product, showDiscountHint }: UpsellItemProps) {
       </div>
 
       {showDiscountHint && (
-        <div className='flex items-center justify-center text-xs font-semibold text-sky-400 border-t border-sky-500/20 pt-2'>
-          <PercentIcon className='h-3 w-3 mr-1.5' />
+        <div className='flex items-center justify-center border-t border-secondary/20 pt-2 text-xs font-semibold text-secondary'>
+          <PercentIcon className='mr-1.5 h-3 w-3' aria-hidden='true' />
           Du får 10% rabatt på dette produktet!
         </div>
       )}

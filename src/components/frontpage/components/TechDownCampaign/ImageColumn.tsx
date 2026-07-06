@@ -29,7 +29,7 @@ const images = [
 
 export function ImageColumn() {
   return (
-    <figure className='relative mx-auto w-full max-w-[440px] sm:max-w-[500px] md:max-w-[560px] lg:max-w-[620px] xl:max-w-none'>
+    <figure className='relative mx-auto w-full max-w-110 sm:max-w-125 md:max-w-140 lg:max-w-155 xl:max-w-none'>
       <div className='relative'>
         <Carousel
           slideCount={images.length}
@@ -42,7 +42,7 @@ export function ImageColumn() {
           <CarouselContent>
             {images.map((image, index) => (
               <CarouselItem key={image.src} className='h-fit'>
-                <div className='relative aspect-square overflow-hidden rounded-2xl bg-teal sm:aspect-3/4 sm:rounded-[1.25rem] lg:aspect-3/4'>
+                <div className='bg-teal relative aspect-square overflow-hidden rounded-2xl sm:aspect-3/4 sm:rounded-[1.25rem] lg:aspect-3/4'>
                   <Image
                     src={image.src}
                     alt={image.alt}
@@ -61,12 +61,12 @@ export function ImageColumn() {
 
           <CarouselPrevious
             aria-label='Forrige produktbilde'
-            className='absolute top-1/2 left-2 z-20 size-10 -translate-y-1/2 cursor-pointer border border-sidebar-foreground dark:border-dark-sidebar-foreground bg-sidebar dark:bg-dark-sidebar text-sidebar-foreground dark:text-dark-sidebar-foreground shadow-none transition-colors hover:bg-sidebar dark:hover:bg-dark-sidebar hover:text-sidebar-foreground dark:hover:text-dark-sidebar-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-foreground dark:focus-visible:outline-dark-sidebar-foreground sm:left-3 sm:size-11'
+            className='dark:border-dark-sidebar-foreground dark:hover:text-dark-sidebar-foreground dark:focus-visible:outline-dark-sidebar-foreground absolute top-1/2 left-2 z-20 size-10 -translate-y-1/2 cursor-pointer border border-sidebar-foreground bg-sidebar text-sidebar-foreground shadow-none transition-colors hover:bg-sidebar hover:text-sidebar-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-foreground sm:left-3 sm:size-11'
           />
 
           <CarouselNext
             aria-label='Neste produktbilde'
-            className='absolute top-1/2 right-2 z-20 size-10 -translate-y-1/2 cursor-pointer border border-sidebar-foreground dark:border-dark-sidebar-foreground bg-sidebar dark:bg-dark-sidebar text-sidebar-foreground dark:text-dark-sidebar-foreground shadow-none transition-colors hover:bg-sidebar dark:hover:bg-dark-sidebar hover:text-sidebar-foreground dark:hover:text-dark-sidebar-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-foreground dark:focus-visible:outline-dark-sidebar-foreground sm:right-3 sm:size-11'
+            className='dark:border-dark-sidebar-foreground dark:hover:text-dark-sidebar-foreground dark:focus-visible:outline-dark-sidebar-foreground absolute top-1/2 right-2 z-20 size-10 -translate-y-1/2 cursor-pointer border border-sidebar-foreground bg-sidebar text-sidebar-foreground shadow-none transition-colors hover:bg-sidebar hover:text-sidebar-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-foreground sm:right-3 sm:size-11'
           />
         </Carousel>
       </div>

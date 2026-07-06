@@ -13,7 +13,7 @@ export function MagazineCtaBlock({
   block
 }: MagazineCtaBlockProps) {
   return (
-    <article className='border-cloud-dancer/12 dark:bg-dark-background my-16 rounded-lg border bg-background p-6 text-foreground shadow-[0_28px_90px_-62px_color-mix(in_oklch,var(--background)_90%,transparent)] sm:p-8'>
+    <article className='dark:bg-dark-background my-16 rounded-lg border border-foreground/12 bg-background p-6 text-foreground shadow-[0_28px_90px_-62px_color-mix(in_oklch,var(--background)_90%,transparent)] sm:p-8'>
       <h2 className='max-w-2xl font-sans text-3xl leading-[0.95] font-bold text-balance sm:text-4xl'>
         <MagazineInlineTitle text={block.title} />
       </h2>
@@ -41,9 +41,9 @@ export function MagazineCtaBlock({
         {block.secondary && (
           <BrandBadge
             asChild
-            backgroundColor='var(--cloud-dancer)'
+            backgroundColor='var(--foreground)'
             textColor='var(--background)'
-            className='border-cloud-dancer/24 min-h-12 border px-6 py-3 text-base leading-[1.35] font-semibold transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105 motion-reduce:transition-none motion-reduce:hover:translate-y-0'
+            className='min-h-12 border border-foreground/24 px-6 py-3 text-base leading-[1.35] font-semibold transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105 motion-reduce:transition-none motion-reduce:hover:translate-y-0'
           >
             <Link
               href={block.secondary.href as Route}

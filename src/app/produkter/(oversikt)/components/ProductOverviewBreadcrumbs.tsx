@@ -3,7 +3,7 @@ import { UtekosBreadcrumbBar } from '@/components/navigation/UtekosBreadcrumbBar
 export function ProductOverviewBreadcrumbs() {
   return (
     <UtekosBreadcrumbBar
-      surface='light'
+      surface='transparent'
       items={[
         { label: 'Forsiden', href: '/' },
         { label: 'Produkter' }

@@ -4,12 +4,15 @@ import dynamic from 'next/dynamic'
 import { LoadWhenVisible } from '@/components/utils/LoadWhenVisible'
 
 const MikrofiberImageSection = dynamic(
-  () => import('./MikrofiberImageSection').then(module => module.MikrofiberImageSection),
+  () =>
+    import('./MikrofiberImageSection').then(
+      module => module.MikrofiberImageSection
+    ),
   {
     ssr: false,
     loading: () => (
       <div
-        className='aspect-square w-full rounded-xl bg-cloud-dancer/12'
+        className='aspect-square w-full rounded-xl bg-foreground/12'
         aria-hidden='true'
       />
     )
@@ -18,7 +21,7 @@ const MikrofiberImageSection = dynamic(
 
 const fallback = (
   <div
-    className='aspect-square w-full rounded-xl bg-cloud-dancer/12'
+    className='aspect-square w-full rounded-xl bg-foreground/12'
     aria-hidden='true'
   />
 )

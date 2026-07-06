@@ -108,7 +108,7 @@ export async function NbccProductSection() {
             }}
             containerClassName='flex w-full max-w-3xl flex-col items-center'
             panelClassName='w-full'
-            buttonClassName='h-12 w-full justify-center gap-2 rounded-md border-foreground dark:border-dark-foreground bg-card  px-6 text-foreground  hover:bg-card/90 dark:hover:bg-dark-card/90 sm:w-auto'
+            buttonClassName='h-12 w-full justify-center gap-2 rounded-md border-foreground dark:border-dark-foreground bg-card  px-6 text-foreground  hover:bg-card/90 /90 sm:w-auto'
           />
         </div>
       </div>

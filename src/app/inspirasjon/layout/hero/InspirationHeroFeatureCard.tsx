@@ -62,7 +62,7 @@ export function InspirationHeroFeatureCard({
 
         {sheen ?
           <div
-            className='pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--cloud-dancer)_24%,transparent)_0%,color-mix(in_oklch,var(--cloud-dancer)_8%,transparent)_34%,transparent_100%)]'
+            className='pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--foreground)_24%,transparent)_0%,color-mix(in_oklch,var(--foreground)_8%,transparent)_34%,transparent_100%)]'
             aria-hidden='true'
           />
         : null}
@@ -90,7 +90,7 @@ export function InspirationHeroFeatureCard({
 
             <h3
               className={cn(
-                'inspirational-page-hero-card-heading text-cloud-dancer whitespace-nowrap',
+                'inspirational-page-hero-card-heading whitespace-nowrap text-foreground',
                 titleClassName
               )}
               style={

@@ -11,11 +11,11 @@ const storyParagraphs = [
 
 export function AboutFounder() {
   return (
-    <article className='dark:bg-dark-background w-full bg-background px-6 py-20 text-foreground sm:px-8 sm:py-28 md:px-12 lg:px-16'>
+    <article className='w-full bg-background px-6 py-20 text-foreground sm:px-8 sm:py-28 md:px-12 lg:px-16'>
       <div className='mx-auto grid max-w-7xl grid-cols-1 items-start gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16'>
         {/* Kolonne 1: Tekstseksjon */}
         <div className='flex flex-col items-start'>
-          <AboutBadge variant='card' className='mb-6'>
+          <AboutBadge className='mb-6'>
             Vår historie
           </AboutBadge>
 

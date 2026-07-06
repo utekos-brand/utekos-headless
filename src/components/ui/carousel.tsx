@@ -300,7 +300,7 @@ function CarouselPrevious({
       variant={variant}
       size={size}
       className={cn(
-        '  hover:bg-card-hover dark:hover:bg-dark-card-hover dark:hover:text-dark-card-foreground absolute size-8 cursor-pointer touch-manipulation rounded-full border border-border bg-card p-0 text-card-foreground shadow-xs hover:text-card-foreground disabled:cursor-not-allowed',
+        'hover:bg-card-hover -hover absolute size-8 cursor-pointer touch-manipulation rounded-full border border-border bg-card p-0 text-card-foreground shadow-xs hover:text-card-foreground disabled:cursor-not-allowed',
         orientation === 'horizontal' ?
           'top-1/2 -left-12 -translate-y-1/2'
         : '-top-12 left-1/2 -translate-x-1/2 rotate-90',
@@ -336,7 +336,7 @@ function CarouselNext({
       variant={variant}
       size={size}
       className={cn(
-        '  hover:bg-card-hover dark:hover:bg-dark-card-hover dark:hover:text-dark-card-foreground absolute size-8 cursor-pointer touch-manipulation rounded-full border border-border bg-card p-0 text-card-foreground shadow-xs hover:text-card-foreground disabled:cursor-not-allowed',
+        'hover:bg-card-hover -hover absolute size-8 cursor-pointer touch-manipulation rounded-full border border-border bg-card p-0 text-card-foreground shadow-xs hover:text-card-foreground disabled:cursor-not-allowed',
         orientation === 'horizontal' ?
           'top-1/2 -right-12 -translate-y-1/2'
         : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',

@@ -45,7 +45,7 @@ export default function MagazineUpgradePage() {
   return (
     <main className='dark:bg-dark-background min-h-screen bg-background text-foreground'>
       <UtekosBreadcrumbBar
-        surface='dark'
+        surface='transparent'
         items={[
           { label: 'Forsiden', href: '/' },
           { label: 'Magasinet', href: '/magasinet' },

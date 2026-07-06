@@ -29,12 +29,10 @@ const fairImages = [
 
 export function AboutEvents() {
   return (
-    <article className='dark:bg-dark-background bg-background py-20 text-foreground sm:py-28'>
+    <article className='bg-background py-20 text-foreground sm:py-28'>
       <div className='mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8'>
         <div>
-          <AboutBadge variant='card' className='mb-6'>
-            Møteplasser
-          </AboutBadge>
+          <AboutBadge className='mb-6'>Møteplasser</AboutBadge>
           <h2 className='text-4xl leading-tight font-semibold text-foreground sm:text-5xl'>
             Der du har møtt oss
           </h2>
@@ -50,7 +48,7 @@ export function AboutEvents() {
                 key={`${event.name}-${event.date}`}
                 className='flex gap-4'
               >
-                <div className=' dark:text-dark-primary flex size-11 shrink-0 items-center justify-center rounded-md bg-card text-primary'>
+                <div className='flex size-11 shrink-0 items-center justify-center rounded-md bg-muted text-ceramic'>
                   <MapPin
                     aria-hidden='true'
                     className='size-5'
@@ -73,7 +71,7 @@ export function AboutEvents() {
           {fairImages.map((src, index) => (
             <div
               key={src}
-              className='  relative aspect-4/3 overflow-hidden rounded-lg border border-border bg-card'
+              className='relative aspect-4/3 overflow-hidden rounded-lg border border-border bg-card'
             >
               <Image
                 src={src}

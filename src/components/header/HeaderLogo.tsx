@@ -17,7 +17,7 @@ export function HeaderLogo() {
           width={58}
           height={58}
           loading='eager'
-          className='size-12 rounded-full ring ring-cloud-dancer/80 md:size-14 lg:size-[58px]'
+          className='size-12 rounded-full ring ring-foreground/80 md:size-14 lg:size-14.5'
         />
       </Link>
     </div>

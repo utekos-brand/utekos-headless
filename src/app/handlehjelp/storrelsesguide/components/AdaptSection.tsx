@@ -6,12 +6,12 @@ export function AdaptSection() {
   return (
     <SizeGuideSectionShell
       id='utekos-measurements'
-      surface='background'
+      surface='card'
       ariaLabelledby='utekos-measurements-heading'
     >
       <h2
         id='utekos-measurements-heading'
-        className='max-w-4xl font-sans text-4xl leading-[1.05] font-bold text-foreground md:text-5xl lg:text-6xl'
+        className='max-w-4xl font-sans text-4xl leading-[1.05] font-bold text-inherit md:text-5xl lg:text-6xl'
       >
         Skapt for å tilpasses
       </h2>
@@ -20,16 +20,16 @@ export function AdaptSection() {
         {adaptFeatures.map(feature => (
           <div
             key={feature.title}
-            className='dark:border-dark-foreground/12  h-full rounded-lg border border-foreground/12 bg-card p-6 text-left shadow-[0_18px_46px_-38px_color-mix(in_oklab,var(--background)_90%,transparent)]'
+            className='h-full rounded-lg border border-border bg-background p-6 text-left text-foreground shadow-[0_18px_46px_-38px_color-mix(in_oklab,var(--background)_90%,transparent)]'
           >
             <div className='flex items-center gap-4'>
-              <div className='bg-teal flex size-12 shrink-0 items-center justify-center rounded-full text-foreground'>
+              <div className='flex size-12 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground'>
                 <feature.Icon
                   className='size-6'
                   aria-hidden='true'
                 />
               </div>
-              <h3 className='font-utekos-text-medium text-lg text-foreground'>
+              <h3 className='font-utekos-text-medium text-lg'>
                 {feature.title}
               </h3>
             </div>
@@ -42,15 +42,15 @@ export function AdaptSection() {
 
       <div className='mt-12 w-full'>
         <div
-          className='dark:focus-visible:ring-dark-foreground/80 dark:focus-visible:ring-offset-dark-background w-full overflow-x-auto rounded-lg text-left focus-visible:ring-2 focus-visible:ring-foreground/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none'
+          className='w-full overflow-x-auto rounded-lg text-left focus-visible:ring-2 focus-visible:ring-foreground/80 focus-visible:ring-offset-2 focus-visible:ring-offset-card focus-visible:outline-none'
           role='region'
           aria-label='Måletabell for Utekos Dun og Mikrofiber størrelser'
           tabIndex={0}
         >
           <div className='w-full max-lg:min-w-max'>
-            <div className='dark:border-dark-foreground/12 overflow-hidden rounded-lg border border-foreground/12 shadow-[0_22px_54px_-42px_color-mix(in_oklab,var(--background)_90%,transparent)]'>
-              <table className='dark:divide-dark-foreground/12  w-full divide-y divide-foreground/12 bg-card text-foreground max-lg:min-w-xl'>
-                <thead className='dark:bg-dark-sidebar dark:text-dark-sidebar-foreground bg-sidebar text-sidebar-foreground'>
+            <div className='overflow-hidden rounded-lg border border-border shadow-[0_22px_54px_-42px_color-mix(in_oklab,var(--background)_90%,transparent)]'>
+              <table className='w-full divide-y divide-border bg-background text-foreground max-lg:min-w-xl'>
+                <thead className='bg-secondary text-secondary-foreground'>
                   <tr>
                     <th
                       scope='col'
@@ -72,11 +72,11 @@ export function AdaptSection() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className='dark:divide-dark-foreground/12 divide-y divide-foreground/12'>
+                <tbody className='divide-y divide-border'>
                   {utekosData.map(item => (
                     <tr
                       key={item.measurement}
-                      className='dark:hover:bg-dark-background/35 transition-colors hover:bg-background/35'
+                      className='transition-colors hover:bg-muted/35'
                     >
                       <td className='py-4 pr-3 pl-4 text-left text-sm font-semibold whitespace-nowrap text-foreground sm:pl-6'>
                         {item.measurement}

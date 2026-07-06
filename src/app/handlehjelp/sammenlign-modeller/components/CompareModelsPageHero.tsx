@@ -45,7 +45,7 @@ export function CompareModelsPageHero() {
             </BrandBadge>
             <Link
               href='#sammenligning'
-              className='hover:text-overcast decoration-cloud-dancer/35 text-base font-medium text-foreground underline underline-offset-8 transition-colors duration-300'
+              className='hover:text-overcast text-base font-medium text-foreground underline decoration-foreground/35 underline-offset-8 transition-colors duration-300'
             >
               Se tabellen
             </Link>

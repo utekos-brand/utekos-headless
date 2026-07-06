@@ -56,13 +56,14 @@ export default function ProductCarePage() {
       </ProductCareSection>
 
       <ProductCareSection
+        id='faq-section'
         tone='elevated'
         aria-labelledby='faq-heading'
       >
         <ProductCareFaq />
       </ProductCareSection>
 
-      <BackToShopCta className='bg-transparent' />
+      <BackToShopCta />
     </article>
   )
 }

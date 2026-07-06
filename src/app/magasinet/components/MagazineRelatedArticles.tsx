@@ -16,10 +16,10 @@ export function MagazineRelatedArticles({
   }
 
   return (
-    <article className='border-t border-background/10 dark:border-dark-background/10 bg-cloud-dancer py-16 text-background dark:text-dark-background'>
+    <article className='dark:border-dark-background/10 dark:text-dark-background border-t border-background/10 bg-foreground py-16 text-background'>
       <div className='container mx-auto px-4'>
         <header className='mb-8 max-w-2xl'>
-          <p className='text-sm leading-4 font-semibold text-havdyp'>
+          <p className='text-havdyp text-sm leading-4 font-semibold'>
             Les videre
           </p>
           <h2 className='mt-2 font-sans text-4xl leading-[0.95] font-bold'>
@@ -31,7 +31,7 @@ export function MagazineRelatedArticles({
             <li key={article.slug}>
               <Link
                 href={`/magasinet/${article.slug}` as Route}
-                className='group bg-overcast block h-full overflow-hidden rounded-lg border border-background/10 dark:border-dark-background/10 transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0'
+                className='group bg-overcast dark:border-dark-background/10 block h-full overflow-hidden rounded-lg border border-background/10 transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0'
               >
                 <Image
                   src={article.heroImage.src}
@@ -42,10 +42,10 @@ export function MagazineRelatedArticles({
                   className='aspect-16/10 h-auto w-full object-cover'
                 />
                 <div className='p-5'>
-                  <h3 className='font-sans text-2xl leading-[0.98] font-bold text-background dark:text-dark-background transition-colors group-hover:text-havdyp'>
+                  <h3 className='dark:text-dark-background group-hover:text-havdyp font-sans text-2xl leading-[0.98] font-bold text-background transition-colors'>
                     <MagazineInlineTitle text={article.title} />
                   </h3>
-                  <p className='mt-3 text-sm leading-normal text-background/72 dark:text-dark-background/72'>
+                  <p className='dark:text-dark-background/72 mt-3 text-sm leading-normal text-background/72'>
                     {article.excerpt}
                   </p>
                 </div>

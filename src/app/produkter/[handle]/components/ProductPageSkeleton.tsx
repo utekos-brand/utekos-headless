@@ -13,28 +13,28 @@ export function ProductPageSkeleton() {
 
       <div className='container mx-auto px-4 md:px-8'>
         <div className='mb-8 flex items-center gap-2'>
-          <Skeleton className='bg-cloud-dancer/70 h-5 w-16' />
-          <Skeleton className='bg-cloud-dancer/70 h-5 w-4' />
-          <Skeleton className='bg-cloud-dancer/70 h-5 w-24' />
-          <Skeleton className='bg-cloud-dancer/70 h-5 w-4' />
-          <Skeleton className='bg-cloud-dancer/70 h-5 w-32' />
+          <Skeleton className='h-5 w-16 bg-foreground/70' />
+          <Skeleton className='h-5 w-4 bg-foreground/70' />
+          <Skeleton className='h-5 w-24 bg-foreground/70' />
+          <Skeleton className='h-5 w-4 bg-foreground/70' />
+          <Skeleton className='h-5 w-32 bg-foreground/70' />
         </div>
 
         <ProductPageGrid>
           <GalleryColumn>
             <div className='mx-auto h-fit w-full max-w-lg md:sticky md:top-8'>
-              <Skeleton className='bg-cloud-dancer/70 aspect-2/3 w-full rounded-3xl' />
+              <Skeleton className='aspect-2/3 w-full rounded-3xl bg-foreground/70' />
             </div>
           </GalleryColumn>
 
           <OptionsColumn>
             <div className='hidden md:block'>
-              <Skeleton className='bg-cloud-dancer/70 h-10 w-full' />
-              <Skeleton className='bg-cloud-dancer/70 mt-3 h-6 w-2/3' />
+              <Skeleton className='h-10 w-full bg-foreground/70' />
+              <Skeleton className='mt-3 h-6 w-2/3 bg-foreground/70' />
             </div>
-            <Skeleton className='bg-cloud-dancer/70 mt-6 hidden h-8 w-28 md:block' />
+            <Skeleton className='mt-6 hidden h-8 w-28 bg-foreground/70 md:block' />
 
-            <div className='border-cloud-dancer/70 bg-cloud-dancer/72 rounded-3xl border p-6 md:mt-6'>
+            <div className='rounded-3xl border border-foreground/70 bg-foreground/72 p-6 md:mt-6'>
               <div className='mt-10 space-y-8'>
                 <div className='space-y-2'>
                   <Skeleton className='bg-overcast/80 h-4 w-20' />

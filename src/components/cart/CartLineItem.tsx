@@ -32,7 +32,9 @@ interface CartLineItemProps {
 export const CartLineItem = ({ lineId }: CartLineItemProps) => {
   const line = useCartLine(lineId)
   const cartActor = CartMutationContext.useActorRef()
-  const [localQuantity, setLocalQuantity] = useState(line?.quantity ?? 1)
+  const [localQuantity, setLocalQuantity] = useState(
+    line?.quantity ?? 1
+  )
   const [isDeleting, setIsDeleting] = useState(false)
   const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -71,10 +73,7 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
       updateTimerRef.current = setTimeout(() => {
         cartActor.send({
           type: 'UPDATE_LINE',
-          input: {
-            lineId: line.id,
-            quantity: newQuantity
-          }
+          input: { lineId: line.id, quantity: newQuantity }
         })
       }, 300)
     }
@@ -89,36 +88,51 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
     })
   }
 
-  const productTitle: string = line.merchandise.product?.title || 'Produkt'
+  const productTitle: string =
+    line.merchandise.product?.title || 'Produkt'
   const productHandle: string = line.merchandise.product?.handle
 
   const variantId: string = line.merchandise.id
-  const baseUrl: string = productHandle ? `/produkter/${productHandle}` : '/'
-  const variantQuery: string | number = variantId ? `?variant=${encodeURIComponent(variantId)}` : ''
+  const baseUrl: string =
+    productHandle ? `/produkter/${productHandle}` : '/'
+  const variantQuery: string | number =
+    variantId ? `?variant=${encodeURIComponent(variantId)}` : ''
 
   const productUrl: string = `${baseUrl}${variantQuery}` as Route
 
   const variantTitle: string = line.merchandise.title || ''
-  const imageUrl: string | undefined = line.merchandise.image?.url
+  const imageUrl: string | undefined =
+    line.merchandise.image?.url
   const [color, size]: string[] = variantTitle.split(' / ')
-  const basePrice: number = parseFloat(line.cost?.totalAmount?.amount || '0') / line.quantity
+  const basePrice: number =
+    parseFloat(line.cost?.totalAmount?.amount || '0') /
+    line.quantity
   const displayPrice: number = basePrice * localQuantity
 
   return (
     <div
       className={cn('flex gap-4 transition-all duration-200', {
-        'opacity-50 pointer-events-none': isDeleting
+        'pointer-events-none opacity-50': isDeleting
       })}
     >
-      <Link href={productUrl as Route} onClick={() => cartStore.send({ type: 'CLOSE' })}>
+      <Link
+        href={productUrl as Route}
+        onClick={() => cartStore.send({ type: 'CLOSE' })}
+      >
         <div className='w-24 shrink-0'>
           <AspectRatio
             ratio={1 / 1}
-            className='overflow-hidden rounded-lg border border-neutral-700 bg-background dark:bg-dark-background'
+            className='overflow-hidden rounded-lg border border-border bg-muted'
           >
             {imageUrl ?
-              <Image src={imageUrl} alt={productTitle} fill className='object-cover' sizes='96px' />
-            : <div className='flex size-full items-center justify-center text-gray-400'>
+              <Image
+                src={imageUrl}
+                alt={productTitle}
+                fill
+                className='object-cover'
+                sizes='96px'
+              />
+            : <div className='flex size-full items-center justify-center text-muted-foreground'>
                 <span className='text-xs'>Ingen bilde</span>
               </div>
             }
@@ -129,37 +143,53 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
       <div className='flex min-w-0 flex-1 flex-col'>
         <div className='relative'>
           <div className='min-w-0 pr-8'>
-            <Link href={productUrl as Route} onClick={() => cartStore.send({ type: 'CLOSE' })}>
-              <h3 className='wrap-break-word text-sm font-medium hover:underline'>{productTitle}</h3>
+            <Link
+              href={productUrl as Route}
+              onClick={() => cartStore.send({ type: 'CLOSE' })}
+            >
+              <h3 className='text-sm font-medium wrap-break-word text-foreground hover:underline'>
+                {productTitle}
+              </h3>
             </Link>
             {color && size && (
-              <p className='mt-1 text-xs text-muted-foreground dark:text-dark-muted-foreground'>
+              <p className='mt-1 text-xs text-muted-foreground'>
                 {color} / {size}
               </p>
             )}
           </div>
-          <div className='absolute -right-2 md:right-0 top-0'>
+          <div className='absolute top-0 -right-2 md:right-0'>
             <AlertDialog>
               <AlertDialogTrigger
                 disabled={isDeleting}
-                className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'size-6 p-0')}
+                className={cn(
+                  buttonVariants({
+                    variant: 'ghost',
+                    size: 'icon'
+                  }),
+                  'size-6 p-0'
+                )}
               >
-                <Trash2 className='size-4 text-red-500' />
+                <Trash2 className='size-4 text-destructive' />
               </AlertDialogTrigger>
 
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Er du sikker?</AlertDialogTitle>
+                  <AlertDialogTitle>
+                    Er du sikker?
+                  </AlertDialogTitle>
                   <AlertDialogDescription>
-                    Vil du fjerne {productTitle} fra handlekurven din?
+                    Vil du fjerne {productTitle} fra handlekurven
+                    din?
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Nei, avbryt</AlertDialogCancel>
+                  <AlertDialogCancel>
+                    Nei, avbryt
+                  </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleRemoveLine}
                     data-track='CartRemoveItem'
-                    className='text-background dark:text-dark-background hover:text-havdyp'
+                    variant='destructive'
                     data-track-data={JSON.stringify({
                       product: productTitle,
                       variant: variantTitle,
@@ -180,28 +210,34 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
             <Activity>
               <Button
                 size='icon'
-                className='size-7 rounded-md bg-cloud-dancer text-background dark:text-dark-background hover:bg-cloud-dancer/90 transition-transform active:scale-90'
-                onClick={() => handleUpdateQuantity(localQuantity - 1)}
+                variant='secondary'
+                className='size-7 rounded-md transition-transform active:scale-90'
+                onClick={() =>
+                  handleUpdateQuantity(localQuantity - 1)
+                }
                 disabled={localQuantity <= 1 || isDeleting}
               >
                 <Minus className='size-3' />
               </Button>
             </Activity>
-            <span className='min-w-7 text-center text-sm font-medium tabular-nums transition-all duration-100'>
+            <span className='min-w-7 text-center text-sm font-medium text-foreground tabular-nums transition-all duration-100'>
               {localQuantity}
             </span>
             <Activity>
               <Button
                 size='icon'
-                className='size-7 rounded-md bg-cloud-dancer text-background dark:text-dark-background hover:bg-cloud-dancer/90 transition-transform active:scale-90'
-                onClick={() => handleUpdateQuantity(localQuantity + 1)}
+                variant='secondary'
+                className='size-7 rounded-md transition-transform active:scale-90'
+                onClick={() =>
+                  handleUpdateQuantity(localQuantity + 1)
+                }
                 disabled={isDeleting || localQuantity >= 99}
               >
                 <Plus className='size-3' />
               </Button>
             </Activity>
           </div>
-          <span className='whitespace-nowrap text-sm font-medium tabular-nums'>
+          <span className='text-sm font-medium whitespace-nowrap text-foreground tabular-nums'>
             {formatNOK(displayPrice)}
           </span>
         </div>

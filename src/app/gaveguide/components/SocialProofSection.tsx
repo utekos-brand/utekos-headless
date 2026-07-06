@@ -5,7 +5,7 @@ import mormor3 from '@public/mormor3.webp'
 
 export function SocialProofSection() {
   return (
-    <article className='dark:bg-dark-sidebar-foreground bg-sidebar-foreground py-24'>
+    <article className='-foreground bg-sidebar-foreground py-24'>
       <div className='container mx-auto px-4'>
         <div className='mx-auto max-w-3xl text-center'>
           <Card className='dark:bg-dark-background border-neutral-800 bg-background'>

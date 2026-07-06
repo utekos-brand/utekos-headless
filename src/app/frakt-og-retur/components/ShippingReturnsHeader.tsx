@@ -9,7 +9,7 @@ export function ShippingReturnsHeader() {
           label='Fri frakt over 999 kr'
           backgroundColor='var(--card)'
           textColor='var(--foreground)'
-          className='border-cloud-dancer/6 mb-6 border px-8 py-4 text-left text-sm md:text-base'
+          className='mb-6 border border-foreground/6 px-8 py-4 text-left text-sm md:text-base'
         />
         <h1 className='font-sans text-4xl font-bold text-foreground sm:text-4xl md:text-5xl lg:text-6xl'>
           Frakt og retur - enkelt og trygt

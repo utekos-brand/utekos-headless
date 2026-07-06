@@ -38,7 +38,7 @@ export function PopularSpotsGrid({
   destinations: Destination[]
 }) {
   return (
-    <article className='text-cloud-dancer bg-background dark:bg-dark-background py-24'>
+    <article className='dark:bg-dark-background bg-background py-24 text-foreground'>
       <div className='container mx-auto px-4'>
         <div className='mx-auto mb-16 max-w-2xl text-center'>
           <h2 className='text-fluid-display font-bold tracking-normal'>
@@ -57,7 +57,7 @@ export function PopularSpotsGrid({
               delay={`${destinationIndex * 0.1}s`}
               threshold={0.2}
             >
-              <Card className='border-cloud-dancer/12 bg-background/58 dark:bg-dark-background/58 transition-colors hover:bg-background dark:hover:bg-dark-background'>
+              <Card className='dark:bg-dark-background/58 dark:hover:bg-dark-background border-foreground/12 bg-background/58 transition-colors hover:bg-background'>
                 <CardContent className='p-6'>
                   <div className='mb-3 flex items-start justify-between'>
                     <h3 className='text-lg font-semibold'>

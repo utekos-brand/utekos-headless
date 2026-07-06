@@ -47,7 +47,7 @@ export function UseCasesGrid({
     <article id='bruksomrader' className='bg-overcast py-24'>
       <div className='container mx-auto px-4'>
         <div className='mx-auto mb-16 max-w-2xl text-center'>
-          <h2 className='text-fluid-display font-bold tracking-normal text-background dark:text-dark-background'>
+          <h2 className='text-fluid-display dark:text-dark-background font-bold tracking-normal text-background'>
             Fra forberedelse til varmen
           </h2>
           <p className='text-ancient-water mt-4 text-lg'>
@@ -63,13 +63,13 @@ export function UseCasesGrid({
               delay={`${useCaseIndex * 0.1}s`}
               threshold={0.2}
             >
-              <Card className='border-cloud-dancer/12 group @container relative h-full overflow-hidden bg-background dark:bg-dark-background'>
+              <Card className='group dark:bg-dark-background @container relative h-full overflow-hidden border-foreground/12 bg-background'>
                 <div
                   className={`absolute inset-0 bg-linear-to-br ${useCase.color} to-transparent opacity-20 transition-opacity group-hover:opacity-30`}
                 />
                 <CardContent className='relative p-8'>
                   <div className='mb-6 flex items-center gap-4'>
-                    <div className='border-cloud-dancer/18 flex size-12 items-center justify-center rounded-lg border bg-background/58 dark:bg-dark-background/58'>
+                    <div className='dark:bg-dark-background/58 flex size-12 items-center justify-center rounded-lg border border-foreground/18 bg-background/58'>
                       <useCase.icon
                         className={`size-6 ${useCase.iconColor}`}
                       />
@@ -78,12 +78,12 @@ export function UseCasesGrid({
                       <p className='text-ancient-water text-sm'>
                         {useCase.time}
                       </p>
-                      <p className='text-cloud-dancer text-sm font-medium'>
+                      <p className='text-sm font-medium text-foreground'>
                         {useCase.temperature}
                       </p>
                     </div>
                   </div>
-                  <h3 className='text-cloud-dancer mb-2 text-xl font-semibold'>
+                  <h3 className='mb-2 text-xl font-semibold text-foreground'>
                     {useCase.title}
                   </h3>
                   <p className='text-ancient-water'>

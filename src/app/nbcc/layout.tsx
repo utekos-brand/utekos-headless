@@ -11,7 +11,7 @@ export default function NbccLayout({
     <>
       <NbccPageJsonLd />
       <UtekosBreadcrumbBar
-        surface='light'
+        surface='transparent'
         items={[
           { label: 'Forsiden', href: '/' },
           { label: 'NBCC-medlemsfordel' }

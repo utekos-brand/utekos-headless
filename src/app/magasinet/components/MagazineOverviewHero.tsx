@@ -13,7 +13,7 @@ export function MagazineOverviewHero({
           <BrandBadge
             backgroundColor='var(--ancient-water)'
             textColor='var(--background)'
-            className='border-cloud-dancer/12 gap-2 border px-5 py-2 text-sm leading-[1.35] font-semibold'
+            className='gap-2 border border-foreground/12 px-5 py-2 text-sm leading-[1.35] font-semibold'
           >
             <UtekosWordmark className='h-4 w-auto' />
             <span>Magasinet</span>

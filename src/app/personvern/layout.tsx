@@ -11,7 +11,7 @@ export default function PrivacyPolicyLayout({
     <>
       <PrivacyPolicyJsonLd />
       <UtekosBreadcrumbBar
-        surface='light'
+        surface='transparent'
         items={[
           { label: 'Forsiden', href: '/' },
           { label: 'Personvern' }

@@ -11,7 +11,7 @@ export default function TermsLayout({
     <>
       <TermsPageJsonLd />
       <UtekosBreadcrumbBar
-        surface='light'
+        surface='transparent'
         items={[
           { label: 'Forsiden', href: '/' },
           { label: 'Vilkår og betingelser' }

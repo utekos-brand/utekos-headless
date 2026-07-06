@@ -73,8 +73,7 @@ export function UseCasesGrid({
             {useCases.map((useCase, useCaseIndex) => {
               const Icon = useCase.icon
               const iconBackgroundClass =
-                useCase.bgColor ??
-                'bg-sidebar dark:bg-dark-sidebar'
+                useCase.bgColor ?? 'bg-sidebar '
 
               return (
                 <AnimatedBlock
@@ -84,12 +83,12 @@ export function UseCasesGrid({
                   threshold={0.2}
                 >
                   <Card
-                    className={`group  @container relative h-full overflow-hidden border-border ${useCase.color}`}
+                    className={`group @container relative h-full overflow-hidden border-border ${useCase.color}`}
                   >
                     <CardContent className='relative p-8'>
                       <div className='mb-6 flex items-center gap-4'>
                         <div
-                          className={`${iconBackgroundClass}  flex size-12 items-center justify-center rounded-lg border border-border`}
+                          className={`${iconBackgroundClass} flex size-12 items-center justify-center rounded-lg border border-border`}
                         >
                           <Icon
                             className={`size-6 ${useCase.iconColor}`}

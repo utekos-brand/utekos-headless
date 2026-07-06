@@ -24,7 +24,7 @@ export function ProductPageErrorState({
 
       <article
         aria-labelledby='product-error-heading'
-        className='border-cloud-dancer/70 bg-cloud-dancer/72 shadow-havdyp/10 mx-auto max-w-2xl rounded-[1.75rem] border p-8 text-center shadow-2xl backdrop-blur-sm sm:p-10'
+        className='shadow-havdyp/10 mx-auto max-w-2xl rounded-[1.75rem] border border-foreground/70 bg-foreground/72 p-8 text-center shadow-2xl backdrop-blur-sm sm:p-10'
       >
         <div className='border-havdyp/14 bg-havdyp mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full border text-foreground'>
           <AlertTriangle
@@ -54,7 +54,7 @@ export function ProductPageErrorState({
           <Button
             asChild
             variant='outline'
-            className='border-havdyp/20 bg-cloud-dancer text-havdyp hover:bg-ancient-water h-12 rounded-full px-7'
+            className='border-havdyp/20 text-havdyp hover:bg-ancient-water h-12 rounded-full bg-foreground px-7'
           >
             <Link href='/produkter'>Se alle produkter</Link>
           </Button>

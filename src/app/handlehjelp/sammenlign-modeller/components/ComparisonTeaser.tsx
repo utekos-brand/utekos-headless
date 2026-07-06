@@ -17,14 +17,14 @@ const models = [
       '(UTSOLGT) - Alternativet for deg som ønsker dun.',
     icon: Feather,
     cardClass:
-      'border-border  bg-card  text-card-foreground  hover:bg-card-hover dark:hover:bg-dark-card-hover',
+      'border-border  bg-card  text-card-foreground  hover:bg-card-hover -hover',
     iconShellClass:
       'border-border  bg-primary dark:bg-dark-primary text-primary-foreground ',
     iconClass: 'text-primary-foreground ',
     textClass: 'text-card-foreground ',
     descriptionClass: 'text-card-foreground ',
     lesmerClass:
-      'text-card-foreground  group-hover:text-card-foreground dark:group-hover:text-dark-card-foreground'
+      'text-card-foreground  group-hover:text-card-foreground dark:group-hover:text-foreground/90-foreground'
   },
   {
     title: 'Utekos TechDown™',
@@ -33,14 +33,14 @@ const models = [
       'Vår nyeste, varmeste og mest allsidige modell.',
     icon: Droplets,
     cardClass:
-      'border-border  bg-card  text-card-foreground  hover:bg-card-hover dark:hover:bg-dark-card-hover',
+      'border-border  bg-card  text-card-foreground  hover:bg-card-hover -hover',
     iconShellClass:
       'border-border  bg-primary dark:bg-dark-primary text-primary-foreground ',
     iconClass: 'text-primary-foreground ',
     textClass: 'text-card-foreground ',
     descriptionClass: 'text-card-foreground ',
     lesmerClass:
-      'text-card-foreground  group-hover:text-card-foreground dark:group-hover:text-dark-card-foreground'
+      'text-card-foreground  group-hover:text-card-foreground dark:group-hover:text-foreground/90-foreground'
   },
   {
     title: 'Utekos Mikrofiber™',
@@ -49,14 +49,14 @@ const models = [
       'For for bruk i aktivitet eller varmere temperaturer.',
     icon: Layers,
     cardClass:
-      'border-border  bg-card  text-card-foreground  hover:bg-card-hover dark:hover:bg-dark-card-hover',
+      'border-border  bg-card  text-card-foreground  hover:bg-card-hover -hover',
     iconShellClass:
       'border-border  bg-primary dark:bg-dark-primary text-primary-foreground ',
     iconClass: 'text-primary-foreground ',
     textClass: 'text-card-foreground ',
     descriptionClass: 'text-card-foreground ',
     lesmerClass:
-      'text-card-foreground  group-hover:text-card-foreground dark:group-hover:text-dark-card-foreground'
+      'text-card-foreground  group-hover:text-card-foreground dark:group-hover:text-foreground/90-foreground'
   }
 ]
 

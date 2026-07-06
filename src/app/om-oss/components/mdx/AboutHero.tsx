@@ -39,7 +39,7 @@ export function AboutHero({
             className='h-auto w-[min(82vw,22rem)] text-foreground sm:w-[min(76vw,40rem)] lg:w-[min(72vw,52rem)]'
           />
         </h1>
-        <AboutBadge variant='card'>{eyebrow}</AboutBadge>
+        <AboutBadge>{eyebrow}</AboutBadge>
         <p className='/90 mx-auto max-w-3xl text-xl leading-8 text-balance text-foreground/90 sm:text-3xl sm:leading-10'>
           {description}
         </p>

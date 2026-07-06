@@ -27,7 +27,9 @@ export const CartBody = () => {
         {lineIds?.map((lineId, index) => (
           <div key={lineId}>
             <CartLineItem lineId={lineId} />
-            {index < lineIds.length - 1 && <div className='my-4 border-b' />}
+            {index < lineIds.length - 1 && (
+              <div className='my-4 border-b border-border' />
+            )}
           </div>
         ))}
       </div>

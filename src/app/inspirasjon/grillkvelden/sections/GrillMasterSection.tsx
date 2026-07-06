@@ -20,9 +20,9 @@ export function GrillMasterSection() {
             </span>
           </h2>
 
-          <Card className='border-cloud-dancer/18 bg-demitasse shadow-[0_28px_80px_-54px_color-mix(in_oklch,var(--background)_82%,transparent)]'>
+          <Card className='bg-demitasse border-foreground/18 shadow-[0_28px_80px_-54px_color-mix(in_oklch,var(--background)_82%,transparent)]'>
             <CardContent className='p-8 sm:p-12'>
-              <blockquote className='leading-text-paragraph text-cloud-dancer mb-6 text-xl tracking-[-0.02em]'>
+              <blockquote className='leading-text-paragraph mb-6 text-xl tracking-[-0.02em] text-foreground'>
                 &quot;Jeg elsker å arrangere grillfester, men
                 hatet at folk dro inn så snart det ble kjølig.
                 Utekos endret alt. Festen fortsetter ute — rundt
@@ -38,7 +38,7 @@ export function GrillMasterSection() {
                   className='size-12 rounded-full object-cover'
                 />
                 <div className='text-left'>
-                  <p className='text-cloud-dancer leading-tight font-semibold tracking-[-0.01em]'>
+                  <p className='leading-tight font-semibold tracking-[-0.01em] text-foreground'>
                     Hans Åge
                   </p>
                   <p className='leading-text-paragraph text-ancient-water text-sm tracking-[-0.02em]'>

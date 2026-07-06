@@ -22,10 +22,10 @@ export const grillSectionSurfaces = {
     muted: 'text-secondary-foreground dark:text-dark-secondary-foreground'
   },
   dark: {
-    section: 'bg-maritime-darkest py-24 text-cloud-dancer',
-    heading: 'text-cloud-dancer',
-    lead: 'text-cloud-dancer',
-    body: 'text-cloud-dancer',
-    muted: 'text-cloud-dancer'
+    section: 'bg-maritime-darkest py-24 text-foreground',
+    heading: 'text-foreground',
+    lead: 'text-foreground',
+    body: 'text-foreground',
+    muted: 'text-foreground'
   }
 } as const

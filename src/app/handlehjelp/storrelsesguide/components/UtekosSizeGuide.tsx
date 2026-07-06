@@ -7,30 +7,30 @@ export function UtekosSizeGuide() {
   return (
     <SizeGuideSectionShell
       id='utekos-size-guide'
-      surface='teal'
+      surface='background'
       ariaLabelledby='utekos-size-guide-heading'
     >
       <div className='max-w-5xl'>
         <BrandBadge
           label='Mikrofiber™'
-          bgColor='var(--sidebar-foreground)'
-          fgColor='var(--sidebar)'
-          className=' mb-5 min-w-24 place-content-start border border-border px-4 py-2 text-left text-lg md:px-6 md:py-3'
+          bgColor='var(--card)'
+          fgColor='var(--card-foreground)'
+          className='mb-5 min-w-24 place-content-start border border-border px-4 py-2 text-left text-lg md:px-6 md:py-3'
         />
         <h2
           id='utekos-size-guide-heading'
-          className='dark:text-dark-sidebar-foreground pt-4 pb-6 text-3xl leading-[1.05] font-bold text-sidebar-foreground md:text-5xl lg:text-6xl'
+          className='pt-4 pb-6 text-3xl leading-[1.05] font-bold text-foreground md:text-5xl lg:text-6xl'
         >
           En unik tilnærming til passform
         </h2>
 
-        <p className='font-utekos-text dark:text-dark-sidebar-foreground/90 max-w-3xl text-2xl leading-tight text-sidebar-foreground/90'>
+        <p className='font-utekos-text /90 max-w-3xl text-2xl leading-tight text-foreground/90'>
           Mer enn bare en størrelse. <br />
           En garanti for komfort gjennom suveren tilpasningsevne.
         </p>
       </div>
 
-      <div className='brand-tracking-normal font-utekos-text dark:text-dark-sidebar-foreground/90 mt-12 max-w-5xl space-y-6 text-left text-lg leading-relaxed text-sidebar-foreground/90'>
+      <div className='brand-tracking-normal font-utekos-text /90 mt-12 max-w-5xl space-y-6 text-left text-lg leading-relaxed text-foreground/90'>
         <p>
           Vi har designet Utekos Dun og Mikrofiber med en unik
           filosofi: ultimat komfort gjennom suveren
@@ -54,23 +54,20 @@ export function UtekosSizeGuide() {
             title={card.title}
             items={card.items}
             classes={{
-              outer: 'bg-card ',
+              outer: 'bg-card',
               inner:
-                'bg-background dark:bg-dark-background text-foreground  text-left ring-foreground/12 dark:ring-dark-foreground/12 shadow-[0_18px_46px_-38px_color-mix(in_oklab,var(--background)_90%,transparent)]',
-              list: 'text-foreground ',
-              separator:
-                'border-foreground/12 dark:border-dark-foreground/12',
+                'bg-background text-foreground text-left ring-foreground/12 shadow-[0_18px_46px_-38px_color-mix(in_oklab,var(--background)_90%,transparent)]',
+              list: 'text-foreground',
+              separator: 'border-border',
               footerLabel: 'text-foreground/90 /90',
-              iconCircle: 'fill-card/35 dark:fill-dark-card/35',
-              iconRing:
-                'stroke-foreground/25 dark:stroke-dark-foreground/25',
-              iconPath:
-                'stroke-foreground dark:stroke-dark-foreground'
+              iconCircle: 'fill-card/35',
+              iconRing: 'stroke-foreground/25',
+              iconPath: 'stroke-foreground'
             }}
             footer={
               <a
                 href='#utekos-measurements'
-                className='decoration-teal text-foreground underline underline-offset-3 hover:decoration-2'
+                className='text-foreground underline decoration-primary underline-offset-3 hover:decoration-2'
               >
                 Se måletabellen &darr;
               </a>

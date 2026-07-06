@@ -183,7 +183,7 @@ export const CheckoutButton = ({
   return (
     <Button
       asChild
-      variant='checkout'
+      variant='secondary'
       className={cn(
         'cursor-pointer hover:brightness-95 aria-disabled:cursor-not-allowed',
         className

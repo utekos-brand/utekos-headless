@@ -11,7 +11,7 @@ export default function UtekosOriginalLayout({
     <>
       <SkreddersyVarmenJsonLd />
       <UtekosBreadcrumbBar
-        surface='light'
+        surface='transparent'
         items={[
           { label: 'Forsiden', href: '/' },
           {

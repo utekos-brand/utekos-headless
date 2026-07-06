@@ -22,12 +22,12 @@ export async function CTASection() {
   }
 
   return (
-    <article className='border-cloud-dancer/12 relative overflow-hidden border-t bg-background dark:bg-dark-background py-24'>
+    <article className='dark:bg-dark-background relative overflow-hidden border-t border-foreground/12 bg-background py-24'>
       <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,var(--ancient-water)_0%,transparent_34%),radial-gradient(circle_at_85%_10%,var(--soft-warm)_0%,transparent_28%)] opacity-[0.18]' />
 
       <div className='relative container mx-auto px-4'>
         <AnimatedBlock className='will-animate-fade-in-scale mb-12 text-center'>
-          <h2 className='text-fluid-display text-cloud-dancer mb-4 leading-[0.95] font-bold tracking-normal'>
+          <h2 className='text-fluid-display mb-4 leading-[0.95] font-bold tracking-normal text-foreground'>
             Sikre deg varmen nå
           </h2>
           <p className='leading-text-paragraph text-ancient-water mx-auto max-w-2xl text-xl tracking-normal'>
@@ -40,7 +40,7 @@ export async function CTASection() {
           className='will-animate-fade-in-up'
           delay='0.2s'
         >
-          <div className='border-cloud-dancer/12 mx-auto max-w-6xl rounded-3xl border bg-background dark:bg-dark-background p-6 shadow-2xl md:p-12'>
+          <div className='dark:bg-dark-background mx-auto max-w-6xl rounded-3xl border border-foreground/12 bg-background p-6 shadow-2xl md:p-12'>
             <ComfyrobeQuickBuy product={product} />
           </div>
         </AnimatedBlock>

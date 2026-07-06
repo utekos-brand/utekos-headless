@@ -26,7 +26,8 @@ export function HeroActions() {
         {/* Primærknapp: Varm, konverterende kontrast (Iced Apricot) mot den mørke kveldsbakgrunnen */}
         <BrandBadge
           asChild
-          tone='commerce-primary'
+          bgColor='var(--primary)'
+          fgColor='var(--primary-foreground)'
           className='h-12 w-full px-5 py-0 text-sm leading-none font-semibold tracking-normal shadow-xl transition-[filter,transform] hover:brightness-105 active:scale-[0.97] md:h-14 md:text-base'
         >
           <button
@@ -49,7 +50,8 @@ export function HeroActions() {
 
         <BrandBadge
           asChild
-          tone='commerce-secondary'
+          bgColor='var(--secondary)'
+          fgColor='var(--secondary-foreground)'
           className='h-12 w-full px-5 py-0 text-sm leading-none font-semibold tracking-normal shadow-sm transition-[filter,transform] hover:brightness-110 active:scale-[0.97] md:h-14 md:text-base'
         >
           <button
@@ -76,7 +78,7 @@ export function HeroActions() {
         type='button'
         onClick={() => smoothScrollTo(SCROLL_TARGETS.solution)}
         aria-label='Bla videre'
-        className='dark:hover:text-dark-foreground absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-foreground/75 transition-[opacity,transform] duration-300 hover:translate-y-1 hover:text-foreground hover:opacity-100 md:flex'
+        className='absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-foreground/75 transition-[opacity,transform] duration-300 hover:translate-y-1 hover:text-foreground hover:opacity-100 md:flex'
       >
         <span className='text-[10px] font-semibold tracking-normal'>
           Bla videre

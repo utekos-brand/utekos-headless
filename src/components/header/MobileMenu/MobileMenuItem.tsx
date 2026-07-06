@@ -19,9 +19,9 @@ export function MobileMenuItem({ item }: { item: MenuItem }) {
     return (
       <Link
         href={normalizeShopifyUrl(item.url) as Route}
-        className='group border-cloud-dancer/10 bg-cloud-dancer/[0.055] hover:border-cloud-dancer/18 hover:bg-cloud-dancer/[0.075] focus-visible:ring-cloud-dancer/38 relative flex w-full items-center justify-between rounded-2xl border px-4 py-4 text-foreground transition-[background,border-color,transform] focus-visible:ring-2 active:scale-[0.99]'
+        className='group relative flex w-full items-center justify-between rounded-2xl border border-foreground/10 bg-foreground/5.5 px-4 py-4 text-foreground transition-[background,border-color,transform] hover:border-foreground/18 hover:bg-foreground/7.5 focus-visible:ring-2 focus-visible:ring-foreground/38 active:scale-[0.99]'
       >
-        <div className='absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 [background:radial-gradient(120%_120%_at_50%_0%,color-mix(in_oklab,var(--cloud-dancer)_12%,transparent),transparent_65%)] group-active:opacity-100' />
+        <div className='absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 [background:radial-gradient(120%_120%_at_50%_0%,color-mix(in_oklab,var(--foreground)_12%,transparent),transparent_65%)] group-active:opacity-100' />
         <div className='relative flex min-w-0 items-center gap-3'>
           <span className='truncate text-[15px] leading-[1.2] font-semibold tracking-[-0.01em]'>
             {item.title}
@@ -35,7 +35,7 @@ export function MobileMenuItem({ item }: { item: MenuItem }) {
 
   return (
     <AccordionItem value={item.title} className='border-none'>
-      <AccordionTrigger className='group border-cloud-dancer/10 bg-cloud-dancer/[0.055] hover:border-cloud-dancer/18 hover:bg-cloud-dancer/[0.075] focus-visible:ring-cloud-dancer/38 data-[state=open]:border-very-peri/34 data-[state=open]:bg-cloud-dancer/[0.085] relative flex w-full items-center justify-between rounded-2xl border px-4 py-4 text-foreground transition-[background,border-color] hover:no-underline focus-visible:ring-2'>
+      <AccordionTrigger className='group data-[state=open]:border-very-peri/34 relative flex w-full items-center justify-between rounded-2xl border border-foreground/10 bg-foreground/5.5 px-4 py-4 text-foreground transition-[background,border-color] hover:border-foreground/18 hover:bg-foreground/7.5 hover:no-underline focus-visible:ring-2 focus-visible:ring-foreground/38 data-[state=open]:bg-foreground/8.5'>
         <div className='absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 [background:radial-gradient(120%_120%_at_50%_0%,color-mix(in_oklab,var(--very-peri)_16%,transparent),transparent_70%)] group-data-[state=open]:opacity-100' />
         <div className='relative flex min-w-0 items-center gap-3'>
           <span className='truncate text-[15px] leading-[1.2] font-semibold tracking-[-0.01em]'>
@@ -45,7 +45,7 @@ export function MobileMenuItem({ item }: { item: MenuItem }) {
       </AccordionTrigger>
 
       <AccordionContent className='pt-2 pb-0'>
-        <div className='border-cloud-dancer/10 dark:bg-dark-background/54 rounded-2xl border bg-background/54 p-2 backdrop-blur'>
+        <div className='dark:bg-dark-background/54 rounded-2xl border border-foreground/10 bg-background/54 p-2 backdrop-blur'>
           <div className='space-y-1.5'>
             {item.items!.map(subItem => (
               <SubMenuItem key={subItem.title} item={subItem} />

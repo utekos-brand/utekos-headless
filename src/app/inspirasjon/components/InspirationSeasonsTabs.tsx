@@ -96,10 +96,10 @@ export function InspirationSeasonsTabs({
     : 'group-data-[orientation=horizontal]/tabs:h-auto grid w-full grid-cols-2 gap-3 bg-transparent p-0 sm:grid-cols-4'
 
   const roundedTriggerClassName =
-    'inspiration-seasons-tab-trigger relative flex !h-auto min-h-20 w-full flex-col items-center justify-center overflow-hidden rounded-xl border border-cloud-dancer/12 bg-background/58 dark:bg-dark-background/58 px-3 py-3 transition-all duration-300 hover:border-cloud-dancer/28 hover:bg-background/72 dark:hover:bg-dark-background/72 data-active:border-cloud-dancer/24 data-active:bg-primary dark:data-active:bg-dark-primary data-active:text-background dark:data-active:text-dark-background'
+    'inspiration-seasons-tab-trigger relative flex !h-auto min-h-20 w-full flex-col items-center justify-center overflow-hidden rounded-xl border border-foreground/12 bg-background/58 dark:bg-dark-background/58 px-3 py-3 transition-all duration-300 hover:border-foreground/28 hover:bg-background/72 dark:hover:bg-dark-background/72 data-active:border-foreground/24 data-active:bg-primary dark:data-active:bg-dark-primary data-active:text-background dark:data-active:text-dark-background'
 
   const pillTriggerClassName =
-    'relative flex !h-auto w-full items-center justify-center overflow-hidden rounded-lg border border-cloud-dancer/12 bg-background/58 dark:bg-dark-background/58 px-3 py-3 transition-all duration-300 hover:border-cloud-dancer/28 data-active:border-cloud-dancer/18 data-active:bg-background dark:data-active:bg-dark-background data-active:text-cloud-dancer'
+    'relative flex !h-auto w-full items-center justify-center overflow-hidden rounded-lg border border-foreground/12 bg-background/58 dark:bg-dark-background/58 px-3 py-3 transition-all duration-300 hover:border-foreground/28 data-active:border-foreground/18 data-active:bg-background dark:data-active:bg-dark-background data-active:text-foreground'
 
   return (
     <Tabs
@@ -112,7 +112,7 @@ export function InspirationSeasonsTabs({
           const Icon = getSeasonIcon(season.iconName)
           const isActive = activeTab === season.value
           const activeClassName =
-            tabActiveClassName ?? 'text-cloud-dancer'
+            tabActiveClassName ?? 'text-foreground'
           const inactiveClassName =
             tabInactiveClassName ?? 'text-ancient-water'
 
@@ -148,7 +148,7 @@ export function InspirationSeasonsTabs({
                     'size-5 transition-colors',
                     variant === 'pill' ?
                       isActive ? season.iconColor
-                      : 'text-muted-foreground dark:text-dark-muted-foreground'
+                      : 'dark:text-dark-muted-foreground text-muted-foreground'
                     : isActive ? activeClassName
                     : inactiveClassName
                   )}
@@ -160,8 +160,8 @@ export function InspirationSeasonsTabs({
                       [
                         'hidden font-medium sm:inline',
                         isActive ?
-                          'text-cloud-dancer'
-                        : 'text-muted-foreground dark:text-dark-muted-foreground'
+                          'text-foreground'
+                        : 'dark:text-dark-muted-foreground text-muted-foreground'
                       ]
                     : [
                         'font-sans font-bold tracking-[-0.01em]',
@@ -192,7 +192,7 @@ export function InspirationSeasonsTabs({
             <div className='inspiration-seasons-tab-content-enter'>
               <Card
                 className={cn(
-                  'relative overflow-hidden rounded-2xl border-cloud-dancer/12 bg-background/58 dark:bg-dark-background/58 py-0',
+                  'dark:bg-dark-background/58 relative overflow-hidden rounded-2xl border-foreground/12 bg-background/58 py-0',
                   contentCardClassName
                 )}
               >
@@ -216,7 +216,7 @@ export function InspirationSeasonsTabs({
                     <div className='mb-5 flex items-center gap-4'>
                       <div
                         className={cn(
-                          'flex size-12 shrink-0 items-center justify-center rounded-xl border border-cloud-dancer/18 bg-background dark:bg-dark-background transition-shadow duration-300',
+                          'dark:bg-dark-background flex size-12 shrink-0 items-center justify-center rounded-xl border border-foreground/18 bg-background transition-shadow duration-300',
                           contentIconClassName
                         )}
                         style={
@@ -237,7 +237,7 @@ export function InspirationSeasonsTabs({
                       </div>
                       <H3
                         className={cn(
-                          'pb-0 text-2xl leading-none text-cloud-dancer sm:text-3xl',
+                          'pb-0 text-2xl leading-none text-foreground sm:text-3xl',
                           contentTitleClassName
                         )}
                       >
@@ -251,7 +251,7 @@ export function InspirationSeasonsTabs({
                     </div>
                     <P
                       className={cn(
-                        'text-left text-lg leading-relaxed text-ancient-water not-first:mt-0',
+                        'text-ancient-water text-left text-lg leading-relaxed not-first:mt-0',
                         contentTextClassName
                       )}
                     >
@@ -264,12 +264,12 @@ export function InspirationSeasonsTabs({
                       {season.tips.map((tip, index) => (
                         <li
                           key={index}
-                          className='inspiration-seasons-tip-enter flex items-start gap-3 rounded-xl border border-cloud-dancer/10 bg-background/36 dark:bg-dark-background/36 p-4'
+                          className='inspiration-seasons-tip-enter dark:bg-dark-background/36 flex items-start gap-3 rounded-xl border border-foreground/10 bg-background/36 p-4'
                           style={{
                             animationDelay: `${index * 0.1}s`
                           }}
                         >
-                          <div className='mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border border-cloud-dancer/18 bg-background dark:bg-dark-background'>
+                          <div className='dark:bg-dark-background mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border border-foreground/18 bg-background'>
                             <Check
                               className={`size-4 ${season.iconColor}`}
                             />

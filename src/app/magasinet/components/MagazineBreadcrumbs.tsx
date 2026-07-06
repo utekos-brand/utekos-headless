@@ -13,5 +13,5 @@ export function MagazineBreadcrumbs({ article }: Props) {
       ]
     : [{ label: 'Hjem', href: '/' }, { label: 'Magasinet' }]
 
-  return <UtekosBreadcrumbBar surface='dark' items={items} />
+  return <UtekosBreadcrumbBar surface='transparent' items={items} />
 }

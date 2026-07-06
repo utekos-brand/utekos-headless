@@ -30,9 +30,9 @@ const utekosCardVariants = cva(
           'dark:border-dark-foreground/10 dark:ring-dark-foreground/10 border-foreground/10 bg-[linear-gradient(145deg,var(--color-mountain-view),var(--color-deep-forest))] text-foreground ring-foreground/10',
         ember:
           'dark:border-dark-foreground/10 dark:ring-dark-foreground/10 border-foreground/10 bg-[linear-gradient(145deg,var(--color-ganache),var(--color-chocolate-truffle))] text-foreground ring-foreground/10',
-        sand: 'dark:border-dark-card-foreground/10 dark:ring-dark-card-foreground/10 border-card-foreground/10 bg-[linear-gradient(145deg,var(--color-cloud-dancer),var(--color-white-down))] text-card-foreground ring-card-foreground/10',
-        rose: 'dark:border-dark-card-foreground/10 dark:ring-dark-card-foreground/10 border-card-foreground/10 bg-[linear-gradient(145deg,var(--color-fairy-tale),var(--color-bleached-mauve-light))] text-card-foreground ring-card-foreground/10',
-        tide: 'dark:border-dark-card-foreground/10 dark:ring-dark-card-foreground/10 border-card-foreground/10 bg-[linear-gradient(145deg,var(--color-quiet-tide),var(--color-ancient-water))] text-card-foreground ring-card-foreground/10',
+        sand: 'border-card-foreground/10 bg-[linear-gradient(145deg,var(--color-foreground),var(--color-white-down))] text-card-foreground ring-card-foreground/10',
+        rose: 'border-card-foreground/10 bg-[linear-gradient(145deg,var(--color-fairy-tale),var(--color-bleached-mauve-light))] text-card-foreground ring-card-foreground/10',
+        tide: 'border-card-foreground/10 bg-[linear-gradient(145deg,var(--color-quiet-tide),var(--color-ancient-water))] text-card-foreground ring-card-foreground/10',
         peri: 'dark:border-dark-foreground/10 dark:ring-dark-foreground/10 border-foreground/10 bg-[linear-gradient(145deg,var(--color-eggplant),var(--color-amethyst-purple))] text-foreground ring-foreground/10'
       },
       density: {

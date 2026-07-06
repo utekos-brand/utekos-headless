@@ -75,13 +75,13 @@ export function HostTipsGrid({ tips }: { tips: HostTip[] }) {
                       <div
                         className={`absolute inset-0 ${theme.glow}`}
                       />
-                      <div className='bg-cloud-dancer/24 absolute inset-x-0 top-0 h-px' />
+                      <div className='absolute inset-x-0 top-0 h-px bg-foreground/24' />
                     </div>
 
                     <CardContent className='relative flex h-full flex-col p-6'>
                       <div className='mb-4 flex items-center gap-4'>
                         <div
-                          className='flex size-10 shrink-0 items-center justify-center rounded-full border border-background/10 dark:border-dark-background/10 transition-transform duration-300 motion-safe:group-hover:-translate-y-0.5'
+                          className='dark:border-dark-background/10 flex size-10 shrink-0 items-center justify-center rounded-full border border-background/10 transition-transform duration-300 motion-safe:group-hover:-translate-y-0.5'
                           style={{
                             backgroundColor: `var(${theme.iconSurface})`
                           }}

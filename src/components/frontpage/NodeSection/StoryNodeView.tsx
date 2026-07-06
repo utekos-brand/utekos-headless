@@ -20,8 +20,7 @@ const sharedStoryCardStyles = {
 const toneStyles = {
   before: {
     ...sharedStoryCardStyles,
-    glow:
-      'from-card-foreground/10 via-card-foreground/4 to-transparent',
+    glow: 'from-card-foreground/10 via-card-foreground/4 to-transparent',
     description: 'text-card-foreground/86'
   },
   after: {
@@ -77,15 +76,17 @@ export function StoryNodeView({
                 role='presentation'
                 className='h-[0.72em] w-[2.95em] translate-y-[0.055em] text-card-foreground'
               />
-              <span className='text-[0.82em] leading-none'>®:</span>
+              <span className='text-[0.82em] leading-none'>
+                ®:
+              </span>
             </span>
           </H3>
         </div>
 
-        <div className='max-w-[26rem] text-left sm:pl-21'>
+        <div className='max-w-104 text-left sm:pl-21'>
           <P
             className={cn(
-              'text-xl leading-snug font-utekos-text-medium tracking-normal not-first:mt-0 sm:text-2xl',
+              'font-utekos-text-medium text-xl leading-snug tracking-normal not-first:mt-0 sm:text-2xl',
               styles.description
             )}
           >

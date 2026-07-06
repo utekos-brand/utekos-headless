@@ -13,7 +13,7 @@
 :root {
   color-scheme: light;
 
-  --background: var(--color-cloud-dancer);
+  --background: var(--color-foreground);
   --foreground: var(--color-secondary-source);
 
   --card: var(--color-fresh-sky-750);

@@ -34,7 +34,7 @@ export default function SizeGuideLayout({
       >
         <SizeGuideJsonLd />
         <UtekosBreadcrumbBar
-          surface='light'
+          surface='transparent'
           items={[
             { label: 'Forsiden', href: '/' },
             { label: 'Størrelsesguide' }

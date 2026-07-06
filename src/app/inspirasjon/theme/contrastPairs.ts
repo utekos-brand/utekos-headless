@@ -17,20 +17,23 @@ export const contrastPairs = {
   },
   cardTitleOnAccentDark: {
     id: 'cardTitleOnAccentDark',
-    foreground: 'var(--cloud-dancer)',
+    foreground: 'var(--foreground)',
     background: 'var(--skipper-blue)'
   },
   heroCardContrast: {
     id: 'heroCardContrast',
-    foreground: 'var(--cloud-dancer)',
+    foreground: 'var(--foreground)',
     background: 'var(--mountain-view)'
   }
 } as const satisfies Record<ContrastPairId, ContrastPair>
 
 export const heroCardContrast = contrastPairs.heroCardContrast
 
-export function contrastPairStyle(pair: ContrastPair | ContrastPairId) {
-  const resolved = typeof pair === 'string' ? contrastPairs[pair] : pair
+export function contrastPairStyle(
+  pair: ContrastPair | ContrastPairId
+) {
+  const resolved =
+    typeof pair === 'string' ? contrastPairs[pair] : pair
 
   return {
     color: resolved.foreground,

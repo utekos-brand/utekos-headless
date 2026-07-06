@@ -6,7 +6,7 @@ export function GaveGuideHero() {
       <div className='container mx-auto px-4'>
         <UtekosBreadcrumbBar
           embedded
-          surface='embeddedDark'
+          surface='transparent'
           className='mb-6 justify-center'
           listClassName='justify-center'
           items={[

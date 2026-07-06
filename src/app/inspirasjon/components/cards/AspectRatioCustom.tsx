@@ -39,7 +39,7 @@ export function CardAspectRatioCustomContent({
         <span
           className={cn(
             justerFormNytLineClassName,
-            'text-sidebar-foreground dark:text-dark-sidebar-foreground'
+            'text-sidebar-foreground'
           )}
         >
           JUSTER.
@@ -47,7 +47,7 @@ export function CardAspectRatioCustomContent({
         <span
           className={cn(
             justerFormNytLineClassName,
-            'text-sidebar-foreground dark:text-dark-sidebar-foreground'
+            'text-sidebar-foreground'
           )}
         >
           FORM.
@@ -55,7 +55,7 @@ export function CardAspectRatioCustomContent({
         <span
           className={cn(
             justerFormNytLineClassName,
-            'text-sidebar-foreground dark:text-dark-sidebar-foreground'
+            'text-sidebar-foreground'
           )}
         >
           NYT.

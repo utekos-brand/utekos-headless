@@ -92,7 +92,7 @@ export function InspirationSeasonsSection({
             ID='inspiration-seasons-title'
             Text={title}
             className={cn(
-              'pb-0 text-left text-cloud-dancer',
+              'pb-0 text-left text-foreground',
               titleClassName
             )}
           />

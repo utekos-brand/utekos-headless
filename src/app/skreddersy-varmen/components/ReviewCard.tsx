@@ -43,7 +43,7 @@ export function ReviewCard({ review }: { review: Review }) {
         </h3>
       )}
 
-      {/* Cloud-dancer med litt transparens for behagelig lese-kontrast i brødteksten */}
+      {/* foreground med litt transparens for behagelig lese-kontrast i brødteksten */}
       <p className='leading-text-paragraph /85 mb-6 text-sm tracking-[-0.01em] text-foreground/85 md:text-base'>
         {review.quote}
       </p>

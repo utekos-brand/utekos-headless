@@ -69,7 +69,7 @@ export function ProductDescription({
   return (
     <article
       aria-labelledby='product-description-heading'
-      className='  font-utekos-text dark:shadow-dark-background/20 mt-12 rounded-[1.25rem] border border-border bg-card p-5 text-card-foreground shadow-lg shadow-background/20 sm:p-6'
+      className='font-utekos-text dark:shadow-dark-background/20 mt-12 rounded-[1.25rem] border border-border bg-card p-5 text-card-foreground shadow-lg shadow-background/20 sm:p-6'
     >
       <div
         id='product-description-content'
@@ -109,7 +109,7 @@ export function ProductDescription({
             onClick={() =>
               setIsDescriptionExpanded(prev => !prev)
             }
-            className='dark:hover:text-dark-card-foreground min-h-11 cursor-pointer p-0 text-base font-semibold tracking-normal text-card-foreground underline-offset-4 hover:text-card-foreground hover:underline'
+            className='min-h-11 cursor-pointer p-0 text-base font-semibold tracking-normal text-card-foreground underline-offset-4 hover:text-card-foreground hover:underline'
           >
             {isDescriptionExpanded ? 'Vis mindre' : 'Les mer'}
           </Button>

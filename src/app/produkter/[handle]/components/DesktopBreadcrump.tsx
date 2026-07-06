@@ -15,7 +15,7 @@ export function DesktopBreadcrump({
     >
       <UtekosBreadcrumbBar
         embedded
-        surface='embeddedLight'
+        surface='transparent'
         className='mb-8'
         items={[
           { label: 'Forside', href: '/' },

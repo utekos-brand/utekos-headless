@@ -26,7 +26,7 @@ export default function InspirationPage() {
       <div className='container mx-auto max-w-4xl px-4'>
         <UtekosBreadcrumbBar
           embedded
-          surface='light'
+          surface='transparent'
           className='mb-8'
           items={[
             { label: 'Forsiden', href: '/' },

@@ -109,7 +109,7 @@ export function ComfyrobeQuickBuy({ product }: Props) {
 
                 return (
                   <CarouselItem key={img.id}>
-                    <div className='border-cloud-dancer/12 dark:bg-dark-background relative aspect-square w-full overflow-hidden rounded-xl border bg-background'>
+                    <div className='dark:bg-dark-background relative aspect-square w-full overflow-hidden rounded-xl border border-foreground/12 bg-background'>
                       <Image
                         src={imageUrl}
                         alt={altText}
@@ -124,8 +124,8 @@ export function ComfyrobeQuickBuy({ product }: Props) {
             )}
           </CarouselContent>
           <div className='block'>
-            <CarouselPrevious className='border-cloud-dancer/12 dark:bg-dark-background/70 text-cloud-dancer dark:hover:bg-dark-background left-4 border bg-background/70 backdrop-blur-md hover:bg-background' />
-            <CarouselNext className='border-cloud-dancer/12 dark:bg-dark-background/70 text-cloud-dancer dark:hover:bg-dark-background right-4 border bg-background/70 backdrop-blur-md hover:bg-background' />
+            <CarouselPrevious className='dark:bg-dark-background/70 dark:hover:bg-dark-background left-4 border border-foreground/12 bg-background/70 text-foreground backdrop-blur-md hover:bg-background' />
+            <CarouselNext className='dark:bg-dark-background/70 dark:hover:bg-dark-background right-4 border border-foreground/12 bg-background/70 text-foreground backdrop-blur-md hover:bg-background' />
           </div>
         </Carousel>
       </div>
@@ -143,7 +143,7 @@ export function ComfyrobeQuickBuy({ product }: Props) {
               label='På lager'
               backgroundColor='var(--ancient-water)'
               textColor='var(--background)'
-              className='border-cloud-dancer/14 border px-3 py-1.5 text-xs leading-4 font-semibold tracking-normal'
+              className='border border-foreground/14 px-3 py-1.5 text-xs leading-4 font-semibold tracking-normal'
             />
           </div>
         </div>
@@ -198,9 +198,9 @@ export function ComfyrobeQuickBuy({ product }: Props) {
                     'relative flex h-12 items-center justify-center rounded-md border text-sm leading-4 font-medium tracking-normal transition-all',
                     isSelected ?
                       'dark:border-dark-primary/60 dark:bg-dark-primary dark:text-dark-background dark:ring-dark-primary/35 border-primary/60 bg-primary text-background ring-1 ring-primary/35'
-                    : 'border-cloud-dancer/14 dark:bg-dark-background/58 text-overcast hover:border-cloud-dancer/28 dark:hover:text-dark-foreground bg-background/58 hover:text-foreground',
+                    : 'dark:bg-dark-background/58 text-overcast dark:hover:text-dark-foreground border-foreground/14 bg-background/58 hover:border-foreground/28 hover:text-foreground',
                     !isAvailable &&
-                      'border-cloud-dancer/10 dark:bg-dark-background/45 text-overcast/55 cursor-not-allowed bg-background/45 box-decoration-slice line-through opacity-60'
+                      'dark:bg-dark-background/45 text-overcast/55 cursor-not-allowed border-foreground/10 bg-background/45 box-decoration-slice line-through opacity-60'
                   )}
                 >
                   {displayName}
@@ -248,7 +248,7 @@ export function ComfyrobeQuickBuy({ product }: Props) {
           </div>
         </div>
         <ComfyrobeAccordion />
-        <div className='border-cloud-dancer/12 bg-cloud-dancer/[0.035] mt-8 rounded-xl border p-6'>
+        <div className='mt-8 rounded-xl border border-foreground/12 bg-foreground/[0.035] p-6'>
           <NewsletterForm />
         </div>
       </div>

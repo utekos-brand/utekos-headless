@@ -17,7 +17,7 @@ export function AboutBreadcrumbBar({
 
   return (
     <UtekosBreadcrumbBar
-      surface='light'
+      surface='transparent'
       items={breadcrumbItems}
     />
   )

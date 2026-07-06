@@ -8,7 +8,7 @@ export function ProductPageBreadcrumb({
   return (
     <UtekosBreadcrumbBar
       embedded
-      surface='embeddedLight'
+      surface='transparent'
       items={[
         { label: 'Forside', href: '/' },
         { label: 'Produkter', href: '/produkter' },

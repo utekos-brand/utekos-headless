@@ -13,7 +13,7 @@ export default function CookieSettingsButton() {
       onClick={openSettings}
       className={cn(
         buttonVariants({ variant: 'link' }),
-        'p-0 h-auto text-sm text-sidebar-foreground/80 dark:text-dark-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground dark:hover:text-dark-sidebar-foreground'
+        '/80 dark:hover:text-dark-sidebar-foreground h-auto p-0 text-sm text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground'
       )}
     >
       Innstillinger for informasjonskapsler

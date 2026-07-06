@@ -8,10 +8,10 @@ import { AboutBadge } from './AboutBadge'
 
 export function AboutRetailer() {
   return (
-    <article className='dark:bg-dark-secondary dark:text-dark-secondary-foreground bg-secondary py-20 text-secondary-foreground sm:py-28'>
+    <article className='bg-card py-20 text-card-foreground sm:py-28'>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-        <div className='dark:bg-dark-background grid grid-cols-1 items-center gap-10 rounded-3xl bg-background p-6 md:grid-cols-[0.85fr_1.15fr] md:p-8 lg:p-10'>
-          <div className='dark:bg-dark-foreground flex min-h-48 items-center justify-center rounded-lg bg-foreground p-8'>
+        <div className='grid grid-cols-1 items-center gap-10 rounded-3xl border border-border bg-background p-6 text-foreground md:grid-cols-[0.85fr_1.15fr] md:p-8 lg:p-10'>
+          <div className='flex min-h-48 items-center justify-center rounded-lg border border-border bg-white p-8'>
             <Image
               src={IntersportLogo}
               alt='Intersport logo'
@@ -22,10 +22,7 @@ export function AboutRetailer() {
           </div>
 
           <div>
-            <AboutBadge
-              variant='accent'
-              className=' mb-6 border border-border'
-            >
+            <AboutBadge className='mb-6'>
               Fysisk butikk i Bergen
             </AboutBadge>
             <h2 className='font-sans text-3xl leading-tight font-semibold text-foreground sm:text-4xl'>
@@ -39,7 +36,8 @@ export function AboutRetailer() {
             </p>
             <Button
               asChild
-              className='dark:bg-dark-primary hover:bg-primary-hover dark:hover:bg-dark-primary-hover mt-8 min-h-12 gap-2 rounded-3xl bg-primary px-8 py-3 text-base font-semibold text-primary-foreground'
+              variant='secondary'
+              className='mt-8 min-h-12 gap-2 rounded-3xl px-8 py-3 text-base font-semibold'
               size='lg'
             >
               <Link

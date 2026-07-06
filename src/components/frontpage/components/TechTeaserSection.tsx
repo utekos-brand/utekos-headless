@@ -18,9 +18,9 @@ export default function TechTeaserSection() {
       className='mt-12 w-full overflow-hidden py-12 md:py-24'
     >
       <div className='container mx-auto max-w-7xl px-4'>
-        <div className='border-cloud-dancer  relative overflow-hidden rounded-3xl border bg-card p-8 shadow-2xl md:p-12 lg:p-20'>
-          <div className='bg-mountain-view pointer-events-none absolute top-0 left-[-10%] h-[600px] w-[600px] -translate-y-1/2 rounded-full blur-[120px]' />
-          <div className='bg-overcast pointer-events-none absolute right-0 bottom-0 h-[500px] w-[500px] translate-y-1/3 rounded-full blur-[100px]' />
+        <div className='relative overflow-hidden rounded-3xl border border-foreground bg-card p-8 shadow-2xl md:p-12 lg:p-20'>
+          <div className='bg-mountain-view pointer-events-none absolute top-0 left-[-10%] size-150 -translate-y-1/2 rounded-full blur-[120px]' />
+          <div className='bg-overcast pointer-events-none absolute right-0 bottom-0 size-125 translate-y-1/3 rounded-full blur-[100px]' />
 
           <div className='relative grid items-center gap-12 lg:grid-cols-2 lg:gap-20'>
             <div className='space-y-4'>
@@ -82,7 +82,7 @@ export default function TechTeaserSection() {
                     className='motion-content group flex items-start gap-4'
                   >
                     <div
-                      className={`border-cloud-dancer mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${item.bg} ${item.color} transition-transform duration-300 group-hover:scale-110`}
+                      className={`mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-foreground ${item.bg} ${item.color} transition-transform duration-300 group-hover:scale-110`}
                     >
                       <item.icon className='size-5' />
                     </div>
@@ -119,7 +119,7 @@ export default function TechTeaserSection() {
                 data-tilt-layer
                 className='preserve-3d relative aspect-4/5 w-full'
               >
-                <div className='absolute -top-4 -right-4 -z-10 size-full translate-z-[-20px] transform rounded-2xl border border-white/5 bg-neutral-900/50 backdrop-blur-sm' />
+                <div className='absolute -top-4 -right-4 -z-10 size-full -translate-z-5 transform rounded-2xl border border-white/5 bg-neutral-900/50 backdrop-blur-sm' />
 
                 <div className='relative size-full overflow-hidden rounded-2xl border border-white/10 bg-neutral-900 shadow-2xl'>
                   <Image
@@ -161,7 +161,7 @@ export default function TechTeaserSection() {
                   </div>
                 </div>
 
-                <div className='motion-inner-parallax dark:bg-dark-background absolute -right-6 -bottom-6 flex h-24 w-24 translate-z-[40px] items-center justify-center rounded-full border border-white/10 bg-background shadow-2xl'>
+                <div className='motion-inner-parallax dark:bg-dark-background absolute -right-6 -bottom-6 flex h-24 w-24 translate-z-10 items-center justify-center rounded-full border border-white/10 bg-background shadow-2xl'>
                   <div className='text-center'>
                     <span className='block text-2xl font-bold text-foreground'>
                       8K

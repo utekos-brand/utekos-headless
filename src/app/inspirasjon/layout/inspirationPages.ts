@@ -1,4 +1,11 @@
-import { Caravan, Flame, Home, Sailboat, Snowflake, Sofa } from 'lucide-react'
+import {
+  Caravan,
+  Flame,
+  Home,
+  Sailboat,
+  Snowflake,
+  Sofa
+} from 'lucide-react'
 import type { Route } from 'next'
 import type { TextOnAccent } from '../theme/pageAccents'
 
@@ -40,10 +47,10 @@ export const inspirationPages: InspirationPageLink[] = [
     label: 'Båtliv',
     description: 'Varme på vannet',
     icon: Sailboat,
-    color: 'var(--skipper-blue)', // Sikrer skarp kontrast mot 'cloud-dancer'
+    color: 'var(--skipper-blue)', // Sikrer skarp kontrast mot 'foreground'
     midColor: 'var(--ancient-water)',
     iconColor: 'text-(--skipper-blue)',
-    textOnAccent: 'cloud-dancer'
+    textOnAccent: 'foreground'
   },
   {
     href: '/inspirasjon/terrassen' as Route,
@@ -53,7 +60,7 @@ export const inspirationPages: InspirationPageLink[] = [
     color: 'var(--mountain-view)',
     midColor: 'var(--primary)',
     iconColor: 'text-(--mountain-view)',
-    textOnAccent: 'cloud-dancer'
+    textOnAccent: 'foreground'
   },
   {
     href: '/inspirasjon/grillkvelden' as Route,

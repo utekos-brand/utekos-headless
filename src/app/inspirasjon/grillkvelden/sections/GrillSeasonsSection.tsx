@@ -9,9 +9,9 @@ export function GrillSeasonsSection() {
       lead='Hold varmen ved grillen — fra tidlig vår til sen høst.'
       seasons={grillSeasons}
       defaultValue='autumn'
-      sectionClassName='bg-demitasse text-cloud-dancer'
-      titleClassName='text-cloud-dancer'
-      leadClassName='text-cloud-dancer'
+      sectionClassName='bg-demitasse text-foreground'
+      titleClassName='text-foreground'
+      leadClassName='text-foreground'
       showSectionGlow={false}
       showTabGlow={false}
       showCardGlow={false}

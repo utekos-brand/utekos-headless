@@ -11,7 +11,7 @@ export default function CompareModelsLayout({
     <>
       <CompareModelsJsonLd />
       <UtekosBreadcrumbBar
-        surface='light'
+        surface='transparent'
         items={[
           { label: 'Forsiden', href: '/' },
           { label: 'Sammenlign modeller' }

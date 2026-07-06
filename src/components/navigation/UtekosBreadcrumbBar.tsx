@@ -32,8 +32,9 @@ export function UtekosBreadcrumbBar({
   embedded
 }: UtekosBreadcrumbBarProps) {
   const styles = breadcrumbSurfaceStyles[surface]
-  const showStripe =
-    !embedded && !isEmbeddedSurface(surface) && styles.stripe
+  const stripeless = isEmbeddedSurface(surface)
+  const showColoredStripe =
+    !embedded && !stripeless && Boolean(styles.stripe)
 
   const breadcrumb = (
     <Breadcrumb className={className}>
@@ -79,15 +80,23 @@ export function UtekosBreadcrumbBar({
     </Breadcrumb>
   )
 
-  if (!showStripe) {
+  if (embedded) {
     return breadcrumb
   }
 
+  if (showColoredStripe) {
+    return (
+      <article className={cn('w-full', styles.stripe)}>
+        <div className='container mx-auto w-full px-4 py-5'>
+          {breadcrumb}
+        </div>
+      </article>
+    )
+  }
+
   return (
-    <article className={cn('w-full', styles.stripe)}>
-      <div className='container mx-auto w-full px-4 py-5'>
-        {breadcrumb}
-      </div>
-    </article>
+    <div className='container mx-auto w-full px-4 py-5'>
+      {breadcrumb}
+    </div>
   )
 }

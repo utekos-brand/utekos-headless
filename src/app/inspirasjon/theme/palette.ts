@@ -10,7 +10,7 @@ export const inspirationPalette = {
   maritimeDarkest: 'var(--maritime-darkest)',
 
   /** Light surfaces & body text on dark */
-  cloudDancer: 'var(--cloud-dancer)',
+  cloudDancer: 'var(--foreground)',
   foreground: 'var(--foreground)',
   ancientWater: 'var(--ancient-water)',
   overcast: 'var(--overcast)',
@@ -27,4 +27,5 @@ export const inspirationPalette = {
   mutedForeground: 'var(--muted-foreground)'
 } as const
 
-export type InspirationPaletteToken = keyof typeof inspirationPalette
+export type InspirationPaletteToken =
+  keyof typeof inspirationPalette

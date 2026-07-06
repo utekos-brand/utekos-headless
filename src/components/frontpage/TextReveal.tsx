@@ -31,7 +31,7 @@ export function LuxuryShimmerText({
     <span
       className={cn('group relative inline-block', className)}
     >
-      <span className='animate-shimmer-gold relative z-10 bg-linear-to-br from-amber-100 via-amber-300 to-amber-500 bg-[length:200%_auto] bg-clip-text text-transparent'>
+      <span className='animate-shimmer-gold relative z-10 bg-linear-to-br from-amber-100 via-amber-300 to-amber-500 bg-size-[200%_auto] bg-clip-text text-transparent'>
         {text}
       </span>
 
@@ -61,7 +61,7 @@ export function OrganicCircleWord({
       </CinematicWord>
 
       <svg
-        className='pointer-events-none absolute top-1/2 left-1/2 h-[130%] w-[115%] -translate-x-1/2 -translate-y-[45%] overflow-visible'
+        className='pointer-events-none absolute top-1/2 left-1/2 h-[130%] w-[115%] -translate-x-1/2 translate-y-[-45%] overflow-visible'
         viewBox='0 0 100 50'
         preserveAspectRatio='none'
       >
@@ -90,7 +90,7 @@ export function GlowWord({
 }) {
   return (
     <span className='relative mx-1 inline-block'>
-      <span className='animate-pulse-slow bg-cloud-dancer/10 absolute inset-0 rounded-full blur-lg' />
+      <span className='animate-pulse-slow absolute inset-0 rounded-full bg-foreground/10 blur-lg' />
       <CinematicWord
         delay={delay}
         className='relative z-10 font-medium text-foreground italic'

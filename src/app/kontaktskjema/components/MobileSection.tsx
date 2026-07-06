@@ -47,13 +47,13 @@ export function MobileSection() {
           </li>
         </ul>
       </div>
-      <div className='border-cloud-dancer/12 dark:bg-dark-background/72 border-t bg-background/72 p-6'>
+      <div className='dark:bg-dark-background/72 border-t border-foreground/12 bg-background/72 p-6'>
         <SupportForm idPrefix='mobile-contact' />
       </div>
 
-      <div className='border-cloud-dancer/12 border-t'>
+      <div className='border-t border-foreground/12'>
         <div className='grid grid-cols-2'>
-          <div className='border-cloud-dancer/12 border-r p-6'>
+          <div className='border-r border-foreground/12 p-6'>
             <h4 className='flex items-start gap-1.5 text-xs leading-[1.3] font-semibold tracking-normal text-foreground'>
               <span aria-hidden>🇳🇴</span>
               For norske forhold
@@ -77,7 +77,7 @@ export function MobileSection() {
           </div>
         </div>
       </div>
-      <div className='border-cloud-dancer/12 border-t p-6'>
+      <div className='border-t border-foreground/12 p-6'>
         <blockquote className='leading-text-paragraph text-sm tracking-normal text-foreground italic'>
           &ldquo;Vårt løfte til deg er enkelt: å levere
           komfortplagg av ypperste kvalitet som lar deg forlenge

@@ -8,16 +8,16 @@ export default function TechMaterialsLayout({
   children: ReactNode
 }) {
   return (
-    <>
+    <article className='bg-background text-foreground'>
       <TechJsonLd />
       <UtekosBreadcrumbBar
-        surface='light'
+        surface='transparent'
         items={[
           { label: 'Forsiden', href: '/' },
           { label: 'Teknologi og materialer' }
         ]}
       />
       {children}
-    </>
+    </article>
   )
 }

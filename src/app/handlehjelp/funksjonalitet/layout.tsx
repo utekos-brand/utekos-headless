@@ -30,16 +30,16 @@ export default function FunctionalityLayout({
   return (
     <>
       <FunctionalityJsonLd />
-      <UtekosBreadcrumbBar
-        surface='dark'
-        items={[
-          { label: 'Forsiden', href: '/' },
-          { label: 'Funksjonalitet' }
-        ]}
-      />
       <article
-        className={`${utekosText.variable} ${utekosTextMedium.variable} ${googleSans.variable} ${googleSansFlex.variable}`}
+        className={`${utekosText.variable} ${utekosTextMedium.variable} ${googleSans.variable} ${googleSansFlex.variable} bg-background text-foreground`}
       >
+        <UtekosBreadcrumbBar
+          surface='transparent'
+          items={[
+            { label: 'Forsiden', href: '/' },
+            { label: 'Funksjonalitet' }
+          ]}
+        />
         {children}
       </article>
     </>

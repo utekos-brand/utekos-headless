@@ -27,9 +27,9 @@ export function SocialProofCard({
 }: SocialProofCardProps) {
   const surfaceClass =
     cardClass ??
-    'border-cloud-dancer/8 bg-cloud-dancer/[0.03] hover:bg-cloud-dancer/[0.05]'
+    'border-foreground/8 bg-foreground/[0.03] hover:bg-foreground/[0.05]'
 
-  const shineStyle = shineClass ?? 'via-cloud-dancer/12'
+  const shineStyle = shineClass ?? 'via-foreground/12'
 
   return (
     <article

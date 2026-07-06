@@ -36,14 +36,14 @@ export function HeroSection() {
       <div className='absolute inset-0 bg-linear-to-b from-black/50 via-transparent via-60% to-[#1F2421] to-95%' />
 
       <div className='relative z-10 flex h-full w-full flex-col items-center justify-start px-6 pt-32 md:justify-center md:pt-0'>
-        <h1 className='mb-4 text-center text-4xl leading-[0.95] tracking-[-0.01em] text-balance text-cloud-dancer drop-shadow-xl md:mb-6 md:text-7xl'>
+        <h1 className='mb-4 text-center text-4xl leading-[0.95] tracking-[-0.01em] text-balance text-foreground drop-shadow-xl md:mb-6 md:text-7xl'>
           Skreddersy varmen <br className='hidden md:block' />
-          <span className='mt-2 block text-2xl leading-[0.95] font-light tracking-[-0.01em] text-cloud-dancer italic opacity-90 md:text-6xl'>
+          <span className='mt-2 block text-2xl leading-[0.95] font-light tracking-[-0.01em] text-foreground italic opacity-90 md:text-6xl'>
             Forleng de gode stundene
           </span>
         </h1>
 
-        <p className='leading-text-paragraph mb-8 max-w-xs text-center text-lg font-light tracking-[-0.01em] text-cloud-dancer drop-shadow-md md:mb-12 md:max-w-3xl md:text-2xl'>
+        <p className='leading-text-paragraph mb-8 max-w-xs text-center text-lg font-light tracking-[-0.01em] text-foreground drop-shadow-md md:mb-12 md:max-w-3xl md:text-2xl'>
           Utekos® definerer en ny standard for utendørs velvære.
           Juster, form og nyt – uansett sted og temperatur.
         </p>

@@ -16,7 +16,7 @@ const selectedSizeOptionClassName =
   'border-primary dark:border-dark-primary bg-background dark:bg-dark-background text-foreground '
 
 const unselectedSizeOptionClassName =
-  'border-border  bg-card  text-card-foreground  hover:cursor-pointer hover:bg-card-hover dark:hover:bg-dark-card-hover'
+  'border-border  bg-card  text-card-foreground  hover:cursor-pointer hover:bg-card-hover -hover'
 
 export function ProductVariantSelector({
   options,
@@ -81,9 +81,12 @@ export function ProductVariantSelector({
                       }}
                       className={cn(
                         variantSwatchButtonClassName,
-                        selectedOptions[option.name] === value.name ?
+                        (
+                          selectedOptions[option.name] ===
+                            value.name
+                        ) ?
                           'border-coral-green ring-coral-green ring-1'
-                        : 'border-card-foreground/24 hover:border-card-foreground/45 hover:ring-2 hover:ring-card-foreground/24 dark:border-dark-card-foreground/24 dark:hover:border-dark-card-foreground/45 dark:hover:ring-dark-card-foreground/24'
+                        : 'dark:border-dark-card-foreground/24 dark:hover:border-dark-card-foreground/45 dark:hover:ring-dark-card-foreground/24 border-card-foreground/24 hover:border-card-foreground/45 hover:ring-2 hover:ring-card-foreground/24'
                       )}
                       style={{
                         backgroundColor: colorCode ?? undefined

@@ -32,7 +32,7 @@ export function BoatingHeroSection() {
         <InspirationHeroBreadcrumb
           label='Båtliv'
           color='var(--very-peri)'
-          textColor='var(--cloud-dancer)'
+          textColor='var(--foreground)'
           icon={Anchor}
         />
       }
@@ -58,9 +58,9 @@ export function BoatingHeroSection() {
           }}
           secondaryStyle={{
             backgroundColor: 'var(--blueberry)',
-            textColor: 'var(--cloud-dancer)',
+            textColor: 'var(--foreground)',
             className:
-              'border-cloud-dancer/35 shadow-[0_18px_38px_-30px_color-mix(in_oklch,var(--background)_48%,transparent)] hover:bg-cloud-dancer/90 focus-visible:ring-2 focus-visible:ring-cloud-dancer/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:focus-visible:ring-offset-dark-background'
+              'border-foreground/35 shadow-[0_18px_38px_-30px_color-mix(in_oklch,var(--background)_48%,transparent)] hover:bg-foreground/90 focus-visible:ring-2 focus-visible:ring-foreground/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:focus-visible:ring-offset-dark-background'
           }}
         />
       }

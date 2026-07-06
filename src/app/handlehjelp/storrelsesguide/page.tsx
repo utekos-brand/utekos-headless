@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 
 export default function SizeGuidePage() {
   return (
-    <article className='bg-sidebar dark:bg-dark-sidebar text-sidebar-foreground dark:text-dark-sidebar-foreground'>
+    <article>
       <SizeGuideHero />
       <TechDownSizeGuide />
       <TechDownHgroup />
@@ -48,7 +48,7 @@ export default function SizeGuidePage() {
       <UtekosSizeGuide />
       <AdaptSection />
       <ComfyrobeSizeGuide />
-      <BackToShopCta />
+      <BackToShopCta surface='card' />
     </article>
   )
 }

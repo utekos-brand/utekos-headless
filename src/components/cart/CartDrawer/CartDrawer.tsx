@@ -47,7 +47,7 @@ export function CartDrawer(): React.JSX.Element {
       direction='right'
     >
       <Activity>
-        <DrawerContent className='size-full overflow-hidden'>
+        <DrawerContent className='size-full overflow-hidden bg-background text-foreground'>
           <VisuallyHidden>
             <DrawerTitle>Handlekurv</DrawerTitle>
             <DrawerDescription>

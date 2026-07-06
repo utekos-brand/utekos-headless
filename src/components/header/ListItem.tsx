@@ -18,15 +18,9 @@ export const ListItem = React.forwardRef<
   return (
     <li>
       <NavigationMenuLink
-        render={
-          <Link
-            ref={ref}
-            href={href}
-            {...props}
-          />
-        }
+        render={<Link ref={ref} href={href} {...props} />}
         className={cn(
-          'hover:border-cloud-dancer/10 hover:bg-cloud-dancer/7 focus-visible:border-cloud-dancer/18 focus-visible:bg-cloud-dancer/8 focus-visible:ring-cloud-dancer/35 block space-y-1 rounded-xl border border-transparent p-3 leading-none no-underline transition-colors outline-none select-none focus-visible:ring-2',
+          'block space-y-1 rounded-xl border border-transparent p-3 leading-none no-underline transition-colors outline-none select-none hover:border-foreground/10 hover:bg-foreground/7 focus-visible:border-foreground/18 focus-visible:bg-foreground/8 focus-visible:ring-2 focus-visible:ring-foreground/35',
           className
         )}
       >

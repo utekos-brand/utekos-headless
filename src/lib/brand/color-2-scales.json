@@ -867,83 +867,83 @@
       ]
     },
     {
-      "id": "cloud-dancer",
+      "id": "foreground",
       "title": "Cloud Dancer",
       "steps": [
         {
           "shade": "50",
-          "cssVar": "--color-cloud-dancer-50",
-          "token": "cloud-dancer-50",
+          "cssVar": "--color-foreground-50",
+          "token": "foreground-50",
           "oklch": "oklch(96.49% 0.005 78.3)",
           "hex": "#f5f3f0"
         },
         {
           "shade": "100",
-          "cssVar": "--color-cloud-dancer-100",
-          "token": "cloud-dancer-100",
+          "cssVar": "--color-foreground-100",
+          "token": "foreground-100",
           "oklch": "oklch(93.06% 0.01 93.57)",
           "hex": "#eae8e1"
         },
         {
           "shade": "200",
-          "cssVar": "--color-cloud-dancer-200",
-          "token": "cloud-dancer-200",
+          "cssVar": "--color-foreground-200",
+          "token": "foreground-200",
           "oklch": "oklch(85.85% 0.02 87.52)",
           "hex": "#d6d0c2"
         },
         {
           "shade": "300",
-          "cssVar": "--color-cloud-dancer-300",
-          "token": "cloud-dancer-300",
+          "cssVar": "--color-foreground-300",
+          "token": "foreground-300",
           "oklch": "oklch(78.66% 0.03 89.61)",
           "hex": "#c1b9a4"
         },
         {
           "shade": "400",
-          "cssVar": "--color-cloud-dancer-400",
-          "token": "cloud-dancer-400",
+          "cssVar": "--color-foreground-400",
+          "token": "foreground-400",
           "oklch": "oklch(71.11% 0.04 88.49)",
           "hex": "#aca186"
         },
         {
           "shade": "500",
-          "cssVar": "--color-cloud-dancer-500",
-          "token": "cloud-dancer-500",
+          "cssVar": "--color-foreground-500",
+          "token": "foreground-500",
           "oklch": "oklch(63.68% 0.052 88.76)",
           "hex": "#988a67"
         },
         {
           "shade": "600",
-          "cssVar": "--color-cloud-dancer-600",
-          "token": "cloud-dancer-600",
+          "cssVar": "--color-foreground-600",
+          "token": "foreground-600",
           "oklch": "oklch(54.11% 0.042 88.45)",
           "hex": "#796e53"
         },
         {
           "shade": "700",
-          "cssVar": "--color-cloud-dancer-700",
-          "token": "cloud-dancer-700",
+          "cssVar": "--color-foreground-700",
+          "token": "foreground-700",
           "oklch": "oklch(44.4% 0.034 89.64)",
           "hex": "#5b533e"
         },
         {
           "shade": "800",
-          "cssVar": "--color-cloud-dancer-800",
-          "token": "cloud-dancer-800",
+          "cssVar": "--color-foreground-800",
+          "token": "foreground-800",
           "oklch": "oklch(33.87% 0.025 87.53)",
           "hex": "#3d3729"
         },
         {
           "shade": "900",
-          "cssVar": "--color-cloud-dancer-900",
-          "token": "cloud-dancer-900",
+          "cssVar": "--color-foreground-900",
+          "token": "foreground-900",
           "oklch": "oklch(22.62% 0.013 93.96)",
           "hex": "#1e1c15"
         },
         {
           "shade": "950",
-          "cssVar": "--color-cloud-dancer-950",
-          "token": "cloud-dancer-950",
+          "cssVar": "--color-foreground-950",
+          "token": "foreground-950",
           "oklch": "oklch(18.72% 0.01 88.81)",
           "hex": "#15130e"
         }

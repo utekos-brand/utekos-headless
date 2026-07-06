@@ -9,7 +9,7 @@ export type InspirationPageSlug =
   | 'grillkvelden'
   | 'isbading'
 
-export type TextOnAccent = 'cloud-dancer' | 'background'
+export type TextOnAccent = 'foreground' | 'background'
 
 export interface PageAccent {
   slug: InspirationPageSlug
@@ -22,7 +22,10 @@ export interface PageAccent {
   cardTitlePair: ContrastPairId
 }
 
-export const pageAccents: Record<InspirationPageSlug, PageAccent> = {
+export const pageAccents: Record<
+  InspirationPageSlug,
+  PageAccent
+> = {
   index: {
     slug: 'index',
     primary: 'var(--primary)',
@@ -52,7 +55,7 @@ export const pageAccents: Record<InspirationPageSlug, PageAccent> = {
     primary: 'var(--skipper-blue)',
     secondary: 'var(--ancient-water)',
     surface: 'var(--background)',
-    textOnAccent: 'cloud-dancer',
+    textOnAccent: 'foreground',
     cardTitlePair: 'cardTitleOnAccentDark'
   },
   terrassen: {
@@ -60,7 +63,7 @@ export const pageAccents: Record<InspirationPageSlug, PageAccent> = {
     primary: 'var(--mountain-view)',
     secondary: 'var(--primary)',
     surface: 'var(--background)',
-    textOnAccent: 'cloud-dancer',
+    textOnAccent: 'foreground',
     cardTitlePair: 'cardTitleOnAccentDark'
   },
   grillkvelden: {

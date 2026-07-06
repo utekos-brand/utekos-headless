@@ -5,7 +5,6 @@ import {
   utekosTextMedium
 } from '@/app/fonts/font.config'
 import { Google_Sans, Google_Sans_Flex } from 'next/font/google'
-import { CrosshatchArt } from './components/CrosshatchArt'
 const googleSansFlex = Google_Sans_Flex({
   subsets: ['latin'],
   display: 'swap',
@@ -34,8 +33,7 @@ export default function MaintenanceLayout({
         className={`${utekosText.variable} ${utekosTextMedium.variable} ${googleSans.variable} ${googleSansFlex.variable}`}
       >
         <MaintenanceJsonLd />
-        <div className='dark:bg-dark-background relative isolate min-h-screen w-full bg-background text-foreground'>
-          <CrosshatchArt />
+        <div className='relative isolate min-h-screen w-full bg-background text-foreground'>
           <div className='relative z-10'>{children}</div>
         </div>
       </article>

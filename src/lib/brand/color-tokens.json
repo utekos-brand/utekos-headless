@@ -10372,74 +10372,74 @@
       ]
     },
     {
-      "id": "cloud-dancer",
+      "id": "foreground",
       "title": "Cloud Dancer",
       "sourceTitle": "CLOUD DANCER - COLOR OF THE YEAR 2026",
       "groups": [
         {
-          "id": "cloud-dancer-tokens",
+          "id": "foreground-tokens",
           "title": "Tokens",
           "method": "tokens"
         },
         {
-          "id": "cloud-dancer-hue",
+          "id": "foreground-hue",
           "title": "Hue",
           "method": "hue"
         },
         {
-          "id": "cloud-dancer-saturation",
+          "id": "foreground-saturation",
           "title": "Saturation",
           "method": "saturation"
         },
         {
-          "id": "cloud-dancer-lightness",
+          "id": "foreground-lightness",
           "title": "Lightness",
           "method": "lightness"
         },
         {
-          "id": "cloud-dancer-shades",
+          "id": "foreground-shades",
           "title": "Shades",
           "method": "shades"
         },
         {
-          "id": "cloud-dancer-analogous",
+          "id": "foreground-analogous",
           "title": "Analogous",
           "method": "analogous"
         },
         {
-          "id": "cloud-dancer-complementary",
+          "id": "foreground-complementary",
           "title": "Complementary",
           "method": "complementary"
         },
         {
-          "id": "cloud-dancer-monochromatic",
+          "id": "foreground-monochromatic",
           "title": "Monochromatic",
           "method": "monochromatic"
         },
         {
-          "id": "cloud-dancer-split-complementary",
+          "id": "foreground-split-complementary",
           "title": "Split Complementary",
           "method": "split-complementary"
         },
         {
-          "id": "cloud-dancer-triadic",
+          "id": "foreground-triadic",
           "title": "Triadic",
           "method": "triadic"
         },
         {
-          "id": "cloud-dancer-tetradic",
+          "id": "foreground-tetradic",
           "title": "Tetradic",
           "method": "tetradic"
         },
         {
-          "id": "cloud-dancer-pantone-solid-coated-c",
+          "id": "foreground-pantone-solid-coated-c",
           "title": "Pantone Solid Coated C",
           "method": "pantone-solid-coated-c"
         }
       ],
       "tokens": [
         {
-          "id": "cloud-dancer-white-alyssum-246",
+          "id": "foreground-white-alyssum-246",
           "cssVar": "--color-white-alyssum",
           "name": "white-alyssum",
           "label": "White Alyssum",
@@ -10470,9 +10470,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-hue",
+              "groupId": "foreground-hue",
               "groupTitle": "Hue",
               "method": "hue",
               "occurrence": 246,
@@ -10483,7 +10483,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-snow-white-247",
+          "id": "foreground-snow-white-247",
           "cssVar": "--color-snow-white",
           "name": "snow-white",
           "label": "Snow White",
@@ -10514,9 +10514,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-hue",
+              "groupId": "foreground-hue",
               "groupTitle": "Hue",
               "method": "hue",
               "occurrence": 247,
@@ -10527,9 +10527,9 @@
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-248",
-          "cssVar": "--color-cloud-dancer",
-          "name": "cloud-dancer",
+          "id": "foreground-foreground-248",
+          "cssVar": "--color-foreground",
+          "name": "foreground",
           "label": "Cloud Dancer",
           "value": "oklch(0.9493 0.007 88.64)",
           "resolvedValue": "oklch(0.9493 0.007 88.64)",
@@ -10558,9 +10558,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-hue",
+              "groupId": "foreground-hue",
               "groupTitle": "Hue",
               "method": "hue",
               "occurrence": 248,
@@ -10569,9 +10569,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-saturation",
+              "groupId": "foreground-saturation",
               "groupTitle": "Saturation",
               "method": "saturation",
               "occurrence": 252,
@@ -10580,9 +10580,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-lightness",
+              "groupId": "foreground-lightness",
               "groupTitle": "Lightness",
               "method": "lightness",
               "occurrence": 258,
@@ -10591,9 +10591,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-analogous",
+              "groupId": "foreground-analogous",
               "groupTitle": "Analogous",
               "method": "analogous",
               "occurrence": 272,
@@ -10602,9 +10602,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-complementary",
+              "groupId": "foreground-complementary",
               "groupTitle": "Complementary",
               "method": "complementary",
               "occurrence": 274,
@@ -10613,9 +10613,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-monochromatic",
+              "groupId": "foreground-monochromatic",
               "groupTitle": "Monochromatic",
               "method": "monochromatic",
               "occurrence": 277,
@@ -10624,9 +10624,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-split-complementary",
+              "groupId": "foreground-split-complementary",
               "groupTitle": "Split Complementary",
               "method": "split-complementary",
               "occurrence": 280,
@@ -10635,9 +10635,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-triadic",
+              "groupId": "foreground-triadic",
               "groupTitle": "Triadic",
               "method": "triadic",
               "occurrence": 283,
@@ -10646,9 +10646,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-tetradic",
+              "groupId": "foreground-tetradic",
               "groupTitle": "Tetradic",
               "method": "tetradic",
               "occurrence": 286,
@@ -10659,7 +10659,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-stalactite-249",
+          "id": "foreground-stalactite-249",
           "cssVar": "--color-stalactite",
           "name": "stalactite",
           "label": "Stalactite",
@@ -10690,9 +10690,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-hue",
+              "groupId": "foreground-hue",
               "groupTitle": "Hue",
               "method": "hue",
               "occurrence": 249,
@@ -10701,9 +10701,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-lightness",
+              "groupId": "foreground-lightness",
               "groupTitle": "Lightness",
               "method": "lightness",
               "occurrence": 259,
@@ -10714,7 +10714,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-star-white-250",
+          "id": "foreground-star-white-250",
           "cssVar": "--color-star-white",
           "name": "star-white",
           "label": "Star White",
@@ -10745,9 +10745,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-hue",
+              "groupId": "foreground-hue",
               "groupTitle": "Hue",
               "method": "hue",
               "occurrence": 250,
@@ -10756,9 +10756,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-analogous",
+              "groupId": "foreground-analogous",
               "groupTitle": "Analogous",
               "method": "analogous",
               "occurrence": 273,
@@ -10767,9 +10767,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-tetradic",
+              "groupId": "foreground-tetradic",
               "groupTitle": "Tetradic",
               "method": "tetradic",
               "occurrence": 285,
@@ -10780,7 +10780,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-vaporous-gray-251",
+          "id": "foreground-vaporous-gray-251",
           "cssVar": "--color-vaporous-gray",
           "name": "vaporous-gray",
           "label": "Vaporous Gray",
@@ -10811,9 +10811,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-saturation",
+              "groupId": "foreground-saturation",
               "groupTitle": "Saturation",
               "method": "saturation",
               "occurrence": 251,
@@ -10824,7 +10824,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-coconut-milk-253",
+          "id": "foreground-coconut-milk-253",
           "cssVar": "--color-coconut-milk",
           "name": "coconut-milk",
           "label": "Coconut Milk",
@@ -10855,9 +10855,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-saturation",
+              "groupId": "foreground-saturation",
               "groupTitle": "Saturation",
               "method": "saturation",
               "occurrence": 253,
@@ -10868,7 +10868,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-vanilla-ice-254",
+          "id": "foreground-vanilla-ice-254",
           "cssVar": "--color-vanilla-ice",
           "name": "vanilla-ice",
           "label": "Vanilla Ice",
@@ -10899,9 +10899,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-saturation",
+              "groupId": "foreground-saturation",
               "groupTitle": "Saturation",
               "method": "saturation",
               "occurrence": 254,
@@ -10912,7 +10912,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-cloud-cream-255",
+          "id": "foreground-cloud-cream-255",
           "cssVar": "--color-cloud-cream",
           "name": "cloud-cream",
           "label": "Cloud Cream",
@@ -10943,9 +10943,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-saturation",
+              "groupId": "foreground-saturation",
               "groupTitle": "Saturation",
               "method": "saturation",
               "occurrence": 255,
@@ -10956,7 +10956,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-bone-white-256",
+          "id": "foreground-bone-white-256",
           "cssVar": "--color-bone-white",
           "name": "bone-white",
           "label": "Bone White",
@@ -10987,9 +10987,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-lightness",
+              "groupId": "foreground-lightness",
               "groupTitle": "Lightness",
               "method": "lightness",
               "occurrence": 256,
@@ -11000,7 +11000,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-white-down-257",
+          "id": "foreground-white-down-257",
           "cssVar": "--color-white-down",
           "name": "white-down",
           "label": "White Down",
@@ -11031,9 +11031,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-lightness",
+              "groupId": "foreground-lightness",
               "groupTitle": "Lightness",
               "method": "lightness",
               "occurrence": 257,
@@ -11044,9 +11044,9 @@
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-260",
-          "cssVar": "--color-cloud-dancer",
-          "name": "cloud-dancer",
+          "id": "foreground-foreground-260",
+          "cssVar": "--color-foreground",
+          "name": "foreground",
           "label": "Cloud Dancer",
           "value": "oklch(0.86 0.0237 93.36)",
           "resolvedValue": "oklch(0.86 0.0237 93.36)",
@@ -11075,9 +11075,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-shades",
+              "groupId": "foreground-shades",
               "groupTitle": "Shades",
               "method": "shades",
               "occurrence": 260,
@@ -11088,9 +11088,9 @@
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-50-261",
-          "cssVar": "--color-cloud-dancer-50",
-          "name": "cloud-dancer-50",
+          "id": "foreground-foreground-50-261",
+          "cssVar": "--color-foreground-50",
+          "name": "foreground-50",
           "label": "Cloud Dancer 50",
           "value": "oklch(96.49% 0.005 78.3)",
           "resolvedValue": "oklch(96.49% 0.005 78.3)",
@@ -11119,22 +11119,22 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-shades",
+              "groupId": "foreground-shades",
               "groupTitle": "Shades",
               "method": "shades",
               "occurrence": 261,
               "role": "scale-step",
-              "scaleBase": "cloud-dancer",
+              "scaleBase": "foreground",
               "scaleStep": 50
             }
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-100-262",
-          "cssVar": "--color-cloud-dancer-100",
-          "name": "cloud-dancer-100",
+          "id": "foreground-foreground-100-262",
+          "cssVar": "--color-foreground-100",
+          "name": "foreground-100",
           "label": "Cloud Dancer 100",
           "value": "oklch(93.06% 0.01 93.57)",
           "resolvedValue": "oklch(93.06% 0.01 93.57)",
@@ -11163,22 +11163,22 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-shades",
+              "groupId": "foreground-shades",
               "groupTitle": "Shades",
               "method": "shades",
               "occurrence": 262,
               "role": "scale-step",
-              "scaleBase": "cloud-dancer",
+              "scaleBase": "foreground",
               "scaleStep": 100
             }
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-200-263",
-          "cssVar": "--color-cloud-dancer-200",
-          "name": "cloud-dancer-200",
+          "id": "foreground-foreground-200-263",
+          "cssVar": "--color-foreground-200",
+          "name": "foreground-200",
           "label": "Cloud Dancer 200",
           "value": "oklch(85.85% 0.02 87.52)",
           "resolvedValue": "oklch(85.85% 0.02 87.52)",
@@ -11207,22 +11207,22 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-shades",
+              "groupId": "foreground-shades",
               "groupTitle": "Shades",
               "method": "shades",
               "occurrence": 263,
               "role": "scale-step",
-              "scaleBase": "cloud-dancer",
+              "scaleBase": "foreground",
               "scaleStep": 200
             }
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-300-264",
-          "cssVar": "--color-cloud-dancer-300",
-          "name": "cloud-dancer-300",
+          "id": "foreground-foreground-300-264",
+          "cssVar": "--color-foreground-300",
+          "name": "foreground-300",
           "label": "Cloud Dancer 300",
           "value": "oklch(78.66% 0.03 89.61)",
           "resolvedValue": "oklch(78.66% 0.03 89.61)",
@@ -11251,22 +11251,22 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-shades",
+              "groupId": "foreground-shades",
               "groupTitle": "Shades",
               "method": "shades",
               "occurrence": 264,
               "role": "scale-step",
-              "scaleBase": "cloud-dancer",
+              "scaleBase": "foreground",
               "scaleStep": 300
             }
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-400-265",
-          "cssVar": "--color-cloud-dancer-400",
-          "name": "cloud-dancer-400",
+          "id": "foreground-foreground-400-265",
+          "cssVar": "--color-foreground-400",
+          "name": "foreground-400",
           "label": "Cloud Dancer 400",
           "value": "oklch(71.11% 0.04 88.49)",
           "resolvedValue": "oklch(71.11% 0.04 88.49)",
@@ -11295,22 +11295,22 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-shades",
+              "groupId": "foreground-shades",
               "groupTitle": "Shades",
               "method": "shades",
               "occurrence": 265,
               "role": "scale-step",
-              "scaleBase": "cloud-dancer",
+              "scaleBase": "foreground",
               "scaleStep": 400
             }
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-500-266",
-          "cssVar": "--color-cloud-dancer-500",
-          "name": "cloud-dancer-500",
+          "id": "foreground-foreground-500-266",
+          "cssVar": "--color-foreground-500",
+          "name": "foreground-500",
           "label": "Cloud Dancer 500",
           "value": "oklch(63.68% 0.052 88.76)",
           "resolvedValue": "oklch(63.68% 0.052 88.76)",
@@ -11339,22 +11339,22 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-shades",
+              "groupId": "foreground-shades",
               "groupTitle": "Shades",
               "method": "shades",
               "occurrence": 266,
               "role": "scale-step",
-              "scaleBase": "cloud-dancer",
+              "scaleBase": "foreground",
               "scaleStep": 500
             }
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-600-267",
-          "cssVar": "--color-cloud-dancer-600",
-          "name": "cloud-dancer-600",
+          "id": "foreground-foreground-600-267",
+          "cssVar": "--color-foreground-600",
+          "name": "foreground-600",
           "label": "Cloud Dancer 600",
           "value": "oklch(54.11% 0.042 88.45)",
           "resolvedValue": "oklch(54.11% 0.042 88.45)",
@@ -11383,22 +11383,22 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-shades",
+              "groupId": "foreground-shades",
               "groupTitle": "Shades",
               "method": "shades",
               "occurrence": 267,
               "role": "scale-step",
-              "scaleBase": "cloud-dancer",
+              "scaleBase": "foreground",
               "scaleStep": 600
             }
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-700-268",
-          "cssVar": "--color-cloud-dancer-700",
-          "name": "cloud-dancer-700",
+          "id": "foreground-foreground-700-268",
+          "cssVar": "--color-foreground-700",
+          "name": "foreground-700",
           "label": "Cloud Dancer 700",
           "value": "oklch(44.4% 0.034 89.64)",
           "resolvedValue": "oklch(44.4% 0.034 89.64)",
@@ -11427,22 +11427,22 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-shades",
+              "groupId": "foreground-shades",
               "groupTitle": "Shades",
               "method": "shades",
               "occurrence": 268,
               "role": "scale-step",
-              "scaleBase": "cloud-dancer",
+              "scaleBase": "foreground",
               "scaleStep": 700
             }
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-800-269",
-          "cssVar": "--color-cloud-dancer-800",
-          "name": "cloud-dancer-800",
+          "id": "foreground-foreground-800-269",
+          "cssVar": "--color-foreground-800",
+          "name": "foreground-800",
           "label": "Cloud Dancer 800",
           "value": "oklch(33.87% 0.025 87.53)",
           "resolvedValue": "oklch(33.87% 0.025 87.53)",
@@ -11471,22 +11471,22 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-shades",
+              "groupId": "foreground-shades",
               "groupTitle": "Shades",
               "method": "shades",
               "occurrence": 269,
               "role": "scale-step",
-              "scaleBase": "cloud-dancer",
+              "scaleBase": "foreground",
               "scaleStep": 800
             }
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-900-270",
-          "cssVar": "--color-cloud-dancer-900",
-          "name": "cloud-dancer-900",
+          "id": "foreground-foreground-900-270",
+          "cssVar": "--color-foreground-900",
+          "name": "foreground-900",
           "label": "Cloud Dancer 900",
           "value": "oklch(22.62% 0.013 93.96)",
           "resolvedValue": "oklch(22.62% 0.013 93.96)",
@@ -11515,22 +11515,22 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-shades",
+              "groupId": "foreground-shades",
               "groupTitle": "Shades",
               "method": "shades",
               "occurrence": 270,
               "role": "scale-step",
-              "scaleBase": "cloud-dancer",
+              "scaleBase": "foreground",
               "scaleStep": 900
             }
           ]
         },
         {
-          "id": "cloud-dancer-cloud-dancer-950-271",
-          "cssVar": "--color-cloud-dancer-950",
-          "name": "cloud-dancer-950",
+          "id": "foreground-foreground-950-271",
+          "cssVar": "--color-foreground-950",
+          "name": "foreground-950",
           "label": "Cloud Dancer 950",
           "value": "oklch(18.72% 0.01 88.81)",
           "resolvedValue": "oklch(18.72% 0.01 88.81)",
@@ -11559,20 +11559,20 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-shades",
+              "groupId": "foreground-shades",
               "groupTitle": "Shades",
               "method": "shades",
               "occurrence": 271,
               "role": "scale-step",
-              "scaleBase": "cloud-dancer",
+              "scaleBase": "foreground",
               "scaleStep": 950
             }
           ]
         },
         {
-          "id": "cloud-dancer-whispy-clouds-275",
+          "id": "foreground-whispy-clouds-275",
           "cssVar": "--color-whispy-clouds",
           "name": "whispy-clouds",
           "label": "Whispy Clouds",
@@ -11603,9 +11603,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-complementary",
+              "groupId": "foreground-complementary",
               "groupTitle": "Complementary",
               "method": "complementary",
               "occurrence": 275,
@@ -11614,9 +11614,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-split-complementary",
+              "groupId": "foreground-split-complementary",
               "groupTitle": "Split Complementary",
               "method": "split-complementary",
               "occurrence": 281,
@@ -11625,9 +11625,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-triadic",
+              "groupId": "foreground-triadic",
               "groupTitle": "Triadic",
               "method": "triadic",
               "occurrence": 284,
@@ -11636,9 +11636,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-tetradic",
+              "groupId": "foreground-tetradic",
               "groupTitle": "Tetradic",
               "method": "tetradic",
               "occurrence": 287,
@@ -11649,7 +11649,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-wren-276",
+          "id": "foreground-wren-276",
           "cssVar": "--color-wren",
           "name": "wren",
           "label": "Wren",
@@ -11680,9 +11680,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-monochromatic",
+              "groupId": "foreground-monochromatic",
               "groupTitle": "Monochromatic",
               "method": "monochromatic",
               "occurrence": 276,
@@ -11693,7 +11693,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-twill-278",
+          "id": "foreground-twill-278",
           "cssVar": "--color-twill",
           "name": "twill",
           "label": "Twill",
@@ -11724,9 +11724,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-monochromatic",
+              "groupId": "foreground-monochromatic",
               "groupTitle": "Monochromatic",
               "method": "monochromatic",
               "occurrence": 278,
@@ -11737,7 +11737,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-diaphonous-279",
+          "id": "foreground-diaphonous-279",
           "cssVar": "--color-diaphonous",
           "name": "diaphonous",
           "label": "Diaphonous",
@@ -11768,9 +11768,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-split-complementary",
+              "groupId": "foreground-split-complementary",
               "groupTitle": "Split Complementary",
               "method": "split-complementary",
               "occurrence": 279,
@@ -11779,9 +11779,9 @@
               "scaleStep": null
             },
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-triadic",
+              "groupId": "foreground-triadic",
               "groupTitle": "Triadic",
               "method": "triadic",
               "occurrence": 282,
@@ -11792,7 +11792,7 @@
           ]
         },
         {
-          "id": "cloud-dancer-pantone-cool-gray-1-c-288",
+          "id": "foreground-pantone-cool-gray-1-c-288",
           "cssVar": "--PANTONE-COOL-GRAY-1-C",
           "name": "pantone-cool-gray-1-c",
           "label": "PANTONE Cool Gray 1 C",
@@ -11823,9 +11823,9 @@
           },
           "relationships": [
             {
-              "sectionId": "cloud-dancer",
+              "sectionId": "foreground",
               "sectionTitle": "Cloud Dancer",
-              "groupId": "cloud-dancer-pantone-solid-coated-c",
+              "groupId": "foreground-pantone-solid-coated-c",
               "groupTitle": "Pantone Solid Coated C",
               "method": "pantone-solid-coated-c",
               "occurrence": 288,

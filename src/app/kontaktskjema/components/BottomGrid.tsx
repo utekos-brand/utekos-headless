@@ -1,12 +1,12 @@
 // Path: src/components/kontakt/BottomGrid.tsx
 export function BottomGrid() {
   return (
-    <div className='h-24 border-b border-l border-r border-cloud-dancer/[0.08]'>
+    <div className='h-24 border-r border-b border-l border-foreground/8'>
       <div className='grid h-full grid-cols-8 md:hidden'>
         {Array.from({ length: 7 }).map((_, i) => (
           <div
             key={`bottom-mobile-${i}`}
-            className='h-full border-r border-cloud-dancer/[0.08]'
+            className='h-full border-r border-foreground/8'
           />
         ))}
         <div className='h-full' />
@@ -16,7 +16,7 @@ export function BottomGrid() {
         {Array.from({ length: 9 }).map((_, i) => (
           <div
             key={`bottom-tablet-${i}`}
-            className='h-full border-r border-cloud-dancer/[0.08]'
+            className='h-full border-r border-foreground/8'
           />
         ))}
         <div className='h-full' />
@@ -26,7 +26,7 @@ export function BottomGrid() {
         {Array.from({ length: 11 }).map((_, i) => (
           <div
             key={`bottom-desktop-${i}`}
-            className='h-full border-r border-cloud-dancer/[0.08]'
+            className='h-full border-r border-foreground/8'
           />
         ))}
         <div className='h-full' />

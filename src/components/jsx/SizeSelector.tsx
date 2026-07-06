@@ -63,7 +63,7 @@ export function SizeSelector({
               role='radio'
               aria-checked={isSelected}
               data-selected={isSelected}
-              className='dark:border-dark-card-foreground/24  dark:hover:border-dark-card-foreground/45 dark:focus-visible:ring-dark-card-foreground/45 data-[selected=true]:border-jungle data-[selected=true]:bg-coral-green data-[selected=true]:text-jungle data-[selected=true]:ring-jungle/55 flex min-h-12 cursor-pointer items-center justify-center rounded-2xl border border-card-foreground/24 bg-card px-3 py-3 text-center text-sm text-card-foreground transition-all duration-200 ease-in-out hover:border-card-foreground/45 focus-visible:ring-2 focus-visible:ring-card-foreground/45 focus-visible:outline-none data-[selected=true]:shadow-[0_12px_28px_-22px_color-mix(in_oklch,var(--jungle)_70%,transparent)] data-[selected=true]:ring-2 md:w-full md:justify-between md:p-4 md:text-left md:text-base'
+              className='dark:border-dark-card-foreground/24 dark:hover:border-dark-card-foreground/45 dark:focus-visible:ring-dark-card-foreground/45 data-[selected=true]:border-jungle data-[selected=true]:bg-coral-green data-[selected=true]:text-jungle data-[selected=true]:ring-jungle/55 flex min-h-12 cursor-pointer items-center justify-center rounded-2xl border border-card-foreground/24 bg-card px-3 py-3 text-center text-sm text-card-foreground transition-all duration-200 ease-in-out hover:border-card-foreground/45 focus-visible:ring-2 focus-visible:ring-card-foreground/45 focus-visible:outline-none data-[selected=true]:shadow-[0_12px_28px_-22px_color-mix(in_oklch,var(--jungle)_70%,transparent)] data-[selected=true]:ring-2 md:w-full md:justify-between md:p-4 md:text-left md:text-base'
             >
               <span className='font-sans'>{sizeValue}</span>
               <div className='/72 hidden text-right text-xs text-card-foreground/72 md:block'>
@@ -90,7 +90,7 @@ export function SizeSelector({
       </div>
 
       {!handlesToHideGuide.includes(productHandle) && (
-        <div className='dark:border-dark-card-foreground/24  flex w-full flex-col rounded-2xl border border-card-foreground/24 bg-card p-4 text-left transition-colors'>
+        <div className='dark:border-dark-card-foreground/24 flex w-full flex-col rounded-2xl border border-card-foreground/24 bg-card p-4 text-left transition-colors'>
           <button
             onClick={() => setIsDetailsOpen(!isDetailsOpen)}
             className='font-utekos-text-medium dark:focus-visible:ring-dark-card-foreground/45 flex w-full cursor-pointer justify-between p-0 text-card-foreground transition-colors focus-visible:ring-2 focus-visible:ring-card-foreground/45 focus-visible:outline-none'
@@ -123,7 +123,7 @@ export function SizeSelector({
               Se dimensjonene på Utekos-modellene{' '}
               <Link
                 href='/handlehjelp/storrelsesguide'
-                className='dark:hover:text-dark-card-foreground/76 text-card-foreground underline hover:text-card-foreground/76'
+                className='/76 text-card-foreground underline hover:text-card-foreground/76'
               >
                 her
               </Link>

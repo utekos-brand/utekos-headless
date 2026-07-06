@@ -65,7 +65,7 @@ export function BenefitsGrid({
             />
           </div>
 
-          <div className=' grid grid-cols-1 gap-8 rounded-3xl bg-card py-6 md:grid-cols-2 md:py-12 lg:grid-cols-4'>
+          <div className='grid grid-cols-1 gap-8 rounded-3xl bg-card py-6 md:grid-cols-2 md:py-12 lg:grid-cols-4'>
             {benefits.map((benefit, benefitIndex) => {
               const Icon = benefit.icon
               const iconBackgroundClass =
@@ -80,7 +80,7 @@ export function BenefitsGrid({
                   threshold={0.2}
                 >
                   <div
-                    className={`${iconBackgroundClass} border-cloud-dancer/12 mx-auto mb-4 flex size-16 items-center justify-center rounded-full border`}
+                    className={`${iconBackgroundClass} mx-auto mb-4 flex size-16 items-center justify-center rounded-full border border-foreground/12`}
                   >
                     <Icon
                       className={`size-8 ${benefit.color}`}

@@ -12,9 +12,9 @@ const TrafficLights = ({
     variant === 'colored' ?
       ['bg-red-500/80', 'bg-blue-500/80', 'bg-green-500/80']
     : [
-        'bg-sidebar-foreground dark:bg-dark-sidebar-foreground',
-        'bg-sidebar-foreground dark:bg-dark-sidebar-foreground',
-        'bg-sidebar-foreground dark:bg-dark-sidebar-foreground'
+        'bg-sidebar-foreground -foreground',
+        'bg-sidebar-foreground -foreground',
+        'bg-sidebar-foreground -foreground'
       ]
 
   return (

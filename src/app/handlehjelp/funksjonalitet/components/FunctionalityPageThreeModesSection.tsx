@@ -2,13 +2,13 @@
 import { Coffee, Maximize2, Move } from 'lucide-react'
 
 const modeCardClassName =
-  'group relative overflow-hidden rounded-2xl border border-foreground/12 dark:border-dark-foreground/12 bg-card  p-8 ring-1 ring-foreground/12 dark:ring-dark-foreground/12 transition-all hover:shadow-lg'
+  'group relative overflow-hidden rounded-2xl border border-foreground/12 bg-card  p-8 ring-1 ring-foreground/12 dark:ring-foreground/12 transition-all hover:shadow-lg'
 
 export function FunctionalityPageThreeModesSection() {
   return (
     <section
       aria-labelledby='functionality-modes-heading'
-      className='dark:border-dark-foreground/20 border-t border-foreground/20 pt-20'
+      className='border-t border-foreground/20 pt-20'
     >
       <div className='container mx-auto px-4 py-12 sm:py-16'>
         <h2 id='functionality-modes-heading' className='sr-only'>
@@ -18,13 +18,13 @@ export function FunctionalityPageThreeModesSection() {
           <div
             className={`${modeCardClassName} hover:border-sky-300/40`}
           >
-            <div className='mb-6 inline-flex size-12 items-center justify-center rounded-full bg-sky-900/30 text-sky-300'>
+            <div className='mb-6 inline-flex size-12 items-center justify-center rounded-full bg-sky-900/30 text-foreground'>
               <Maximize2 className='size-6' aria-hidden />
             </div>
             <h3 className='mb-3 text-xl font-bold text-foreground'>
               1. Fullengdemodus
             </h3>
-            <p className='mb-4 pb-2 text-xl font-bold text-foreground md:text-2xl'>
+            <p className='mb-4 pb-2 text-foreground md:text-2xl'>
               For maksimal varme og ro
             </p>
             <p className='font-utekos-text! /90 mt-2 tracking-wide text-foreground/90 md:text-xl!'>

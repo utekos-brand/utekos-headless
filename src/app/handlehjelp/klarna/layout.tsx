@@ -9,7 +9,7 @@ export default function KlarnaHelpLayout({
   return (
     <>
       <UtekosBreadcrumbBar
-        surface='inverted'
+        surface='transparent'
         items={[
           { label: 'Forsiden', href: '/' },
           { label: 'Betaling med Klarna' }

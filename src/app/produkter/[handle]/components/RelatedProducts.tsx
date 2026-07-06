@@ -57,8 +57,8 @@ export function RelatedProducts({
             )
           })}
         </CarouselContent>
-        <CarouselPrevious className='dark:border-dark-sidebar-foreground dark:bg-dark-sidebar dark:text-dark-sidebar-foreground dark:hover:bg-dark-sidebar dark:hover:text-dark-sidebar-foreground left-2 border-sidebar-foreground bg-sidebar text-sidebar-foreground shadow-md hover:bg-sidebar hover:text-sidebar-foreground' />
-        <CarouselNext className='dark:border-dark-sidebar-foreground dark:bg-dark-sidebar dark:text-dark-sidebar-foreground dark:hover:bg-dark-sidebar dark:hover:text-dark-sidebar-foreground right-2 border-sidebar-foreground bg-sidebar text-sidebar-foreground shadow-md hover:bg-sidebar hover:text-sidebar-foreground' />
+        <CarouselPrevious className='dark:border-dark-sidebar-foreground dark:hover:text-dark-sidebar-foreground left-2 border-sidebar-foreground bg-sidebar text-sidebar-foreground shadow-md hover:bg-sidebar hover:text-sidebar-foreground' />
+        <CarouselNext className='dark:border-dark-sidebar-foreground dark:hover:text-dark-sidebar-foreground right-2 border-sidebar-foreground bg-sidebar text-sidebar-foreground shadow-md hover:bg-sidebar hover:text-sidebar-foreground' />
       </Carousel>
     </article>
   )

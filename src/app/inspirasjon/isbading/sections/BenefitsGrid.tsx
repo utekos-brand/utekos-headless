@@ -41,7 +41,7 @@ export function BenefitsGrid({
   benefits: Benefit[]
 }) {
   return (
-    <article className='text-cloud-dancer bg-background dark:bg-dark-background py-24'>
+    <article className='dark:bg-dark-background bg-background py-24 text-foreground'>
       <div className='container mx-auto px-4'>
         <div className='mx-auto mb-16 max-w-2xl text-center'>
           <h2 className='text-fluid-display font-bold tracking-normal'>
@@ -61,7 +61,7 @@ export function BenefitsGrid({
               delay={`${benefitIndex * 0.05}s`}
               threshold={0.2}
             >
-              <div className='border-cloud-dancer/12 mx-auto mb-4 flex size-16 items-center justify-center rounded-full border bg-background/58 dark:bg-dark-background/58'>
+              <div className='dark:bg-dark-background/58 mx-auto mb-4 flex size-16 items-center justify-center rounded-full border border-foreground/12 bg-background/58'>
                 <benefit.icon
                   className={`size-8 ${benefit.color}`}
                 />

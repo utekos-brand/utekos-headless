@@ -5,6 +5,7 @@
  * - light:    fg #f0eee9 on bg #010214  → ~15.8:1 (1.4.3 AAA)
  * - dark:     fg #f0eee9 on bg #010214  → ~15.8:1 (1.4.3 AAA)
  * - inverted: fg #010214 on bg #f0eee9  → ~15.8:1 (1.4.3 AAA)
+ * - transparent: inherits parent `color`; contrast is the parent’s responsibility.
  *
  * Link opacities use /85 (not /72) to preserve ≥7:1 on muted states.
  * Separators use /55 — non-text UI, ≥3:1 vs adjacent (1.4.11 AA).
@@ -14,6 +15,7 @@ export type BreadcrumbSurface =
   | 'light'
   | 'dark'
   | 'inverted'
+  | 'transparent'
   | 'transparentDark'
   | 'embeddedLight'
   | 'embeddedDark'
@@ -58,13 +60,12 @@ const invertedText: BreadcrumbSurfaceStyles = {
     'text-background/55 dark:text-dark-background/55 [&>svg]:text-background/55 dark:svg]:text-dark-background/55'
 }
 
-const transparentDarkText: BreadcrumbSurfaceStyles = {
-  stripe: 'border-b border-transparent bg-transparent text-primary-foreground',
-  list: 'text-primary-foreground',
-  link: 'text-primary-foreground/85 transition-colors hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/50 focus-visible:ring-offset-2 focus-visible:ring-offset-foreground',
-  page: 'font-medium text-primary-foreground',
-  separator:
-    'text-primary-foreground/55 [&>svg]:text-primary-foreground/55'
+const transparentText: BreadcrumbSurfaceStyles = {
+  stripe: '',
+  list: 'text-inherit',
+  link: 'text-inherit/85 transition-colors hover:text-inherit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current/50 focus-visible:ring-offset-2',
+  page: 'font-medium text-inherit',
+  separator: 'text-inherit/55 [&>svg]:text-inherit/55'
 }
 
 export const breadcrumbSurfaceStyles: Record<
@@ -74,17 +75,17 @@ export const breadcrumbSurfaceStyles: Record<
   light: lightText,
   dark: darkText,
   inverted: invertedText,
-  transparentDark: transparentDarkText,
-  /** Embedded on light page backgrounds (e.g. bobil hero). */
+  transparent: transparentText,
+  /** @deprecated Use `transparent` — kept for backward compatibility. */
+  transparentDark: transparentText,
+  /** @deprecated Use `transparent` with parent text color. */
   embeddedLight: { ...lightText, stripe: '' },
-  /** Embedded on dark page backgrounds (e.g. night, campaign hero). */
+  /** @deprecated Use `transparent` with parent text color. */
   embeddedDark: { ...darkText, stripe: '' }
 }
 
 export function isEmbeddedSurface(
   surface: BreadcrumbSurface
 ): boolean {
-  return (
-    surface === 'embeddedLight' || surface === 'embeddedDark'
-  )
+  return breadcrumbSurfaceStyles[surface].stripe === ''
 }

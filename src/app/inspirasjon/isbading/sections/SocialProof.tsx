@@ -76,7 +76,7 @@ export function SocialProof() {
                 <div className='group p-1'>
                   <AspectRatio
                     ratio={1 / 1}
-                    className='border-cloud-dancer/12 relative overflow-hidden rounded-lg border bg-background dark:bg-dark-background'
+                    className='dark:bg-dark-background relative overflow-hidden rounded-lg border border-foreground/12 bg-background'
                   >
                     <Image
                       src={image.src}
@@ -100,8 +100,8 @@ export function SocialProof() {
             ))}
           </CarouselContent>
 
-          <CarouselPrevious className='left-2 z-10 inline-flex md:left-[-50px]' />
-          <CarouselNext className='right-2 z-10 inline-flex md:right-[-50px]' />
+          <CarouselPrevious className='left-2 z-10 inline-flex md:-left-12.5' />
+          <CarouselNext className='right-2 z-10 inline-flex md:-right-12.5' />
         </Carousel>
       </div>
     </article>

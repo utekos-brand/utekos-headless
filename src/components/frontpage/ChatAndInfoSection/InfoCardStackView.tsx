@@ -3,13 +3,13 @@
 import { Lock, ShoppingBag } from 'lucide-react'
 import { motion, type Variants } from 'motion/react'
 import Image from 'next/image'
-import UtekosLogo from '@public/icon.png'
-import { cn } from '@/lib/utils/className'
 import Link from 'next/link'
+import UtekosLogo from '@public/icon.png'
 import { BackgroundRippleEffect } from '@/components/ui/background-ripple-effect'
 import { H3 } from '@/components/typography/TypographyH3'
 import { InlineText } from '@/components/typography/TypographyInlineText'
 import { P } from '@/components/typography/TypographyP'
+import { cn } from '@/lib/utils/className'
 
 const TrafficLights = ({
   variant = 'default'
@@ -25,9 +25,9 @@ const TrafficLights = ({
       ]
     : variant === 'card' ?
       [
-        'bg-card-foreground/45 -foreground/45',
-        'bg-card-foreground/65 -foreground/65',
-        'bg-card-foreground/85 -foreground/85'
+        'bg-card-foreground/45 dark:bg-dark-card-foreground/45',
+        'bg-card-foreground/65 dark:bg-dark-card-foreground/65',
+        'bg-card-foreground/85 dark:bg-dark-card-foreground/85'
       ]
     : [
         'bg-secondary-foreground/45 dark:bg-dark-secondary-foreground/45',
@@ -36,14 +36,11 @@ const TrafficLights = ({
       ]
 
   return (
-    <div className='absolute top-[10%] left-[10%] z-20 flex gap-[0.35em]'>
+    <div className='absolute top-[11%] left-[8%] z-20 flex gap-[0.35em]'>
       {colors.map((color, i) => (
         <div
           key={i}
-          className={cn(
-            'aspect-square w-[0.45em] rounded-full',
-            color
-          )}
+          className={cn('aspect-square w-[0.45em] rounded-full', color)}
         />
       ))}
     </div>
@@ -66,50 +63,67 @@ const cardMotion = {
   }
 } satisfies Variants
 
+const cardSizeClasses =
+  'absolute w-[84%] aspect-[1.62/1] sm:w-[76%] sm:aspect-[2/1] lg:w-[74%]'
+
 const cardBaseClasses =
-  '@container/card absolute overflow-hidden rounded-xl border p-[clamp(0.875rem,4.5cqi,1.5rem)] text-[clamp(0.75rem,3.2cqi,0.875rem)] shadow-2xl shadow-black/16 will-change-transform'
+  '@container/card overflow-hidden rounded-xl border p-[clamp(0.875rem,4.5cqi,1.5rem)] text-[clamp(0.82rem,3.45cqi,1rem)] shadow-2xl shadow-black/16 will-change-transform'
+
+const cardContentRowClasses =
+  'relative z-10 flex items-start gap-[0.8em] pt-[clamp(2.15rem,9.5cqi,2.9rem)]'
+
+const cardTitleClasses =
+  'pb-0 text-[1.15em] leading-[1.12] font-semibold'
+
+const cardTextClasses =
+  'mt-[0.42em] text-[0.95em] leading-snug font-normal not-first:mt-0'
+
+const backCardPlacementClasses = 'top-0 left-0 z-0'
+
+const frontCardPlacementClasses =
+  'top-[39%] left-[16%] z-10 sm:top-[40%] sm:left-[24%] lg:left-[26%]'
 
 const backCardClasses = cn(
+  cardSizeClasses,
   cardBaseClasses,
+  backCardPlacementClasses,
   'border-card-foreground/14 bg-[color-mix(in_oklch,var(--color-card)_94%,var(--color-foreground)_6%)] text-card-foreground'
 )
 
 const frontCardClasses = cn(
+  cardSizeClasses,
   cardBaseClasses,
+  frontCardPlacementClasses,
   'border-foreground/12 bg-background text-foreground dark:border-dark-foreground/12 dark:bg-dark-background dark:text-dark-foreground'
 )
 
-/* Icon chips invert each card surface; ratios in src/tokens/semantic.*.css. */
 const backCardIconClassName =
-  'flex size-[clamp(1.75rem,8cqi,2rem)] shrink-0 items-center justify-center rounded-lg border border-card-foreground/35 bg-card-foreground text-card dark:border-dark-card-foreground/35'
+  'flex size-[clamp(1.9rem,8cqi,2.35rem)] shrink-0 items-center justify-center rounded-lg border border-card-foreground/35 bg-card-foreground text-card dark:border-dark-card-foreground/35'
 
 const frontCardIconClassName =
-  'flex size-[clamp(1.75rem,8cqi,2rem)] shrink-0 items-center justify-center rounded-lg border border-foreground/20 bg-foreground/8 text-foreground dark:border-dark-foreground/20 dark:bg-dark-foreground/10 dark:text-dark-foreground'
+  'flex size-[clamp(1.9rem,8cqi,2.35rem)] shrink-0 items-center justify-center rounded-lg border border-foreground/20 bg-foreground/8 text-foreground dark:border-dark-foreground/20 dark:bg-dark-foreground/10 dark:text-dark-foreground'
 
 export function InfoCardStackView() {
   return (
     <motion.div
       variants={stackMotion}
-      className='@container/stack relative z-20 mx-auto w-full max-w-[min(100%,27.5rem)] [container-type:inline-size] [font-size:clamp(0.875rem,2.8cqi,1rem)]'
-      style={{ aspectRatio: '10 / 11' }}
+      className='@container/stack relative z-20 mx-auto aspect-[1/1.04] w-full max-w-[min(100%,44rem)] overflow-visible @container text-[clamp(0.875rem,2.8cqi,1rem)] sm:aspect-16/10'
     >
       <div
-        className='pointer-events-none absolute -inset-[6%] rounded-3xl bg-[radial-gradient(70%_64%_at_24%_18%,color-mix(in_oklch,var(--color-secondary-foreground)_10%,transparent),transparent_68%)]'
+        className='pointer-events-none absolute inset-[-6%] rounded-3xl bg-[radial-gradient(70%_64%_at_24%_18%,color-mix(in_oklch,var(--color-secondary-foreground)_10%,transparent),transparent_68%)]'
         aria-hidden
       />
 
       <motion.div
         variants={cardMotion}
         whileHover={{ y: -4, transition: { duration: 0.24 } }}
-        className={cn(
-          backCardClasses,
-          'top-0 left-0 z-0 h-[52%] w-full'
-        )}
+        className={backCardClasses}
       >
         <div
           className='pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(72%_64%_at_18%_22%,color-mix(in_oklch,var(--color-card-foreground)_10%,transparent),transparent_66%)]'
           aria-hidden
         />
+
         <BackgroundRippleEffect
           rows={5}
           cols={11}
@@ -117,16 +131,20 @@ export function InfoCardStackView() {
           interactive={false}
           className='pointer-events-none opacity-40'
         />
+
         <TrafficLights variant='card' />
-        <div className='relative z-10 mt-[18%] flex items-start gap-[0.75em]'>
+
+        <div className={cardContentRowClasses}>
           <div className={backCardIconClassName}>
-            <ShoppingBag className='size-[1.15em] stroke-[1.7]' />
+            <ShoppingBag className='size-[1.12em] stroke-[1.7]' />
           </div>
+
           <div className='min-w-0'>
-            <H3 className='pb-0 text-[1.05em] font-semibold leading-snug text-card-foreground'>
+            <H3 className={cn(cardTitleClasses, 'text-card-foreground')}>
               En trygg handel
             </H3>
-            <P className='/88 mt-[0.35em] text-[0.92em] leading-snug font-normal text-card-foreground/88 not-first:mt-0'>
+
+            <P className={cn(cardTextClasses, 'text-card-foreground/88')}>
               Sikre betalingsløsninger og 14 dagers angrerett.
             </P>
           </div>
@@ -136,10 +154,7 @@ export function InfoCardStackView() {
       <motion.div
         variants={cardMotion}
         whileHover={{ y: -4, transition: { duration: 0.24 } }}
-        className={cn(
-          frontCardClasses,
-          'top-[34%] left-[9%] z-10 h-[54%] w-[91%]'
-        )}
+        className={frontCardClasses}
       >
         <BackgroundRippleEffect
           rows={5}
@@ -148,6 +163,7 @@ export function InfoCardStackView() {
           interactive={false}
           className='pointer-events-none opacity-25'
         />
+
         <div
           className='absolute inset-0 z-0 bg-[radial-gradient(75%_62%_at_68%_20%,color-mix(in_oklch,var(--color-foreground)_8%,transparent),transparent_62%)]'
           aria-hidden
@@ -156,17 +172,19 @@ export function InfoCardStackView() {
         <TrafficLights variant='colored' />
 
         <div className='relative z-10 flex h-full min-h-0 flex-col'>
-          <div className='mt-[18%] flex items-start gap-[0.75em]'>
+          <div className={cardContentRowClasses}>
             <div className={frontCardIconClassName}>
-              <Lock className='size-[1.15em] stroke-[1.7]' />
+              <Lock className='size-[1.12em] stroke-[1.7]' />
             </div>
+
             <div className='min-w-0'>
-              <H3 className='pb-0 text-[1.05em] font-semibold leading-snug text-foreground'>
+              <H3 className={cn(cardTitleClasses, 'text-foreground')}>
                 Ditt personvern
               </H3>
-              <P className='mt-[0.35em] text-[0.92em] leading-snug font-normal text-foreground/88 not-first:mt-0'>
-                Vi tar personvern på alvor. Se hvordan vi
-                behandler dine data i vår{' '}
+
+              <P className={cn(cardTextClasses, 'text-foreground/88')}>
+                Vi tar personvern på alvor. Se hvordan vi behandler dine data i
+                vår{' '}
                 <Link
                   href='/personvern'
                   className='font-normal text-foreground underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground dark:focus-visible:outline-dark-foreground'
@@ -178,13 +196,13 @@ export function InfoCardStackView() {
             </div>
           </div>
 
-          <div className='mt-auto flex justify-center py-[0.5em]'>
+          <div className='mt-auto flex justify-center pt-[clamp(1.25rem,5cqi,1.85rem)] pb-[0.55em]'>
             <Image
               src={UtekosLogo}
               alt='Utekos Logo'
               width={32}
               height={32}
-              className='size-[clamp(1.5rem,7cqi,2.25rem)]'
+              className='size-[clamp(1.55rem,7cqi,2.35rem)]'
             />
           </div>
         </div>

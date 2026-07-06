@@ -41,7 +41,7 @@ export function VariantSelectors({
                   {isColorOption && (
                     <span
                       aria-hidden='true'
-                      className='border-cloud-dancer/35 bg-havdyp size-3 rounded-full border shadow-[0_0_0_2px_color-mix(in_oklab,var(--cloud-dancer)_12%,transparent)]'
+                      className='bg-havdyp size-3 rounded-full border border-foreground/35 shadow-[0_0_0_2px_color-mix(in_oklab,var(--foreground)_12%,transparent)]'
                     />
                   )}
                   {currentSelectedValue}
@@ -68,10 +68,10 @@ export function VariantSelectors({
                         onUpdateVariant(option.name, value)
                       }
                       className={cn(
-                        'hover:bg-cloud-dancer dark:text-dark-background rounded-lg px-6 py-2.5 text-sm text-background transition-all duration-200',
+                        'dark:text-dark-background rounded-lg px-6 py-2.5 text-sm text-background transition-all duration-200 hover:bg-foreground',
                         'hover:scale-105 active:scale-95',
                         isActive ? 'shadow-md' : (
-                          'hover:border-cloud-dancer/40'
+                          'hover:border-foreground/40'
                         )
                       )}
                       aria-pressed={isActive}
@@ -80,7 +80,7 @@ export function VariantSelectors({
                       {isColorOption && (
                         <span
                           aria-hidden='true'
-                          className='dark:border-dark-background/25 bg-havdyp size-3 rounded-full border border-background/25 shadow-[0_0_0_2px_color-mix(in_oklab,var(--cloud-dancer)_35%,transparent)]'
+                          className='dark:border-dark-background/25 bg-havdyp size-3 rounded-full border border-background/25 shadow-[0_0_0_2px_color-mix(in_oklab,var(--foreground)_35%,transparent)]'
                         />
                       )}
                       {value}

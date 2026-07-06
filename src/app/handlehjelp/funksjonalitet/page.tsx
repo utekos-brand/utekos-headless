@@ -15,13 +15,13 @@ export default async function FunctionalityPage() {
   await connection()
 
   return (
-    <article className='bg-night pt-12 pb-20 text-cloud-dancer'>
+    <article className='pt-12 pb-20'>
       <FunctionalityPageHero />
       <FunctionalityPageThreeModesSection />
       <FunctionalityPageVideoSection />
 
       <div className='container mx-auto mt-24 px-4 text-center'>
-        <p className='text-lg text-cloud-dancer/85'>
+        <p className='text-lg text-foreground/85'>
           Gjelder modellene TechDown, Dun og Mikrofiber.
         </p>
       </div>

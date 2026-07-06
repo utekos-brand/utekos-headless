@@ -57,7 +57,7 @@ export function PopularDestinations({
               delay={`${destinationIndex * 0.1}s`}
               threshold={0.2}
             >
-              <Card className='  hover:bg-card-hover dark:hover:bg-dark-card-hover border-border bg-card text-card-foreground transition-colors'>
+              <Card className='hover:bg-card-hover -hover border-border bg-card text-card-foreground transition-colors'>
                 <CardContent className='p-6'>
                   <div className='mb-3 flex items-start justify-between'>
                     <h3 className='text-lg font-semibold'>

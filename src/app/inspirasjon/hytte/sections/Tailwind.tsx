@@ -14,26 +14,26 @@ export function TailwindSection() {
       gutterWidth={hyttePatternGutterWidth}
       contentWidth={hyttePatternContentWidth}
       showHorizontalRules={false}
-      className='dark:bg-dark-sidebar dark:text-dark-sidebar-foreground overflow-x-clip bg-sidebar text-sidebar-foreground'
+      className='overflow-x-clip bg-sidebar text-sidebar-foreground'
       contentClassName='w-full min-w-0 px-6 py-24 sm:py-32 lg:px-8'
     >
       <div className='mx-auto max-w-4xl text-center'>
-        <h2 className='dark:text-dark-sidebar-foreground text-base/7 font-semibold text-sidebar-foreground'>
+        <h2 className='text-base/7 font-semibold text-sidebar-foreground'>
           Pris
         </h2>
-        <p className='dark:text-dark-sidebar-foreground mt-2 text-5xl font-semibold tracking-tight text-balance text-sidebar-foreground sm:text-6xl'>
+        <p className='mt-2 text-5xl font-semibold tracking-tight text-balance text-sidebar-foreground sm:text-6xl'>
           Velg din favoritt
         </p>
       </div>
 
-      <p className='dark:text-dark-sidebar-foreground mx-auto mt-6 max-w-2xl text-center text-lg font-medium text-pretty text-sidebar-foreground sm:text-xl/8'>
+      <p className='mx-auto mt-6 max-w-2xl text-center text-lg font-medium text-pretty text-sidebar-foreground sm:text-xl/8'>
         Velg varianten som du liker best eller egner seg til ditt
         bruksscenario for å få den beste komforten og skreddersy
         varmen etter behovene dine.
       </p>
 
       <div className='mx-auto mt-16 grid w-full max-w-lg min-w-0 grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2'>
-        <div className=' dark:ring-dark-border rounded-3xl rounded-t-3xl bg-card p-8 text-card-foreground ring-1 ring-border sm:rounded-b-none sm:p-10 lg:rounded-tr-none lg:rounded-bl-3xl'>
+        <div className='dark:ring-dark-border rounded-3xl rounded-t-3xl bg-card p-8 text-card-foreground ring-1 ring-border sm:rounded-b-none sm:p-10 lg:rounded-tr-none lg:rounded-bl-3xl'>
           <h3
             id='utekos-mikrofiber'
             className='text-base/7 font-semibold text-card-foreground'

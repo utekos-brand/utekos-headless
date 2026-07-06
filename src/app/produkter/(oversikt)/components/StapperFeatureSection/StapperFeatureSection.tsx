@@ -12,11 +12,11 @@ import { stapperFeatures } from './stapperFeatures'
 
 export function StapperFeatureSection() {
   const imagePanel = (
-    <Card className='border-cloud-dancer/12 bg-cloud-dancer/[0.035] relative isolate min-h-88 overflow-hidden rounded-3xl py-0 shadow-none backdrop-blur-[2px] sm:min-h-104 lg:min-h-132'>
+    <Card className='relative isolate min-h-88 overflow-hidden rounded-3xl border-foreground/12 bg-foreground/[0.035] py-0 shadow-none backdrop-blur-[2px] sm:min-h-104 lg:min-h-132'>
       <CardContent className='relative flex size-full min-h-[inherit] items-center justify-center p-0'>
         <div className='absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,color-mix(in_oklab,var(--ancient-water)_18%,transparent),transparent_44%)]' />
         <div className='dark:bg-dark-background/55 absolute inset-x-10 bottom-8 h-24 rounded-full bg-background/55 blur-3xl' />
-        <div className='  absolute top-8 right-8 hidden rounded-full border border-border bg-card px-4 py-2 text-xs font-medium text-card-foreground uppercase sm:block'>
+        <div className='absolute top-8 right-8 hidden rounded-full border border-border bg-card px-4 py-2 text-xs font-medium text-card-foreground uppercase sm:block'>
           100 g
         </div>
         <Image
@@ -31,7 +31,7 @@ export function StapperFeatureSection() {
   )
 
   return (
-    <article className='border-cloud-dancer/12 relative mb-8 overflow-hidden rounded-[1.75rem] border bg-[radial-gradient(circle_at_14%_18%,color-mix(in_oklab,var(--ancient-water)_14%,transparent),transparent_30%),linear-gradient(135deg,var(--havdyp)_0%,var(--background)_48%,var(--havdyp)_100%)] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 xl:px-12'>
+    <article className='relative mb-8 overflow-hidden rounded-[1.75rem] border border-foreground/12 bg-[radial-gradient(circle_at_14%_18%,color-mix(in_oklab,var(--ancient-water)_14%,transparent),transparent_30%),linear-gradient(135deg,var(--havdyp)_0%,var(--background)_48%,var(--havdyp)_100%)] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 xl:px-12'>
       <div
         aria-hidden='true'
         className='absolute inset-0 -z-10'
@@ -41,7 +41,7 @@ export function StapperFeatureSection() {
         }}
       />
 
-      <div className='via-cloud-dancer/30 pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent to-transparent' />
+      <div className='pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-foreground/30 to-transparent' />
 
       <div className='mx-auto max-w-312'>
         <div className='grid gap-8 lg:grid-cols-[minmax(0,0.86fr)_minmax(28rem,1.14fr)] lg:items-center xl:gap-12'>
@@ -49,7 +49,7 @@ export function StapperFeatureSection() {
             <AnimatedBlock className='will-animate-fade-in-up'>
               <Badge
                 variant='outline'
-                className=' dark:bg-dark-muted dark:text-dark-muted-foreground mb-5 border-border bg-muted px-3.5 py-1.5 text-muted-foreground'
+                className='dark:bg-dark-muted dark:text-dark-muted-foreground mb-5 border-border bg-muted px-3.5 py-1.5 text-muted-foreground'
               >
                 Utekos Stapper™
               </Badge>
@@ -101,11 +101,11 @@ export function StapperFeatureSection() {
           </AnimatedBlock>
         </div>
 
-        <div className='border-cloud-dancer/10 mt-8 grid grid-cols-1 border-t text-left sm:grid-cols-2 lg:mt-10 lg:grid-cols-4'>
+        <div className='mt-8 grid grid-cols-1 border-t border-foreground/10 text-left sm:grid-cols-2 lg:mt-10 lg:grid-cols-4'>
           {stapperFeatures.map((feature, index) => (
             <AnimatedBlock
               key={feature.title}
-              className='will-animate-fade-in-up group border-cloud-dancer/10 sm:even:border-cloud-dancer/10 lg:border-cloud-dancer/10 relative flex gap-4 border-b py-6 sm:odd:pr-6 sm:even:border-l sm:even:pl-6 lg:border-b-0 lg:border-l lg:px-6 lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0'
+              className='will-animate-fade-in-up group relative flex gap-4 border-b border-foreground/10 py-6 sm:odd:pr-6 sm:even:border-l sm:even:border-foreground/10 sm:even:pl-6 lg:border-b-0 lg:border-l lg:border-foreground/10 lg:px-6 lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0'
               delay={`${index * 0.08}s`}
             >
               <div

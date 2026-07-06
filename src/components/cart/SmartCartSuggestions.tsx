@@ -99,11 +99,11 @@ export function SmartCartSuggestions({
     )
 
     return (
-      <div className='border-t border-neutral-800 p-6'>
-        <div className='text-center'>
+      <div className='border-t border-border bg-background p-6'>
+        <div className='text-center text-foreground'>
           <p>
             Du er kun{' '}
-            <span className='font-bold text-white'>
+            <span className='font-bold text-foreground'>
               {formatNOK(remainingAmount)}
             </span>{' '}
             unna fri frakt!
@@ -139,7 +139,7 @@ export function SmartCartSuggestions({
 
   if (suggestions.length === 0) {
     return (
-      <div className='border-t border-neutral-800 p-6'>
+      <div className='border-t border-border bg-background p-6'>
         <FreeShippingConfirmation />
       </div>
     )
@@ -152,10 +152,12 @@ export function SmartCartSuggestions({
     : 'Andre livsnytere har også sett på'
 
   return (
-    <div className='border-t border-neutral-800 p-6'>
+    <div className='border-t border-border bg-background p-6'>
       <FreeShippingConfirmation />
       <div className='mt-6'>
-        <h3 className='text-sm font-semibold text-center'>{title}</h3>
+        <h3 className='text-center text-sm font-semibold text-foreground'>
+          {title}
+        </h3>
         <div className='mt-4 space-y-4'>
           {suggestions.map(product => (
             <UpsellItem

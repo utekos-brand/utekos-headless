@@ -59,8 +59,8 @@ export function ProductGallery({
       </CarouselContent>
       {images.length > 1 && (
         <>
-          <CarouselPrevious className='left-2 border-sidebar-foreground dark:border-dark-sidebar-foreground bg-sidebar dark:bg-dark-sidebar text-sidebar-foreground dark:text-dark-sidebar-foreground shadow-lg ring-1 ring-sidebar-foreground dark:ring-dark-sidebar-foreground hover:bg-sidebar dark:hover:bg-dark-sidebar hover:text-sidebar-foreground dark:hover:text-dark-sidebar-foreground' />
-          <CarouselNext className='right-2 border-sidebar-foreground dark:border-dark-sidebar-foreground bg-sidebar dark:bg-dark-sidebar text-sidebar-foreground dark:text-dark-sidebar-foreground shadow-lg ring-1 ring-sidebar-foreground dark:ring-dark-sidebar-foreground hover:bg-sidebar dark:hover:bg-dark-sidebar hover:text-sidebar-foreground dark:hover:text-dark-sidebar-foreground' />
+          <CarouselPrevious className='dark:border-dark-sidebar-foreground dark:ring-dark-sidebar-foreground dark:hover:text-dark-sidebar-foreground left-2 border-sidebar-foreground bg-sidebar text-sidebar-foreground shadow-lg ring-1 ring-sidebar-foreground hover:bg-sidebar hover:text-sidebar-foreground' />
+          <CarouselNext className='dark:border-dark-sidebar-foreground dark:ring-dark-sidebar-foreground dark:hover:text-dark-sidebar-foreground right-2 border-sidebar-foreground bg-sidebar text-sidebar-foreground shadow-lg ring-1 ring-sidebar-foreground hover:bg-sidebar hover:text-sidebar-foreground' />
         </>
       )}
     </Carousel>

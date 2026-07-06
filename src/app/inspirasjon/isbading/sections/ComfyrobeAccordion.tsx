@@ -244,7 +244,7 @@ export function ComfyrobeAccordion({
   return (
     <Accordion
       className={cn(
-        'border-cloud-dancer/12 mt-4 w-full border-t',
+        'mt-4 w-full border-t border-foreground/12',
         className
       )}
       defaultValue={['about']}
@@ -253,7 +253,7 @@ export function ComfyrobeAccordion({
         <AccordionItem
           key={item.value}
           value={item.value}
-          className='border-cloud-dancer/12'
+          className='border-foreground/12'
         >
           <AccordionTrigger>{item.trigger}</AccordionTrigger>
           <AccordionContent className={item.contentClassName}>

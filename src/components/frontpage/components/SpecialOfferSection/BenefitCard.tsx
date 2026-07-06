@@ -29,10 +29,10 @@ const toneStyles: Record<
     icon: 'border-card-foreground/28 bg-secondary text-sidebar-foreground'
   },
   mauve: {
-    icon: 'border-primary/34 bg-primary text-primary-foreground'
+   icon: 'border-card-foreground/28 bg-secondary text-sidebar-foreground'
   },
   overcast: {
-    icon: 'border-foreground/24 bg-foreground/10 text-foreground'
+   icon: 'border-card-foreground/28 bg-secondary text-sidebar-foreground'
   }
 }
 

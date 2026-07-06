@@ -1,15 +1,9 @@
 import { UtekosBreadcrumbBar } from '@/components/navigation/UtekosBreadcrumbBar'
-import type { BreadcrumbSurface } from '@/lib/navigation/breadcrumbVariants'
 
 export function InspirationHeroBreadcrumb({
-  label,
-  surface = 'embeddedLight'
+  label
 }: {
   label: string
-  surface?: Extract<
-    BreadcrumbSurface,
-    'embeddedLight' | 'embeddedDark'
-  >
   color?: string
   textColor?: string
   icon?: unknown
@@ -17,7 +11,7 @@ export function InspirationHeroBreadcrumb({
   return (
     <UtekosBreadcrumbBar
       embedded
-      surface={surface}
+      surface='transparent'
       items={[
         { label: 'Forsiden', href: '/' },
         { label: 'Inspirasjon', href: '/inspirasjon' },

@@ -11,16 +11,20 @@ export function EmptyCartRecommendations() {
 
   if (!products || products.length === 0) {
     return (
-      <div className='text-center text-muted-foreground dark:text-dark-muted-foreground'>
-        <p className='text-base'>Handlekurven din er tom</p>
-        <p className='mt-1 text-sm'>Legg til produkter for å komme i gang.</p>
+      <div className='text-center text-muted-foreground'>
+        <p className='text-base text-foreground'>
+          Handlekurven din er tom
+        </p>
+        <p className='mt-1 text-sm'>
+          Legg til produkter for å komme i gang.
+        </p>
       </div>
     )
   }
 
   return (
     <div className='text-left'>
-      <h4 className='text-base font-semibold mb-4'>
+      <h4 className='mb-4 text-base font-semibold text-foreground'>
         Legg til for å starte din Utekos
       </h4>
       <div className='space-y-4'>

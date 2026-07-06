@@ -9,7 +9,7 @@ export function ProductTestimonial() {
         delay='0s'
         threshold={0.5}
       >
-        <Card className='dark:bg-dark-sidebar-foreground border-neutral-800 bg-sidebar-foreground'>
+        <Card className='-foreground border-neutral-800 bg-sidebar-foreground'>
           <CardContent className='p-12 text-center'>
             <blockquote className='/90 text-xl text-foreground/90 italic'>
               &quot;Utekos har totalt forandret hvordan vi bruker

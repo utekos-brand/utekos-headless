@@ -1,4 +1,3 @@
-// Path: src/components/cart/RecommendedItem.tsx
 import { getInitialAvailableOptions } from '@/components/ProductCard/getInitialAvailableOptions'
 import { findMatchingVariant } from '@/components/ProductCard/findMatchingVariant'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
@@ -10,16 +9,22 @@ import type { ShopifyProduct } from 'types/product'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export function RecommendedItem({ product }: { product: ShopifyProduct }) {
+export function RecommendedItem({
+  product
+}: {
+  product: ShopifyProduct
+}) {
   const cartActor = CartMutationContext.useActorRef()
   const selectedOptions = getInitialAvailableOptions(product)
-  const selectedVariant = findMatchingVariant(product, selectedOptions)
+  const selectedVariant = findMatchingVariant(
+    product,
+    selectedOptions
+  )
 
   const handleAddToCart = () => {
     if (selectedVariant) {
       cartActor.send({
         type: 'ADD_LINES',
-
         input: [{ variantId: selectedVariant.id, quantity: 1 }]
       })
     }
@@ -27,13 +32,21 @@ export function RecommendedItem({ product }: { product: ShopifyProduct }) {
 
   return (
     <div className='flex items-center gap-4'>
-      <Link href={`/produkter/${product.handle}`} onClick={() => cartStore.send({ type: 'CLOSE' })}>
-        <div className='w-16 flex-shrink-0'>
-          <AspectRatio ratio={2 / 3} className='overflow-hidden rounded-md border bg-sidebar-foreground dark:bg-dark-sidebar-foreground'>
+      <Link
+        href={`/produkter/${product.handle}`}
+        onClick={() => cartStore.send({ type: 'CLOSE' })}
+      >
+        <div className='w-16 shrink-0'>
+          <AspectRatio
+            ratio={2 / 3}
+            className='overflow-hidden rounded-md border border-border bg-muted'
+          >
             {product.featuredImage && (
               <Image
                 src={product.featuredImage.url}
-                alt={product.featuredImage.altText || product.title}
+                alt={
+                  product.featuredImage.altText || product.title
+                }
                 fill
                 className='object-cover'
                 sizes='64px'
@@ -43,18 +56,23 @@ export function RecommendedItem({ product }: { product: ShopifyProduct }) {
         </div>
       </Link>
       <div className='grow'>
-        <Link href={`/produkter/${product.handle}`} onClick={() => cartStore.send({ type: 'CLOSE' })}>
-          <h4 className='text-sm font-medium hover:underline'>{product.title}</h4>
+        <Link
+          href={`/produkter/${product.handle}`}
+          onClick={() => cartStore.send({ type: 'CLOSE' })}
+        >
+          <h4 className='text-sm font-medium text-foreground hover:underline'>
+            {product.title}
+          </h4>
         </Link>
-        <p className='mt-1 text-sm text-muted-foreground dark:text-dark-muted-foreground'>
+        <p className='mt-1 text-sm text-muted-foreground'>
           {formatPrice(product.priceRange.minVariantPrice)}
         </p>
       </div>
       <Button
         size='sm'
+        variant='secondary'
         onClick={handleAddToCart}
         disabled={!selectedVariant}
-        className='bg-ancient-water text-maritime-darkest hover:bg-ancient-water/80'
       >
         Legg til
       </Button>

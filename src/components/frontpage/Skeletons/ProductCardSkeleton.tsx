@@ -1,10 +1,15 @@
 import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader
+} from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export function ProductCardSkeleton() {
   return (
-    <Card className='flex h-full flex-col bg-sidebar-foreground dark:bg-dark-sidebar-foreground'>
+    <Card className='-foreground flex h-full flex-col bg-sidebar-foreground'>
       <CardContent className='relative p-0'>
         <AspectRatio ratio={2 / 3}>
           <Skeleton className='size-full rounded-t-lg' />

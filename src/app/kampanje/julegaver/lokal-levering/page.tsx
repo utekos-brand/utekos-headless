@@ -53,7 +53,7 @@ export default async function ChristmasLocalDelivery() {
   return (
     <div className='dark:bg-dark-background bg-background pb-20'>
       <CampaignPageTracker />
-      <article className=' relative overflow-hidden bg-card pt-24 pb-16 text-center text-card-foreground md:pt-32'>
+      <article className='relative overflow-hidden bg-card pt-24 pb-16 text-center text-card-foreground md:pt-32'>
         <div className='relative z-10 container mx-auto px-4'>
           <KampanjeJulegaverBreadcrumbs
             currentLabel='Lokal levering'
@@ -61,7 +61,7 @@ export default async function ChristmasLocalDelivery() {
             parentLabel='Julegaver'
           />
           {/* Badge for lokal tilhørighet */}
-          <div className=' bg-promo dark:bg-dark-promo text-promo-foreground dark:text-dark-promo-foreground inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 backdrop-blur-sm'>
+          <div className='bg-promo dark:bg-dark-promo text-promo-foreground dark:text-dark-promo-foreground inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 backdrop-blur-sm'>
             <Gift className='h-4 w-4' />
             <span className='text-sm font-medium'>
               Gi bort funksjonell varme
@@ -99,7 +99,7 @@ export default async function ChristmasLocalDelivery() {
           </div>
         </div>
       </article>
-      <article className='  border-y border-border bg-card py-8 text-card-foreground'>
+      <article className='border-y border-border bg-card py-8 text-card-foreground'>
         <div className='container mx-auto px-4'>
           <div className='grid gap-8 text-center sm:grid-cols-3'>
             <div className='flex flex-col items-center gap-3'>
@@ -151,7 +151,7 @@ export default async function ChristmasLocalDelivery() {
 
       {/* --- SLIK GJØR DU DET (Instruksjon) --- */}
       <article className='container mx-auto mt-12 px-4'>
-        <div className='  rounded-2xl border border-border bg-card p-6 text-card-foreground md:p-10'>
+        <div className='rounded-2xl border border-border bg-card p-6 text-card-foreground md:p-10'>
           <div className='text-center'>
             <h3 className='text-2xl font-bold text-card-foreground'>
               Slik fungerer julegave-ekspressen:
@@ -224,7 +224,7 @@ export default async function ChristmasLocalDelivery() {
         </div>
 
         <div className='grid gap-8 md:grid-cols-2 lg:gap-12'>
-          <div className='group   hover:border-commerce-primary/40 dark:hover:border-dark-commerce-primary/40 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
+          <div className='group hover:border-commerce-primary/40 dark:hover:border-dark-commerce-primary/40 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
             <div className='absolute top-4 right-4 z-10 rounded-full bg-red-800 px-3 py-1 text-xs font-bold text-white shadow-lg'>
               JULERABATT
             </div>
@@ -265,7 +265,7 @@ export default async function ChristmasLocalDelivery() {
             </div>
           </div>
 
-          <div className='group   hover:border-commerce-primary/40 dark:hover:border-dark-commerce-primary/40 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
+          <div className='group hover:border-commerce-primary/40 dark:hover:border-dark-commerce-primary/40 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
             <div className='absolute top-4 right-4 z-10 rounded-full bg-blue-900 px-3 py-1 text-xs font-bold text-white shadow-lg'>
               BESTSELGER
             </div>
@@ -305,7 +305,7 @@ export default async function ChristmasLocalDelivery() {
             </div>
           </div>
 
-          <div className='group   hover:border-commerce-primary/40 dark:hover:border-dark-commerce-primary/40 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
+          <div className='group hover:border-commerce-primary/40 dark:hover:border-dark-commerce-primary/40 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
             <div className='absolute top-4 right-4 z-10 rounded-full bg-orange-900 px-3 py-1 text-xs font-bold text-white shadow-lg'>
               FÅ IGJEN
             </div>
@@ -342,7 +342,7 @@ export default async function ChristmasLocalDelivery() {
             </div>
           </div>
 
-          <div className='group   hover:border-commerce-primary/40 dark:hover:border-dark-commerce-primary/40 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
+          <div className='group hover:border-commerce-primary/40 dark:hover:border-dark-commerce-primary/40 relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground transition-all'>
             <div className='absolute top-4 right-4 z-10 rounded-full bg-neutral-800 px-3 py-1 text-xs font-bold text-white shadow-lg'>
               ALLROUNDER
             </div>
@@ -403,7 +403,7 @@ export default async function ChristmasLocalDelivery() {
         <div className='grid gap-6 md:grid-cols-3'>
           <Link
             href='/handlehjelp/teknologi-materialer'
-            className='group  hover:bg-card-hover dark:hover:bg-dark-card-hover flex flex-col items-center rounded-xl bg-card p-8 text-center text-card-foreground transition-colors'
+            className='group hover:bg-card-hover -hover flex flex-col items-center rounded-xl bg-card p-8 text-center text-card-foreground transition-colors'
           >
             <div className='mb-4 rounded-full bg-red-900/20 p-4 transition-transform group-hover:scale-110'>
               <Gift className='h-8 w-8 text-red-400' />
@@ -416,7 +416,7 @@ export default async function ChristmasLocalDelivery() {
 
           <Link
             href='/kontaktskjema'
-            className='group  hover:bg-card-hover dark:hover:bg-dark-card-hover flex flex-col items-center rounded-xl bg-card p-8 text-center text-card-foreground transition-colors'
+            className='group hover:bg-card-hover -hover flex flex-col items-center rounded-xl bg-card p-8 text-center text-card-foreground transition-colors'
           >
             <div className='mb-4 rounded-full bg-blue-900/20 p-4 transition-transform group-hover:scale-110'>
               <Truck className='h-8 w-8 text-blue-400' />
@@ -431,7 +431,7 @@ export default async function ChristmasLocalDelivery() {
 
           <Link
             href='/handlehjelp/storrelsesguide'
-            className='group  hover:bg-card-hover dark:hover:bg-dark-card-hover flex flex-col items-center rounded-xl bg-card p-8 text-center text-card-foreground transition-colors'
+            className='group hover:bg-card-hover -hover flex flex-col items-center rounded-xl bg-card p-8 text-center text-card-foreground transition-colors'
           >
             <div className='mb-4 rounded-full bg-green-900/20 p-4 transition-transform group-hover:scale-110'>
               <Calendar className='h-8 w-8 text-green-400' />

@@ -29,7 +29,7 @@ export async function NodeSection() {
           className={cn(nodeSectionClassName, 'flex flex-col')}
         >
           <div
-            className='dark:via--border pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-border to-transparent'
+            className='dark:via-border pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-border to-transparent'
             aria-hidden='true'
           />
           <CustomerNetwork />

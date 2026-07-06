@@ -21,7 +21,7 @@ export function SizeLabel({ className = '' }: SizeLabelProps) {
         target='_blank'
         rel='noopener noreferrer'
         className={cn(
-          'font-utekos-text-medium dark:hover:text-dark-card-foreground/90 dark:focus-visible:outline-dark-card-foreground inline-flex items-center gap-1 text-sm tracking-wide text-card-foreground uppercase hover:text-card-foreground/90 hover:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground',
+          'font-utekos-text-medium /90 dark:focus-visible:outline-dark-card-foreground inline-flex items-center gap-1 text-sm tracking-wide text-card-foreground uppercase hover:text-card-foreground/90 hover:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground',
           className
         )}
       >
@@ -29,7 +29,7 @@ export function SizeLabel({ className = '' }: SizeLabelProps) {
         <ExternalLink className='font-utekos-text-medium size-3 text-current' />
       </HoverCardTrigger>
       <HoverCardContent
-        className=' w-60 border-border'
+        className='w-60 border-border'
         side='top'
         align='start'
       >

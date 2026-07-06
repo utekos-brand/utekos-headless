@@ -23,7 +23,7 @@ export function PreFooterNavigation() {
               className={cn(
                 'group flex items-center justify-between p-6',
                 'dark:border-dark-foreground/10 dark:bg-dark-background/30 rounded-2xl border border-foreground/10 bg-background/30 backdrop-blur-sm',
-                'dark:hover:border-dark-primary/50 dark:hover:bg-dark-background/60 dark:hover:shadow-dark-primary/5 transition-all duration-400 hover:border-primary/50 hover:bg-background/60 hover:shadow-lg hover:shadow-primary/5',
+                'dark:hover:border-dark-primary/50 dark:hover:bg-dark-background/60 dark:hover:shadow-dark-primary/5 transition-all duration-400 hover:border-secondary/50 hover:bg-background/60 hover:shadow-lg hover:shadow-secondary/5',
                 index === 0 && 'md:col-span-2 lg:col-span-3',
                 link.mdOnly && 'hidden md:flex'
               )}
@@ -31,7 +31,8 @@ export function PreFooterNavigation() {
               <div className='flex items-center gap-4'>
                 <div
                   className={cn(
-                    'dark:border-dark-foreground/5 dark:bg-dark-background/80 dark:text-dark-primary dark:group-hover:border-dark-primary dark:group-hover:bg-dark-primary dark:group-hover:text-dark-foreground rounded-full border border-foreground/5 bg-background/80 p-3 text-primary shadow-sm transition-colors duration-400 group-hover:border-primary group-hover:bg-primary group-hover:text-foreground'
+                    'rounded-full border border-border bg-muted p-3 text-ceramic shadow-sm transition-colors duration-400',
+                    'group-hover:border-secondary/50 group-hover:bg-secondary group-hover:text-secondary-foreground'
                   )}
                 >
                   {link.icon}
@@ -47,8 +48,7 @@ export function PreFooterNavigation() {
                 </div>
               </div>
 
-              {/* Pilen: Får den varme "Iced Apricot"-fargen på hover for å trigge et klikk */}
-              <ArrowRight className='/30 dark:group-hover:text-dark-accent size-5 text-foreground/30 transition-all duration-400 group-hover:translate-x-2 group-hover:text-accent' />
+              <ArrowRight className='size-5 text-muted-foreground transition-all duration-400 group-hover:translate-x-2 group-hover:text-ceramic' />
             </Link>
           ))}
         </div>

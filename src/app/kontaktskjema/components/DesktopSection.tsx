@@ -49,9 +49,9 @@ export function DesktopSection() {
           </ul>
         </div>
 
-        <div className='border-cloud-dancer/12 border-y'>
+        <div className='border-y border-foreground/12'>
           <div className='grid grid-cols-1 sm:grid-cols-2'>
-            <div className='border-cloud-dancer/12 border-r p-6 sm:p-8 lg:px-8 lg:py-12'>
+            <div className='border-r border-foreground/12 p-6 sm:p-8 lg:px-8 lg:py-12'>
               <h4 className='flex items-center gap-2 leading-tight font-semibold tracking-normal text-foreground'>
                 <Leaf className='text-soft-warm h-5 w-5' />
                 En investering i komfort
@@ -91,7 +91,7 @@ export function DesktopSection() {
         </div>
       </div>
 
-      <div className='border-cloud-dancer/12 dark:bg-dark-background/72 border-l bg-background/72 p-8 lg:p-12'>
+      <div className='dark:bg-dark-background/72 border-l border-foreground/12 bg-background/72 p-8 lg:p-12'>
         <SupportForm idPrefix='desktop-contact' />
       </div>
     </div>
