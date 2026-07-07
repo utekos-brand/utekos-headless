@@ -88,7 +88,7 @@ export function BenefitsGrid({
 
                 <H3
                   Text={benefit.title}
-                  className='mb-2 pb-0 text-foreground'
+                  className='mb-2 pb-0 text-xl font-bold tracking-[-0.01em] text-foreground md:text-xl'
                 />
 
                 <p className='tracking-[-0.02em] text-foreground/90'>
