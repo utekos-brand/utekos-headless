@@ -56,6 +56,8 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
   --color-success-green: var(--success-green);
+  --color-surface-neutral: var(--surface-neutral);
+  --color-dark-surface-neutral: var(--dark-surface-neutral);
 }
 
 :root {
@@ -92,6 +94,7 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --surface-neutral: oklch(0.3336 0.0035 286.21);
   --success-green: oklch(0.5266 0.099 174.55);
   --light: oklch(0.895 0.0514 145.13);
   --utekos-50: oklch(98.12% 0.027 196.72);
@@ -106,6 +109,7 @@
   --utekos-900: oklch(29.07% 0.050 194.77);
   --utekos-1000: oklch(0.2357 0.04 194.77);
   --utekos-1100: oklch(0.165 0.0282 194.77);
+  --dark-surface-neutral: oklch(0.215 0.032 194.77);
 }
 
 .dark {
@@ -113,7 +117,7 @@
   --foreground: oklch(0.985 0 0);
   --teal-25: oklch(0.9569 0.014 185.95);
   --badge: oklch(0.2357 0.04 194.77);
-  --card: oklch(0.325 0.0503 194.96);
+  --card: oklch(0.265 0.038 194.77);
   --ceramic: oklch(0.6678 0.1141 194.02);
   --alternate: oklch(0.2943 0.0502 194.77);
   --alternate-button: oklch(0.4999 0.0853 194.77);
@@ -123,7 +127,7 @@
   --primary: oklch(0.5575 0.1564 43.75);
   --primary-hover: oklch(0.69218 0.158176 62.7916);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.304938 0.052052 194.7689);
+  --secondary: oklch(0.315 0.042 194.77);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.2357 0.04 194.77);
   --muted-foreground: oklch(0.708 0 0);
@@ -143,6 +147,8 @@
   --sidebar-ring: oklch(0.556 0 0);
   --success-green: oklch(0.5266 0.099 174.55);
   --light: oklch(0.895 0.0514 145.13);
+  --surface-neutral: oklch(0.215 0.032 194.77);
+  --dark-surface-neutral: oklch(0.215 0.032 194.77);
 }
 
 

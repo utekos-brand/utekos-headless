@@ -20,6 +20,7 @@ import { CAROUSEL_SSR } from '@/components/ui/carousel-ssr'
 import { cn } from '@/lib/utils/className'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { H2 } from '@/components/typography/TypographyH2'
+import { Lead } from '@/components/typography/Lead'
 
 export function TerrasseCarousel() {
   const [api, setApi] = React.useState<CarouselApi>()
@@ -96,30 +97,22 @@ export function TerrasseCarousel() {
   }
 
   return (
-    <article className='relative isolate overflow-x-clip bg-card py-16 text-card-foreground sm:py-20 lg:py-24'>
+    <article className='relative isolate overflow-x-clip bg-surface-neutral py-16 text-card-foreground sm:py-20 lg:py-24'>
       <InspirationContentShell>
         <div className='mb-8 max-w-3xl text-left sm:mb-10 lg:mb-12'>
-          <BrandBadge
-            backgroundColor='var(--secondary)'
-            textColor='var(--secondary-foreground)'
-            className='mb-4 gap-2 border border-border px-4 py-2 font-utekos-text text-sm leading-4 shadow-none'
-          >
-            <Camera className='size-4' aria-hidden='true' />
-            <span className='inline-flex flex-wrap items-baseline justify-center gap-x-[0.28em] leading-snug'>
-              <span>Terrasselivet med</span>
-              <UtekosWordmark className='inline-block h-[0.78em] w-auto translate-y-[0.035em] text-current' />
-            </span>
-          </BrandBadge>
-
           <H2
-            ID='terrasse-bildekarusell'
+            ID='TerrasseInspirationTitle'
+            Text='Terrasselivet med Utekos'
+          />
+
+          <Lead
             Text='Forleng dine beste øyeblikk'
-            className='mt-4 max-w-2xl text-balance pb-0 text-2xl font-semibold text-card-foreground sm:text-3xl md:text-4xl'
+            className='mt-4 max-w-2xl text-balance pb-0 text-2xl! font-semibold text-card-foreground sm:text-3xl! md:text-4xl!'
           />
         </div>
 
         <div className='relative'>
-          <div className='relative mx-auto max-w-6xl overflow-hidden rounded-lg border border-border bg-background p-4 shadow-sm sm:p-6'>
+          <div className='relative max-w-6xl overflow-hidden rounded-lg border border-border bg-background p-4 shadow-sm sm:p-6'>
             <Carousel
               setApi={setApi}
               plugins={[autoplayPlugin]}

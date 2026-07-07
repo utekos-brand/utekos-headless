@@ -1,10 +1,10 @@
 import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
+import { InspirationFeatureCard } from '@/app/inspirasjon/components/cards/InspirationFeatureCard'
 import { Sparkles, Thermometer, Users, Wind } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { H2 } from '@/components/typography/TypographyH2'
-import { H3 } from '@/components/typography/TypographyH3'
 import { Lead } from '@/components/typography/Lead'
-import { P } from '@/components/typography/TypographyP'
+import { cn } from '@/lib/utils/className'
 
 const benefitsData: {
   icon: LucideIcon
@@ -21,7 +21,7 @@ const benefitsData: {
     icon: Wind,
     title: 'Vindtett komfort',
     description:
-      'Designet for å stenge den kjølige sjøbrisen og trekken ute.'
+      'Designet for å stenge den kjølige sjøbrisen ute.'
   },
   {
     icon: Sparkles,
@@ -41,7 +41,7 @@ export function BenefitsGrid() {
   return (
     <article className='overflow-x-clip bg-background py-16 text-foreground sm:py-20 lg:py-24'>
       <InspirationContentShell>
-        <div className='mb-10 max-w-3xl sm:mb-12 lg:mb-16 md:max-w-4xl'>
+        <div className='mb-10 max-w-3xl sm:mb-12 md:max-w-4xl lg:mb-16'>
           <H2
             ID='batliv-fordeler'
             Text='Skapt for livet på sjøen'
@@ -53,28 +53,43 @@ export function BenefitsGrid() {
           </Lead>
         </div>
 
-        <div className='grid grid-cols-1 gap-6 rounded-3xl bg-card p-6 text-card-foreground md:grid-cols-2 md:gap-8 md:p-8 xl:grid-cols-4'>
+        <div className='grid grid-cols-1 items-start gap-6 rounded-3xl bg-card p-6 text-card-foreground md:grid-cols-2 md:gap-8 md:p-8 xl:grid-cols-4'>
           {benefitsData.map((benefit, index) => {
             const Icon = benefit.icon
+            const benefitNumber = String(index + 1).padStart(2, '0')
 
             return (
               <div
                 key={benefit.title}
-                className='boat-benefits-card h-full rounded-lg border border-border bg-background p-6 text-left text-foreground shadow-sm sm:p-7'
+                className='boat-benefits-card'
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
-                <div className='mb-5 flex items-start gap-4 sm:mb-6 sm:gap-5'>
-                  <div className='flex size-14 shrink-0 items-center justify-center rounded-lg border border-border bg-muted text-ceramic'>
-                    <Icon className='size-7' aria-hidden='true' />
-                  </div>
-                  <H3
-                    Text={benefit.title}
-                    className='pt-1 pb-0 text-left text-xl leading-snug text-foreground sm:text-2xl'
-                  />
-                </div>
-                <P className='mt-0 text-left text-base leading-relaxed text-foreground/80 not-first:mt-0'>
-                  {benefit.description}
-                </P>
+                <InspirationFeatureCard
+                  density='compact'
+                  footerMode='flow'
+                  icon={Icon}
+                  title={benefit.title}
+                  description={benefit.description}
+                  footerLabel='Fordel'
+                  footerValue={benefitNumber}
+                  backgroundSlot={
+                    <>
+                      <div className='absolute inset-0 bg-[linear-gradient(145deg,color-mix(in_oklch,var(--foreground)_5%,transparent),transparent_44%)]' />
+                      <div className='absolute inset-x-0 top-0 h-px bg-foreground/10' />
+                      <div className='absolute -top-24 -right-24 size-56 rounded-full bg-secondary/18 opacity-80 blur-3xl transition-opacity duration-300 group-hover:opacity-100' />
+                    </>
+                  }
+                  className='h-auto min-h-0 border-border bg-background text-foreground shadow-sm ring-border/50 transition-colors duration-300 hover:bg-muted/40 motion-reduce:transition-none'
+                  headerClassName='gap-5 px-6 pt-6 sm:px-7 sm:pt-7'
+                  iconContainerClassName='size-14 rounded-2xl border-border bg-secondary text-secondary-foreground ring-border/50'
+                  iconClassName='size-7'
+                  titleClassName='text-left text-xl leading-snug font-semibold tracking-[-0.02em] text-foreground sm:text-2xl'
+                  contentClassName='px-6 pt-5 pb-5 sm:px-7'
+                  descriptionClassName='max-w-[32ch] text-base leading-relaxed text-foreground/80'
+                  footerClassName='border-border bg-muted/30 px-6 py-4 sm:px-7'
+                  footerLabelClassName='text-muted-foreground'
+                  footerValueClassName='text-secondary'
+                />
               </div>
             )
           })}

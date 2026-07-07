@@ -1,11 +1,9 @@
 import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
-import { Card, CardContent } from '@/components/ui/card'
+import { InspirationFeatureCard } from '@/app/inspirasjon/components/cards/InspirationFeatureCard'
 import { BookOpen, Coffee, Moon } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { H2 } from '@/components/typography/TypographyH2'
-import { H3 } from '@/components/typography/TypographyH3'
 import { Lead } from '@/components/typography/Lead'
-import { P } from '@/components/typography/TypographyP'
 import { MotionCard, MotionReveal } from './TerraceMotion'
 
 type UseCase = {
@@ -47,46 +45,57 @@ export function UseCasesGrid({
   return (
     <article
       id='bruksomrader'
-      className='overflow-x-clip bg-card py-16 text-card-foreground sm:py-20 lg:py-24'
+      className='overflow-x-clip bg-surface-neutral py-16 text-foreground sm:py-20 lg:py-24'
     >
       <InspirationContentShell>
-        <MotionReveal className='mb-10 max-w-3xl sm:mb-12 lg:mb-16 lg:max-w-4xl'>
+        <MotionReveal className='mb-6 max-w-3xl lg:max-w-4xl'>
           <H2
             ID='terrasse-hjemmekos'
             Text='Hjemmekos, bare ute'
-            className='text-card-foreground'
+            className='text-foreground'
           />
-          <Lead className='mt-4 max-w-2xl pb-0 text-card-foreground md:mt-6 md:pb-0 lg:pb-0'>
+          <Lead className='max-w-2xl pb-0! text-foreground my-2 md:pb-0! lg:pb-0!'>
             Fra en stille stund for deg selv, til sosiale lag som
             varer lenger.
           </Lead>
         </MotionReveal>
 
-        <div className='grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8'>
+        <div className='grid grid-cols-1 items-start gap-6 md:grid-cols-3 md:gap-8'>
           {useCases.map((useCase, index) => {
             const Icon = useCase.icon
 
             return (
-              <MotionCard key={useCase.title} delay={index * 0.08}>
-                <Card className='group @container h-full overflow-hidden rounded-lg border border-border bg-background text-foreground shadow-sm transition-colors duration-300 hover:bg-muted/40 motion-reduce:transition-none'>
-                  <CardContent className='relative p-6 sm:p-8'>
-                    <div className='mb-6 flex items-center gap-4'>
-                      <div className='flex size-12 shrink-0 items-center justify-center rounded-lg border border-border bg-secondary text-secondary-foreground'>
-                        <Icon className='size-6' aria-hidden='true' />
-                      </div>
-                      <P className='text-left font-utekos-text-medium leading-snug text-secondary not-first:mt-0'>
-                        {useCase.time}
-                      </P>
-                    </div>
-                    <H3
-                      Text={useCase.title}
-                      className='pb-0 text-left text-xl leading-snug text-foreground md:text-2xl'
-                    />
-                    <P className='mt-4 leading-relaxed text-foreground/80 not-first:mt-4'>
-                      {useCase.description}
-                    </P>
-                  </CardContent>
-                </Card>
+              <MotionCard
+                key={useCase.title}
+                delay={index * 0.08}
+                y={18}
+              >
+                <InspirationFeatureCard
+                  density='compact'
+                  footerMode='flow'
+                  icon={Icon}
+                  title={useCase.title}
+                  description={useCase.description}
+                  footerLabel='Tidspunkt'
+                  footerValue={useCase.time}
+                  backgroundSlot={
+                    <>''
+                      <div className='absolute inset-0 bg-[linear-gradient(145deg,color-mix(in_oklch,var(--secondary)_6%,transparent),transparent_44%)]' />
+                      <div className='absolute inset-x-0 top-0 h-px bg-secondary/14' />
+                      <div className='absolute -top-24 -right-24 size-56 rounded-full bg-secondary/18 opacity-80 blur-3xl transition-opacity duration-300 group-hover:opacity-100' />
+                    </>
+                  }
+                  className='h-auto min-h-0 border-border bg-secondary text-foreground shadow-sm ring-border/50 transition-colors duration-300 hover:bg-muted/40 motion-reduce:transition-none'
+                  headerClassName='gap-4 px-6 pt-6 sm:px-8 sm:pt-8'
+                  iconContainerClassName='size-12 rounded-lg border-border bg-surface-neutral text-secondary-foreground ring-border/50'
+                  iconClassName='size-6'
+                  titleClassName='text-left text-xl leading-snug font-semibold tracking-[-0.02em] text-foreground md:text-2xl'
+                  contentClassName='px-6 pt-5 pb-5 sm:px-8'
+                  descriptionClassName='max-w-[34ch] text-base leading-relaxed text-foreground/80'
+                  footerClassName='border-border bg-background px-6 py-4 sm:px-8'
+                  footerLabelClassName='text-foreground/90'
+                  footerValueClassName='text-secondary'
+                />
               </MotionCard>
             )
           })}
