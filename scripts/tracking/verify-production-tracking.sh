@@ -108,7 +108,11 @@ SMOKE_OUTPUT="$("$PWCLI" -s="$SESSION" run-code "async (page) => {
     const latestConsent = consentEvents.at(-1) || {};
 
     return {
-      notGranted: required.filter(service => latestConsent[service] !== true)
+      notGranted: required.filter(service => latestConsent[service] !== true),
+      hasMetaPixel: typeof window.fbq === 'function',
+      metaScriptUrls: [...document.scripts]
+        .map(script => script.src)
+        .filter(src => src.includes('connect.facebook.net') || src.includes('facebook.com'))
     };
   }, requiredServices);
   const acceptedRequests = requests.slice(requestCountBeforeAccept);
@@ -142,6 +146,7 @@ SMOKE_OUTPUT="$("$PWCLI" -s="$SESSION" run-code "async (page) => {
   if (preConsentForbiddenRequests.length > 0) failures.push('Optional vendor requests occurred before consent.');
   if (!googleTagStatuses.includes(200)) failures.push('sGTM did not serve the canonical Google tag destination.');
   if (acceptedState.notGranted.length > 0) failures.push('Accept all did not grant every required tracking service.');
+  if (!acceptedState.hasMetaPixel) failures.push('Meta Pixel did not initialize after marketing consent.');
   if (acceptedRequests.some(url => url.includes('www.google-analytics.com/g/collect'))) {
     failures.push('GA4 fell back to the direct Google Analytics collect endpoint after consent.');
   }

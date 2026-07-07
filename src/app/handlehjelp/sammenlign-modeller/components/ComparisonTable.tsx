@@ -1,20 +1,20 @@
-// Path: src/app/handlehjelp/sammenlign-modeller/components/ComparisonTable.tsx
 import {
   comparisonRows,
   modelRecommendations
 } from '../utils/comparisonData'
+import { compareModelsTheme } from '../utils/compareModelsTheme'
 import { TableCellContent } from './TableCellContent'
 
 export function ComparisonTable() {
   return (
-    <div className='border-card-foreground  max-w-full overflow-x-auto rounded-xl border border-card-foreground bg-card text-card-foreground contain-[paint]'>
+    <div className={compareModelsTheme.tableShell}>
       <table className='w-full min-w-[880px] border-collapse text-left'>
         <caption className='sr-only'>
           Sammenligning av Utekos Dun, Utekos Mikrofiber og
           Utekos TechDown
         </caption>
         <thead>
-          <tr className='bg-secondary bg-featured text-foreground'>
+          <tr className={compareModelsTheme.tableHeader}>
             <th
               scope='col'
               className='w-[20%] p-5 font-sans text-base font-bold tracking-[-0.01em]'
@@ -34,16 +34,15 @@ export function ComparisonTable() {
         </thead>
         <tbody>
           {comparisonRows.map(row => (
-            <tr
-              key={row.feature}
-              className='border-card-foreground/20 border-b border-card-foreground/20'
-            >
+            <tr key={row.feature} className={compareModelsTheme.tableRowBorder}>
               <th
                 scope='row'
                 className='p-5 align-top font-sans text-base leading-[1.05] font-bold tracking-[-0.01em] text-card-foreground'
               >
                 <span>{row.feature}</span>
-                <span className='text-foreground/90 mt-2 block text-xs leading-[1.35] font-medium text-foreground/90'>
+                <span
+                  className={`mt-2 block text-xs leading-[1.35] font-medium ${compareModelsTheme.tableFeatureHint}`}
+                >
                   {row.shortAnswer}
                 </span>
               </th>
@@ -52,9 +51,7 @@ export function ComparisonTable() {
                   key={model.key}
                   className='p-5 text-center align-top'
                 >
-                  <TableCellContent
-                    value={row.values[model.key]}
-                  />
+                  <TableCellContent value={row.values[model.key]} />
                 </td>
               ))}
             </tr>

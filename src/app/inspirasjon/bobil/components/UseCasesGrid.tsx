@@ -9,7 +9,7 @@ import { Lead } from '@/components/typography/Lead'
 import type { UseCase } from '../types'
 import { cn } from '@/lib/utils/className'
 
-import MorningCoffee from '@public/coffe_utekos.webp'
+import MorningCoffee from '@public/MorningCoffe-1920x1080.png'
 import UtekosNight from '@public/UtekosNight-1920x1080.png'
 import BobilAutumn from '@public/BobilAutomn-1920x1080.png'
 

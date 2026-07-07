@@ -11,9 +11,11 @@ const analyticsDataEnvSchema = z.object({
     .string()
     .regex(/^\d+$/)
     .default('489598217'),
+  GOOGLE_ANALYTICS_CREDENTIALS_PATH: z.string().min(1).optional(),
   GOOGLE_ANALYTICS_DATA_API_SERVICE_ACCOUNT_JSON: z.string().min(1).optional(),
   GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON: z.string().min(1).optional(),
-  GOOGLE_MERCHANT_SERVICE_ACCOUNT_JSON: z.string().min(1).optional()
+  GOOGLE_MERCHANT_SERVICE_ACCOUNT_JSON: z.string().min(1).optional(),
+  GOOGLE_APPLICATION_CREDENTIALS: z.string().min(1).optional()
 })
 
 const analyticsServiceAccountSchema = z.object({
@@ -48,6 +50,25 @@ function readLocalAnalyticsServiceAccount() {
     process.cwd(),
     LOCAL_DEV_ANALYTICS_SERVICE_ACCOUNT_PATH
   )
+
+  if (!existsSync(credentialsPath)) {
+    return undefined
+  }
+
+  return readFileSync(credentialsPath, 'utf8')
+}
+
+function readServiceAccountPath(candidatePath: string | undefined) {
+  const normalizedPath = normalizeOptionalEnvValue(candidatePath)
+
+  if (!normalizedPath) {
+    return undefined
+  }
+
+  const credentialsPath =
+    path.isAbsolute(normalizedPath) ?
+      normalizedPath
+    : path.join(process.cwd(), normalizedPath)
 
   if (!existsSync(credentialsPath)) {
     return undefined
@@ -96,18 +117,24 @@ export function getGoogleAnalyticsDataConfig(): GoogleAnalyticsDataConfig {
 
   const parsedEnv = analyticsDataEnvSchema.parse({
     GOOGLE_ANALYTICS_PROPERTY_ID: process.env.GOOGLE_ANALYTICS_PROPERTY_ID,
+    GOOGLE_ANALYTICS_CREDENTIALS_PATH:
+      normalizeOptionalEnvValue(process.env.GOOGLE_ANALYTICS_CREDENTIALS_PATH),
     GOOGLE_ANALYTICS_DATA_API_SERVICE_ACCOUNT_JSON:
       normalizeOptionalEnvValue(process.env.GOOGLE_ANALYTICS_DATA_API_SERVICE_ACCOUNT_JSON),
     GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON:
       normalizeOptionalEnvValue(process.env.GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON),
     GOOGLE_MERCHANT_SERVICE_ACCOUNT_JSON:
-      normalizeOptionalEnvValue(process.env.GOOGLE_MERCHANT_SERVICE_ACCOUNT_JSON)
+      normalizeOptionalEnvValue(process.env.GOOGLE_MERCHANT_SERVICE_ACCOUNT_JSON),
+    GOOGLE_APPLICATION_CREDENTIALS:
+      normalizeOptionalEnvValue(process.env.GOOGLE_APPLICATION_CREDENTIALS)
   })
 
   const serviceAccount = parseAnalyticsServiceAccount([
     parsedEnv.GOOGLE_ANALYTICS_DATA_API_SERVICE_ACCOUNT_JSON,
+    readServiceAccountPath(parsedEnv.GOOGLE_ANALYTICS_CREDENTIALS_PATH),
     parsedEnv.GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON,
     parsedEnv.GOOGLE_MERCHANT_SERVICE_ACCOUNT_JSON,
+    readServiceAccountPath(parsedEnv.GOOGLE_APPLICATION_CREDENTIALS),
     readLocalAnalyticsServiceAccount()
   ])
 

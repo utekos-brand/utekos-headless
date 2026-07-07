@@ -1,5 +1,5 @@
-// Path: src/app/handlehjelp/sammenlign-modeller/components/TableCellContent.tsx
 import { Check } from 'lucide-react'
+import { compareModelsTheme } from '../utils/compareModelsTheme'
 
 export function TableCellContent({
   value
@@ -8,13 +8,11 @@ export function TableCellContent({
 }) {
   if (typeof value === 'boolean') {
     return value ?
-        <span className='bg-primary text-background inline-flex size-8 items-center justify-center rounded-full bg-primary text-background'>
+        <span className={compareModelsTheme.checkIcon}>
           <Check className='size-4' aria-hidden='true' />
           <span className='sr-only'>Ja</span>
         </span>
-      : <span className='text-foreground/90 text-sm text-foreground/90'>
-          Nei
-        </span>
+      : <span className={compareModelsTheme.checkNegative}>Nei</span>
   }
 
   return (

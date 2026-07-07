@@ -1,4 +1,5 @@
 import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
+import { InspirationFeatureCard } from '@/app/inspirasjon/components/cards/InspirationFeatureCard'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
 import {
   HeartHandshake,
@@ -9,9 +10,8 @@ import {
 import type { Benefit } from '../types'
 import { grillSectionSurfaces } from '../theme/sectionSurfaces'
 import { H2 } from '@/components/typography/TypographyH2'
-import { H3 } from '@/components/typography/TypographyH3'
 import { Lead } from '@/components/typography/Lead'
-import { P } from '@/components/typography/TypographyP'
+import { cn } from '@/lib/utils/className'
 
 const { background } = grillSectionSurfaces
 
@@ -62,38 +62,57 @@ export function BenefitsGrid({
           />
           <Lead
             Text='Mindre stress for deg, mer komfort for gjestene — en vinn-vinn for kvelden.'
-            className={`mt-4 max-w-3xl pb-0 ${background.lead}`}
+            className={cn(
+              'mt-4 max-w-3xl pb-0 md:pb-0 lg:pb-0',
+              background.lead
+            )}
           />
         </div>
 
-        <div className='grid grid-cols-1 gap-6 rounded-3xl bg-card p-6 text-card-foreground md:grid-cols-2 md:gap-8 md:p-8 lg:grid-cols-4'>
-          {benefits.map((benefit, benefitIndex) => (
-            <AnimatedBlock
-              key={benefit.title}
-              className='will-animate-fade-in-scale text-center'
-              delay={`${benefitIndex * 0.05}s`}
-              threshold={0.2}
-            >
-              <div className='h-full rounded-lg border border-border bg-background p-6 text-foreground shadow-sm sm:p-7'>
-                <div
-                  className={`mx-auto mb-4 flex size-16 items-center justify-center rounded-full border border-border ${benefit.iconBackground}`}
-                >
-                  <benefit.icon
-                    className='size-8 text-ceramic'
-                    aria-hidden
-                  />
-                </div>
-                <H3
-                  Text={benefit.title}
-                  className='mb-2 pb-0 text-lg font-bold text-foreground'
+        <div className='grid grid-cols-1 items-start gap-6 rounded-3xl bg-card p-6 text-card-foreground md:grid-cols-2 md:gap-8 md:p-8 lg:grid-cols-4'>
+          {benefits.map((benefit, benefitIndex) => {
+            const Icon = benefit.icon
+            const benefitNumber = String(benefitIndex + 1).padStart(2, '0')
+
+            return (
+              <AnimatedBlock
+                key={benefit.title}
+                className='will-animate-fade-in-scale'
+                delay={`${benefitIndex * 0.05}s`}
+                threshold={0.2}
+              >
+                <InspirationFeatureCard
+                  density='compact'
+                  footerMode='flow'
+                  icon={Icon}
+                  title={benefit.title}
+                  description={benefit.description}
+                  footerLabel='Fordel'
+                  footerValue={benefitNumber}
+                  backgroundSlot={
+                    <>
+                      <div className='absolute inset-0 bg-[linear-gradient(145deg,color-mix(in_oklch,var(--foreground)_5%,transparent),transparent_44%)]' />
+                      <div className='absolute inset-x-0 top-0 h-px bg-foreground/10' />
+                      <div className='absolute -top-24 -right-24 size-56 rounded-full bg-secondary/18 opacity-80 blur-3xl transition-opacity duration-300 group-hover:opacity-100' />
+                    </>
+                  }
+                  className='h-auto min-h-0 border-border bg-background text-foreground shadow-sm ring-border/50 transition-colors duration-300 hover:bg-muted/40 motion-reduce:transition-none'
+                  headerClassName='gap-5 px-6 pt-6 sm:px-7 sm:pt-7'
+                  iconContainerClassName={cn(
+                    'size-14 rounded-2xl border-border text-ceramic ring-border/50',
+                    benefit.iconBackground
+                  )}
+                  iconClassName='size-7'
+                  titleClassName='text-left text-xl leading-snug font-semibold tracking-[-0.02em] text-foreground sm:text-2xl'
+                  contentClassName='px-6 pt-5 pb-5 sm:px-7'
+                  descriptionClassName='max-w-[32ch] text-base leading-relaxed text-foreground/80'
+                  footerClassName='border-border bg-muted/30 px-6 py-4 sm:px-7'
+                  footerLabelClassName='text-muted-foreground'
+                  footerValueClassName='text-secondary'
                 />
-                <P
-                  Text={benefit.description}
-                  className='mx-auto text-center text-base text-foreground/80'
-                />
-              </div>
-            </AnimatedBlock>
-          ))}
+              </AnimatedBlock>
+            )
+          })}
         </div>
       </InspirationContentShell>
     </article>
