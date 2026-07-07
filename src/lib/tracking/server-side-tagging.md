@@ -115,7 +115,8 @@ Google Consent Mode v2 oppdateres via
 
 Provider-dispatch opprettes bare når eventet har nødvendig DPS-samtykke:
 
-- `Google Analytics` for dataLayer/sGTM (browser).
+- `Google Analytics` for dataLayer/sGTM (browser) og GA4 Measurement Protocol fallback for samtykkede
+  browser business-events med `ga4Data.client_id`. `PageView` holdes på sGTM for å unngå duplisering.
 - `Facebook Pixel` for Meta Pixel og direkte Meta CAPI.
 - `Microsoft Advertising Remarketing` for Microsoft UET browser-events. Shopify purchase kan i tillegg
   sendes via Microsoft UET CAPI når `MICROSOFT_UET_CAPI_TOKEN` er satt og checkout-attribusjonen inneholder
@@ -215,5 +216,8 @@ Rollback-versjoner er web `98` og server `15`.
   `MICROSOFT_UET_CAPI_TOKEN` er lagt inn i Vercel Production.
 - Meta Pixel og direkte CAPI deler `event_id`
 - Meta sendes aldri via sGTM
-- Browser-GA4 dupliseres ikke via Measurement Protocol når `GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm`
+- Browser-`PageView` dupliseres ikke via Measurement Protocol når `GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm`.
+  Browser business-events som `select_item`, `add_to_cart`, `begin_checkout`, `view_item`,
+  `view_item_list`, `search` og `generate_lead` kan køes til GA4 Measurement Protocol når sGTM-eventtaggen
+  ikke kan bevises å sende dem.
 - Ukjente tjenester i DPS-skanningen er klassifisert

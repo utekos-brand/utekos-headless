@@ -10,6 +10,7 @@ import { processMetaParamBuilderRequest } from '@/lib/tracking/meta/param-builde
 import { setMetaParamBuilderCookies } from '@/lib/tracking/meta/param-builder/setMetaParamBuilderCookies'
 import { persistAcceptedTrackingEvent } from '@/lib/tracking/warehouse/persistAcceptedTrackingEvent'
 import { getRequestConsentState } from '@/lib/tracking/consent/getRequestConsentState'
+import { getProvidersForAcceptedTrackingEvent } from '@/lib/tracking/warehouse/getProvidersForAcceptedTrackingEvent'
 import {
   USERCENTRICS_GOOGLE_ANALYTICS_SERVICE_NAME,
   USERCENTRICS_META_SERVICE_NAME,
@@ -51,17 +52,14 @@ export async function POST(request: NextRequest) {
         ...validation.payload,
         userData: undefined
       }
+  const providers = getProvidersForAcceptedTrackingEvent(payload, providerConsent)
+
   after(async () => {
     try {
       await persistAcceptedTrackingEvent(payload, {
         ...consent,
         source: 'usercentrics'
-      }, [
-        ...(providerConsent.meta ? ['meta'] as const : []),
-        ...(providerConsent.google && process.env.GOOGLE_BROWSER_EVENT_TRANSPORT !== 'sgtm'
-          ? ['google'] as const
-          : [])
-      ])
+      }, providers)
     } catch (error) {
       await logToAppLogs(
         'ERROR',

@@ -1,5 +1,5 @@
 import { getClientMetaUserData } from '@/lib/tracking/meta/utils/getClientMetaUserData'
-import { getClientGA4Data } from '@/lib/tracking/google/getClientGA4Data'
+import { resolveClientGA4Data } from '@/lib/tracking/google/getClientGA4Data'
 import { sendMetaPixelEvent } from '@/lib/tracking/meta/sendMetaPixelEvent'
 import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
 import { pushGoogleDataLayerEvent } from '@/lib/tracking/google/pushGoogleDataLayerEvent'
@@ -27,7 +27,7 @@ export async function dispatchMetaTrackingEvent({
   const hasGoogleAnalyticsConsent = hasServiceConsent(USERCENTRICS_GOOGLE_ANALYTICS_SERVICE_NAME)
   const hasMicrosoftUetConsent = hasServiceConsent(USERCENTRICS_MICROSOFT_SERVICE_NAME)
   const hasMarketingEventConsent = hasMetaConsent || hasMicrosoftUetConsent
-  const resolvedGa4Data = hasGoogleAnalyticsConsent ? ga4Data ?? getClientGA4Data() : undefined
+  const resolvedGa4Data = hasGoogleAnalyticsConsent ? ga4Data ?? resolveClientGA4Data() : undefined
 
   if (hasGoogleAnalyticsConsent) {
     pushGoogleDataLayerEvent(eventName, eventId, eventData)
@@ -58,7 +58,7 @@ export async function dispatchMetaTrackingEvent({
     actionSource: 'website',
     userData: hasMetaConsent ? getClientMetaUserData(userData) : undefined,
     eventData,
-    ga4Data: resolvedGa4Data
+    ga4Data: await resolvedGa4Data
   }
 
   const body = JSON.stringify(payload)

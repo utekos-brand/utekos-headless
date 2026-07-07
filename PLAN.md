@@ -167,8 +167,10 @@ Dato: 2026-06-09
 - `/api/tracking-events` validerer en streng, versjonert
   Zod-kontrakt og avviser valgfri lagring fail-closed når verken
   Meta-, Google- eller Microsoft-samtykke kan dokumenteres.
-- Browser-events bruker én sentral dispatcher. Google går til
-  samtykkegatet dataLayer/sGTM. Meta Pixel og ledger/CAPI deler
+- Browser-events bruker én sentral dispatcher. Google pusher fortsatt
+  til samtykkegatet dataLayer/sGTM, og samtykkede business-events med
+  `ga4Data.client_id` køes i tillegg som GA4 Measurement Protocol
+  fallback når de ikke er `PageView`. Meta Pixel og ledger/CAPI deler
   samme `event_id`. Microsoft UET er consent-gatet i samme
   dispatcher og sender dokumenterte lowercase actions
   (`add_to_cart`, `begin_checkout`, `purchase`) med `event_id`,

@@ -1,7 +1,8 @@
 import 'server-only'
 
-import { buildGA4EventParams } from './buildGA4EventParams'
+import { buildGA4BrowserEventParams } from './buildGA4BrowserEventParams'
 import { mapToGA4EventName } from './mapToGA4EventName'
+import { shouldQueueGoogleServerEvent } from './shouldQueueGoogleServerEvent'
 import { trackServerEvent } from './trackingServerEvent'
 
 import type { MetaEventPayload } from 'types/tracking/meta'
@@ -11,9 +12,12 @@ export async function sendGA4BrowserEvent(
   payload: MetaEventPayload,
   userContext: { clientIp?: string | undefined; userAgent?: string | undefined }
 ): Promise<GoogleBrowserEventResult> {
-  const { eventName, eventData, ga4Data } = payload
+  const { eventName, eventId, eventData, eventSourceUrl, ga4Data } = payload
 
-  if (process.env.GOOGLE_BROWSER_EVENT_TRANSPORT === 'sgtm') {
+  if (
+    process.env.GOOGLE_BROWSER_EVENT_TRANSPORT === 'sgtm'
+    && !shouldQueueGoogleServerEvent(payload, true)
+  ) {
     return {
       success: true,
       provider: 'google',
@@ -42,7 +46,7 @@ export async function sendGA4BrowserEvent(
   const result = await trackServerEvent(
     {
       name: gaEventName,
-      params: buildGA4EventParams(eventData)
+      params: buildGA4BrowserEventParams({ eventData, eventId, eventSourceUrl })
     },
     {
       clientId: ga4Data.client_id,

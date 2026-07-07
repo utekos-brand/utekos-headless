@@ -29,7 +29,10 @@ declare global {
 
     dataLayer: unknown[]
 
-    gtag?: (command: string, action: string, params?: Record<string, unknown>) => void
+    gtag?: {
+      (command: 'get', target: string, fieldName: string, callback: (value: unknown) => void): void
+      (command: string, action: string, params?: Record<string, unknown>): void
+    }
 
     pintrk?: {
       (method: 'load', tagId: string, userData?: Record<string, unknown>): void
