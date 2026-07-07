@@ -3,6 +3,8 @@ import { BookOpen, ShoppingBag } from 'lucide-react'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { cn } from '@/lib/utils/className'
 
+import type { Route } from 'next'
+
 const ctaCardClassName =
   'group relative flex flex-col items-center justify-center rounded-3xl border border-card-foreground/10 bg-card p-12 text-center text-card-foreground transition-all duration-500 hover:border-secondary/40 hover:bg-secondary hover:text-secondary-foreground hover:shadow-2xl'
 
@@ -10,7 +12,7 @@ const ctaIconClassName =
   'mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-card-foreground/10 text-card-foreground transition-all group-hover:scale-110 group-hover:bg-secondary-foreground group-hover:text-secondary'
 
 type NavigationCtaCardProps = {
-  href: string
+  href: Route
   icon: typeof ShoppingBag
   title: string
   description: string
