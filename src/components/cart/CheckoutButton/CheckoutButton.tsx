@@ -22,6 +22,14 @@ import {
   USERCENTRICS_VERCEL_ANALYTICS_SERVICE_NAME
 } from '@/components/cookie-consent/usercentricsConfig'
 
+const CHECKOUT_TRACKING_NAVIGATION_TIMEOUT_MS = 1200
+
+function waitForCheckoutTrackingDeadline() {
+  return new Promise<void>(resolve => {
+    window.setTimeout(resolve, CHECKOUT_TRACKING_NAVIGATION_TIMEOUT_MS)
+  })
+}
+
 export const CheckoutButton = ({
   checkoutUrl,
   subtotal,
@@ -61,7 +69,7 @@ export const CheckoutButton = ({
   const disabledAttrs =
     isDisabled ? { 'aria-disabled': true, 'tabIndex': -1 } : {}
 
-  const trackCheckout = () => {
+  const trackCheckout = async () => {
     if (isDisabled) return
 
     if (!cartId) {
@@ -125,7 +133,7 @@ export const CheckoutButton = ({
         )
       }
 
-      void dispatchMetaTrackingEvent({
+      await dispatchMetaTrackingEvent({
         eventName: 'InitiateCheckout',
         eventId: eventID,
         eventData: {
@@ -167,7 +175,7 @@ export const CheckoutButton = ({
     }
   }
 
-  const handleClick = (
+  const handleClick = async (
     event: React.MouseEvent<HTMLAnchorElement>
   ) => {
     if (isDisabled) {
@@ -176,8 +184,26 @@ export const CheckoutButton = ({
       return
     }
 
+    if (
+      event.defaultPrevented
+      || event.button !== 0
+      || event.metaKey
+      || event.ctrlKey
+      || event.shiftKey
+      || event.altKey
+    ) {
+      trackAnalytics()
+      void trackCheckout()
+      return
+    }
+
+    event.preventDefault()
     trackAnalytics()
-    trackCheckout()
+    await Promise.race([
+      trackCheckout(),
+      waitForCheckoutTrackingDeadline()
+    ])
+    window.location.assign(checkoutUrl)
   }
 
   return (

@@ -34,6 +34,7 @@
     "usercentrics:css": "node scripts/print-usercentrics-custom-css.mjs",
     "validate:usercentrics-docs": "node scripts/usercentrics-docs/validate.mjs",
     "tracking:smoke": "bash scripts/tracking/verify-production-tracking.sh",
+    "tracking:commerce-smoke": "node scripts/tracking/verify-commerce-event-flow.mjs",
     "validate:gtin": "tsx scripts/gtin/validate-gtin-doc.ts",
     "merchant:preflight": "DOTENV_CONFIG_PATH=.env.local tsx -r dotenv/config scripts/merchant/preflight.ts",
     "merchant:create-data-source": "DOTENV_CONFIG_PATH=.env.local tsx -r dotenv/config scripts/merchant/create-data-source.ts",
