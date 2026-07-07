@@ -3,6 +3,7 @@ import type { TrackingServiceResult } from 'types/tracking/webhook/TrackingServi
 import type { CheckoutAttribution } from 'types/tracking/user/CheckoutAttribution'
 import type { TrackingContext } from 'types/tracking/user/TrackingContext'
 import type { MetaEventPayload } from 'types/tracking/meta'
+import type { ProviderDispatchAttemptInput } from 'types/tracking/event'
 import type { GooglePurchaseDispatchResult } from '@/lib/tracking/google/sendGooglePurchase'
 import type { MicrosoftUetPurchaseDispatchResult } from '@/lib/tracking/microsoft-uet/sendMicrosoftUetPurchase'
 import { createTrackingContext } from '@/lib/tracking/utils/createTrackingContext'
@@ -36,6 +37,7 @@ export type ProcessOrderTrackingDependencies = {
     payload: MetaEventPayload,
     attribution: CheckoutAttribution | null
   ) => Promise<MicrosoftUetPurchaseDispatchResult>
+  recordProviderDispatchAttempt?: ((input: ProviderDispatchAttemptInput) => Promise<void>) | undefined
   logger: TrackingLogger
 }
 
@@ -126,6 +128,50 @@ export async function processOrderTrackingWithDependencies(
       },
       { source: 'orders-paid webhook' }
     )
+  }
+
+  if (payload.eventId && payload.eventName && deps.recordProviderDispatchAttempt) {
+    const auditWrites = [
+      deps.recordProviderDispatchAttempt({
+        eventId: payload.eventId,
+        eventName: payload.eventName,
+        provider: 'google',
+        success: googleOk,
+        skipped: !hasClientId,
+        skipReason: !hasClientId ? 'missing_client_id' : undefined,
+        error: googleOk ? undefined : googleSkippedReason,
+        retryable: false,
+        dispatchMode: 'server_direct'
+      }),
+      deps.recordProviderDispatchAttempt({
+        eventId: payload.eventId,
+        eventName: payload.eventName,
+        provider: 'microsoft_uet',
+        success: microsoftOk,
+        skipped: !deps.sendMicrosoftUetPurchase || (microsoftResult?.success === false && microsoftResult.skipped === true),
+        skipReason:
+          !deps.sendMicrosoftUetPurchase ? 'not_configured'
+          : microsoftResult?.success === false && microsoftResult.skipped === true ? microsoftSkippedReason
+          : undefined,
+        error: microsoftOk ? undefined : microsoftSkippedReason,
+        retryable: false,
+        dispatchMode: 'server_direct'
+      })
+    ]
+    const auditResults = await Promise.allSettled(auditWrites)
+    const failedAuditWrites = auditResults.filter(result => result.status === 'rejected')
+
+    if (failedAuditWrites.length > 0) {
+      await deps.logger(
+        'WARN',
+        'Provider dispatch audit write failed',
+        {
+          orderId: order.id,
+          failedAuditWrites: failedAuditWrites.length
+        },
+        { source: 'orders-paid webhook' }
+      )
+    }
   }
 
   const details = {

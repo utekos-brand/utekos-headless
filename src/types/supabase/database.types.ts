@@ -238,7 +238,29 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      dead_letter_summary: {
+        Row: {
+          latest_created_at: string | null
+          latest_resolved_at: string | null
+          reason: string | null
+          source: string | null
+          total_count: number | null
+          unresolved_count: number | null
+        }
+        Relationships: []
+      }
+      provider_dispatch_health: {
+        Row: {
+          dispatch_mode: string | null
+          last_processed_at: string | null
+          last_updated_at: string | null
+          provider: string | null
+          row_count: number | null
+          skip_reason: string | null
+          status: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
@@ -259,6 +281,9 @@ export type Database = {
           metadata: Json
           payload: Json
           reason: string
+          resolution_code: string | null
+          resolution_note: string | null
+          resolved_by: string | null
           resolved_at: string | null
           source: string
         }
@@ -268,6 +293,9 @@ export type Database = {
           metadata?: Json
           payload?: Json
           reason: string
+          resolution_code?: string | null
+          resolution_note?: string | null
+          resolved_by?: string | null
           resolved_at?: string | null
           source: string
         }
@@ -277,6 +305,9 @@ export type Database = {
           metadata?: Json
           payload?: Json
           reason?: string
+          resolution_code?: string | null
+          resolution_note?: string | null
+          resolved_by?: string | null
           resolved_at?: string | null
           source?: string
         }
@@ -318,49 +349,67 @@ export type Database = {
       provider_dispatch_attempts: {
         Row: {
           attempt_count: number
+          consent_basis: Json
           created_at: string
+          data_quality: Json
+          dispatch_mode: string
           event_id: string | null
           event_name: string | null
           id: string
           idempotency_key: string
+          last_attempt_started_at: string | null
           last_error: string | null
+          latency_ms: number | null
           next_attempt_at: string | null
           payload: Json
           processed_at: string | null
           provider: string
           response: Json
+          skip_reason: string | null
           status: string
           updated_at: string
         }
         Insert: {
           attempt_count?: number
+          consent_basis?: Json
           created_at?: string
+          data_quality?: Json
+          dispatch_mode?: string
           event_id?: string | null
           event_name?: string | null
           id?: string
           idempotency_key: string
+          last_attempt_started_at?: string | null
           last_error?: string | null
+          latency_ms?: number | null
           next_attempt_at?: string | null
           payload?: Json
           processed_at?: string | null
           provider: string
           response?: Json
+          skip_reason?: string | null
           status?: string
           updated_at?: string
         }
         Update: {
           attempt_count?: number
+          consent_basis?: Json
           created_at?: string
+          data_quality?: Json
+          dispatch_mode?: string
           event_id?: string | null
           event_name?: string | null
           id?: string
           idempotency_key?: string
+          last_attempt_started_at?: string | null
           last_error?: string | null
+          latency_ms?: number | null
           next_attempt_at?: string | null
           payload?: Json
           processed_at?: string | null
           provider?: string
           response?: Json
+          skip_reason?: string | null
           status?: string
           updated_at?: string
         }
@@ -687,4 +736,3 @@ export const Constants = {
     Enums: {},
   },
 } as const
-

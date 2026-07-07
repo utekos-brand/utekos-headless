@@ -4,6 +4,7 @@ import { sendMetaPixelEvent } from '@/lib/tracking/meta/sendMetaPixelEvent'
 import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
 import { pushGoogleDataLayerEvent } from '@/lib/tracking/google/pushGoogleDataLayerEvent'
 import { dispatchMicrosoftUetBrowserEvent } from '@/lib/tracking/microsoft-uet/trackMicrosoftUetEvent'
+import { capturePostHogCommerceEvent } from '@/lib/tracking/posthog/capturePostHogCommerceEvent'
 import {
   USERCENTRICS_GOOGLE_ANALYTICS_SERVICE_NAME,
   USERCENTRICS_META_SERVICE_NAME,
@@ -62,6 +63,7 @@ export async function dispatchMetaTrackingEvent({
   }
 
   const body = JSON.stringify(payload)
+  capturePostHogCommerceEvent(payload)
 
   if (typeof navigator !== 'undefined' && 'sendBeacon' in navigator) {
     const sent = navigator.sendBeacon('/api/tracking-events', new Blob([body], { type: 'application/json' }))

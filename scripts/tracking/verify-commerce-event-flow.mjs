@@ -13,6 +13,7 @@ const warehousePollAttempts = Number(process.env.TRACKING_COMMERCE_SMOKE_WAREHOU
 const warehousePollIntervalMs = Number(process.env.TRACKING_COMMERCE_SMOKE_WAREHOUSE_INTERVAL_MS || 1000)
 const requireSucceeded = process.env.TRACKING_COMMERCE_SMOKE_REQUIRE_SUCCEEDED === '1'
 const useSyntheticIdentifiers = process.env.TRACKING_COMMERCE_SMOKE_SYNTHETIC_IDS === '1'
+const purchaseEventId = process.env.TRACKING_COMMERCE_SMOKE_PURCHASE_EVENT_ID || ''
 
 const requiredEvents = [
   { canonicalEventName: 'select_item', eventName: 'SelectItem' },
@@ -21,6 +22,7 @@ const requiredEvents = [
 ]
 
 const requiredProviders = ['google', 'meta']
+const requiredDataLayerEvents = ['select_item', 'add_to_cart', 'begin_checkout']
 const consentedServices = [
   'Usercentrics Consent Management Platform',
   'Facebook Pixel',
@@ -31,6 +33,54 @@ const consentedServices = [
   'Microsoft Clarity',
   'PostHog'
 ]
+
+function networkEvidenceFromUrl(url) {
+  try {
+    const parsedUrl = new URL(url)
+    const host = parsedUrl.hostname
+    const path = parsedUrl.pathname
+
+    if (host === 'www.facebook.com' && path === '/tr/') {
+      return {
+        provider: 'meta',
+        event: parsedUrl.searchParams.get('ev'),
+        host,
+        path
+      }
+    }
+
+    if (host === 'bat.bing.com') {
+      return {
+        provider: 'microsoft_uet',
+        event: parsedUrl.searchParams.get('evt') || parsedUrl.searchParams.get('en'),
+        host,
+        path
+      }
+    }
+
+    if (host.includes('clarity.ms') || host.includes('clarity.microsoft.com')) {
+      return {
+        provider: 'clarity',
+        event: null,
+        host,
+        path
+      }
+    }
+
+    if (host === 'portal.utekos.no' || host.includes('posthog.com')) {
+      return {
+        provider: 'posthog',
+        event: null,
+        host,
+        path
+      }
+    }
+  } catch {
+    return null
+  }
+
+  return null
+}
 
 function logStage(stage) {
   console.error(`[commerce-smoke] ${stage}`)
@@ -155,6 +205,34 @@ async function clickFirstVisible(locator, label) {
   throw new Error(`No visible ${label} target found.`)
 }
 
+async function waitForProductSelectTarget(page) {
+  const selectors = [
+    '[data-track="ProductCardFooterViewMoreClick"]',
+    '[data-track="ProductCardViewMoreClick"]',
+    '[data-track="HelpChooseCardProductSelect"]'
+  ]
+  const startedAt = Date.now()
+
+  while (Date.now() - startedAt < eventTimeoutMs) {
+    for (const selector of selectors) {
+      const locator = page.locator(selector)
+      const count = await locator.count()
+
+      for (let index = 0; index < count; index += 1) {
+        const candidate = locator.nth(index)
+        if (await candidate.isVisible().catch(() => false)) {
+          return selector
+        }
+      }
+    }
+
+    await page.mouse.wheel(0, 1200)
+    await page.waitForTimeout(500)
+  }
+
+  throw new Error('No visible product select target found after lazy-load scroll.')
+}
+
 async function clickFirstVisibleSelector(page, selectors, label) {
   const startedAt = Date.now()
 
@@ -255,6 +333,88 @@ async function queryWarehouse(eventIds) {
   }
 }
 
+async function queryMicrosoftUetPurchaseStatus() {
+  if (!purchaseEventId) {
+    return {
+      skipped: true,
+      reason: 'TRACKING_COMMERCE_SMOKE_PURCHASE_EVENT_ID is not configured.',
+      rows: []
+    }
+  }
+
+  const warehouseUrl = getWarehouseUrl()
+  if (!warehouseUrl) {
+    return {
+      skipped: true,
+      reason: 'No Supabase tracking warehouse URL is configured.',
+      rows: []
+    }
+  }
+
+  const sql = postgres(warehouseUrl, {
+    max: 1,
+    idle_timeout: 5,
+    connect_timeout: 10,
+    prepare: false
+  })
+
+  try {
+    const rows = await sql`
+      select
+        provider,
+        event_name,
+        event_id,
+        status,
+        dispatch_mode,
+        skip_reason,
+        last_error,
+        processed_at is not null as has_processed_at
+      from ops.provider_dispatch_attempts
+      where event_id = ${purchaseEventId}
+        and provider = 'microsoft_uet'
+      order by updated_at desc
+      limit 5
+    `
+
+    return {
+      skipped: false,
+      reason: null,
+      rows
+    }
+  } finally {
+    await sql.end({ timeout: 5 })
+  }
+}
+
+async function readBrowserEvidence(page) {
+  return page.evaluate(requiredEventsFromNode => {
+    const dataLayer = Array.isArray(window.dataLayer) ? window.dataLayer : []
+    const dataLayerEvents = dataLayer
+      .filter(item => item && typeof item === 'object' && typeof item.event === 'string')
+      .map(item => ({
+        event: item.event,
+        event_id: item.event_id,
+        has_ecommerce: Boolean(item.ecommerce)
+      }))
+    const uetQueue = Array.isArray(window.uetq) ? window.uetq : []
+    const uetEvents = uetQueue
+      .filter(item => Array.isArray(item) && item[0] === 'event')
+      .map(item => ({
+        action: item[1],
+        has_event_id: Boolean(item[2]?.event_id),
+        page_type: item[2]?.ecomm_pagetype
+      }))
+    const postHogEvents = window.posthog?._i || []
+
+    return {
+      dataLayerEvents,
+      uetEvents,
+      postHogInitialized: Array.isArray(postHogEvents) && postHogEvents.length > 0,
+      requiredEvents: requiredEventsFromNode
+    }
+  }, requiredDataLayerEvents)
+}
+
 function assertPayloadQuality(payloads) {
   const failures = []
 
@@ -335,6 +495,62 @@ function assertWarehouseRows(payloads, warehouseResult) {
   return failures
 }
 
+function assertBrowserProviderEvidence(browserEvidence, networkEvidence, clarityConsentApplied) {
+  const failures = []
+  const dataLayerEvents = new Set(browserEvidence.dataLayerEvents.map(item => item.event))
+  const metaEvents = new Set(networkEvidence.meta.map(item => item.event).filter(Boolean))
+  const uetHasBrowserNetwork = networkEvidence.microsoft_uet.length > 0
+  const uetActions = new Set(browserEvidence.uetEvents.map(item => item.action).filter(Boolean))
+
+  for (const eventName of requiredDataLayerEvents) {
+    if (!dataLayerEvents.has(eventName)) {
+      failures.push(`Google dataLayer is missing ${eventName}.`)
+    }
+  }
+
+  for (const expected of requiredEvents) {
+    if (!metaEvents.has(expected.eventName)) {
+      failures.push(`Meta Pixel browser network is missing ${expected.eventName}.`)
+    }
+  }
+
+  if (!uetHasBrowserNetwork) {
+    failures.push('Microsoft UET browser network request was not observed.')
+  }
+
+  for (const eventName of requiredDataLayerEvents) {
+    if (!uetActions.has(eventName)) {
+      failures.push(`Microsoft UET queue is missing ${eventName}.`)
+    }
+  }
+
+  if (!clarityConsentApplied) {
+    failures.push('Microsoft Clarity Consent API V2 was not available/applied for ad_Storage and analytics_Storage.')
+  }
+
+  if (networkEvidence.posthog.length === 0 && !browserEvidence.postHogInitialized) {
+    failures.push('PostHog capture/init evidence was not observed.')
+  }
+
+  return failures
+}
+
+function assertMicrosoftUetPurchaseStatus(purchaseStatus) {
+  if (purchaseStatus.skipped) {
+    return [`Microsoft UET CAPI purchase-status verification skipped: ${purchaseStatus.reason}`]
+  }
+
+  if (purchaseStatus.rows.length === 0) {
+    return [`No microsoft_uet provider_dispatch_attempts row found for purchase event ${purchaseEventId}.`]
+  }
+
+  if (requireSucceeded && !purchaseStatus.rows.some(row => row.status === 'succeeded' && row.has_processed_at === true)) {
+    return [`No succeeded microsoft_uet purchase row found for ${purchaseEventId}.`]
+  }
+
+  return []
+}
+
 async function runSmoke() {
   logStage(`starting browser for ${baseUrl}`)
   const browser = await chromium.launch({ headless: true })
@@ -345,10 +561,21 @@ async function runSmoke() {
   })
   const page = await context.newPage()
   const trackedPayloads = []
+  const networkEvidence = {
+    meta: [],
+    microsoft_uet: [],
+    clarity: [],
+    posthog: []
+  }
 
   await context.route('https://kasse.utekos.no/**', route => route.abort('aborted'))
 
   page.on('request', request => {
+    const evidence = networkEvidenceFromUrl(request.url())
+    if (evidence && evidence.provider in networkEvidence) {
+      networkEvidence[evidence.provider].push(evidence)
+    }
+
     const payload = parseTrackingRequest(request)
     if (payload) {
       trackedPayloads.push(payload)
@@ -361,19 +588,24 @@ async function runSmoke() {
     await page.waitForTimeout(3000)
     logStage('accepting consent')
     await grantTrackingConsent(page)
+    const clarityConsentApplied = await page.evaluate(() => {
+      if (typeof window.clarity !== 'function') return false
+
+      window.clarity('consentv2', {
+        ad_Storage: 'granted',
+        analytics_Storage: 'granted'
+      })
+
+      return true
+    })
     await installSyntheticIdentifiers(page)
     await page.waitForTimeout(3000)
 
+    logStage('waiting for lazy-loaded product cards')
+    const productSelectSelector = await waitForProductSelectTarget(page)
+
     logStage('clicking product select')
-    await clickFirstVisibleSelector(
-      page,
-      [
-        '[data-track="ProductCardFooterViewMoreClick"]',
-        '[data-track="ProductCardViewMoreClick"]',
-        '[data-track="HelpChooseCardProductSelect"]'
-      ],
-      'product select'
-    )
+    await page.locator(productSelectSelector).first().click({ timeout: eventTimeoutMs, noWaitAfter: true })
     logStage('waiting for select_item payload')
     const selectItemPayload = await waitForTrackedPayload(trackedPayloads, 'select_item')
 
@@ -397,9 +629,14 @@ async function runSmoke() {
     const eventIds = requiredEvents.map(event => payloads[event.canonicalEventName].eventId)
     logStage('querying warehouse')
     const warehouseResult = await queryWarehouse(eventIds)
+    logStage('querying Microsoft UET CAPI purchase status')
+    const microsoftUetPurchaseStatus = await queryMicrosoftUetPurchaseStatus()
+    const browserEvidence = await readBrowserEvidence(page)
     const payloadFailures = assertPayloadQuality(payloads)
     const warehouseFailures = assertWarehouseRows(payloads, warehouseResult)
-    const failures = [...payloadFailures, ...warehouseFailures]
+    const browserProviderFailures = assertBrowserProviderEvidence(browserEvidence, networkEvidence, clarityConsentApplied)
+    const microsoftUetPurchaseFailures = assertMicrosoftUetPurchaseStatus(microsoftUetPurchaseStatus)
+    const failures = [...payloadFailures, ...warehouseFailures, ...browserProviderFailures, ...microsoftUetPurchaseFailures]
     const summary = {
       baseUrl,
       eventIds: Object.fromEntries(
@@ -430,6 +667,29 @@ async function runSmoke() {
           hasGa4ClientId: row.has_ga4_client_id,
           hasGa4SessionId: row.has_ga4_session_id,
           hasFbp: row.has_fbp,
+          hasProcessedAt: row.has_processed_at
+        }))
+      },
+      browserProviders: {
+        dataLayerEvents: browserEvidence.dataLayerEvents,
+        metaPixelRequestCount: networkEvidence.meta.length,
+        microsoftUetRequestCount: networkEvidence.microsoft_uet.length,
+        microsoftUetQueueEvents: browserEvidence.uetEvents,
+        clarityRequestCount: networkEvidence.clarity.length,
+        clarityConsentApplied,
+        postHogRequestCount: networkEvidence.posthog.length,
+        postHogInitialized: browserEvidence.postHogInitialized
+      },
+      microsoftUetPurchaseStatus: {
+        skipped: microsoftUetPurchaseStatus.skipped,
+        reason: microsoftUetPurchaseStatus.reason,
+        rows: microsoftUetPurchaseStatus.rows.map(row => ({
+          provider: row.provider,
+          eventName: row.event_name,
+          eventId: row.event_id,
+          status: row.status,
+          dispatchMode: row.dispatch_mode,
+          skipReason: row.skip_reason,
           hasProcessedAt: row.has_processed_at
         }))
       },

@@ -18,10 +18,14 @@ export async function claimProviderDispatchAttempts(
       select id
       from ops.provider_dispatch_attempts
       where (
-        status in ('pending', 'retry_scheduled')
+        provider in ('meta', 'google')
+        and dispatch_mode = 'server_retry'
+        and status in ('pending', 'retry_scheduled')
         and coalesce(next_attempt_at, created_at) <= now()
       ) or (
-        status = 'processing'
+        provider in ('meta', 'google')
+        and dispatch_mode = 'server_retry'
+        and status = 'processing'
         and updated_at <= now() - interval '10 minutes'
       )
       order by coalesce(next_attempt_at, created_at), created_at

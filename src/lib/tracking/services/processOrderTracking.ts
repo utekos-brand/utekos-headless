@@ -2,6 +2,7 @@ import type { OrderPaid } from 'types/commerce/order/OrderPaid'
 import type { TrackingServiceResult } from 'types/tracking/webhook/TrackingServiceResult'
 import { getRedisAttribution } from '@/lib/tracking/utils/getRedisAttribution'
 import { persistAcceptedTrackingEvent } from '@/lib/tracking/warehouse/persistAcceptedTrackingEvent'
+import { recordProviderDispatchAttempt } from '@/lib/tracking/warehouse/recordProviderDispatchAttempt'
 import { sendGooglePurchase } from '@/lib/tracking/google/sendGooglePurchase'
 import { sendMicrosoftUetPurchase } from '@/lib/tracking/microsoft-uet/sendMicrosoftUetPurchase'
 import { logToAppLogs } from '@/lib/utils/logToAppLogs'
@@ -15,6 +16,7 @@ export async function processOrderTracking(
     persistAcceptedTrackingEvent,
     sendGooglePurchase,
     sendMicrosoftUetPurchase,
+    recordProviderDispatchAttempt,
     logger: logToAppLogs
   })
 }

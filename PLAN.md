@@ -3,7 +3,164 @@
 ## Status
 
 STATUS: SGTM ER FLYTTET TIL NYTT GOOGLE CLOUD-PROSJEKT;
-PRODUKSJONSDOMENET ER VERIFISERT GRØNT
+PRODUKSJONSDOMENET ER VERIFISERT GRØNT; TELEMETRY- OG
+PLATTFORMHERDING ER IMPLEMENTERT LOKALT I READ-ONLY/FAIL-CLOSED
+MODUS; SUPABASE PRODUCTION-MUTASJON FOR TELEMETRY-HERDING ER
+UTFØRT OG VERIFISERT; VERCEL PRODUCTION DEPLOY ER GODKJENT FOR
+DENNE RELEASEN; PROVIDER WRITES OG GTM PUBLISH ER FORTSATT
+BLOKKERT UTEN SEPARAT EKSPLISITT GODKJENNING
+
+## Telemetry- og plattformherding
+
+Dato: 2026-07-07
+
+Deploy-/migrasjonsrekkefølge er nå kanonisk dokumentert i
+[DEPLOYMENT.md](DEPLOYMENT.md). Den skal leses før alle production
+deploys, Supabase-mutasjoner, env-endringer, GTM-publiseringer,
+trackingendringer og providerendringer.
+
+### Nåværende operativ beslutning
+
+- Supabase er kanonisk tracking-, audit- og provider-statuslager.
+  PostHog beholdes som seriøs produktanalyse, ikke som
+  finansielt/provider-kanonisk lager.
+- Meta, Google og Microsoft behandles som aktive annonseplattformer
+  med lik kravstandard for auth, read-only diagnostikk, smoke,
+  providerstatus og dokumentasjon.
+- Første gjennomføring er read-only/fail-closed for providerne.
+  Supabase production mutation er utført for databaseforutsetningene
+  runtime nå krever. Vercel production deploy er eksplisitt godkjent
+  for denne releasen. Provider writes og GTM publish er ikke utført.
+- Microsoft/Bing er utvidet fra UET endpoint-check til full
+  Microsoft Advertising-flate: OAuth/MFA, Ads API, Ad Insight,
+  Shopping Content/Merchant Center, UET CAPI, Scripts som separat
+  automatiseringsflate og Clarity Advertising/Consent API V2.
+- Google Ads native conversion tag holdes fortsatt ute inntil
+  dobbelttelling mot GA4-importerte konverteringer er avklart.
+
+### Implementert lokalt
+
+- `.env.mcp.example` er renset lokalt for token-lignende verdier og
+  bruker placeholders. Eksponerte ekte tokens må fortsatt roteres hos
+  provider dersom de har vært reelle.
+- `config/mcp/servers.base.json` inneholder nå `google-ads-mcp` med
+  env-placeholders og `meta-ads-read-only` som egen read-only
+  diagnoseflate. Generated `mcp.json` og `.vscode/mcp.json` skal
+  fortsatt kun bygges via `npm run mcp:build`.
+- Commerce/Tracking MCP er utvidet til 28 kanoniske read-only tools.
+  Nye Microsoft-prober dekker auth readiness, account access,
+  campaign status, Ad Insight, Shopping Content og Clarity Ads
+  readiness. `provider_env_readiness` skiller nå blant annet
+  `microsoft_uet`, `microsoft_ads`, `microsoft_clarity`, `google_ads`,
+  `meta` og `posthog`.
+- Microsoft Advertising auth forventer `msads.manage`,
+  developer token, CustomerId, AccountId, access token og
+  refresh-token-håndtering. Shopping Content-proben bruker samme
+  tokenoppløser.
+- Meta Ads er delt i read-only diagnose og write-flater. Default MCP
+  for Meta-diagnose skal ikke kunne endre kampanjer, budsjetter,
+  målgrupper, kreativer eller datasett.
+- Supabase-skjemaet er herdet lokalt og i production med migrasjonen
+  `20260707111433_harden_provider_dispatch_audit_statuses.sql`.
+  Den sikrer `marketing.campaign_insights`,
+  `ops.integration_job_leases`, nye provider-auditfelter,
+  statusen `skipped_unqualified`, dispatch modes, dead-letter
+  resolution-felter og viewene `ops.provider_dispatch_health` og
+  `ops.dead_letter_summary`.
+- Provider-audit støtter nå `meta`, `google` og `microsoft_uet`.
+  `missing_client_id` for Google klassifiseres som
+  `skipped_unqualified`, ikke aktiv dead-letter feil.
+- Shopify `orders-paid` skriver provider-audit for Google og
+  Microsoft UET purchase som `server_direct`. Generisk retry-claiming
+  er fortsatt avgrenset til `meta` og `google` med
+  `dispatch_mode='server_retry'`.
+- PostHog er endret til eksplisitt, samtykkegatet produktanalyse:
+  `autocapture: false`, manuell `$pageview`, trygg commerce-helper,
+  `NEXT_PUBLIC_POSTHOG_KEY` med legacy fallback, og session replay
+  kun når aktivert med streng input-, tekst- og nettverksmaskering.
+- Browser commerce smoke er utvidet til å kreve Google dataLayer,
+  Meta Pixel-network, Microsoft UET browser network/queue, Clarity
+  Consent API V2, PostHog init/capture evidence, Supabase rows og
+  Microsoft UET CAPI purchase-status via
+  `TRACKING_COMMERCE_SMOKE_PURCHASE_EVENT_ID`.
+- Lokale runbooks for Meta Dataset Quality og Microsoft Advertising
+  finnes i dette arbeidsområdet under `docs/meta/` og
+  `docs/microsoft/`. Merk at `docs/` er ignorert i nåværende
+  repo-policy; de må unignores eller flyttes dersom de skal bli
+  tracked teamdokumentasjon.
+
+### Verifisert etter herding
+
+- `npm run mcp:build`: grønn, med forventede advarsler for tomme
+  valgfrie Google Ads OAuth/customer-envs.
+- `npm run mcp:doctor`: grønn, med samme seks valgfrie Google Ads
+  env-advarsler.
+- `npm run mcp:commerce-tracking:doctor`: grønn. Doctor bekrefter
+  28 tools, 13 providers, fire live-verifiserte flater og
+  strukturerte fail-closed credential/scope-resultater for manglende
+  provider-tilganger.
+- `node --check` for commerce smoke og Commerce/Tracking MCP doctor:
+  grønn.
+- Targeted unit tests for order tracking og PostHog commerce helper:
+  fire av fire tester grønn.
+- `pnpm exec tsc --noEmit`: grønn.
+- `npm run build`: grønn med kun font fallback warnings for
+  `Google Sans Flex` og `Google Sans`.
+- Supabase migration history matcher nå lokale migrasjoner etter
+  kontrollert repair: `20260609204152` ble markert reverted fordi den
+  var samme `add_website_visitor_events` som lokal `20260609192500`.
+  `20260609090000`, `20260609192500` og `20260613120000` ble markert
+  applied fordi production schema allerede beviste objektene.
+- `SUPABASE_NO_TELEMETRY=1 npx supabase db push --linked
+  --include-all`: kjørte production-migrasjonene
+  `20260612120000_add_integration_job_leases.sql` og
+  `20260707111433_harden_provider_dispatch_audit_statuses.sql`.
+- Supabase production query bekrefter at
+  `ops.integration_job_leases`, `marketing.campaign_insights`,
+  `ops.provider_dispatch_health`, `ops.dead_letter_summary`,
+  `dispatch_mode`, `skip_reason` og dead-letter resolution-felter
+  finnes.
+- Constraint-query bekrefter at `provider_dispatch_attempts` tillater
+  `skipped_unqualified` og har `dispatch_mode`-sjekk for
+  `server_retry`, `server_direct` og `client_observed`.
+- `npx supabase db lint --linked --schema marketing,ops,analytics`:
+  grønn, "No schema errors found".
+- Secret scan av `.env.mcp.example`, `.mcp.json`,
+  `config/mcp/credentials.manifest.json`,
+  `config/mcp/servers.base.json`, `mcp.json` og `.vscode/mcp.json`
+  fant ikke de eksponerte token-/konto-strengene.
+
+### Ikke utført med vilje
+
+- Browser commerce smoke er ikke kjørt fordi den sender live
+  tracking-events og nå krever en konkret
+  `TRACKING_COMMERCE_SMOKE_PURCHASE_EVENT_ID` for Microsoft UET CAPI
+  purchase-status.
+- Tokenrotasjon hos Google/Meta/Microsoft er ikke utført fra repoet.
+  Lokale eksponerte verdier er fjernet; providerrotasjon må gjøres
+  separat dersom verdiene var ekte.
+- `npm run lint` er fortsatt ikke en ren completion gate. Den feiler
+  på bred, eksisterende repo-gjeld utenfor denne herdingpakken.
+
+### Neste gates
+
+- Følg [DEPLOYMENT.md](DEPLOYMENT.md) for release order ved videre
+  arbeid: Supabase først når runtime krever nye databaseobjekter,
+  deretter Vercel production deploy, deretter
+  provider-/tracking-smoke.
+- Denne tråden har eksplisitt godkjent og gjennomført Supabase
+  production-mutasjon for telemetry-herdingen. Vercel production
+  deploy er også eksplisitt godkjent for denne releasen.
+- Fyll Microsoft Advertising/Shopping/Clarity credentials i lokal
+  secret store, kjør Microsoft read-only probes, og marker
+  Microsoft OK først når OAuth, account access, campaign status, UET,
+  Shopping Content og Clarity readiness er bevist.
+- Fyll Google Ads OAuth/customer-envs og kjør Google Ads read-only
+  probes før Google Ads MCP regnes som live-operativt.
+- Kjør commerce browser smoke med eksplisitt purchase event id når
+  live tracking-testen er godkjent.
+- Flytt eller unignore de nye Meta/Microsoft runbookene dersom de
+  skal være en del av tracked repo-dokumentasjon.
 
 ## Shadcn MCP og cardproduction
 
@@ -116,6 +273,10 @@ Dato: 2026-06-15
 
 Dato: 2026-06-09
 
+Denne seksjonen beskriver den eldre tracking-gjenopprettingen.
+Gjeldende status etter 2026-07-07-herdingen står i
+`Telemetry- og plattformherding` over.
+
 ### Tracking-gjenoppretting 2026-06-11
 
 - Usercentrics ruleset `9suQr3rGddL3Tb` er publisert med Google
@@ -201,7 +362,7 @@ Dato: 2026-06-09
 ### Kanonisk eventmatrise
 
 | Kanonisk event   | Midlertidig Meta-navn | Klassifisering                                          | Browsertransport                                        |
-| ---------------- | --------------------- | ------------------------------------------------------- | ------------------------------------------------------- |
+| ------------------| -----------------------| ---------------------------------------------------------| ---------------------------------------------------------|
 | `page_view`      | `PageView`            | statistics/marketing etter samtykke                     | Google dataLayer/sGTM + Meta Pixel/CAPI                 |
 | `view_item`      | `ViewContent`         | statistics/marketing etter samtykke                     | Google dataLayer/sGTM + Meta Pixel/CAPI                 |
 | `add_to_cart`    | `AddToCart`           | statistics/marketing etter samtykke                     | Google dataLayer/sGTM + Meta Pixel/CAPI + Microsoft UET |
@@ -220,9 +381,10 @@ Dato: 2026-06-09
   web-loader, publiserte DPS-navn, fravær av valgfrie
   leverandører før samtykke, samtykketilbaketrekking og kanonisk
   Google-tag-destinasjon.
-- `npx tsc --noEmit --pretty false` er blokkert av en
-  eksisterende, uvedkommende feil i
-  `src/app/api/analytics/visitor-event/route.test.ts`.
+- Historisk 2026-06-11 var `npx tsc --noEmit --pretty false`
+  blokkert av en eksisterende, uvedkommende feil i
+  `src/app/api/analytics/visitor-event/route.test.ts`. Etter
+  2026-07-07-herdingen er `pnpm exec tsc --noEmit` verifisert grønn.
 
 ### Gjenstående ekstern konfigurasjon
 
@@ -236,8 +398,11 @@ Dato: 2026-06-09
 - Verifiser GA4 Realtime, Meta Pixel/CAPI-deduplisering og Google
   Ads GA4-importerte konverteringer med reelle
   produksjonshendelser.
-- Kjør Supabase-migrasjon
-  `20260609090000_harden_provider_dispatch_observability.sql`.
+- Supabase-migrasjon skal ikke kjøres blindt. Gjeldende lokale
+  herdingmigrasjon er
+  `20260707111433_harden_provider_dispatch_audit_statuses.sql`, men
+  migration-history drift må repareres kontrollert før production
+  push.
 - Overvåk GA4, Meta og Ads i minst 48 timer etter vellykket
   produksjonssmoke.
 
@@ -396,7 +561,7 @@ job-status.
 ### Kritiske arbeidslaster
 
 | Arbeidslast                            | Ressurser                                                      | SLO                                                                                                           |
-| -------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| ----------------------------------------| ----------------------------------------------------------------| ---------------------------------------------------------------------------------------------------------------|
 | Cart og checkout-forberedelse          | Shopify Storefront API, cart cache tags, cookies               | p95 under 1.5s for app-logikk. Tracking må ikke blokkere success-respons.                                     |
 | Produkt-, collection- og search-flater | Next.js cache, Shopify Storefront API ved cache miss           | p95 under 1.2s ved cache hit. Cache miss skal bruke fallback, stale data eller kontrollert revalidering.      |
 | Proxy og normal sidetrafikk            | Vercel Function, PostHog rewrite, intern logging ved behov     | Respons skal ikke vente på Redis, app-logg eller analytics-dispatch.                                          |

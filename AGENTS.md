@@ -1,5 +1,42 @@
 # PROJECT UTEKOS MAIN TEAM FILE
 
+## Strategic baseline
+
+Paramount purpose: achieve absolute brand growth for Utekos.
+
+Primary objective: establish strong mental availability by mapping
+category entry points, building mental structures, deploying
+wide-reaching media, and enforcing evidence-based marketing across
+operations.
+
+Revenue goal: NOK 100,000,000 yearly sales by 2031-12-31. Current
+baseline used for planning: NOK 2,000,000.
+
+Core stack:
+
+- Domain registrar: one.com
+- Deployment and hosting: Vercel
+- Frontend: Next.js 16.2 / React 19.2
+- Commerce: Shopify headless
+- Consent: Usercentrics
+- Tag management: Google Tag Manager web + server-side GTM
+- Web and product analytics: Google Analytics + PostHog
+- Structured content: Sanity
+- Canonical tracking warehouse: Supabase
+- Cloud infrastructure: Google Cloud Platform
+
+Paid media allocation:
+
+- Meta Ads: 70%
+- Google Ads: 20%
+- Microsoft Ads: 10%
+
+Any active paid-media platform must be treated as a first-class
+commercial system. If Meta, Google, or Microsoft is used, it must
+receive equal dedication in diagnostics, auth, smoke tests, provider
+status, documentation, and operational follow-up. Half-configured
+tracking or diagnostics are not acceptable.
+
 Follow these steps for each interaction:
 
 1. User Identification:
@@ -75,6 +112,7 @@ utelukkende formidles via farge.
 
 This file is the authoritative operating contract for all agents
 working in this repository. Read this file first, then `PLAN.md`,
+`DEPLOYMENT.md`,
 `/Users/kristofferohnstadhjelmeland/main-documentation/agents.txt`,
 `/Users/kristofferohnstadhjelmeland/main-documentation/sitemap.xml`
 `/Users/kristofferohnstadhjelmeland/main-documentation/README.md`,
@@ -130,6 +168,10 @@ Verification gates:
   mutation, ad campaign creation, Shopify catalog mutation, and
   Supabase schema mutation require explicit user confirmation and
   must not be hidden behind a default agent profile.
+- Before any production deploy, schema mutation, env change, GTM
+  publish, tracking change, provider change, or operational tooling
+  release, read and follow [DEPLOYMENT.md](DEPLOYMENT.md). The
+  deployment checklist is the canonical release-order gate.
 
 Brand and business-critical posture:
 
@@ -140,6 +182,76 @@ Brand and business-critical posture:
 - Distinctive brand assets, colors, type, tone of voice, and
   category entry points must be checked against project sources
   before implementation.
+
+### Telemetry and paid-media operating baseline
+
+Status date: 2026-07-07.
+
+- Supabase is the canonical tracking, audit, and provider-status
+  warehouse. PostHog is product analytics, not the canonical
+  financial or provider-audit ledger.
+- `marketing.event_ledger` records accepted tracking events.
+  `ops.provider_dispatch_attempts` is the provider queue/audit table.
+  Current provider ids are `meta`, `google`, and `microsoft_uet`.
+- Provider dispatch statuses include `skipped_unqualified`.
+  Missing Google `client_id` is a qualified skip with
+  `skip_reason='missing_client_id'`, not an active dead-letter
+  failure.
+- Provider dispatch modes are `server_retry`, `server_direct`, and
+  `client_observed`. The retry claimant only owns `meta` and `google`
+  rows with `dispatch_mode='server_retry'`. Microsoft UET purchase
+  rows are direct audit/status rows, not generic retry-queue rows.
+- Dead-letter counts are only useful when resolved/unresolved state,
+  provider/source, reason, and replay policy are visible. Use
+  `ops.dead_letter_summary` and provider-specific context before
+  treating row counts as action signals.
+- PostHog must remain consent-gated through Usercentrics. Current
+  practice is explicit product events, manual pageviews,
+  `autocapture: false`, and optional session replay only with strict
+  input/text/network masking.
+- PostHog events must not contain user PII, query-string secrets,
+  free-text customer content, or provider payloads. Use the safe
+  helper in `src/lib/tracking/posthog/` for commerce events.
+- Microsoft/Bing is a full ad platform, not only a UET endpoint.
+  Microsoft readiness requires OAuth/MFA with `msads.manage`,
+  developer token, CustomerId, AccountId, refresh-token handling,
+  Ads API, Ad Insight, Shopping Content/Merchant Center, UET CAPI,
+  and Clarity consent/linkage checks.
+- Clarity belongs to the statistics/analytics consent surface and
+  must be checked with Consent API V2 storage flags
+  `ad_Storage` and `analytics_Storage` when advertising linkage is
+  evaluated.
+- Meta diagnostics must keep read-only analysis separate from any
+  write-capable Ads tooling. Campaign, budget, audience, creative,
+  dataset, GTM publish, provider write, and production deployment
+  actions require separate explicit approval.
+- Google Ads native conversion tags remain excluded until
+  double-counting risk against GA4-imported conversions is resolved.
+
+### Telemetry verification gates
+
+- Required local gates after telemetry/platform changes:
+  `npm run mcp:build`, `npm run mcp:doctor`,
+  `npm run mcp:commerce-tracking:doctor`, targeted unit tests,
+  `pnpm exec tsc --noEmit`, and Supabase lint where schema files are
+  touched.
+- Deployment and migration order is not optional. Use
+  [DEPLOYMENT.md](DEPLOYMENT.md) to classify changed files, decide
+  what must be migrated/configured/deployed, and record blocked
+  verification.
+- Commerce browser smoke must prove consent state, Google
+  `dataLayer`, Meta Pixel/CAPI evidence, Microsoft UET browser
+  network or queue evidence, Microsoft UET CAPI purchase status,
+  Clarity Consent API V2 behavior, PostHog masking/init evidence,
+  and Supabase rows.
+- Microsoft must not be marked OK until read-only probes prove OAuth
+  readiness, account access, campaign status, UET endpoint health,
+  Shopping Content status, and Clarity advertising readiness, or
+  return a deliberate fail-closed reason.
+- Supabase production mutation remains blocked without explicit
+  confirmation. For schema repair, do not run blind diff/drop. First
+  inspect migration history, sync intentionally, preserve
+  `campaign_insights` and `integration_job_leases`, then lint.
 
 flowchart TD start[Oppgave om main-documentation] -->
 agents[agents.txt] agents --> specialized{Spesialisert domene?}
@@ -234,6 +346,9 @@ explicitly asks for that cost-bearing provider mutation.
   `marketing.event_ledger`. Kø: `ops.provider_dispatch_attempts`.
   Meta quality: `marketing.meta_quality_snapshots` via
   `/api/cron/sync-meta-insights`.
+- **Provider-audit:** `ops.provider_dispatch_health` and
+  `ops.dead_letter_summary` are the current read models for provider
+  row counts, skipped rows, and unresolved dead letters.
 - **Iceberg:** `analytics_bucket_fdw` over `analytics-bucket` med
   vault-creds. Kald lagring: `analytics.event_ledger_archive` +
   `archive_event_ledger_batch` (pg_cron).
@@ -241,8 +356,9 @@ explicitly asks for that cost-bearing provider mutation.
   sGTM eier fortsatt consent-gated browser-GTM via
   `cloud.server.utekos.no`.
 - **PostHog:** Én consent-gatet init via `@posthog/react` og
-  `portal.utekos.no` i `DeferredTrackingBundle`. Ingen Vercel
-  `/relay-MAhe`-relay i aktiv flyt.
+  `portal.utekos.no` i `DeferredTrackingBundle`. Autocapture er av,
+  pageviews er manuelle, commerce-events er eksplisitte og replay er
+  maskert. Ingen Vercel `/relay-MAhe`-relay i aktiv flyt.
 
 ### Local MCP and secrets
 
@@ -258,3 +374,24 @@ npm run mcp:doctor                   # validate env + credential files
 See [docs/local-secrets.md](docs/local-secrets.md) for the full
 layering (`.env.local` vs `.env.mcp.local` vs
 `src/api/lib/cloud-credentials/`).
+
+Current MCP expectations:
+
+- `config/mcp/servers.base.json` is the committed source for local
+  MCP server templates. Generated `mcp.json`, `.vscode/mcp.json`,
+  and `.cursor/mcp.json` must not be hand-edited.
+- `google-ads-mcp` belongs in MCP templates/config with env
+  placeholders, never inline secrets.
+- `meta-ads-read-only` is the default Meta diagnostic surface.
+  Write-capable Meta tools require explicit approval for the concrete
+  action.
+- The Commerce/Tracking MCP surface is read-only diagnostics. The
+  current doctor expects 28 canonical tools and covers Shopify,
+  Merchant Center, Google Ads, GTM/sGTM, Meta Dataset Quality,
+  Microsoft UET, Microsoft Ads, Microsoft Shopping Content,
+  Microsoft Clarity, PostHog, Sentry, Vercel, consent, and tracking
+  contracts.
+- `.env.mcp.example` must contain placeholders only. Real credentials
+  belong in ignored local env files or approved secret stores. If a
+  token-like value has been exposed in chat, docs, generated config,
+  or tracked files, remove it locally and rotate it at the provider.

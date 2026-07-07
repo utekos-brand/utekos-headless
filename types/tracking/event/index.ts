@@ -35,10 +35,13 @@ export type GoogleSender = (
 export interface ProviderDispatchAttemptInput {
   eventId: string
   eventName: string
-  provider: 'meta' | 'google'
+  provider: 'meta' | 'google' | 'microsoft_uet'
   success: boolean
   error?: string | undefined
   retryable?: boolean | undefined
+  skipped?: boolean | undefined
+  skipReason?: string | undefined
+  dispatchMode?: 'server_retry' | 'server_direct' | 'client_observed' | undefined
 }
 
 export interface TrackingDependencies {

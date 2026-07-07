@@ -14,11 +14,15 @@ export async function recordProviderDispatchAttempt(
   }
 
   const idempotencyKey = getTrackingIdempotencyKey(input.eventName, input.eventId)
+  const dispatchMode = input.dispatchMode ?? 'server_retry'
   const status =
-    input.success ? 'succeeded'
-    : input.retryable === false ? 'failed'
+    input.skipped ? 'skipped_unqualified'
+    : input.success ? 'succeeded'
+    : input.retryable === false || dispatchMode !== 'server_retry' ? 'failed'
     : 'retry_scheduled'
   const nextAttemptAt = status === 'retry_scheduled' ? new Date(Date.now() + 60_000) : null
+  const processedAt = status === 'retry_scheduled' ? null : new Date()
+  const lastError = input.error ?? input.skipReason ?? null
 
   await sql`
     insert into ops.provider_dispatch_attempts (
@@ -30,6 +34,8 @@ export async function recordProviderDispatchAttempt(
       attempt_count,
       next_attempt_at,
       last_error,
+      dispatch_mode,
+      skip_reason,
       processed_at
     )
     values (
@@ -40,25 +46,33 @@ export async function recordProviderDispatchAttempt(
       ${status},
       1,
       ${nextAttemptAt},
-      ${input.error ?? null},
-      ${input.success ? new Date() : null}
+      ${lastError},
+      ${dispatchMode},
+      ${input.skipReason ?? null},
+      ${processedAt}
     )
     on conflict (provider, idempotency_key) do update
     set
       status = case
         when excluded.status = 'succeeded' then 'succeeded'
+        when excluded.status = 'skipped_unqualified' then 'skipped_unqualified'
         when excluded.status = 'failed' then 'failed'
+        when excluded.dispatch_mode <> 'server_retry' then excluded.status
         when ops.provider_dispatch_attempts.payload = '{}'::jsonb then 'failed'
         else 'retry_scheduled'
       end,
       attempt_count = ops.provider_dispatch_attempts.attempt_count + 1,
       next_attempt_at = case
         when excluded.status = 'succeeded' then null
+        when excluded.status = 'skipped_unqualified' then null
         when excluded.status = 'failed' then null
+        when excluded.dispatch_mode <> 'server_retry' then null
         when ops.provider_dispatch_attempts.payload = '{}'::jsonb then null
         else excluded.next_attempt_at
       end,
       last_error = excluded.last_error,
+      dispatch_mode = excluded.dispatch_mode,
+      skip_reason = excluded.skip_reason,
       processed_at = excluded.processed_at,
       updated_at = now()
   `

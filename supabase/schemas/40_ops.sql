@@ -28,12 +28,20 @@ create table if not exists ops.provider_dispatch_attempts (
   payload jsonb not null default '{}'::jsonb,
 
   status text not null default 'pending'
-    check (status in ('pending', 'processing', 'succeeded', 'retry_scheduled', 'failed', 'dead_lettered')),
+    check (status in ('pending', 'processing', 'succeeded', 'retry_scheduled', 'failed', 'dead_lettered', 'skipped_unqualified')),
   attempt_count integer not null default 0
     check (attempt_count >= 0),
   next_attempt_at timestamptz,
   last_error text,
   response jsonb not null default '{}'::jsonb,
+  consent_basis jsonb not null default '{}'::jsonb,
+  data_quality jsonb not null default '{}'::jsonb,
+  dispatch_mode text not null default 'server_retry'
+    check (dispatch_mode in ('server_retry', 'server_direct', 'client_observed')),
+  skip_reason text,
+  last_attempt_started_at timestamptz,
+  latency_ms integer
+    check (latency_ms is null or latency_ms >= 0),
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
@@ -49,6 +57,13 @@ create index if not exists provider_dispatch_attempts_queue_idx
 create index if not exists provider_dispatch_attempts_event_idx
   on ops.provider_dispatch_attempts (event_id, provider)
   where event_id is not null;
+
+create index if not exists provider_dispatch_attempts_provider_status_idx
+  on ops.provider_dispatch_attempts (provider, status, updated_at desc);
+
+create index if not exists provider_dispatch_attempts_skipped_idx
+  on ops.provider_dispatch_attempts (provider, skip_reason, updated_at desc)
+  where status = 'skipped_unqualified';
 
 create table if not exists ops.slo_incidents (
   id uuid primary key default gen_random_uuid(),
@@ -78,6 +93,9 @@ create table if not exists ops.dead_letter_events (
   reason text not null,
   payload jsonb not null default '{}'::jsonb,
   metadata jsonb not null default '{}'::jsonb,
+  resolution_code text,
+  resolution_note text,
+  resolved_by text,
 
   created_at timestamptz not null default now(),
   resolved_at timestamptz
@@ -125,3 +143,30 @@ create table if not exists ops.integration_job_leases (
 
 create index if not exists integration_job_leases_expires_at_idx
   on ops.integration_job_leases (expires_at);
+
+create or replace view ops.provider_dispatch_health
+with (security_invoker = true)
+as
+select
+  provider,
+  status,
+  dispatch_mode,
+  skip_reason,
+  count(*)::bigint as row_count,
+  max(updated_at) as last_updated_at,
+  max(processed_at) as last_processed_at
+from ops.provider_dispatch_attempts
+group by provider, status, dispatch_mode, skip_reason;
+
+create or replace view ops.dead_letter_summary
+with (security_invoker = true)
+as
+select
+  source,
+  reason,
+  count(*) filter (where resolved_at is null)::bigint as unresolved_count,
+  count(*)::bigint as total_count,
+  max(created_at) as latest_created_at,
+  max(resolved_at) as latest_resolved_at
+from ops.dead_letter_events
+group by source, reason;

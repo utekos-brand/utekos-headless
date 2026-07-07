@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import type { OrderPaid } from 'types/commerce/order/OrderPaid'
+import type { ProviderDispatchAttemptInput } from 'types/tracking/event'
 import type { CheckoutAttribution } from 'types/tracking/user/CheckoutAttribution'
 import { processOrderTrackingWithDependencies } from './processOrderTrackingWithDependencies'
 
@@ -63,6 +64,7 @@ test('persists a full purchase payload and dispatches Google when GA client id e
   const persisted: Array<{ payload: unknown; providers: readonly string[] }> = []
   const googleDispatches: unknown[] = []
   const microsoftDispatches: unknown[] = []
+  const providerAudits: ProviderDispatchAttemptInput[] = []
 
   const result = await processOrderTrackingWithDependencies(createOrder(), {
     getRedisAttribution: async () => attribution,
@@ -95,6 +97,9 @@ test('persists a full purchase payload and dispatches Google when GA client id e
         currency: 'NOK'
       }
     },
+    recordProviderDispatchAttempt: async input => {
+      providerAudits.push(input)
+    },
     logger: async () => {}
   })
 
@@ -102,6 +107,15 @@ test('persists a full purchase payload and dispatches Google when GA client id e
   assert.equal(persisted.length, 1)
   assert.equal(googleDispatches.length, 1)
   assert.equal(microsoftDispatches.length, 1)
+  assert.deepEqual(providerAudits.map(item => ({
+    provider: item.provider,
+    success: item.success,
+    skipped: item.skipped,
+    dispatchMode: item.dispatchMode
+  })), [
+    { provider: 'google', success: true, skipped: false, dispatchMode: 'server_direct' },
+    { provider: 'microsoft_uet', success: true, skipped: false, dispatchMode: 'server_direct' }
+  ])
   assert.deepEqual(persisted[0]?.providers, [])
   assert.equal((persisted[0]?.payload as { eventData?: { transaction_id?: string } }).eventData?.transaction_id, '123456789')
   assert.deepEqual(result.details, {
@@ -121,6 +135,7 @@ test('persists a full purchase payload and dispatches Google when GA client id e
 test('persists purchase payload and logs skip when GA client id is missing', async () => {
   const logs: Array<{ level: string; message: string; meta?: Record<string, unknown> }> = []
   const persisted: unknown[] = []
+  const providerAudits: ProviderDispatchAttemptInput[] = []
 
   const result = await processOrderTrackingWithDependencies(createOrder(), {
     getRedisAttribution: async () => null,
@@ -129,6 +144,9 @@ test('persists purchase payload and logs skip when GA client id is missing', asy
     },
     sendGooglePurchase: async () => {
       throw new Error('Google dispatch should not run without GA client id')
+    },
+    recordProviderDispatchAttempt: async input => {
+      providerAudits.push(input)
     },
     logger: async (level, message, meta) => {
       logs.push({
@@ -141,6 +159,28 @@ test('persists purchase payload and logs skip when GA client id is missing', asy
 
   assert.equal(result.success, true)
   assert.equal(persisted.length, 1)
+  assert.deepEqual(providerAudits.map(item => ({
+    provider: item.provider,
+    success: item.success,
+    skipped: item.skipped,
+    skipReason: item.skipReason,
+    dispatchMode: item.dispatchMode
+  })), [
+    {
+      provider: 'google',
+      success: false,
+      skipped: true,
+      skipReason: 'missing_client_id',
+      dispatchMode: 'server_direct'
+    },
+    {
+      provider: 'microsoft_uet',
+      success: false,
+      skipped: true,
+      skipReason: 'not_configured',
+      dispatchMode: 'server_direct'
+    }
+  ])
   assert.equal(logs.some(log => log.level === 'WARN' && log.message === 'GA4 Purchase Skipped'), true)
   assert.deepEqual(result.details, {
     orderId: 123456789,

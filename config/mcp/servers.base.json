@@ -293,6 +293,27 @@
       ],
       "autoApprove": []
     },
+    "google-ads-mcp": {
+      "type": "stdio",
+      "command": "pipx",
+      "args": [
+        "run",
+        "--spec",
+        "git+https://github.com/googleads/google-ads-mcp.git",
+        "google-ads-mcp"
+      ],
+      "env": {
+        "GOOGLE_PROJECT_ID": "${GOOGLE_PROJECT_ID}",
+        "GOOGLE_ADS_DEVELOPER_TOKEN": "${GOOGLE_ADS_DEVELOPER_TOKEN}",
+        "GOOGLE_ADS_CUSTOMER_ID": "${GOOGLE_ADS_CUSTOMER_ID}",
+        "GOOGLE_ADS_LOGIN_CUSTOMER_ID": "${GOOGLE_ADS_LOGIN_CUSTOMER_ID}",
+        "GOOGLE_ADS_MANAGER_ID": "${GOOGLE_ADS_MANAGER_ID}",
+        "GOOGLE_ADS_CLIENT_ID": "${GOOGLE_ADS_CLIENT_ID}",
+        "GOOGLE_ADS_CLIENT_SECRET": "${GOOGLE_ADS_CLIENT_SECRET}",
+        "GOOGLE_ADS_REFRESH_TOKEN": "${GOOGLE_ADS_REFRESH_TOKEN}"
+      },
+      "autoApprove": []
+    },
     "google-developer-knowledge": {
       "authProviderType": "google_credentials",
       "url": "https://developerknowledge.googleapis.com/mcp",
@@ -497,6 +518,40 @@
         "update_creative",
         "update_custom_audience",
         "upload_creative_asset",
+        "validate_token"
+      ],
+      "autoApprove": []
+    },
+    "meta-ads-read-only": {
+      "command": "npx",
+      "args": ["-y", "meta-ads-mcp"],
+      "env": {
+        "META_ACCESS_TOKEN": "${META_ACCESS_TOKEN}",
+        "META_APP_ID": "${META_APP_ID}",
+        "META_AUTO_REFRESH": "${META_AUTO_REFRESH}",
+        "META_BUSINESS_ID": "${META_BUSINESS_ID}"
+      },
+      "type": "stdio",
+      "tools": [
+        "compare_performance",
+        "estimate_audience_size",
+        "export_insights",
+        "get_ad_accounts",
+        "get_attribution_data",
+        "get_audience_insights",
+        "get_campaign",
+        "get_campaign_performance",
+        "get_capabilities",
+        "get_creative_performance",
+        "get_insights",
+        "get_token_info",
+        "health_check",
+        "list_ad_sets",
+        "list_ads",
+        "list_audiences",
+        "list_campaigns",
+        "list_creatives",
+        "preview_ad",
         "validate_token"
       ],
       "autoApprove": []
