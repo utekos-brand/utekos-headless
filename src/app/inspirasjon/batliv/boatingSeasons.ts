@@ -5,8 +5,8 @@ export const boatingSeasons: InspirationSeasonDefinition[] = [
     value: 'spring',
     label: 'Vår',
     iconName: 'LifeBuoy',
-    iconColor: 'text-ancient-water',
-    glowColor: 'var(--ancient-water)',
+    iconColor: 'text-secondary-foreground',
+    glowColor: 'var(--secondary)',
     title: 'Komfort under vårpussen',
     description:
       'Vårpussen kan være en kald fornøyelse. Hold varmen mens du gjør båten klar for sesongens eventyr, selv på kjølige aprildager.'
@@ -15,8 +15,8 @@ export const boatingSeasons: InspirationSeasonDefinition[] = [
     value: 'summer',
     label: 'Sommer',
     iconName: 'Sun',
-    iconColor: 'text-primary dark:text-dark-primary',
-    glowColor: 'var(--primary)',
+    iconColor: 'text-secondary-foreground',
+    glowColor: 'var(--secondary)',
     title: 'Når solen har gått ned',
     description:
       'Ikke la gåsehuden jage deg under dekk. Forleng de magiske sommerkveldene i cockpiten eller på flybridgen.'
@@ -25,8 +25,8 @@ export const boatingSeasons: InspirationSeasonDefinition[] = [
     value: 'autumn',
     label: 'Høst',
     iconName: 'Fish',
-    iconColor: 'text-very-peri',
-    glowColor: 'var(--soft-warm)',
+    iconColor: 'text-secondary-foreground',
+    glowColor: 'var(--secondary)',
     title: 'Høstfiske i komfort',
     description:
       'Høsten byr på fantastisk lys og gode fiskemuligheter. Nyt den skarpe, klare luften uten å fryse mens du venter på napp.'
@@ -35,8 +35,8 @@ export const boatingSeasons: InspirationSeasonDefinition[] = [
     value: 'winter',
     label: 'Vinter',
     iconName: 'Anchor',
-    iconColor: 'text-ancient-water',
-    glowColor: 'var(--overcast)',
+    iconColor: 'text-secondary-foreground',
+    glowColor: 'var(--secondary)',
     title: 'Tilsyn i Vinteropplag',
     description:
       'Selv om båten ligger på land, krever den tilsyn. Gjør de kalde turene til havna for å sjekke presenning og motor langt mer behagelige.'

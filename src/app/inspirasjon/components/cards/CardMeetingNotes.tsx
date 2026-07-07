@@ -44,7 +44,7 @@ const CardMeetingNotesDemo = () => {
       <CardFooter>
         <div className='flex -space-x-2 hover:space-x-1'>
           {avatars.map((avatar, index) => (
-            <Avatar key={index} className='ring-background dark:ring-dark-background ring-2 transition-all duration-300 ease-in-out'>
+            <Avatar key={index} className='ring-background ring-2 transition-all duration-300 ease-in-out'>
               <AvatarImage src={avatar.src} alt={avatar.name} />
               <AvatarFallback className='text-xs'>{avatar.fallback}</AvatarFallback>
             </Avatar>

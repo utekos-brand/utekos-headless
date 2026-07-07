@@ -27,7 +27,7 @@ export function DottedGlowBackgroundSection() {
             </span>
             ?
           </h2>
-          <p className='dark:text-dark-muted mt-4 max-w-lg text-center text-base text-muted md:text-left'>
+          <p className='text-muted mt-4 max-w-lg text-center text-base text-muted md:text-left'>
             Utekos er designet for å gi deg den beste opplevelsen
             mulig når du er ute. Vi har utviklet en helt ny
             kategori av personlig komfort.

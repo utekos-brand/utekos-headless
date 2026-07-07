@@ -11,7 +11,7 @@ export function Hero() {
   return (
     <article
       aria-labelledby='hero-headline'
-      className='bg-maritime-darkest relative min-h-[calc(100svh-70px)] w-full overflow-hidden font-sans text-foreground xl:min-h-[calc(100svh-86px)]'
+      className='bg-card relative min-h-[calc(100svh-70px)] w-full overflow-hidden font-sans text-foreground xl:min-h-[calc(100svh-86px)]'
     >
       {/* Background — desktop */}
       <div className='absolute inset-0 z-0 hidden md:block'>
@@ -44,11 +44,11 @@ export function Hero() {
       {/* Static overlays. No motion values, no JS. */}
       <div
         aria-hidden
-        className='from-maritime-darkest/35 via-maritime-darkest/55 to-maritime-darkest/95 absolute inset-0 z-1 bg-linear-to-b via-50%'
+        className='from-card/35 via-card/55 to-card/95 absolute inset-0 z-1 bg-linear-to-b via-50%'
       />
       <div
         aria-hidden
-        className='from-maritime-darkest/80 via-maritime-darkest/20 absolute inset-y-0 left-0 z-1 hidden w-1/2 bg-linear-to-r to-transparent md:block'
+        className='from-card/80 via-card/20 absolute inset-y-0 left-0 z-1 hidden w-1/2 bg-linear-to-r to-transparent md:block'
       />
       {/* Main content */}
       <div className='relative z-10 mx-auto flex min-h-[calc(100svh-70px)] w-full max-w-350 flex-col items-start justify-center px-6 pt-20 pb-16 md:px-12 md:pt-24 lg:px-20 xl:min-h-[calc(100svh-86px)]'>

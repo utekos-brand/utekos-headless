@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator'
 
 export function NbccBenefitSection() {
   return (
-    <article className='dark:bg-dark-background bg-background px-4 pt-3 pb-20 sm:px-6 lg:px-8'>
+    <article className='bg-background px-4 pt-3 pb-20 sm:px-6 lg:px-8'>
       <div className='mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-start'>
         <div data-nbcc-reveal data-nbcc-animate>
           <Badge
@@ -54,7 +54,7 @@ export function NbccBenefitSection() {
             <h3 className='font-semibold text-foreground'>
               Din NBCC-fordel
             </h3>
-            <p className='dark:text-dark-muted-foreground mt-2 text-sm leading-6 text-muted-foreground'>
+            <p className='text-foreground/90 mt-2 text-sm leading-6 text-foreground/90'>
               For deg som ønsker kompromissløs komfort og
               overlegen allsidighet.
             </p>
@@ -71,7 +71,7 @@ export function NbccBenefitSection() {
             <h3 className='font-semibold text-foreground'>
               Bred campingrelevans
             </h3>
-            <p className='dark:text-dark-muted-foreground mt-2 text-sm leading-6 text-muted-foreground'>
+            <p className='text-foreground/90 mt-2 text-sm leading-6 text-foreground/90'>
               Egner seg som hånd i hanske for camping- og
               bobiltilværelsen, men også hjemme på terrassen!
             </p>
@@ -88,7 +88,7 @@ export function NbccBenefitSection() {
             <h3 className='font-semibold text-foreground'>
               Klar for neste samling
             </h3>
-            <p className='dark:text-dark-muted-foreground mt-2 text-sm leading-6 text-muted-foreground'>
+            <p className='text-foreground/90 mt-2 text-sm leading-6 text-foreground/90'>
               Invester i alt du elsker med campinglivet og
               tilrettelegg for enda bedre og langvarige
               opplevelser.

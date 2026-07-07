@@ -33,7 +33,7 @@ import { PatternFrame } from '@/components/ui/pattern-frame'
 
 export default function ShippingAndReturnsPage() {
   return (
-    <article className='mx-auto w-full bg-background dark:bg-dark-background pt-12 pb-20 sm:pt-16 sm:pb-28'>
+    <article className='mx-auto w-full bg-background pt-12 pb-20 sm:pt-16 sm:pb-28'>
       <ShippingReturnsHeader />
 
       <PatternFrame

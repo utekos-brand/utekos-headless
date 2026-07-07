@@ -43,16 +43,13 @@ export function TestimonialConstellation() {
                 duration: 0.9,
                 ease: [0.22, 1, 0.36, 1]
               }}
-              className='dark:shadow-dark-background/20 mb-8 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-card-foreground shadow-lg shadow-background/20'
+              className='shadow-background/20 mb-8 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-card-foreground shadow-lg'
               style={{
                 backgroundColor: 'var(--card)',
                 borderColor: 'var(--color-blue-green)'
               }}
             >
-              <div
-                className='flex gap-0.5 drop-shadow-sm'
-                style={{ color: 'var(--accent)' }}
-              >
+              <div className='flex gap-0.5 text-yellow-400 drop-shadow-sm'>
                 {[...Array(5)].map((_, i) =>
                   i < 4 ?
                     <Star
@@ -95,7 +92,7 @@ export function TestimonialConstellation() {
                 className='mb-6 pb-0 text-left text-3xl leading-[1.05] font-bold text-foreground md:text-5xl lg:text-6xl'
               >
                 Hva sier andre{' '}
-                <InlineText className='font-sans text-primary dark:text-secondary'>
+                <InlineText className='font-sans text-primary dark:text-light'>
                   livsnytere?
                 </InlineText>
               </H2>

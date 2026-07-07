@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { cn } from '@/lib/utils/className'
 import type { InspirationHeroAlign } from './types'
 
@@ -40,9 +41,9 @@ export function InspirationHeroSection({
     >
       {background}
 
-      <div
+      <InspirationContentShell
         className={cn(
-          'container relative z-10 mx-auto px-5 pt-16 pb-16 md:px-4 sm:pt-20 sm:pb-14',
+          'relative z-10 py-16 sm:py-20',
           containerClassName
         )}
       >
@@ -51,7 +52,7 @@ export function InspirationHeroSection({
         >
           {children}
         </div>
-      </div>
+      </InspirationContentShell>
     </Tag>
   )
 }

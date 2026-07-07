@@ -19,11 +19,11 @@ export function ComfyrobeImageCarousel() {
         plugins={[fadePlugin.current]}
         slideCount={2}
         opts={{ loop: true }}
-        className='mx-auto size-full w-full overflow-hidden rounded-[1.35rem] bg-background/60 dark:bg-dark-background/60 shadow-[0_24px_70px_-48px_color-mix(in_oklch,var(--background)_90%,transparent)]'
+        className='mx-auto size-full w-full overflow-hidden rounded-[1.35rem] bg-background/60 bg-background/60 shadow-[0_24px_70px_-48px_color-mix(in_oklch,var(--background)_90%,transparent)]'
       >
         <CarouselContent className='relative aspect-square w-full'>
           <CarouselItem className='absolute inset-0 pl-0'>
-            <div className='relative mx-auto size-full overflow-hidden bg-[radial-gradient(circle_at_50%_28%,color-mix(in_oklch,var(--havdyp)_54%,var(--background)_46%)_0%,var(--background)_72%)]'>
+            <div className='relative mx-auto size-full overflow-hidden bg-[radial-gradient(circle_at_50%_28%,color-mix(in_oklch,var(--card)_54%,var(--background)_46%)_0%,var(--background)_72%)]'>
               <Image
                 src={ComfyRobe}
                 alt='Comfyrobe produktbilde.'
@@ -36,7 +36,7 @@ export function ComfyrobeImageCarousel() {
           </CarouselItem>
 
           <CarouselItem className='absolute inset-0 pl-0'>
-            <div className='relative size-full overflow-hidden bg-background dark:bg-dark-background'>
+            <div className='relative size-full overflow-hidden bg-background'>
               <Image
                 src={ComfyRainy}
                 alt='Comfyrobe som tåler regnvær, vist i et norsk kystlandskap.'

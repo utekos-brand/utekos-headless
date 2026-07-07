@@ -9,28 +9,28 @@ import { Button } from '@/components/ui/button'
 import { LazyComfyrobeImageCarousel } from '@/app/produkter/(oversikt)/components/LazyComfyrobeImageCarousel'
 import { ArrowRight, Wind } from 'lucide-react'
 import { comfyrobeFeatures } from '@/app/produkter/(oversikt)/utils/comfyrobeFeatures'
-
+import { PageSection } from '@/components/layout/PageSection'
 const featureSurfaceStyles = {
   weather: {
     background: 'var(--card)',
-    border: 'var(--coral-green)',
+    border: 'var(--ceramic)',
     iconBackground: 'var(--foreground)',
     iconBorder: 'var(--card)',
-    iconColor: 'var(--coral-green)'
+    iconColor: 'var(--ceramic)'
   },
   warmth: {
     background: 'var(--card)',
-    border: 'var(--coral-green)',
+    border: 'var(--ceramic)',
     iconBackground: 'var(--foreground)',
     iconBorder: 'var(--card)',
-    iconColor: 'var(--coral-green)'
+    iconColor: 'var(--ceramic)'
   },
   freedom: {
     background: 'var(--card)',
-    border: 'var(--coral-green)',
+    border: 'var(--ceramic)',
     iconBackground: 'var(--foreground)',
     iconBorder: 'var(--card)',
-    iconColor: 'var(--coral-green)'
+    iconColor: 'var(--ceramic)'
   }
 } as const
 
@@ -38,10 +38,9 @@ export function ComfyrobeFeatureSection() {
   return (
     <article
       aria-labelledby='comfyrobe-feature-heading'
-      className='w-full py-16 sm:py-24 md:mb-24'
+      className='py-12 md:py-16 '
     >
-      <div className='container mx-auto px-4'>
-        <div className='border-coral-green dark:bg-dark-background relative overflow-hidden rounded-[1.75rem] border bg-background p-5 shadow-[0_28px_90px_-62px_color-mix(in_oklch,var(--background)_90%,transparent)] sm:p-8 lg:p-12'>
+        <div className='border-ceramic bg-background relative overflow-hidden rounded-[1.75rem] border p-5 shadow-[0_28px_90px_-62px_color-mix(in_oklch,var(--background)_90%,transparent)] sm:p-8 lg:p-12'>
           <div className='pointer-events-none absolute inset-0 opacity-70'>
             <div
               className='size-136rounded-full absolute top-0 -left-24 blur-3xl'
@@ -76,10 +75,10 @@ export function ComfyrobeFeatureSection() {
                     <BrandBadge
                       backgroundColor='var(--card)'
                       textColor='var(--foreground)'
-                      className='border-pine mb-5 gap-2 border px-4 py-2 text-sm font-medium shadow-[0_16px_34px_-28px_color-mix(in_oklch,var(--jungle)_68%,transparent)]'
+                      className='border-secondary mb-5 gap-2 border px-4 py-2 text-sm font-medium shadow-[0_16px_34px_-28px_color-mix(in_oklch,var(--secondary)_68%,transparent)]'
                     >
                       <Wind
-                        className='text-coral-green size-4'
+                        className='text-ceramic size-4'
                         aria-hidden='true'
                       />
                       <span>Comfyrobe™</span>
@@ -96,7 +95,7 @@ export function ComfyrobeFeatureSection() {
                     >
                       Forleng utekosen.
                       <br />
-                      <span className='text-heading-secondary dark:text-dark-heading-secondary'>
+                      <span className='text-heading-secondary text-heading-secondary'>
                         Uansett vær.
                       </span>
                     </h2>
@@ -106,7 +105,7 @@ export function ComfyrobeFeatureSection() {
                     className='will-animate-fade-in-up'
                     delay='0.1s'
                   >
-                    <p className='leading-text-paragraph /88 mt-6 max-w-2xl text-lg text-foreground/88'>
+                    <p className='leading-text-paragraph text-foreground/88 mt-6 max-w-2xl text-lg'>
                       Comfyrobe™ er den ultimate allværskåpen for
                       livsnyteren. Den kombinerer den urokkelige
                       beskyttelsen til en teknisk skalljakke med
@@ -171,7 +170,7 @@ export function ComfyrobeFeatureSection() {
                                 </h3>
                               </div>
 
-                              <p className='leading-text-paragraph /78 mt-3 text-sm text-foreground/78 sm:mt-2'>
+                              <p className='leading-text-paragraph text-foreground/78 mt-3 text-sm sm:mt-2'>
                                 {feature.description}
                               </p>
                             </div>
@@ -192,9 +191,9 @@ export function ComfyrobeFeatureSection() {
 
                       <Button
                         asChild
-                        variant='commerce-primary'
+                        variant='default'
                         size='lg'
-                        className='group min-h-12 w-full gap-2 rounded-full px-6 py-3 text-base leading-[1.35] font-semibold whitespace-normal shadow-[0_18px_40px_-28px_color-mix(in_oklch,var(--commerce-primary)_70%,transparent)] transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:w-auto sm:whitespace-nowrap'
+                        className='group min-h-12 w-full gap-2 rounded-full px-6 py-3 text-base leading-[1.35] font-semibold whitespace-normal shadow-[0_18px_40px_-28px_color-mix(in_oklch,var(--primary)_70%,transparent)] transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:w-auto sm:whitespace-nowrap'
                       >
                         <Link
                           href={'/produkter/comfyrobe' as Route}
@@ -211,7 +210,7 @@ export function ComfyrobeFeatureSection() {
             </AnimatedBlock>
           </div>
         </div>
-      </div>
     </article>
+
   )
 }

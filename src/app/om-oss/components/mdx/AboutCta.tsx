@@ -2,7 +2,9 @@ import { KlarnaLogo } from '@/components/payments/KlarnaLogo'
 import { VippsLogo } from '@/components/payments/VippsLogo'
 import { ArrowRight, Check } from 'lucide-react'
 import Link from 'next/link'
+import { cn } from '@/lib/utils/className'
 import { AboutBadge } from './AboutBadge'
+import { aboutSectionInsetClass } from './AboutPageShell'
 import type { Route } from 'next'
 
 const reassuranceItems = [
@@ -13,7 +15,7 @@ const reassuranceItems = [
 export function AboutCta() {
   return (
     <article className='bg-background py-20 text-foreground sm:py-28'>
-      <div className='mx-auto max-w-5xl px-4 sm:px-6 lg:px-8'>
+      <div className={cn(aboutSectionInsetClass, 'max-w-5xl')}>
         <div className='rounded-3xl border border-border bg-card p-8 text-center text-card-foreground sm:p-12'>
           <AboutBadge className='mb-6'>
             Oppdag vår kolleksjon

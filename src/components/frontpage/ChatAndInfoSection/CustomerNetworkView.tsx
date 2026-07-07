@@ -94,7 +94,7 @@ export function CustomerNetworkView({
             <div className='flex size-full items-center justify-center rounded-full border border-border bg-[#007272] px-3 text-card-foreground shadow-[0_18px_40px_-28px_color-mix(in_oklab,var(--card)_55%,transparent)] ring-1 ring-card-foreground/10'>
               {node.data ?
                 <div className='flex min-w-0 items-center justify-center gap-2'>
-                  <span className='dark:border-dark-card-foreground/35 -foreground flex size-7 shrink-0 items-center justify-center rounded-full border border-card-foreground/35 bg-card-foreground text-card'>
+                  <span className='border-card-foreground/35 -foreground flex size-7 shrink-0 items-center justify-center rounded-full border border-card-foreground/35 bg-card-foreground text-card'>
                     <IconRenderer
                       name={node.data.icon as IconName}
                       className='size-3.5'
@@ -114,7 +114,7 @@ export function CustomerNetworkView({
       {centerNode ?
         <div className='pointer-events-none absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2'>
           <div className='relative flex h-28 w-28 items-center justify-center rounded-full border border-border bg-sidebar shadow-[0_0_0_8px_color-mix(in_oklab,var(--color-foreground)_3%,transparent),0_24px_54px_-32px_color-mix(in_oklab,var(--color-background)_92%,transparent)]'>
-            <div className='dark:bg-dark-foreground relative h-24 w-24 overflow-hidden rounded-full border-2 border-border bg-foreground'>
+            <div className='bg-foreground relative h-24 w-24 overflow-hidden rounded-full border-2 border-border bg-foreground'>
               <Image
                 src={UtekosLogo}
                 alt='Utekos'

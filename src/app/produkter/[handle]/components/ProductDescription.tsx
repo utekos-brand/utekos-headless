@@ -37,7 +37,7 @@ function ProductDescriptionBlockView({
           {block.items.map(item => (
             <li
               key={item}
-              className='dark:marker:text-dark-card-foreground/55 list-disc marker:text-card-foreground/55'
+              className='marker:text-card-foreground/55 list-disc marker:text-card-foreground/55'
             >
               {item}
             </li>
@@ -69,7 +69,7 @@ export function ProductDescription({
   return (
     <article
       aria-labelledby='product-description-heading'
-      className='font-utekos-text dark:shadow-dark-background/20 mt-12 rounded-[1.25rem] border border-border bg-card p-5 text-card-foreground shadow-lg shadow-background/20 sm:p-6'
+      className='font-utekos-text shadow-background/20 mt-12 rounded-[1.25rem] border border-border bg-card p-5 text-card-foreground shadow-lg shadow-background/20 sm:p-6'
     >
       <div
         id='product-description-content'

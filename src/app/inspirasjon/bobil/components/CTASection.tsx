@@ -7,7 +7,7 @@ export function CTASection() {
       lead='Ta med Utekos på tur og opplev naturen i komfort — uansett sesong.'
       primaryTrackId='BobilShopAllProductsClick'
       secondaryTrackId='BobilFindYourSizeClick'
-      accentGlow='var(--fair-orchid)'
+      accentGlow='var(--ceramic)'
     />
   )
 }

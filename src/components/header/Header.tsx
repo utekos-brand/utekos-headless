@@ -7,12 +7,19 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Route } from 'next'
 import { HeadphonesIcon } from 'lucide-react'
+import { siteXGutterClassName } from '@/lib/layout/siteGutter'
+import { cn } from '@/lib/utils/className'
 import { ClientMobileMenu } from './ClientMobileMenu'
 
 export default function Header({ menu }: { menu: MenuItem[] }) {
   return (
     <header className='top-0! z-50 w-full text-foreground'>
-      <div className='relative mx-auto grid min-h-18 w-full grid-cols-[auto_1fr] items-center gap-3 px-4 py-2.5 sm:px-6 lg:min-h-20 lg:px-10 xl:min-h-22.5'>
+      <div
+        className={cn(
+          'relative mx-auto grid min-h-18 w-full grid-cols-[auto_1fr] items-center gap-3 py-2.5 lg:min-h-20 xl:min-h-22.5',
+          siteXGutterClassName
+        )}
+      >
         <div className='flex min-w-0 items-center justify-start'>
           <Link
             href={'/' as Route}
@@ -43,7 +50,7 @@ export default function Header({ menu }: { menu: MenuItem[] }) {
           <Link
             href={'/kontaktskjema' as Route}
             data-track='HeaderCustomerServiceClick'
-            className='dark:focus-visible:ring-dark-ring hidden h-11 min-w-31 items-center justify-center gap-2 rounded-md px-3 text-sm font-semibold text-foreground transition outline-none hover:bg-accent hover:text-accent-foreground focus-visible:ring-3 focus-visible:ring-ring md:inline-flex dark:hover:bg-accent'
+            className='focus-visible:ring-ring hidden h-11 min-w-31 items-center justify-center gap-2 rounded-md px-3 text-sm font-semibold text-foreground transition outline-none hover:bg-accent hover:text-accent-foreground focus-visible:ring-3 focus-visible:ring-ring md:inline-flex dark:hover:bg-accent'
           >
             <HeadphonesIcon className='size-4' aria-hidden />
             <span>Kundeservice</span>
@@ -51,7 +58,7 @@ export default function Header({ menu }: { menu: MenuItem[] }) {
 
           <Cart
             showLabel
-            className='dark:hover:bg-dark-accent h-11 min-w-29 rounded-md border-transparent bg-transparent px-3 text-foreground hover:bg-accent hover:text-accent-foreground'
+            className='hover:bg-accent h-11 min-w-29 rounded-md border-transparent bg-transparent px-3 text-foreground hover:bg-accent hover:text-accent-foreground'
           />
 
           <ClientMobileMenu menu={menu} />

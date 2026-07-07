@@ -71,13 +71,13 @@ const DrawerCart = ({ items = defaultItems }: DrawerCartProps) => {
                   </div>
                   <div className='flex-1 space-y-2'>
                     <h4 className='font-medium'>{item.name}</h4>
-                    <p className='text-muted-foreground dark:text-dark-muted-foreground text-sm'>{item.description}</p>
+                    <p className='text-foreground/90 text-foreground/90 text-sm'>{item.description}</p>
                     <p className='font-medium'>{item.price}</p>
                   </div>
                 </div>
                 <Button
                   variant='outline'
-                  className='border-destructive dark:border-dark-destructive text-destructive dark:text-dark-destructive hover:bg-destructive/10 dark:hover:bg-dark-destructive/10 hover:text-destructive dark:hover:text-dark-destructive focus-visible:border-destructive dark:focus-visible:border-dark-destructive focus-visible:ring-destructive/20 dark:focus-visible:ring-dark-destructive/20 dark:focus-visible:ring-dark-destructive/40 w-full'
+                  className='border-destructive text-destructive hover:bg-destructive/10 hover:bg-destructive/10 hover:text-destructive hover:text-destructive focus-visible:border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20 focus-visible:ring-destructive/20 focus-visible:ring-destructive/40 w-full'
                 >
                   <Trash2Icon />
                   Remove
@@ -87,11 +87,11 @@ const DrawerCart = ({ items = defaultItems }: DrawerCartProps) => {
           ))}
           <div className='my-4 space-y-2'>
             <div className='flex justify-between'>
-              <p className='text-muted-foreground dark:text-dark-muted-foreground'>Subtotal</p>
+              <p className='text-foreground/90 text-foreground/90'>Subtotal</p>
               <p>$247.99</p>
             </div>
             <div className='flex justify-between'>
-              <p className='text-muted-foreground dark:text-dark-muted-foreground'>Shipping</p>
+              <p className='text-foreground/90 text-foreground/90'>Shipping</p>
               <p>$10.00</p>
             </div>
             <Separator />

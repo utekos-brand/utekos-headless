@@ -132,7 +132,7 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
                 className='object-cover'
                 sizes='96px'
               />
-            : <div className='flex size-full items-center justify-center text-muted-foreground'>
+            : <div className='flex size-full items-center justify-center text-foreground/90'>
                 <span className='text-xs'>Ingen bilde</span>
               </div>
             }
@@ -152,7 +152,7 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
               </h3>
             </Link>
             {color && size && (
-              <p className='mt-1 text-xs text-muted-foreground'>
+              <p className='mt-1 text-xs text-foreground/90'>
                 {color} / {size}
               </p>
             )}

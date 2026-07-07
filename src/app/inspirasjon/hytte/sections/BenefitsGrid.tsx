@@ -1,4 +1,5 @@
 import { AnimatedBlock } from '@/components/AnimatedBlock'
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import {
   Settings2,
   HeartHandshake,
@@ -6,44 +7,40 @@ import {
   Thermometer
 } from 'lucide-react'
 import type { Benefit } from '../types'
-
-// Dataene oppdatert med Utekos Premium fargepalett
+import { Lead } from '@/components/typography/Lead'
+import { H2 } from '@/components/typography/TypographyH2'
 export const benefitsData: Benefit[] = [
   {
     icon: Thermometer,
     title: 'Øyeblikkelig varme',
     description:
       'Fra kjølig ankomst til peiskos-følelse på sekunder.',
-    benefitColor:
-      'bg-featured-foreground dark:bg-dark-featured-foreground',
-    iconColor: 'text-featured dark:text-dark-featured'
+    benefitColor: 'bg-secondary text-secondary-foreground',
+    iconColor: 'text-secondary-foreground'
   },
   {
     icon: Settings2,
     title: 'Praktisk design',
     description:
       'Tar minimalt med plass og er enkel å ta med seg.',
-    benefitColor:
-      'bg-featured-foreground dark:bg-dark-featured-foreground',
-    iconColor: 'text-featured dark:text-dark-featured'
+    benefitColor: 'bg-secondary text-secondary-foreground',
+    iconColor: 'text-secondary-foreground'
   },
   {
     icon: HeartHandshake,
     title: 'Forlenger hyggen',
     description:
       'Mer tid til de gode samtalene utendørs, uansett vær.',
-    benefitColor:
-      'bg-featured-foreground dark:bg-dark-featured-foreground',
-    iconColor: 'text-featured dark:text-dark-featured'
+    benefitColor: 'bg-secondary text-secondary-foreground',
+    iconColor: 'text-secondary-foreground'
   },
   {
     icon: MapPinIcon,
     title: 'En del av hytten',
     description:
       'Blir like selvsagt å ta på seg som tøflene inne.',
-    benefitColor:
-      'bg-featured-foreground dark:bg-dark-featured-foreground',
-    iconColor: 'text-featured dark:text-dark-featured'
+    benefitColor: 'bg-secondary text-secondary-foreground',
+    iconColor: 'text-secondary-foreground'
   }
 ]
 
@@ -53,16 +50,11 @@ export function BenefitsGrid({
   benefits: Benefit[]
 }) {
   return (
-    <article className='border-featured-border dark:border-dark-featured-border bg-featured dark:bg-dark-featured w-full min-w-0 overflow-x-clip border-t py-24 text-foreground'>
-      <div className='container mx-auto px-4'>
+    <article className='w-full min-w-0 overflow-x-clip border-t border-border bg-background py-24 text-foreground'>
+      <InspirationContentShell>
         <div className='mb-20 max-w-3xl text-left lg:max-w-4xl'>
-          <h2 className='text-fluid-display font-bold tracking-normal text-foreground'>
-            Designet for hyttelivet
-          </h2>
-          <p className='mt-5 text-lg leading-relaxed text-foreground'>
-            Komfort, kvalitet og smarte detaljer gjør det lett å
-            bruke hytten mer.
-          </p>
+          <H2 Text='Designet for hyttelivet' ID='benefits-grid-h2' className='mb-5' />
+          <Lead Text='Komfort, kvalitet og smarte detaljer gjør det lett å bruke hytten mer.' />
         </div>
 
         <div className='grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
@@ -84,13 +76,13 @@ export function BenefitsGrid({
               <h3 className='mb-3 font-sans text-xl font-bold tracking-[-0.01em]'>
                 {benefit.title}
               </h3>
-              <p className='mx-auto max-w-65 text-base leading-relaxed text-foreground'>
+              <p className='mx-auto max-w-65 text-base leading-relaxed text-foreground/90'>
                 {benefit.description}
               </p>
             </AnimatedBlock>
           ))}
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

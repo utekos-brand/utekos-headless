@@ -17,18 +17,23 @@ const brandBadgeVariants = cva(
     variants: {
       variant: { default: '' },
       tone: {
-        'neutral':
-          ' bg-card text-card-foreground',
-        'promo':
-          'bg-promo dark:bg-dark-promo text-promo-foreground dark:text-dark-promo-foreground',
+        neutral: 'bg-card text-card-foreground',
+        primary:
+          'bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-foreground',
+        secondary:
+          'border-secondary bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:text-secondary-foreground',
+        accent: 'bg-accent text-accent-foreground',
+        /** @deprecated Use `accent` */
+        promo: 'bg-accent text-accent-foreground',
+        /** @deprecated Use `primary` */
         'commerce-primary':
-          'bg-commerce-primary dark:bg-dark-commerce-primary text-commerce-primary-foreground dark:text-dark-commerce-primary-foreground hover:bg-commerce-primary-hover dark:hover:bg-dark-commerce-primary-hover hover:text-commerce-primary-hover-foreground dark:hover:text-dark-commerce-primary-hover-foreground',
+          'bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-foreground',
+        /** @deprecated Use `secondary` */
         'commerce-secondary':
-          'bg-commerce-secondary dark:bg-dark-commerce-secondary text-commerce-secondary-foreground dark:text-dark-commerce-secondary-foreground hover:bg-commerce-secondary-hover dark:hover:bg-dark-commerce-secondary-hover hover:text-commerce-secondary-hover-foreground dark:hover:text-dark-commerce-secondary-hover-foreground',
-        'featured':
-          'bg-featured dark:bg-dark-featured text-foreground',
-        'custom':
-          'bg-(--brand-badge-bg) text-(--brand-badge-text)'
+          'border-secondary bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:text-secondary-foreground',
+        /** @deprecated Use `secondary` */
+        featured: 'bg-secondary text-secondary-foreground',
+        custom: 'bg-(--brand-badge-bg) text-(--brand-badge-text)'
       }
     },
     defaultVariants: { variant: 'default', tone: 'neutral' }

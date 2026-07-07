@@ -1,13 +1,27 @@
 import { MoonIcon } from '@heroicons/react/24/outline'
 import { Sunrise, Wind } from 'lucide-react'
+import { type StaticImageData } from 'next/image'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
-import { Card, CardContent } from '@/components/ui/card'
-import { SectionBox } from '@/components/layout/SectionBox'
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
+import { InspirationFeatureCard } from '@/app/inspirasjon/components/cards/InspirationFeatureCard'
 import { H2 } from '@/components/typography/TypographyH2'
-import { H3 } from '@/components/typography/TypographyH3'
 import { Lead } from '@/components/typography/Lead'
-import { P } from '@/components/typography/TypographyP'
 import type { UseCase } from '../types'
+import { cn } from '@/lib/utils/className'
+
+import MorningCoffee from '@public/MorningCoffe-1920x1080.png'
+import UtekosNight from '@public/UtekosNight-1920x1080.png'
+import BobilAutumn from '@public/BobilAutomn-1920x1080.png'
+
+const useCaseImages: Record<string, StaticImageData> = {
+  Morgen: MorningCoffee,
+  Kveld: UtekosNight,
+  Overgang: BobilAutumn
+}
+
+function getUseCaseImage(useCase: UseCase) {
+  return useCaseImages[useCase.time] ?? BobilAutumn
+}
 
 export const useCasesData: UseCase[] = [
   {
@@ -51,76 +65,66 @@ export function UseCasesGrid({
   useCases: UseCase[]
 }) {
   return (
-    <SectionBox bgcolor='bg-secondary dark:bg-dark-secondary text-secondary-foreground dark:text-dark-secondary-foreground'>
-      <article
-        id='bruksomrader'
-        className='dark:text-dark-secondary-foreground text-secondary-foreground'
-      >
-        <div className='container'>
-          <div className='w-full'>
-            <H2
-              Text='Utekos gjennom bobildøgnet'
-              ID='bruksomrader-h2'
-              className='dark:text-dark-secondary-foreground text-secondary-foreground'
-            />
-            <Lead
-              Text='Fra soloppgang til solnedgang'
-              className='dark:text-dark-secondary-foreground text-secondary-foreground'
-            />
-          </div>
-
-          <div className='grid grid-cols-1 gap-8 md:grid-cols-3'>
-            {useCases.map((useCase, useCaseIndex) => {
-              const Icon = useCase.icon
-              const iconBackgroundClass =
-                useCase.bgColor ?? 'bg-sidebar '
-
-              return (
-                <AnimatedBlock
-                  key={useCase.title}
-                  className='will-animate-fade-in-up'
-                  delay={`${useCaseIndex * 0.1}s`}
-                  threshold={0.2}
-                >
-                  <Card
-                    className={`group @container relative h-full overflow-hidden border-border ${useCase.color}`}
-                  >
-                    <CardContent className='relative p-8'>
-                      <div className='mb-6 flex items-center gap-4'>
-                        <div
-                          className={`${iconBackgroundClass} flex size-12 items-center justify-center rounded-lg border border-border`}
-                        >
-                          <Icon
-                            className={`size-6 ${useCase.iconColor}`}
-                          />
-                        </div>
-
-                        <div>
-                          <p className='text-sm tracking-[-0.02em] text-foreground'>
-                            {useCase.time}
-                          </p>
-                          <p className='text-sm font-medium tracking-[-0.02em]'>
-                            {useCase.temperature}
-                          </p>
-                        </div>
-                      </div>
-
-                      <H3
-                        Text={useCase.title}
-                        className='leading-[0.95] font-bold text-foreground'
-                      />
-                      <P
-                        Text={useCase.description}
-                        className='tracking-[-0.02em]'
-                      />
-                    </CardContent>
-                  </Card>
-                </AnimatedBlock>
-              )
-            })}
-          </div>
+    <article
+      id='bruksomrader'
+      className='overflow-x-clip bg-surface-neutral py-16 text-foreground sm:py-20 lg:py-24'
+    >
+      <InspirationContentShell>
+        <div className='mb-8 w-full md:mb-10 lg:mb-12'>
+          <H2
+            Text='Utekos gjennom bobildøgnet'
+            ID='bruksomrader-h2'
+            className='text-foreground'
+          />
+          <Lead
+            Text='Fra soloppgang til solnedgang'
+            className='text-foreground/90'
+          />
         </div>
-      </article>
-    </SectionBox>
+
+        <div className='grid auto-rows-fr grid-cols-1 items-stretch gap-8 md:grid-cols-3'>
+          {useCases.map((useCase, useCaseIndex) => {
+            const Icon = useCase.icon
+            const image = getUseCaseImage(useCase)
+            const iconBackgroundClass =
+              useCase.bgColor ?? 'bg-background'
+
+            return (
+              <AnimatedBlock
+                key={useCase.title}
+                className='will-animate-fade-in-up h-full'
+                delay={`${useCaseIndex * 0.1}s`}
+                threshold={0.2}
+              >
+                <InspirationFeatureCard
+                  density='media'
+                  footerMode='bottom'
+                  image={image}
+                  imageAlt={`${useCase.title} med Utekos ved bobil`}
+                  imageAspect='4/3'
+                  icon={Icon}
+                  title={useCase.title}
+                  description={useCase.description}
+                  footerLabel={useCase.time}
+                  footerValue={useCase.temperature}
+                  className={cn(
+                    'border-border/70 bg-background text-foreground',
+                    useCase.color
+                  )}
+                  iconContainerClassName={cn(
+                    'border-border/70',
+                    iconBackgroundClass
+                  )}
+                  iconClassName={useCase.iconColor}
+                  footerClassName='border-card-foreground/10'
+                  footerLabelClassName='text-card-foreground/55'
+                  footerValueClassName='text-card-foreground'
+                />
+              </AnimatedBlock>
+            )
+          })}
+        </div>
+      </InspirationContentShell>
+    </article>
   )
 }

@@ -12,7 +12,7 @@ import { CTASection } from './sections/CTASection'
 import Link from 'next/link'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { ProductSpotlight } from './sections/ProductSpotlight'
-import { IceBathingFAQ, iceBathingFaqItems } from './sections/IceBathingFAQ'
+import { IceBathingFAQ } from './sections/IceBathingFAQ'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://utekos.no'),
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 
 export default function IceBathingInspirationPage() {
   return (
-    <article className='flex flex-col gap-12 pb-20'>
+    <article className='flex flex-col bg-background text-foreground'>
       <IceBathingHeroSection />
       <ProductSpotlight />
 
@@ -62,12 +62,12 @@ export default function IceBathingInspirationPage() {
 
       <CTASection />
 
-      <div className='fixed bottom-4 left-4 right-4 z-50 md:hidden animate-in slide-in-from-bottom-10 fade-in duration-700'>
+      <div className='fixed right-4 bottom-4 left-4 z-50 animate-in duration-700 fade-in slide-in-from-bottom-10 md:hidden'>
         <BrandBadge
           asChild
           backgroundColor='var(--primary)'
-          textColor='var(--background)'
-          className='min-h-14 w-full border border-primary/24 dark:border-dark-primary/24 px-6 py-3 text-base leading-4 font-bold tracking-normal shadow-2xl transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105'
+          textColor='var(--primary-foreground)'
+          className='min-h-14 w-full border border-transparent px-6 py-3 text-base leading-4 font-bold tracking-normal shadow-2xl transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none motion-reduce:transition-none motion-reduce:hover:translate-y-0'
         >
           <Link href='/produkter/comfyrobe'>Kjøp Comfyrobe™</Link>
         </BrandBadge>

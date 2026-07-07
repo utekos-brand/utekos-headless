@@ -1,3 +1,4 @@
+import { InspirationContentShell } from './InspirationContentShell'
 import { InspirationSeasonsTabs } from './InspirationSeasonsTabs'
 import type { InspirationSeasonDefinition } from '../theme/seasons'
 import { inspirationSurfaces } from '../theme/surfaces'
@@ -54,7 +55,7 @@ export function InspirationSeasonsSection({
 }: InspirationSeasonsSectionProps) {
   const [glowA, glowB] = glowTokens ?? [
     'var(--primary)',
-    'var(--mountain-view)'
+    'var(--secondary)'
   ]
 
   return (
@@ -86,7 +87,7 @@ export function InspirationSeasonsSection({
         : null}
       </div>
 
-      <div className='container mx-auto px-4'>
+      <InspirationContentShell>
         <div className='animate-fade-in-up mb-16 max-w-4xl text-left'>
           <H2
             ID='inspiration-seasons-title'
@@ -99,7 +100,7 @@ export function InspirationSeasonsSection({
           <Lead
             Text={lead}
             className={cn(
-              'text-ancient-water mt-6 max-w-2xl pb-0 text-left md:pb-0 lg:pb-0',
+              'text-secondary mt-6 max-w-2xl pb-0 text-left md:pb-0 lg:pb-0',
               leadClassName
             )}
           />
@@ -139,7 +140,7 @@ export function InspirationSeasonsSection({
             showCardGlow={showCardGlow}
           />
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

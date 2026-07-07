@@ -19,7 +19,7 @@ export function MagazineArticleHeader({
     : null
 
   return (
-    <header className='bg-havdyp relative overflow-hidden text-foreground'>
+    <header className='bg-card relative overflow-hidden text-foreground'>
       <div
         className='absolute inset-0 bg-[linear-gradient(140deg,color-mix(in_oklch,var(--background)_72%,transparent),transparent_58%)]'
         aria-hidden
@@ -32,7 +32,7 @@ export function MagazineArticleHeader({
           <h1 className='font-sans text-5xl leading-[0.9] font-bold text-balance sm:text-6xl lg:text-7xl'>
             <MagazineInlineTitle text={article.title} />
           </h1>
-          <p className='leading-text-paragraph /86 mt-6 max-w-3xl text-xl text-foreground/86 sm:text-2xl'>
+          <p className='leading-text-paragraph text-foreground/86 mt-6 max-w-3xl text-xl text-foreground/86 sm:text-2xl'>
             {article.excerpt}
           </p>
           <div className='/72 mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm leading-4 text-foreground/72'>

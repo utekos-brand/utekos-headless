@@ -4,72 +4,59 @@ import {
   Home,
   Sailboat,
   Snowflake,
-  Sofa
+  Sofa,
+  Tent
 } from 'lucide-react'
 import type { Route } from 'next'
-import type { TextOnAccent } from '../theme/pageAccents'
 
 export interface InspirationPageLink {
   href: Route
   label: string
   description: string
   icon: typeof Home
-  color: string
-  midColor: string
-  iconColor: string
-  /** Tekst på cross-link-kort — erstatter pageIndex-heuristikk */
-  textOnAccent: TextOnAccent
 }
 
 export const inspirationPages: InspirationPageLink[] = [
   {
-    href: '/inspirasjon/hytteliv' as Route,
+    href: '/inspirasjon/hytte' as Route,
     label: 'Hytteliv',
     description: 'Komfort på hytten året rundt',
-    icon: Home,
-    color: 'var(--ancient-water)',
-    midColor: 'var(--mountain-view)',
-    iconColor: 'text-(--ancient-water)',
-    textOnAccent: 'background'
+    icon: Home
   },
   {
     href: '/inspirasjon/bobil' as Route,
     label: 'Bobil',
     description: 'Forleng campingsesongen',
-    icon: Caravan,
-    color: 'var(--fair-orchid)',
-    midColor: 'var(--mountain-view)',
-    iconColor: 'text-(--fair-orchid)',
-    textOnAccent: 'background'
+    icon: Caravan
   },
   {
     href: '/inspirasjon/batliv' as Route,
     label: 'Båtliv',
     description: 'Varme på vannet',
-    icon: Sailboat,
-    color: 'var(--skipper-blue)', // Sikrer skarp kontrast mot 'foreground'
-    midColor: 'var(--ancient-water)',
-    iconColor: 'text-(--skipper-blue)',
-    textOnAccent: 'foreground'
+    icon: Sailboat
   },
   {
     href: '/inspirasjon/terrassen' as Route,
     label: 'Terrassen',
     description: 'Hjemme best',
-    icon: Sofa,
-    color: 'var(--mountain-view)',
-    midColor: 'var(--primary)',
-    iconColor: 'text-(--mountain-view)',
-    textOnAccent: 'foreground'
+    icon: Sofa
   },
   {
     href: '/inspirasjon/grillkvelden' as Route,
     label: 'Grillkvelden',
     description: 'Sosiale stunder',
-    icon: Flame,
-    color: 'var(--primary)',
-    midColor: 'var(--skipper-blue)',
-    iconColor: 'text-(--primary)',
-    textOnAccent: 'background' // Kritisk WCAG-fiks: --primary krever mørk tekst
+    icon: Flame
+  },
+  {
+    href: '/inspirasjon/isbading' as Route,
+    label: 'Isbading',
+    description: 'Varme etter kuldesjokket',
+    icon: Snowflake
+  },
+  {
+    href: '/inspirasjon/camping' as Route,
+    label: 'Camping',
+    description: 'Mer tid i naturen',
+    icon: Tent
   }
 ]

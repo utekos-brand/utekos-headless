@@ -152,11 +152,11 @@ export function ProductPageView({
   )
 
   return (
-    <article className='dark:bg-dark-background ! relative isolate overflow-x-clip bg-background py-0 text-foreground! md:py-6'>
+    <article className='bg-background ! relative isolate overflow-x-clip bg-background py-0 text-foreground! md:py-6'>
       <KlarnaOnSiteMessagingScript />
       <div className='pointer-events-none absolute inset-0 -z-10'>
         <div className='absolute top-12 left-[8%] size-80 rounded-full' />
-        <div className='absolute right-[8%] bottom-[18%] h-96 w-96 rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--very-peri)_20%,transparent)_0%,transparent_72%)] blur-3xl' />
+        <div className='absolute right-[8%] bottom-[18%] h-96 w-96 rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--ring)_20%,transparent)_0%,transparent_72%)] blur-3xl' />
       </div>
 
       <div className='container mx-auto px-4 md:px-8'>
@@ -228,7 +228,7 @@ export function ProductPageView({
             </AnimatedBlock>
           </GalleryColumn>
           <OptionsColumn>
-            <div className='dark:text-dark-background hidden text-background md:block'>
+            <div className='text-background hidden text-background md:block'>
               <ProductHeader
                 productHandle={productData.handle}
                 productTitle={title}

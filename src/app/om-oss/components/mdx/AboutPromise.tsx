@@ -1,5 +1,6 @@
 import { Heart, ShieldCheck } from 'lucide-react'
 import { AboutBadge } from './AboutBadge'
+import { aboutSectionInsetClass } from './AboutPageShell'
 
 const promises = [
   {
@@ -16,8 +17,8 @@ const promises = [
 
 export function AboutPromise() {
   return (
-    <article className='bg-background px-8 py-20 text-left text-foreground sm:py-28 md:px-12 lg:px-16'>
-      <div className='max-w-5xl px-4 text-left sm:px-6 lg:px-8'>
+    <article className='bg-background py-20 text-left text-foreground sm:py-28'>
+      <div className={aboutSectionInsetClass}>
         <AboutBadge className='mb-6'>Vårt løfte</AboutBadge>
         <h2 className='text-left font-sans text-5xl leading-[0.95] font-bold text-foreground sm:text-5xl'>
           Vårt løfte til deg

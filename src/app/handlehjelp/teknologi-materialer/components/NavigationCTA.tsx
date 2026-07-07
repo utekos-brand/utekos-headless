@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { Route } from 'next'
 import { BookOpen, ShoppingBag } from 'lucide-react'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { cn } from '@/lib/utils/className'
@@ -10,7 +11,7 @@ const ctaIconClassName =
   'mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-card-foreground/10 text-card-foreground transition-all group-hover:scale-110 group-hover:bg-secondary-foreground group-hover:text-secondary'
 
 type NavigationCtaCardProps = {
-  href: string
+  href: Route
   icon: typeof ShoppingBag
   title: string
   description: string

@@ -194,7 +194,7 @@ const items: ComfyrobeAccordionItem[] = [
     value: 'care',
     trigger: 'Vask og vedlikehold',
     contentClassName:
-      'space-y-3 text-sm leading-text-paragraph tracking-normal text-overcast',
+      'space-y-3 text-sm leading-text-paragraph tracking-normal text-foreground/90',
     content: (
       <>
         <div>

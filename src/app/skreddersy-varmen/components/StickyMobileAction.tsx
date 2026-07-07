@@ -16,7 +16,7 @@ import { scrollToElement } from '@/lib/motion/scrollToElement'
 const DISMISS_KEY = 'utekos:sticky-mobile-dismissed'
 
 const focusRing =
-  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:focus-visible:outline-dark-primary focus-visible:ring-2 focus-visible:ring-foreground/20 dark:focus-visible:ring-dark-foreground/20'
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-foreground/20'
 
 export function StickyMobileAction() {
   const reduced = useReducedMotion()
@@ -119,14 +119,14 @@ export function StickyMobileAction() {
           className='fixed inset-x-3 bottom-3 z-50 lg:hidden'
         >
           {/* Glasspanel-baren: Bruker background/95 for å gi en solid kontrast, uansett hvilken farge seksjonen bak har */}
-          <div className='dark:border-dark-foreground/15 dark:bg-dark-background/95 flex items-center gap-2 rounded-full border border-foreground/15 bg-background/95 p-2 text-foreground shadow-[0_10px_40px_rgba(0,0,0,0.3)] backdrop-blur-md'>
+          <div className='border-foreground/15 bg-background/95 flex items-center gap-2 rounded-full border border-foreground/15 bg-background/95 p-2 text-foreground shadow-[0_10px_40px_rgba(0,0,0,0.3)] backdrop-blur-md'>
             <button
               type='button'
               onClick={handleDismiss}
               data-track='SkreddersyVarmenStickyClose'
               aria-label='Lukk'
               className={cn(
-                'dark:border-dark-foreground/10 dark:bg-dark-foreground/5 /60 dark:hover:bg-dark-foreground/10 dark:hover:text-dark-foreground flex size-9 shrink-0 items-center justify-center rounded-full border border-foreground/10 bg-foreground/5 text-foreground/60 transition-colors hover:bg-foreground/10 hover:text-foreground sm:size-10',
+                'border-foreground/10 bg-foreground/5 /60 hover:bg-foreground/10 hover:text-foreground flex size-9 shrink-0 items-center justify-center rounded-full border border-foreground/10 bg-foreground/5 text-foreground/60 transition-colors hover:bg-foreground/10 hover:text-foreground sm:size-10',
                 focusRing
               )}
             >
@@ -167,7 +167,7 @@ export function StickyMobileAction() {
 
             <BrandBadge
               asChild
-              tone='commerce-primary'
+              tone='neutral'
               className={cn(
                 'h-11 shrink-0 gap-1.5 px-3.5 py-0 text-xs font-bold tracking-normal shadow-[0_4px_15px_rgba(255,180,120,0.15)] transition-[filter,transform,box-shadow] hover:brightness-105 active:scale-[0.985] sm:px-5 sm:text-sm',
                 focusRing

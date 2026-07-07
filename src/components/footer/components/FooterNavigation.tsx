@@ -17,7 +17,7 @@ export function FooterNavigation() {
                 <li key={link.path}>
                   <Link
                     href={link.path}
-                    className='font-utekos-text text-base transition-colors hover:text-foreground dark:hover:text-dark-foreground'
+                    className='font-utekos-text text-base transition-colors hover:text-foreground hover:text-foreground'
                     data-track={link.trackingEvent}
                     {...(link.external && {
                       target: '_blank',

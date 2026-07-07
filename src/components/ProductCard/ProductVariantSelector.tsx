@@ -10,10 +10,10 @@ type ProductVariantSelectorViewProps =
   ProductVariantSelectorProps & { compactMobile?: boolean }
 
 const sizeOptionClassName =
-  'btn-variant-option inline-flex hover:cursor-pointer min-h-9 items-center justify-center rounded-lg px-3 py-1.5 text-sm leading-none font-medium whitespace-nowrap transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-border dark:focus-visible:ring-dark-border focus-visible:ring-offset-2 focus-visible:ring-offset-primary dark:focus-visible:ring-offset-dark-primary focus-visible:outline-none'
+  'btn-variant-option inline-flex hover:cursor-pointer min-h-9 items-center justify-center rounded-lg px-3 py-1.5 text-sm leading-none font-medium whitespace-nowrap transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-border focus-visible:ring-border focus-visible:ring-offset-2 focus-visible:ring-offset-primary focus-visible:ring-offset-primary focus-visible:outline-none'
 
 const selectedSizeOptionClassName =
-  'border-primary dark:border-dark-primary bg-background dark:bg-dark-background text-foreground '
+  'border-primary bg-background text-foreground '
 
 const unselectedSizeOptionClassName =
   'border-border  bg-card  text-card-foreground  hover:cursor-pointer hover:bg-card-hover -hover'
@@ -41,11 +41,11 @@ export function ProductVariantSelector({
                 {...(compactMobile ?
                   {
                     className:
-                      'text-card-foreground  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground dark:focus-visible:outline-dark-card-foreground !text-[0.68rem] md:!text-sm'
+                      'text-card-foreground  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground focus-visible:outline-card-foreground !text-[0.68rem] md:!text-sm'
                   }
                 : {
                     className:
-                      'text-card-foreground  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground dark:focus-visible:outline-dark-card-foreground'
+                      'text-card-foreground  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground focus-visible:outline-card-foreground'
                   })}
               />
             : <InlineText
@@ -85,8 +85,8 @@ export function ProductVariantSelector({
                           selectedOptions[option.name] ===
                             value.name
                         ) ?
-                          'border-coral-green ring-coral-green ring-1'
-                        : 'dark:border-dark-card-foreground/24 dark:hover:border-dark-card-foreground/45 dark:hover:ring-dark-card-foreground/24 border-card-foreground/24 hover:border-card-foreground/45 hover:ring-2 hover:ring-card-foreground/24'
+                          'border-ceramic ring-ceramic ring-1'
+                        : 'border-card-foreground/24 hover:border-card-foreground/45 hover:ring-card-foreground/24 border-card-foreground/24 hover:border-card-foreground/45 hover:ring-2 hover:ring-card-foreground/24'
                       )}
                       style={{
                         backgroundColor: colorCode ?? undefined

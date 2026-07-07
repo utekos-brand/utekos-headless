@@ -8,7 +8,7 @@ export const ReviewsButton = () => {
       asChild
       variant='ghost'
       size='lg'
-      className='dark:border-dark-card-foreground/24 hover:bg-card-foreground/90 hover:text-card sm:w-auto sm:min-w-56 sm:px-5 dark:bg-teal-900 dark:text-foreground'
+      className='border-card-foreground/24 hover:bg-card-foreground/90 hover:text-card sm:w-auto sm:min-w-56 sm:px-5 dark:bg-teal-900 dark:text-foreground'
     >
       <Link href='/#testimonial-constellation'>
         <InlineText>Se tilbakemeldingene</InlineText>

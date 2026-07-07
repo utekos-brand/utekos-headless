@@ -1,7 +1,6 @@
-// Path: src/app/inspirasjon/terrassen/sections/TerrasseCarousel.tsx
-
 'use client'
 
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import Image from 'next/image'
 import { Camera } from 'lucide-react'
 import * as React from 'react'
@@ -21,6 +20,7 @@ import { CAROUSEL_SSR } from '@/components/ui/carousel-ssr'
 import { cn } from '@/lib/utils/className'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { H2 } from '@/components/typography/TypographyH2'
+import { Lead } from '@/components/typography/Lead'
 
 export function TerrasseCarousel() {
   const [api, setApi] = React.useState<CarouselApi>()
@@ -97,34 +97,22 @@ export function TerrasseCarousel() {
   }
 
   return (
-    <article className='relative isolate mx-auto overflow-hidden bg-[var(--terrace-night)] px-4 py-20 text-[var(--terrace-cream)] sm:py-32'>
-      <div className='container mx-auto max-w-7xl'>
-        <div className='mb-12 max-w-4xl text-left'>
-          <BrandBadge
-            backgroundColor='var(--terrace-glass)'
-            textColor='var(--terrace-cream)'
-            className='mb-4 gap-2 border border-[var(--terrace-line-dark)] px-4 py-2 font-utekos-text text-sm leading-4 shadow-none backdrop-blur-md'
-          >
-            <Camera className='size-4' aria-hidden='true' />
-            <span className='inline-flex items-baseline gap-[0.28em] leading-none'>
-              <span className='text-[0.95em]'>
-                Terrasselivet med
-              </span>
-              <UtekosWordmark className='inline-block h-[0.78em] w-auto translate-y-[0.035em] text-current' />
-            </span>
-          </BrandBadge>
-
+    <article className='relative isolate overflow-x-clip bg-surface-neutral py-16 text-card-foreground sm:py-20 lg:py-24'>
+      <InspirationContentShell>
+        <div className='mb-8 max-w-3xl text-left sm:mb-10 lg:mb-12'>
           <H2
-            ID='terrasse-bildekarusell'
+            ID='TerrasseInspirationTitle'
+            Text='Terrasselivet med Utekos'
+          />
+
+          <Lead
             Text='Forleng dine beste øyeblikk'
-            className='mt-4 pb-0 text-left text-[clamp(3rem,6vw,5.75rem)] leading-[0.95] text-[var(--terrace-cream)]'
+            className='mt-4 max-w-2xl text-balance pb-0 text-2xl! font-semibold text-card-foreground sm:text-3xl! md:text-4xl!'
           />
         </div>
 
         <div className='relative'>
-          <div className='relative mx-auto max-w-6xl overflow-hidden rounded-lg border border-[var(--terrace-line-dark)] bg-[var(--terrace-glass-panel)] p-4 shadow-[0_32px_90px_-56px_rgb(0_0_0/0.9)] backdrop-blur-sm sm:p-6'>
-            <div className='absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,var(--terrace-copper),transparent)]' />
-
+          <div className='relative max-w-6xl overflow-hidden rounded-lg border border-border bg-background p-4 shadow-sm sm:p-6'>
             <Carousel
               setApi={setApi}
               plugins={[autoplayPlugin]}
@@ -143,7 +131,7 @@ export function TerrasseCarousel() {
                     key={image.src}
                     className='pl-4 md:basis-1/2 lg:basis-1/3'
                   >
-                    <div className='group relative overflow-hidden rounded-lg border border-[var(--terrace-line-dark)] bg-transparent'>
+                    <div className='group relative overflow-hidden rounded-lg border border-border bg-card'>
                       <AspectRatio ratio={1 / 1}>
                         <Image
                           src={image.src}
@@ -152,24 +140,24 @@ export function TerrasseCarousel() {
                           className='object-cover transition-transform duration-700 will-change-transform group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100'
                           sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
                         />
-                        <div className='absolute inset-0 bg-linear-to-t from-[rgb(16_32_31/0.76)] via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 motion-reduce:transition-none' />
+                        <div className='absolute inset-0 bg-linear-to-t from-foreground/50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 motion-reduce:transition-none' />
                       </AspectRatio>
                     </div>
                   </CarouselItem>
                 ))}
               </CarouselContent>
 
-              <CarouselPrevious className='left-4 border-[var(--terrace-line-dark)] bg-[var(--terrace-control-light)] text-[var(--terrace-night)] backdrop-blur-md hover:bg-[var(--terrace-cream)] focus-visible:ring-[var(--terrace-copper)]' />
-              <CarouselNext className='right-4 border-[var(--terrace-line-dark)] bg-[var(--terrace-control-light)] text-[var(--terrace-night)] backdrop-blur-md hover:bg-[var(--terrace-cream)] focus-visible:ring-[var(--terrace-copper)]' />
+              <CarouselPrevious className='left-2 border-border bg-background/90 text-foreground hover:bg-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card md:left-4' />
+              <CarouselNext className='right-2 border-border bg-background/90 text-foreground hover:bg-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card md:right-4' />
             </Carousel>
 
-            <div className='mt-8 flex items-center justify-center gap-2'>
+            <div className='mt-6 flex items-center justify-center gap-2 sm:mt-8'>
               {api?.snapList().map((_, index) => (
                 <button
                   key={index}
                   type='button'
                   onClick={() => api.goTo(index)}
-                  className='flex size-8 items-center justify-center rounded-full focus-visible:ring-2 focus-visible:ring-[var(--terrace-copper)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--terrace-night)] focus-visible:outline-none'
+                  className='flex size-8 items-center justify-center rounded-full focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none'
                   aria-current={
                     current === index + 1 ? 'true' : undefined
                   }
@@ -179,8 +167,8 @@ export function TerrasseCarousel() {
                     className={cn(
                       'block h-2 rounded-full border transition-all duration-300 motion-reduce:transition-none',
                       current === index + 1 ?
-                        'w-6 border-[var(--terrace-copper)] bg-[var(--terrace-copper)]'
-                      : 'w-2 border-[var(--terrace-line-dark)] bg-[var(--terrace-cream)] hover:bg-[var(--terrace-sage-soft)]'
+                        'w-6 border-secondary bg-secondary'
+                      : 'w-2 border-border bg-muted hover:bg-muted-foreground/40'
                     )}
                     aria-hidden='true'
                   />
@@ -189,7 +177,7 @@ export function TerrasseCarousel() {
             </div>
           </div>
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

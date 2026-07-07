@@ -1,11 +1,10 @@
-// Path: src/app/inspirasjon/terrassen/sections/BenefitsGrid.tsx
-
 import { Home, Sparkles, Thermometer, Users } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
+import { InspirationFeatureCard } from '@/app/inspirasjon/components/cards/InspirationFeatureCard'
 import { H2 } from '@/components/typography/TypographyH2'
-import { H3 } from '@/components/typography/TypographyH3'
 import { Lead } from '@/components/typography/Lead'
-import { P } from '@/components/typography/TypographyP'
+import { terraceBenefitsTheme } from '../theme/terraceInspirationTheme'
 import { MotionCard, MotionReveal } from './TerraceMotion'
 
 type Benefit = {
@@ -46,23 +45,24 @@ export function BenefitsGrid({
   benefits: Benefit[]
 }) {
   return (
-    <article className='bg-[var(--terrace-night-soft)] py-24 text-[var(--terrace-cream)] md:py-32'>
-      <div className='container mx-auto px-4'>
-        <MotionReveal className='mb-16 max-w-3xl md:max-w-4xl'>
+    <article className={terraceBenefitsTheme.sectionClassName}>
+      <InspirationContentShell>
+        <MotionReveal className='mb-14 max-w-3xl md:mb-16 md:max-w-4xl'>
           <H2
             ID='terrasse-investering'
             Text='En investering i hjemmet'
-            className='pb-0 text-left text-[clamp(3rem,6vw,5.75rem)] leading-[0.95] text-[var(--terrace-cream)]'
+            className={terraceBenefitsTheme.titleClassName}
           />
-          <Lead className='mt-6 max-w-3xl pb-0 text-left text-[var(--terrace-sage-soft)] md:pb-0 lg:pb-0'>
+          <Lead className={terraceBenefitsTheme.leadClassName}>
             Få mer ut av uteplassen du allerede har. Utekos er
             designet for å maksimere komforten i hverdagen.
           </Lead>
         </MotionReveal>
 
-        <div className='grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4'>
+        <div className='grid grid-cols-1 items-start gap-6 md:grid-cols-2 xl:grid-cols-4'>
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon
+            const benefitNumber = String(index + 1).padStart(2, '0')
 
             return (
               <MotionCard
@@ -70,28 +70,45 @@ export function BenefitsGrid({
                 delay={index * 0.06}
                 y={18}
               >
-                <div className='h-full rounded-lg border border-[var(--terrace-line-dark)] bg-[var(--terrace-panel-dark)] p-7 text-left text-[var(--terrace-cream)] shadow-[0_28px_74px_-58px_rgb(0_0_0/0.88)] backdrop-blur-xl sm:p-8'>
-                  <div className='mb-7 flex items-start gap-5'>
-                    <div className='flex size-14 shrink-0 items-center justify-center rounded-lg border border-[var(--terrace-line-dark)] bg-[var(--terrace-copper)] text-[var(--terrace-night)]'>
-                      <Icon
-                        className='size-7'
-                        aria-hidden='true'
-                      />
-                    </div>
-                    <H3
-                      Text={benefit.title}
-                      className='pt-1 pb-0 text-left text-2xl leading-[1.12] text-[var(--terrace-cream)]'
-                    />
-                  </div>
-                  <P className='mt-0 text-left text-base leading-relaxed text-[var(--terrace-sage-soft)] not-first:mt-0'>
-                    {benefit.description}
-                  </P>
-                </div>
+                <InspirationFeatureCard
+                  density='compact'
+                  footerMode='flow'
+                  icon={Icon}
+                  title={benefit.title}
+                  description={benefit.description}
+                  footerLabel='Fordel'
+                  footerValue={benefitNumber}
+                  backgroundSlot={
+                    <>
+                      <div className='absolute inset-0 bg-[linear-gradient(145deg,color-mix(in_oklch,var(--card-foreground)_7%,transparent),transparent_42%)]' />
+                      <div className='absolute inset-x-0 top-0 h-px bg-[color-mix(in_oklch,var(--card-foreground)_18%,transparent)]' />
+                      <div className='absolute -top-24 -right-24 size-56 rounded-full bg-[color-mix(in_oklch,var(--ceramic)_18%,transparent)] blur-3xl transition-opacity duration-300 group-hover:opacity-90' />
+                    </>
+                  }
+                  className={terraceBenefitsTheme.cardClassName}
+                  headerClassName='gap-5 px-7 pt-7 sm:px-8 sm:pt-8'
+                  iconContainerClassName={
+                    terraceBenefitsTheme.iconContainerClassName
+                  }
+                  iconClassName='size-7'
+                  titleClassName={terraceBenefitsTheme.titleCardClassName}
+                  contentClassName='px-7 pt-5 pb-5 sm:px-8'
+                  descriptionClassName={
+                    terraceBenefitsTheme.descriptionClassName
+                  }
+                  footerClassName={terraceBenefitsTheme.footerClassName}
+                  footerLabelClassName={
+                    terraceBenefitsTheme.footerLabelClassName
+                  }
+                  footerValueClassName={
+                    terraceBenefitsTheme.footerValueClassName
+                  }
+                />
               </MotionCard>
             )
           })}
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

@@ -1,15 +1,15 @@
 import { H2 } from '@/components/typography/TypographyH2'
 import { Lead } from '@/components/typography/Lead'
-import { SectionBox } from '@/components/layout/SectionBox'
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 
 export function SkalViTrekkeInnSection() {
   return (
-    <SectionBox>
-      <article
-        id='skal-vi-trekke-inn'
-        className='dark:bg-dark-background w-full overflow-x-clip bg-background px-4 pt-8 pb-8 text-foreground sm:px-6 md:px-8 md:pt-12 lg:px-10 lg:pt-16'
-      >
-        <div className='max-w-7xl text-left'>
+    <article
+      id='skal-vi-trekke-inn'
+      className='w-full overflow-x-clip bg-background text-foreground'
+    >
+      <InspirationContentShell className='pt-8 pb-8 md:pt-12 lg:pt-16'>
+        <div className='text-left'>
           <H2
             Text='Skal vi trekke inn?'
             ID='skal-vi-trekke-inn-h2'
@@ -24,7 +24,7 @@ export function SkalViTrekkeInnSection() {
             className='bg-transparent text-foreground md:-mt-2'
           />
         </div>
-      </article>
-    </SectionBox>
+      </InspirationContentShell>
+    </article>
   )
 }

@@ -22,9 +22,9 @@ export async function AnnouncementBanner() {
 	        href={'/skreddersy-varmen' as Route}
 	        data-track='AnnouncementBannerClick'
 	        aria-label='Se tilbudet på Utekos TechDown til kr 1790'
-        className='group font-utekos-text-medium block w-full py-1 bg-background dark:bg-dark-background  pr-14 pl-3 tracking-wide transition-colors outline-none sm:px-12 sm:py-2'
+        className='group font-utekos-text-medium block w-full py-1 bg-background  pr-14 pl-3 tracking-wide transition-colors outline-none sm:px-12 sm:py-2'
       >
-        <div className='mx-auto flex max-w-5xl min-w-0 items-center bg-background dark:bg-dark-background justify-center gap-2 max-[360px]:gap-1.5 sm:gap-2.5'>
+        <div className='mx-auto flex max-w-5xl min-w-0 items-center bg-background justify-center gap-2 max-[360px]:gap-1.5 sm:gap-2.5'>
           <Bird
             aria-hidden='true'
             className='size-4 shrink-0 min-[360px]:size-5 sm:size-6 md:size-7 lg:size-8 xl:size-9'

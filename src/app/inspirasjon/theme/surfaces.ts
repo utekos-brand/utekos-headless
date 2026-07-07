@@ -2,8 +2,8 @@
 export const inspirationGlows = {
   primary: (opacity = 0.44) =>
     `radial-gradient(circle, color-mix(in oklch, var(--primary) ${opacity * 100}%, transparent) 0%, transparent 70%)`,
-  mountainView: (opacity = 0.54) =>
-    `radial-gradient(circle, color-mix(in oklch, var(--mountain-view) ${opacity * 100}%, transparent) 0%, transparent 70%)`,
+  secondaryGlow: (opacity = 0.54) =>
+    `radial-gradient(circle, color-mix(in oklch, var(--secondary) ${opacity * 100}%, transparent) 0%, transparent 70%)`,
   accent: (token: string, opacity = 0.5) =>
     `radial-gradient(circle, color-mix(in oklch, ${token} ${opacity * 100}%, transparent) 0%, transparent 70%)`,
   tabActive: (token: string) =>
@@ -12,20 +12,20 @@ export const inspirationGlows = {
 
 /** Solid kort-flater — ingen gradient-tekstbakgrunn */
 export const inspirationSurfaces = {
-  darkSection: 'bg-mountain-view',
+  darkSection: 'bg-secondary',
   darkSectionText: 'text-foreground',
   lightSection: 'bg-foreground',
-  lightSectionText: 'text-background dark:text-dark-background',
+  lightSectionText: 'text-background',
   cardOnDark:
-    'border border-foreground/12 bg-background/58 dark:bg-dark-background/58',
+    'border border-foreground/12 bg-background/58 bg-background/58',
   cardSolid:
-    'border border-foreground/12 bg-background dark:bg-dark-background'
+    'border border-foreground/12 bg-background'
 } as const
 
 /** Hero feature-kort: theme-stil med dokumentert kontrast */
 export function heroFeatureSurface(accent: string) {
   return {
-    surface: 'var(--mountain-view)',
+    surface: 'var(--secondary)',
     border: `color-mix(in oklch, ${accent} 42%, var(--background))`,
     titleColor: 'var(--foreground)',
     descriptionColor: 'var(--foreground)',

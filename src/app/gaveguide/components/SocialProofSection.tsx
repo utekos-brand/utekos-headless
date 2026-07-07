@@ -8,7 +8,7 @@ export function SocialProofSection() {
     <article className='-foreground bg-sidebar-foreground py-24'>
       <div className='container mx-auto px-4'>
         <div className='mx-auto max-w-3xl text-center'>
-          <Card className='dark:bg-dark-background border-neutral-800 bg-background'>
+          <Card className='bg-background border-neutral-800 bg-background'>
             <CardContent className='p-12'>
               <blockquote className='/90 mb-6 text-xl text-foreground/90 italic'>
                 &quot;Fikk Utekos i 50-årsgave av barna. Helt
@@ -29,7 +29,7 @@ export function SocialProofSection() {
                 </div>
                 <div className='text-left'>
                   <p className='font-semibold'>Bjørg H.</p>
-                  <p className='dark:text-dark-muted-foreground text-sm text-muted-foreground'>
+                  <p className='text-foreground/90 text-sm text-foreground/90'>
                     Fornøyd gavemottaker
                   </p>
                 </div>

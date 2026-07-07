@@ -1,10 +1,14 @@
-import { Card, CardContent } from '@/components/ui/card'
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
+import { InspirationFeatureCard } from '@/app/inspirasjon/components/cards/InspirationFeatureCard'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
 import { Flame, Moon, Users } from 'lucide-react'
 import type { UseCase } from '../types'
 import { H2 } from '@/components/typography/TypographyH2'
 import { Lead } from '@/components/typography/Lead'
-import { SectionBox } from '@/components/layout/SectionBox'
+import { grillSectionSurfaces } from '../theme/sectionSurfaces'
+import { cn } from '@/lib/utils/className'
+
+const { card } = grillSectionSurfaces
 
 export const useCasesData: UseCase[] = [
   {
@@ -13,9 +17,9 @@ export const useCasesData: UseCase[] = [
     title: 'Mens grillen blir varm',
     description:
       'Hold gjestene komfortable mens de venter på den perfekte gløden.',
-    color: 'bg-card ',
-    iconColor: 'text-accent dark:text-dark-accent',
-    iconBackground: 'bg-card-foreground -foreground'
+    color: 'bg-background',
+    iconColor: 'text-secondary-foreground',
+    iconBackground: 'bg-secondary'
   },
   {
     icon: Users,
@@ -23,9 +27,9 @@ export const useCasesData: UseCase[] = [
     title: 'Rundt bordet',
     description:
       'La de gode samtalene fortsette når temperaturen faller.',
-    color: 'bg-card ',
-    iconColor: 'text-accent dark:text-dark-accent',
-    iconBackground: 'bg-card-foreground -foreground'
+    color: 'bg-background',
+    iconColor: 'text-secondary-foreground',
+    iconBackground: 'bg-secondary'
   },
   {
     icon: Moon,
@@ -33,9 +37,9 @@ export const useCasesData: UseCase[] = [
     title: 'Når stjernene titter frem',
     description:
       'For de som blir igjen — komfort som varer til den siste samtalen.',
-    color: 'bg-card ',
-    iconColor: 'text-accent dark:text-dark-accent',
-    iconBackground: 'bg-card-foreground -foreground'
+    color: 'bg-background',
+    iconColor: 'text-secondary-foreground',
+    iconBackground: 'bg-secondary'
   }
 ]
 
@@ -45,64 +49,71 @@ export function UseCasesGrid({
   useCases: UseCase[]
 }) {
   return (
-    <SectionBox bgcolor='bg-secondary dark:bg-dark-secondary text-secondary-foreground dark:text-dark-secondary-foreground border-b border-border '>
-      <article
-        id='bruksomrader'
-        className='dark:text-dark-secondary-foreground text-secondary-foreground'
-      >
-        <div className='container'>
-          <div className='mb-6 max-w-4xl'>
-            <H2
-              ID='bruksomrader'
-              Text='Utekos gjennom hele kvelden'
-              className='dark:text-dark-secondary-foreground text-secondary-foreground'
-            />
-            <Lead
-              Text='Fra første gjest ankommer til de siste drar — komfort
-            som holder stemningen oppe.'
-              className='dark:text-dark-secondary-foreground text-secondary-foreground'
-            />
-          </div>
+    <article
+      id='bruksomrader'
+      className={cn('overflow-x-clip border-b border-border', card.section)}
+    >
+      <InspirationContentShell>
+        <div className='mb-10 max-w-3xl sm:mb-12 lg:mb-16 lg:max-w-4xl'>
+          <H2
+            ID='bruksomrader'
+            Text='Utekos gjennom hele kvelden'
+            className={card.heading}
+          />
+          <Lead
+            Text='Fra første gjest ankommer til de siste drar — komfort som holder stemningen oppe.'
+            className={cn('mt-4 max-w-3xl pb-0 md:mt-6 md:pb-0 lg:pb-0', card.lead)}
+          />
+        </div>
 
-          <div className='grid grid-cols-1 gap-8 md:grid-cols-3'>
-            {useCases.map((useCase, caseIndex) => (
+        <div className='grid grid-cols-1 items-start gap-6 md:grid-cols-3 md:gap-8'>
+          {useCases.map((useCase, caseIndex) => {
+            const Icon = useCase.icon
+
+            return (
               <AnimatedBlock
                 key={useCase.title}
-                className='will-animate-fade-in-up h-full'
+                className='will-animate-fade-in-up'
                 delay={`${caseIndex * 0.1}s`}
                 threshold={0.2}
               >
-                <Card
-                  className={`group /40 @container relative h-full overflow-hidden border-border/40 ${useCase.color}`}
-                >
-                  <CardContent className='relative p-8'>
-                    <div className='mb-6 flex items-center gap-4'>
-                      <div
-                        className={`flex size-12 shrink-0 items-center justify-center rounded-full border border-foreground/18 ${useCase.iconBackground}`}
-                      >
-                        <useCase.icon
-                          className={`size-6 ${useCase.iconColor}`}
-                          aria-hidden
-                        />
-                      </div>
-                      <p className='font-utekos-text-medium text-base tracking-[-0.02em] text-foreground'>
-                        {useCase.time}
-                      </p>
-                    </div>
-
-                    <h3 className='font-utekos-text-medium mb-2 text-xl leading-[1.1] font-semibold tracking-[-0.01em] text-foreground'>
-                      {useCase.title}
-                    </h3>
-                    <p className='font-utekos-text text-base tracking-[-0.02em] text-foreground'>
-                      {useCase.description}
-                    </p>
-                  </CardContent>
-                </Card>
+                <InspirationFeatureCard
+                  density='compact'
+                  footerMode='flow'
+                  icon={Icon}
+                  title={useCase.title}
+                  description={useCase.description}
+                  footerLabel='Tidspunkt'
+                  footerValue={useCase.time}
+                  backgroundSlot={
+                    <>
+                      <div className='absolute inset-0 bg-[linear-gradient(145deg,color-mix(in_oklch,var(--foreground)_5%,transparent),transparent_44%)]' />
+                      <div className='absolute inset-x-0 top-0 h-px bg-foreground/10' />
+                      <div className='absolute -top-24 -right-24 size-56 rounded-full bg-secondary/18 opacity-80 blur-3xl transition-opacity duration-300 group-hover:opacity-100' />
+                    </>
+                  }
+                  className={cn(
+                    'h-auto min-h-0 border-border text-foreground shadow-sm ring-border/50 transition-colors duration-300 hover:bg-muted/40 motion-reduce:transition-none',
+                    useCase.color
+                  )}
+                  headerClassName='gap-4 px-6 pt-6 sm:px-8 sm:pt-8'
+                  iconContainerClassName={cn(
+                    'size-12 rounded-lg border-border text-secondary-foreground ring-border/50',
+                    useCase.iconBackground
+                  )}
+                  iconClassName={cn('size-6', useCase.iconColor)}
+                  titleClassName='text-left text-xl leading-snug font-semibold tracking-[-0.02em] text-foreground md:text-2xl'
+                  contentClassName='px-6 pt-5 pb-5 sm:px-8'
+                  descriptionClassName='max-w-[34ch] text-base leading-relaxed text-foreground/80'
+                  footerClassName='border-border bg-muted/30 px-6 py-4 sm:px-8'
+                  footerLabelClassName='text-muted-foreground'
+                  footerValueClassName='text-foreground'
+                />
               </AnimatedBlock>
-            ))}
-          </div>
+            )
+          })}
         </div>
-      </article>
-    </SectionBox>
+      </InspirationContentShell>
+    </article>
   )
 }

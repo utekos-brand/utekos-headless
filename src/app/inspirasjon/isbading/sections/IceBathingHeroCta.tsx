@@ -17,8 +17,8 @@ export function IceBathingHeroCta() {
     <BrandBadge
       asChild
       backgroundColor='var(--primary)'
-      textColor='var(--background)'
-      className='group min-h-14 min-w-[200px] border border-primary/24 dark:border-dark-primary/24 px-8 py-4 text-base leading-4 font-bold tracking-normal shadow-2xl transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105'
+      textColor='var(--primary-foreground)'
+      className='group min-h-14 min-w-[200px] border border-transparent px-8 py-4 text-base leading-4 font-bold tracking-normal shadow-2xl transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none motion-reduce:transition-none motion-reduce:hover:translate-y-0'
     >
       <Link
         href='#product-spotlight'
@@ -37,7 +37,10 @@ export function IceBathingHeroCta() {
         className='inline-flex items-center justify-center'
       >
         Kle deg for kulden
-        <ArrowRight className='ml-2 size-4 transition-transform group-hover:translate-x-1' aria-hidden />
+        <ArrowRight
+          className='ml-2 size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0'
+          aria-hidden
+        />
       </Link>
     </BrandBadge>
   )

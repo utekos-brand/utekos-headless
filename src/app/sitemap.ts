@@ -53,11 +53,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const inspirationPaths = [
     '/inspirasjon',
-    '/inspirasjon/batliv',
+    '/inspirasjon/hytte',
     '/inspirasjon/bobil',
+    '/inspirasjon/batliv',
+    '/inspirasjon/terrassen',
     '/inspirasjon/grillkvelden',
-    '/inspirasjon/hytteliv',
-    '/inspirasjon/terrassen'
+    '/inspirasjon/isbading',
+    '/inspirasjon/camping'
   ]
   const inspirationPages: MetadataRoute.Sitemap = inspirationPaths.map(path => ({
     url: `${baseUrl}${path}`,

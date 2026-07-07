@@ -27,9 +27,9 @@ export default function TestNewsletterPage() {
             type='email'
             placeholder='test+1@utekos.no'
             required
-            className='dark:border-dark-input dark:bg-dark-background w-full rounded border border-input bg-background p-2 text-foreground'
+            className='border-input bg-background w-full rounded border border-input bg-background p-2 text-foreground'
           />
-          <p className='dark:text-dark-muted-foreground mt-1 text-xs text-muted-foreground'>
+          <p className='text-foreground/90 mt-1 text-xs text-foreground/90'>
             Tips: Bruk alias (f.eks. din.epost+test1@gmail.com)
             for å teste flere ganger.
           </p>
@@ -38,7 +38,7 @@ export default function TestNewsletterPage() {
         <button
           type='submit'
           disabled={isPending}
-          className='bg-commerce-primary dark:bg-dark-commerce-primary text-commerce-primary-foreground dark:text-dark-commerce-primary-foreground hover:bg-commerce-primary-hover dark:hover:bg-dark-commerce-primary-hover hover:text-commerce-primary-hover-foreground dark:hover:text-dark-commerce-primary-hover-foreground rounded px-4 py-2 disabled:opacity-50'
+          className='bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-foreground rounded px-4 py-2 disabled:opacity-50'
         >
           {isPending ? 'Kjører...' : 'Test Påmelding'}
         </button>
@@ -46,7 +46,7 @@ export default function TestNewsletterPage() {
 
       {state.message && (
         <div
-          className={`mt-4 rounded p-3 ${state.status === 'error' ? 'dark:bg-dark-destructive text-destructive-foreground dark:text-dark-destructive-foreground bg-destructive' : 'bg-promo dark:bg-dark-promo text-promo-foreground dark:text-dark-promo-foreground'}`}
+          className={`mt-4 rounded p-3 ${state.status === 'error' ? 'bg-destructive text-destructive-foreground' : 'bg-accent text-accent-foreground'}`}
         >
           <p className='font-bold'>
             {state.status === 'success' ? 'Suksess!' : 'Feil:'}

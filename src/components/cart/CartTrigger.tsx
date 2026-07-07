@@ -6,7 +6,7 @@ import { useCartQuery } from '@/hooks/useCartQuery'
 import { useCartStoreSnapshot } from '@/hooks/useCartStoreSnapshot'
 import { cartStore } from '@/lib/state/cartStore'
 import { cn } from '@/lib/utils/className'
-import { ShoppingCartIcon } from '@heroicons/react/24/outline'
+import { ShoppingCart } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { getRecommendedProducts } from '@/api/lib/products/getRecommendedProducts'
 import { getAccessoryProducts } from '@/api/lib/products/getAccessoryProducts'
@@ -61,21 +61,20 @@ export function CartTrigger({
       aria-label={`Åpne handlekurven, ${itemCount} ${itemCount === 1 ? 'vare' : 'varer'}`}
       variant='outline'
       className={cn(
-        'dark:bg-dark-background relative flex size-11 items-center justify-center gap-2 rounded-md bg-background text-foreground',
-        ' dark:hover:bg-dark-accent border border-border transition-colors hover:bg-accent hover:text-accent-foreground',
-        'p-0',
+        'relative flex items-center justify-center gap-2 rounded-md border border-border bg-background text-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
+        showLabel ? 'h-11' : 'size-11 p-0',
         className
       )}
       onClick={handleOpen}
       onMouseEnter={handlePrefetch}
     >
-      <ShoppingCartIcon className='size-4 transition-all ease-in-out hover:scale-110' />
+      <ShoppingCart className='size-4 shrink-0' aria-hidden />
       {showLabel ?
         <span className='text-sm font-semibold'>Handlekurv</span>
       : null}
 
       {itemCount > 0 && (
-        <div className='dark:border-dark-primary dark:bg-dark-primary pointer-events-none absolute -top-2 -right-2 z-10 grid h-4 w-4 place-items-center rounded-sm border border-primary bg-primary text-[11px] font-medium text-primary-foreground'>
+        <div className='pointer-events-none absolute -top-2 -right-2 z-10 grid h-4 w-4 place-items-center rounded-sm border border-primary bg-primary text-[11px] font-medium text-primary-foreground'>
           {itemCount}
         </div>
       )}

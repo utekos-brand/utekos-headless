@@ -1,6 +1,9 @@
 'use client'
 
 import { useAddToCartAction } from '@/hooks/useAddToCartAction'
+import { generateEventID } from '@/components/analytics/Meta/generateEventID'
+import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { AnimatePresence, motion } from 'motion/react'
 import { ArrowUpRight, Loader2, MousePointer2, ShoppingBag, X } from 'lucide-react'
 import type { Route } from 'next'
@@ -41,6 +44,13 @@ function normalizeVariants(product: ShopifyProduct): ShopifyProductVariant[] {
   if (v?.nodes) return v.nodes
   if (v?.edges) return v.edges.map(edge => edge.node)
   return []
+}
+
+function getTrackingVariant(
+  variants: ShopifyProductVariant[],
+  selectedVariant: ShopifyProductVariant | null
+) {
+  return selectedVariant ?? variants.find(variant => variant.availableForSale) ?? variants[0] ?? null
 }
 
 export function HelpChooseCard({ product, index, glowColor }: HelpChooseCardProps) {
@@ -163,6 +173,46 @@ export function HelpChooseCard({ product, index, glowColor }: HelpChooseCardProp
   const formattedPrice = `${parseInt(price).toLocaleString('no-NO')} kr`
   const isOutOfStock = !product.availableForSale
 
+  const trackProductSelect = () => {
+    const trackingVariant = getTrackingVariant(variants, selectedVariant)
+    if (!trackingVariant) return
+
+    const contentId = cleanShopifyId(trackingVariant.id) || trackingVariant.id
+    const numericPrice = Number(trackingVariant.price?.amount ?? product.priceRange.minVariantPrice.amount)
+    const itemListId = 'produkter-hjelp-meg-velge'
+    const itemListName = 'Hjelp meg å velge'
+
+    void dispatchMetaTrackingEvent({
+      eventName: 'SelectItem',
+      eventId: generateEventID(),
+      eventData: {
+        value: Number.isFinite(numericPrice) ? numericPrice : undefined,
+        currency: trackingVariant.price?.currencyCode ?? product.priceRange.minVariantPrice.currencyCode,
+        content_name: product.title,
+        content_type: 'product',
+        content_category: product.productType || 'Utekos products',
+        content_ids: [contentId],
+        contents: [
+          {
+            id: contentId,
+            quantity: 1,
+            item_price: Number.isFinite(numericPrice) ? numericPrice : undefined,
+            item_name: product.title,
+            item_brand: product.vendor || 'Utekos',
+            item_category: product.productType || 'Utekos products',
+            item_variant: trackingVariant.title,
+            item_list_id: itemListId,
+            item_list_name: itemListName,
+            index
+          }
+        ],
+        item_list_id: itemListId,
+        item_list_name: itemListName,
+        num_items: 1
+      }
+    })
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -172,7 +222,12 @@ export function HelpChooseCard({ product, index, glowColor }: HelpChooseCardProp
       className='group relative size-full'
       onMouseLeave={() => setIsSelectingSize(false)}
     >
-      <Link href={`/produkter/${product.handle}` as Route} className='block size-full'>
+      <Link
+        href={`/produkter/${product.handle}` as Route}
+        className='block size-full'
+        onClick={trackProductSelect}
+        data-track='HelpChooseCardProductSelect'
+      >
         <div className='relative flex aspect-2/3 h-full flex-col overflow-hidden rounded-3xl border border-white/5 bg-neutral-900 shadow-2xl transition-transform duration-300 md:hover:-translate-y-1'>
           <div className='absolute inset-0 z-0 bg-neutral-800'>
             <AnimatePresence mode='wait'>

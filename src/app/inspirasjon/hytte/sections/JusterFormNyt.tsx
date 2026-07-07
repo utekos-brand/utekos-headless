@@ -2,6 +2,7 @@ import {
   CardAspectRatioCustomContent,
   CardAspectRatioCustom
 } from '../../components/cards/AspectRatioCustom'
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 
 export function JusterFormNyt() {
   return (
@@ -9,9 +10,11 @@ export function JusterFormNyt() {
       id='juster-form-nyt'
       className='w-full min-w-0 overflow-x-clip'
     >
-      <div className='grid w-full min-w-0 grid-cols-1 items-center justify-center bg-sidebar text-sidebar-foreground lg:grid-cols-2'>
-        <CardAspectRatioCustomContent className='flex-1' />
-        <CardAspectRatioCustom className='flex-1' />
+      <div className='w-full bg-muted text-foreground'>
+        <InspirationContentShell className='grid min-w-0 grid-cols-1 place-items-stretch px-0 lg:grid-cols-2'>
+          <CardAspectRatioCustomContent className='w-full justify-self-stretch' />
+          <CardAspectRatioCustom className='w-full justify-self-stretch' />
+        </InspirationContentShell>
       </div>
     </article>
   )

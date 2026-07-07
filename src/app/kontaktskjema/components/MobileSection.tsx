@@ -22,7 +22,7 @@ export function MobileSection() {
 
         <ul className='mt-6 space-y-6'>
           <li className='flex items-start gap-3'>
-            <HelpCircle className='text-ancient-water h-5 w-5 shrink-0' />
+            <HelpCircle className='text-secondary h-5 w-5 shrink-0' />
             <div>
               <h3 className='text-sm leading-[1.3] font-semibold tracking-normal text-foreground'>
                 Få personlig veiledning
@@ -34,7 +34,7 @@ export function MobileSection() {
             </div>
           </li>
           <li className='flex items-start gap-3'>
-            <Package className='text-ancient-water h-5 w-5 shrink-0' />
+            <Package className='text-secondary h-5 w-5 shrink-0' />
             <div>
               <h3 className='text-sm leading-[1.3] font-semibold tracking-normal text-foreground'>
                 Hjelp med din bestilling
@@ -47,7 +47,7 @@ export function MobileSection() {
           </li>
         </ul>
       </div>
-      <div className='dark:bg-dark-background/72 border-t border-foreground/12 bg-background/72 p-6'>
+      <div className='bg-background/72 border-t border-foreground/12 bg-background/72 p-6'>
         <SupportForm idPrefix='mobile-contact' />
       </div>
 
@@ -67,7 +67,7 @@ export function MobileSection() {
           </div>
           <div className='p-6'>
             <h4 className='flex items-start gap-1.5 text-xs leading-[1.3] font-semibold tracking-normal text-foreground'>
-              <Leaf className='text-soft-warm h-4 w-4' />
+              <Leaf className='text-accent h-4 w-4' />
               Investering i komfort
             </h4>
             <p className='leading-text-paragraph mt-1.5 text-xs tracking-normal text-foreground'>

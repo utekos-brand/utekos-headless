@@ -34,14 +34,14 @@ export function VariantSelectors({
           if (option.optionValues.length === 1) {
             return (
               <div key={option.name} className='space-y-2'>
-                <h3 className='text-sm font-semibold tracking-wide text-foreground uppercase'>
+                <h3 className='text-sm font-semibold tracking-wide text-card-foreground uppercase'>
                   {option.name}
                 </h3>
-                <p className='flex items-center gap-2 text-base font-medium text-foreground'>
+                <p className='flex items-center gap-2 text-base font-medium text-card-foreground'>
                   {isColorOption && (
                     <span
                       aria-hidden='true'
-                      className='bg-havdyp size-3 rounded-full border border-foreground/35 shadow-[0_0_0_2px_color-mix(in_oklab,var(--foreground)_12%,transparent)]'
+                      className='size-3 rounded-full border border-border bg-muted shadow-[0_0_0_2px_color-mix(in_oklab,var(--card-foreground)_12%,transparent)]'
                     />
                   )}
                   {currentSelectedValue}
@@ -52,7 +52,7 @@ export function VariantSelectors({
 
           return (
             <div key={option.name} className='space-y-3'>
-              <h3 className='text-sm font-semibold tracking-wide text-foreground uppercase'>
+              <h3 className='text-sm font-semibold tracking-wide text-card-foreground uppercase'>
                 {option.name}
               </h3>
 
@@ -63,16 +63,16 @@ export function VariantSelectors({
                   return (
                     <Button
                       key={value}
-                      variant={isActive ? 'outline' : 'default'}
+                      variant={isActive ? 'outline' : 'secondary'}
                       onClick={() =>
                         onUpdateVariant(option.name, value)
                       }
                       className={cn(
-                        'dark:text-dark-background rounded-lg px-6 py-2.5 text-sm text-background transition-all duration-200 hover:bg-foreground',
+                        'rounded-lg px-6 py-2.5 text-sm transition-all duration-200',
                         'hover:scale-105 active:scale-95',
-                        isActive ? 'shadow-md' : (
-                          'hover:border-foreground/40'
-                        )
+                        isActive ?
+                          'border-card-foreground/40 bg-card-foreground/10 text-card-foreground shadow-md'
+                        : 'hover:border-border'
                       )}
                       aria-pressed={isActive}
                       aria-label={`Velg ${option.name} ${value}`}
@@ -80,7 +80,7 @@ export function VariantSelectors({
                       {isColorOption && (
                         <span
                           aria-hidden='true'
-                          className='dark:border-dark-background/25 bg-havdyp size-3 rounded-full border border-background/25 shadow-[0_0_0_2px_color-mix(in_oklab,var(--foreground)_35%,transparent)]'
+                          className='size-3 rounded-full border border-border bg-muted shadow-[0_0_0_2px_color-mix(in_oklab,var(--card-foreground)_35%,transparent)]'
                         />
                       )}
                       {value}

@@ -56,7 +56,7 @@ export function KlarnaProductExpressCheckout({
       />
       {errorMessage ?
         <p
-          className='text-destructive dark:text-dark-destructive mt-2 text-sm'
+          className='text-destructive mt-2 text-sm'
           role='alert'
           aria-live='polite'
         >

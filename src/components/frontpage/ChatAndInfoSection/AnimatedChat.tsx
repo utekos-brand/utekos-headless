@@ -30,19 +30,18 @@ const messageMotion = {
 const chatBubbleClassName = 'max-w-xs sm:max-w-sm'
 
 /*
-  One surface per person, like a real chat thread.
   Hanne (incoming): accent — ink on cloud 12.55:1 (light),
   soft on tone-30 ~10:1 (dark). WCAG 1.4.3 AA.
 */
 const incomingBubbleContentClassName =
-  '!rounded-2xl !rounded-tl-md !border !border-[color-mix(in_oklch,var(--accent-foreground)_12%,transparent)] !bg-accent dark:!bg-dark-accent !p-3 !text-base !leading-snug !text-accent-foreground dark:!text-dark-accent-foreground shadow-lg shadow-background/15 dark:shadow-dark-background/15'
+  '!rounded-2xl !rounded-tl-md !border !border-[color-mix(in_oklch,var(--accent-foreground)_12%,transparent)] !bg-accent dark:!bg-accent !p-3 !text-base !leading-snug !text-accent-foreground dark:!text-accent-foreground shadow-lg shadow-background/15'
 
 /*
-  Thomas (outgoing): primary — white on havdyp 14.28:1 (light),
-  ink on teal-70 7.03:1 (dark). WCAG 1.4.3 AA.
+  Thomas (outgoing): foreground on background — 14.28:1 (light),
+  12.55:1 (dark). WCAG 1.4.3 AA.
 */
 const outgoingBubbleContentClassName =
-  '!rounded-2xl !rounded-tr-md !border !border-[color-mix(in_oklch,var(--primary-foreground)_28%,transparent)] !bg-primary dark:!bg-dark-primary !p-3 !text-base !leading-snug !text-primary-foreground dark:!text-dark-primary-foreground shadow-lg shadow-background/15 dark:shadow-dark-background/15'
+  '!rounded-2xl !rounded-tr-md !border !border-[color-mix(in_oklch,var(--foreground)_12%,transparent)] !bg-foreground dark:!bg-foreground !p-3 !text-base !leading-snug !text-background dark:!text-background shadow-lg shadow-background/15'
 
 export function AnimatedChat() {
   return (
@@ -78,8 +77,8 @@ export function AnimatedChat() {
           <NameCursor
             name='Hanne'
             side='left'
-            color='var(--chart-3)'
-            foreground='var(--color-secondary-source)'
+            color='var(--secondary)'
+            foreground='var(--secondary-foreground)'
           />
         </motion.div>
         <motion.div variants={messageMotion}>
@@ -143,12 +142,12 @@ export function AnimatedChat() {
                   className={outgoingBubbleContentClassName}
                 >
                   <div className='flex items-center gap-2'>
-                    <P className='chat-bubble-text flex items-center whitespace-nowrap text-primary-foreground not-first:mt-0'>
+                    <P className='chat-bubble-text flex items-center whitespace-nowrap text-background not-first:mt-0'>
                       <InlineText>
                         Nettopp. Mer plass til vinen 😉
                       </InlineText>
                       <motion.span
-                        className='dark:bg-dark-primary-foreground ml-1 inline-block h-4 w-0.5 bg-primary-foreground'
+                        className='bg-background ml-1 inline-block h-4 w-0.5'
                         animate={{ opacity: [1, 0, 1] }}
                         transition={{
                           duration: 0.9,
@@ -158,7 +157,7 @@ export function AnimatedChat() {
                       />
                     </P>
                     <span
-                      className='hidden size-5 shrink-0 items-center justify-center rounded-md bg-transparent text-primary-foreground sm:inline-flex'
+                      className='hidden size-5 shrink-0 items-center justify-center rounded-md bg-transparent text-background sm:inline-flex'
                       aria-hidden
                       title='Send'
                     >
@@ -175,8 +174,8 @@ export function AnimatedChat() {
         <NameCursor
           name='Hanne'
           side='left'
-          color='var(--chart-3)'
-          foreground='var(--color-secondary-source)'
+          color='var(--secondary)'
+          foreground='var(--secondary-foreground)'
           className='absolute top-[22%] right-[15%]'
         />
         <NameCursor

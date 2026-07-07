@@ -4,10 +4,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { KlarnaLogo } from '@/components/payments/KlarnaLogo'
-import { VippsLogo } from '@/components/payments/VippsLogo'
-import VisaWhiteLogo from '@public/logo/VisaWhiteLogo.svg'
-import Image from 'next/image'
+import { PaymentIcons } from '@/components/payments/PaymentIcons'
 import { H3 } from '@/components/typography/TypographyH3'
 
 export function CardSafeShopping() {
@@ -25,42 +22,7 @@ export function CardSafeShopping() {
       </CardHeader>
 
       <CardContent className='px-0'>
-        <ul
-          aria-label='Betalingsmetoder: Vipps, Visa og Klarna'
-          className='flex items-center justify-center gap-3 sm:gap-4'
-        >
-          <li
-            aria-label='Vipps'
-            className='flex min-h-11 items-center justify-center py-2 sm:min-h-12'
-          >
-            <VippsLogo
-              aria-hidden='true'
-              className='h-5 w-auto sm:h-6'
-            />
-          </li>
-          <li
-            aria-label='Visa'
-            className='flex min-h-14 items-center justify-center py-2 sm:min-h-15'
-          >
-            <Image
-              src={VisaWhiteLogo}
-              alt=''
-              height={60}
-              width={60}
-              aria-hidden='true'
-              className='h-8 w-auto object-contain sm:h-9'
-            />
-          </li>
-          <li
-            aria-label='Klarna'
-            className='flex min-h-11 items-center justify-center py-2 sm:min-h-12'
-          >
-            <KlarnaLogo
-              aria-hidden='true'
-              className='h-7 w-auto sm:h-8'
-            />
-          </li>
-        </ul>
+        <PaymentIcons />
       </CardContent>
     </Card>
   )

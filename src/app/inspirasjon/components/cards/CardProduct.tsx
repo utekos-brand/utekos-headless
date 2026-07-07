@@ -29,10 +29,10 @@ export const CardProduct = () => {
       <Button
         size='icon'
         onClick={() => setLiked(!liked)}
-        className='absolute top-4 right-4 rounded-full bg-primary/10 dark:bg-dark-primary/10 hover:bg-primary/20 dark:hover:bg-dark-primary/20'
+        className='absolute top-4 right-4 rounded-full bg-primary/10 bg-primary/10 hover:bg-primary/20 hover:bg-primary/20'
       >
         {liked ?
-          <Heart className='fill-destructive dark:fill-dark-destructive stroke-destructive dark:stroke-dark-destructive' />
+          <Heart className='fill-destructive stroke-destructive' />
         : <Heart className='stroke-white' />}
         <span className='sr-only'>Like</span>
       </Button>

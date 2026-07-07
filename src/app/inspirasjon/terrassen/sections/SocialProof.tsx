@@ -1,5 +1,4 @@
-// Path: src/app/inspirasjon/terrassen/sections/SocialProof.tsx
-
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { Card, CardContent } from '@/components/ui/card'
 import Image from 'next/image'
 import { H2 } from '@/components/typography/TypographyH2'
@@ -8,19 +7,19 @@ import { MotionReveal } from './TerraceMotion'
 
 export function SocialProof() {
   return (
-    <article className='bg-[var(--terrace-night-soft)] py-24 text-[var(--terrace-cream)] md:py-32'>
-      <div className='container mx-auto px-4'>
+    <article className='overflow-x-clip bg-background py-16 text-foreground sm:py-20 lg:py-24'>
+      <InspirationContentShell>
         <MotionReveal className='max-w-3xl'>
           <H2
             ID='terrasse-kundeopplevelse'
             Text='Huseiere elsker Utekos'
-            className='mb-8 pb-0 text-left text-[clamp(3rem,6vw,5.75rem)] leading-[0.95] text-[var(--terrace-cream)]'
+            className='mb-6 pb-0 text-foreground sm:mb-8'
           />
 
-          <Card className='rounded-lg border border-[var(--terrace-line-dark)] bg-[var(--terrace-glass-panel)] text-[var(--terrace-cream)] shadow-[0_28px_80px_-54px_rgb(0_0_0/0.86)] backdrop-blur-xl'>
-            <CardContent className='p-8 sm:p-12'>
-              <blockquote className='mb-8'>
-                <P className='text-center font-utekos-text-medium text-xl leading-relaxed text-[var(--terrace-cream)] not-first:mt-0 md:text-2xl'>
+          <Card className='rounded-lg border border-border bg-card text-card-foreground shadow-sm'>
+            <CardContent className='p-6 sm:p-10 lg:p-12'>
+              <blockquote className='mb-6 sm:mb-8'>
+                <P className='text-center font-utekos-text-medium text-lg leading-relaxed text-card-foreground not-first:mt-0 md:text-xl'>
                   &quot;Vi har doblet bruken av terrassen etter at
                   vi fikk Utekos i hus. Den brukes av hele
                   familien, fra tenåringen som vil sitte ute med
@@ -29,7 +28,7 @@ export function SocialProof() {
                   tepper.&quot;
                 </P>
               </blockquote>
-              <div className='flex items-center justify-center gap-4'>
+              <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
                 <Image
                   src='/kristin.webp'
                   alt='Kristin'
@@ -38,11 +37,11 @@ export function SocialProof() {
                   sizes='48px'
                   className='size-12 rounded-full object-cover'
                 />
-                <div className='text-left'>
-                  <P className='font-utekos-text-medium leading-tight tracking-normal text-[var(--terrace-cream)] not-first:mt-0'>
+                <div className='text-center sm:text-left'>
+                  <P className='font-utekos-text-medium leading-tight tracking-normal text-card-foreground not-first:mt-0'>
                     Kristin
                   </P>
-                  <P className='text-sm leading-relaxed tracking-normal text-[var(--terrace-sage-soft)] not-first:mt-1'>
+                  <P className='text-sm leading-relaxed tracking-normal text-card-foreground/80 not-first:mt-1'>
                     Eneboligeier fra Ulvik
                   </P>
                 </div>
@@ -50,7 +49,7 @@ export function SocialProof() {
             </CardContent>
           </Card>
         </MotionReveal>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

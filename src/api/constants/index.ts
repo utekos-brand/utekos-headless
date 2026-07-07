@@ -39,7 +39,7 @@ export const PRODUCT_VARIANTS = {
       }
     ],
     features: ['Helårsbruk', 'Tre bruksformer', 'Vannavstøtende'],
-    colors: [{ name: 'Havdyp', hex: 'var(--color-havdyp)' }],
+    colors: [{ name: 'Havdyp', hex: 'var(--card)' }],
     sizes: ['Liten', 'Middels', 'Stor', 'Ekstra stor'],
     images: [
       'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/kvinne-nyter-terrasselivet-med-utekos-techdown.webp?v=1780689292',
@@ -75,7 +75,7 @@ export const PRODUCT_VARIANTS = {
       }
     ],
     features: ['Lett å pakke', 'Tørker raskt', 'Syntetisk fyll'],
-    colors: [{ name: 'Fjellblå', hex: 'var(--color-ocean-cavern)' }],
+    colors: [{ name: 'Fjellblå', hex: 'var(--card)' }],
     sizes: ['Medium', 'Large'],
     images: [
       'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/utekos-mikrofiber-helfigur-1600-1600.webp?v=1780689474',

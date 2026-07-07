@@ -35,7 +35,7 @@ export async function FeaturedProductsSection() {
         </H2>
         <ProductCarousel
           productCardClassName={
-            'border border-foreground/12 dark:border-dark-foreground/12 bg-card '
+            'border border-foreground/12 border-foreground/12 bg-card '
           }
         />
       </PageSection>

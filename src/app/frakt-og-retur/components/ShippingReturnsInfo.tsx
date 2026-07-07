@@ -25,10 +25,10 @@ export function ShippingReturnsInfo() {
           className='will-animate-fade-in-up h-full'
           delay='0.2s'
         >
-          <article className='dark:bg-dark-foreground/5 flex h-full min-w-0 flex-col rounded-2xl bg-foreground/5 p-2'>
-            <div className='dark:ring-dark-border  flex h-full flex-col items-start rounded-xl bg-card p-6 shadow-sm ring-1 ring-border sm:p-8'>
+          <article className='bg-foreground/5 flex h-full min-w-0 flex-col rounded-2xl bg-foreground/5 p-2'>
+            <div className='ring-border  flex h-full flex-col items-start rounded-xl bg-card p-6 shadow-sm ring-1 ring-border sm:p-8'>
               <header className='mb-4 flex flex-col items-start gap-4'>
-                <div className='dark:ring-dark-border/50 dark:bg-dark-foreground/5 flex size-12 shrink-0 items-center justify-center rounded-full bg-foreground/5 text-foreground ring-1 ring-border/50'>
+                <div className='ring-border/50 bg-foreground/5 flex size-12 shrink-0 items-center justify-center rounded-full bg-foreground/5 text-foreground ring-1 ring-border/50'>
                   <Truck
                     className='size-6'
                     strokeWidth={1.8}
@@ -73,10 +73,10 @@ export function ShippingReturnsInfo() {
           className='will-animate-fade-in-up h-full'
           delay='0.4s'
         >
-          <article className='dark:bg-dark-foreground/5 flex h-full min-w-0 flex-col rounded-2xl bg-foreground/5 p-2'>
-            <div className='dark:ring-dark-border  flex h-full flex-col items-start rounded-xl bg-card p-6 shadow-sm ring-1 ring-border sm:p-8'>
+          <article className='bg-foreground/5 flex h-full min-w-0 flex-col rounded-2xl bg-foreground/5 p-2'>
+            <div className='ring-border  flex h-full flex-col items-start rounded-xl bg-card p-6 shadow-sm ring-1 ring-border sm:p-8'>
               <header className='mb-4 flex flex-col items-start gap-4'>
-                <div className='dark:ring-dark-border/50 dark:bg-dark-foreground/5 flex size-12 shrink-0 items-center justify-center rounded-full bg-foreground/5 text-foreground ring-1 ring-border/50'>
+                <div className='ring-border/50 bg-foreground/5 flex size-12 shrink-0 items-center justify-center rounded-full bg-foreground/5 text-foreground ring-1 ring-border/50'>
                   <Undo2
                     className='size-6'
                     strokeWidth={1.8}
@@ -137,7 +137,7 @@ export function ShippingReturnsInfo() {
             >
               <AccordionTrigger
                 data-track={`ShippingReturns-${item.id}-Click`}
-                className='dark:hover:text-dark-foreground/80 dark:svg]:text-dark-foreground/90 text-left text-lg leading-relaxed font-medium text-foreground transition-colors hover:text-foreground/80 hover:no-underline [&>svg]:text-foreground/90'
+                className='hover:text-foreground/80 [&>svg]:text-foreground/90 text-left text-lg leading-relaxed font-medium text-foreground transition-colors hover:text-foreground/80 hover:no-underline [&>[&>svg]:text-foreground/90'
               >
                 {item.question}
               </AccordionTrigger>
@@ -148,7 +148,7 @@ export function ShippingReturnsInfo() {
                     <a
                       href='mailto:kundeservice@utekos.no'
                       data-track='ShippingReturnsEmailClick'
-                      className='dark:decoration-dark-foreground/30 dark:hover:decoration-dark-foreground font-semibold text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors hover:decoration-foreground'
+                      className='decoration-foreground/30 hover:decoration-foreground font-semibold text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors hover:decoration-foreground'
                     >
                       kundeservice@utekos.no
                     </a>{' '}

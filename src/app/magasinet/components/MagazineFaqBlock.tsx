@@ -11,7 +11,7 @@ export function MagazineFaqBlock({
   return (
     <article className='my-16'>
       {block.title && (
-        <h2 className='dark:text-dark-background font-sans text-4xl leading-[0.95] font-bold text-balance text-background sm:text-5xl'>
+        <h2 className='text-background font-sans text-4xl leading-[0.95] font-bold text-balance text-background sm:text-5xl'>
           <MagazineInlineTitle text={block.title} />
         </h2>
       )}
@@ -19,12 +19,12 @@ export function MagazineFaqBlock({
         {block.items.map(item => (
           <div
             key={item.question}
-            className='dark:border-dark-background/10 rounded-lg border border-background/10 bg-foreground p-5'
+            className='border-background/10 rounded-lg border border-background/10 bg-foreground p-5'
           >
-            <dt className='dark:text-dark-background font-sans text-xl leading-[1.05] font-bold text-background'>
+            <dt className='text-background font-sans text-xl leading-[1.05] font-bold text-background'>
               {item.question}
             </dt>
-            <dd className='dark:text-dark-background/76 mt-3 text-base leading-[1.55] text-background/76'>
+            <dd className='text-background/76 mt-3 text-base leading-[1.55] text-background/76'>
               {item.answer}
             </dd>
           </div>

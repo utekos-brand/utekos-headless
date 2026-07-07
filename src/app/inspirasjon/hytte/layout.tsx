@@ -20,7 +20,7 @@ export default function HytteLayout({
 }) {
   return (
     <article
-      className={`${utekosText.variable} ${utekosTextMedium.variable} ${googleSansFlex.variable} dark:bg-dark-background w-full min-w-0 overflow-x-clip scroll-smooth bg-background text-foreground antialiased`}
+      className={`${utekosText.variable} ${utekosTextMedium.variable} ${googleSansFlex.variable} w-full min-w-0 overflow-x-clip scroll-smooth bg-background text-foreground antialiased`}
     >
       {children}
     </article>

@@ -145,7 +145,7 @@ const paletteNotes = [
   {
     title: 'Maritim base',
     description:
-      'Canva-sporet peker mot dype blåfiolette flater. I kode mappes dette til maritime-darkest, havdyp og kontrollerte blå tints.',
+      'Canva-sporet peker mot dype blåfiolette flater. I kode mappes dette til card, secondary og kontrollerte blå tints.',
     palette: 'maritime'
   },
   {
@@ -157,7 +157,7 @@ const paletteNotes = [
   {
     title: 'Naturkomplement',
     description:
-      'Olive, mountain-view og fairy-tale-tints dekker hytte, skog og gaveflater med roligere harmonier.',
+      'Olive, secondary og ceramic-tints dekker hytte, skog og gaveflater med roligere harmonier.',
     palette: 'forest'
   }
 ] satisfies PaletteNote[]

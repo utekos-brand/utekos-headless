@@ -11,12 +11,12 @@ import {
 export function ShippingAndReturnComponent() {
   return (
     <div className='flex flex-col gap-6'>
-      <div className='dark:border-dark-foreground/10 dark:bg-dark-background rounded-xl border border-foreground/10 bg-background text-foreground shadow-sm'>
-        <div className='dark:divide-dark-foreground/10 grid grid-cols-1 divide-y divide-foreground/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0'>
+      <div className='border-foreground/10 bg-background rounded-xl border border-foreground/10 bg-background text-foreground shadow-sm'>
+        <div className='divide-foreground/10 grid grid-cols-1 divide-y divide-foreground/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0'>
           <div className='flex items-start gap-3 p-4'>
             <Truck
               size={22}
-              className='dark:text-dark-accent mt-0.5 shrink-0 text-accent drop-shadow-sm'
+              className='text-accent mt-0.5 shrink-0 text-accent drop-shadow-sm'
             />
             <div className='min-w-0'>
               <p className='text-sm font-semibold text-foreground'>
@@ -31,7 +31,7 @@ export function ShippingAndReturnComponent() {
           <div className='flex items-start gap-3 p-4'>
             <RefreshCcw
               size={22}
-              className='dark:text-dark-accent mt-0.5 shrink-0 text-accent drop-shadow-sm'
+              className='text-accent mt-0.5 shrink-0 text-accent drop-shadow-sm'
             />
             <div className='min-w-0'>
               <p className='text-sm font-semibold text-foreground'>
@@ -46,7 +46,7 @@ export function ShippingAndReturnComponent() {
           <div className='flex items-start gap-3 p-4'>
             <Store
               size={22}
-              className='dark:text-dark-accent mt-0.5 shrink-0 text-accent drop-shadow-sm'
+              className='text-accent mt-0.5 shrink-0 text-accent drop-shadow-sm'
             />
             <div className='min-w-0'>
               <p className='text-sm font-semibold text-foreground'>
@@ -59,11 +59,11 @@ export function ShippingAndReturnComponent() {
           </div>
         </div>
 
-        <div className='dark:border-dark-foreground/10 dark:bg-dark-background/50 rounded-b-xl border-t border-foreground/10 bg-background/50 px-4 py-2.5'>
+        <div className='border-foreground/10 bg-background/50 rounded-b-xl border-t border-foreground/10 bg-background/50 px-4 py-2.5'>
           <Link
             href={'/frakt-og-retur' as Route}
             data-track='SkreddersyVarmenFraktOgReturLink'
-            className='group /60 dark:hover:text-dark-accent inline-flex items-center gap-1.5 text-xs font-medium text-foreground/60 transition-colors hover:text-accent'
+            className='group /60 hover:text-accent inline-flex items-center gap-1.5 text-xs font-medium text-foreground/60 transition-colors hover:text-accent'
           >
             Alt om frakt og retur
             <ArrowRight

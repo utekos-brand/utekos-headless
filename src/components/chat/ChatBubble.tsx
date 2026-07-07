@@ -31,10 +31,10 @@ export function ChatBubble({
     <div className={cn('flex', justify)}>
       <div
         className={cn(
-          'dark:shadow-dark-background/15 max-w-xs rounded-2xl border p-3 shadow-lg shadow-background/15 sm:max-w-sm',
+          'shadow-background/15 max-w-xs rounded-2xl border p-3 shadow-lg shadow-background/15 sm:max-w-sm',
           bubble,
           side === 'right' &&
-            'dark:bg-dark-primary border-[color-mix(in_oklch,var(--primary-foreground)_28%,transparent)] bg-primary text-primary-foreground'
+            'bg-primary border-[color-mix(in_oklch,var(--primary-foreground)_28%,transparent)] bg-primary text-primary-foreground'
         )}
         style={bubbleStyle}
       >

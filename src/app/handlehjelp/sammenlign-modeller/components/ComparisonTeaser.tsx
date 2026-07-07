@@ -8,6 +8,8 @@ import {
   Layers
 } from 'lucide-react'
 import { cn } from '@/lib/utils/className'
+import { H2 } from '@/components/typography/TypographyH2'
+import { Lead } from '@/components/typography/Lead'
 
 const models = [
   {
@@ -17,14 +19,14 @@ const models = [
       '(UTSOLGT) - Alternativet for deg som ønsker dun.',
     icon: Feather,
     cardClass:
-      'border-border  bg-card  text-card-foreground  hover:bg-card-hover -hover',
+      'border-card-foreground/12 bg-card text-card-foreground shadow-sm ring-1 ring-card-foreground/10 hover:bg-card/95 hover:ring-card-foreground/20',
     iconShellClass:
-      'border-border  bg-primary dark:bg-dark-primary text-primary-foreground ',
-    iconClass: 'text-primary-foreground ',
-    textClass: 'text-card-foreground ',
-    descriptionClass: 'text-card-foreground ',
+      'border-card-foreground bg-card-foreground text-card',
+    iconClass: 'text-card',
+    textClass: 'text-card-foreground',
+    descriptionClass: 'text-card-foreground/80',
     lesmerClass:
-      'text-card-foreground  group-hover:text-card-foreground dark:group-hover:text-foreground/90-foreground'
+      'text-card-foreground/90 group-hover:text-card-foreground'
   },
   {
     title: 'Utekos TechDown™',
@@ -33,14 +35,14 @@ const models = [
       'Vår nyeste, varmeste og mest allsidige modell.',
     icon: Droplets,
     cardClass:
-      'border-border  bg-card  text-card-foreground  hover:bg-card-hover -hover',
+      'border-card-foreground/12 bg-card text-card-foreground shadow-sm ring-1 ring-card-foreground/10 hover:bg-card/95 hover:ring-card-foreground/20',
     iconShellClass:
-      'border-border  bg-primary dark:bg-dark-primary text-primary-foreground ',
-    iconClass: 'text-primary-foreground ',
-    textClass: 'text-card-foreground ',
-    descriptionClass: 'text-card-foreground ',
+      'border-teal-25 bg-teal-25 text-card',
+    iconClass: 'text-card',
+    textClass: 'text-card-foreground',
+    descriptionClass: 'text-card-foreground/80',
     lesmerClass:
-      'text-card-foreground  group-hover:text-card-foreground dark:group-hover:text-foreground/90-foreground'
+      'text-card-foreground/90 group-hover:text-card-foreground'
   },
   {
     title: 'Utekos Mikrofiber™',
@@ -49,36 +51,31 @@ const models = [
       'For for bruk i aktivitet eller varmere temperaturer.',
     icon: Layers,
     cardClass:
-      'border-border  bg-card  text-card-foreground  hover:bg-card-hover -hover',
+      'border-card-foreground/12 bg-card text-card-foreground shadow-sm ring-1 ring-card-foreground/10 hover:bg-card/95 hover:ring-card-foreground/20',
     iconShellClass:
-      'border-border  bg-primary dark:bg-dark-primary text-primary-foreground ',
-    iconClass: 'text-primary-foreground ',
-    textClass: 'text-card-foreground ',
-    descriptionClass: 'text-card-foreground ',
+      'border-light bg-light text-card',
+    iconClass: 'text-card',
+    textClass: 'text-card-foreground',
+    descriptionClass: 'text-card-foreground/80',
     lesmerClass:
-      'text-card-foreground  group-hover:text-card-foreground dark:group-hover:text-foreground/90-foreground'
+      'text-card-foreground/90 group-hover:text-card-foreground'
   }
 ]
 
 export function ComparisonTeaser() {
   return (
-    <article className='mb-24 px-4 py-12 md:py-16'>
-      <div className='bg-overcast container mx-auto overflow-hidden rounded-3xl border border-white/5 shadow-2xl'>
+    <article className='mx-auto py-12 md:py-16'>
+      <div className='relative container mx-auto overflow-hidden rounded-3xl border border-border bg-muted text-foreground shadow-2xl'>
         <div className='absolute inset-0 -z-10 opacity-20'>
-          <div className='absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[24px_24px]' />
+          <div className='absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[24px_24px]' />
         </div>
 
-        <div className='p-6 text-center max-sm:text-left md:p-16'>
-          <h2 className='text-havdyp font-sans text-4xl font-bold sm:text-5xl md:text-6xl'>
+        <div className='p-6 text-left md:p-16'>
+          <H2 ID='comparison-teaser-title' Text='Usikker på hvilken Utekos du skal velge?'>
             Usikker på hvilken Utekos du skal velge?
-          </h2>
+          </H2>
 
-          <p className='utekos-section-lead text-havdyp mx-auto mt-6 max-w-4xl text-[1.2rem] leading-relaxed'>
-            Alle Utekos-modellene har justerbar passform og
-            ventilasjon, men har ellers ulike egenskaper og
-            styrker. Se vår sammenligningsguide for å finne
-            modellen som passer best til dine behov.
-          </p>
+          <Lead Text='Alle Utekos-modellene har justerbar passform og ventilasjon, men har ellers ulike egenskaper og styrker. Se vår sammenligningsguide for å finne modellen som passer best til dine behov.' className='mt-2! max-w-4xl pb-0! text-left text-foreground/85' />
 
           <div className='mt-12 grid grid-cols-1 gap-6 text-left md:grid-cols-3'>
             {models.map(model => (
@@ -118,7 +115,7 @@ export function ComparisonTeaser() {
 
                 <p
                   className={cn(
-                    '! mb-6 text-[1rem]!',
+                    'mb-6 text-base leading-relaxed',
                     model.descriptionClass
                   )}
                 >
@@ -141,9 +138,9 @@ export function ComparisonTeaser() {
           <div className='mt-12'>
             <Button
               asChild
-              variant='commerce-primary'
+              variant='secondary'
               size='lg'
-              className='h-12 rounded-full px-8 transition-all'
+              className='h-12 rounded-full px-8 transition-colors hover:bg-secondary/90'
             >
               <Link
                 href={

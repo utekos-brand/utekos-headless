@@ -11,18 +11,18 @@ export function NbccHowToUseSection() {
   return (
     <article
       id='slik-bruker-du-fordelen'
-      className='bg-foreground-muted px-4 py-20 sm:px-6 lg:px-8'
+      className='bg-muted px-4 py-20 sm:px-6 lg:px-8'
     >
       <div className='mx-auto max-w-7xl'>
         <div className='grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start'>
           <div data-nbcc-reveal data-nbcc-animate>
-            <p className='dark:text-dark-background text-sm font-semibold tracking-[0.18em] text-background uppercase'>
+            <p className='text-background text-sm font-semibold tracking-[0.18em] text-background uppercase'>
               NBCC MEDLEMSFORDEL
             </p>
-            <h2 className='dark:text-dark-background mt-4 max-w-xl text-3xl font-semibold tracking-normal text-balance text-background sm:text-4xl'>
+            <h2 className='text-background mt-4 max-w-xl text-3xl font-semibold tracking-normal text-balance text-background sm:text-4xl'>
               Fra medlemskode til ekte Utekos.
             </h2>
-            <p className='dark:text-dark-background mt-5 max-w-xl text-base text-background'>
+            <p className='text-background mt-5 max-w-xl text-base text-background'>
               Som medlem får du en hyggelig prisrabatt på hele
               vårt hovedsortiment. Følg de tre enkle stegene for
               å hente koden din, eller hopp rett til kassen om du
@@ -30,7 +30,7 @@ export function NbccHowToUseSection() {
             </p>
             <Button
               asChild
-              className='dark:bg-dark-background hover:bg-foreground-muted mt-8 h-12 rounded-md bg-background px-6 text-foreground'
+              className='bg-background hover:bg-muted mt-8 h-12 rounded-md bg-background px-6 text-foreground'
             >
               <Link
                 href={'/produkter' as Route}
@@ -65,23 +65,23 @@ export function NbccHowToUseSection() {
                     <CheckIcon
                       size={22}
                       animate='default'
-                      className='dark:text-dark-primary text-primary'
+                      className='text-primary'
                       aria-hidden
                     />
                   </span>
                   <div>
-                    <p className='dark:text-dark-background text-sm font-semibold text-background'>
+                    <p className='text-background text-sm font-semibold text-background'>
                       Steg {index + 1}
                     </p>
-                    <h3 className='dark:text-dark-background mt-1 text-xl font-semibold text-background'>
+                    <h3 className='text-background mt-1 text-xl font-semibold text-background'>
                       {step.title}
                     </h3>
-                    <p className='dark:text-dark-background mt-2 text-sm leading-7 text-background'>
+                    <p className='text-background mt-2 text-sm leading-7 text-background'>
                       {step.description}
                     </p>
                   </div>
                   {index < nbccSteps.length - 1 && (
-                    <Separator className='dark:bg-dark-background/50 bg-background/50 sm:col-start-2' />
+                    <Separator className='bg-background/50 bg-background/50 sm:col-start-2' />
                   )}
                 </li>
               ))}

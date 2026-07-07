@@ -96,10 +96,10 @@ export function InspirationSeasonsTabs({
     : 'group-data-[orientation=horizontal]/tabs:h-auto grid w-full grid-cols-2 gap-3 bg-transparent p-0 sm:grid-cols-4'
 
   const roundedTriggerClassName =
-    'inspiration-seasons-tab-trigger relative flex !h-auto min-h-20 w-full flex-col items-center justify-center overflow-hidden rounded-xl border border-foreground/12 bg-background/58 dark:bg-dark-background/58 px-3 py-3 transition-all duration-300 hover:border-foreground/28 hover:bg-background/72 dark:hover:bg-dark-background/72 data-active:border-foreground/24 data-active:bg-primary dark:data-active:bg-dark-primary data-active:text-background dark:data-active:text-dark-background'
+    'inspiration-seasons-tab-trigger relative flex !h-auto min-h-20 w-full flex-col items-center justify-center overflow-hidden rounded-xl border border-foreground/12 bg-background/58 bg-background/58 px-3 py-3 transition-all duration-300 hover:border-foreground/28 hover:bg-background/72 hover:bg-background/72 data-active:border-foreground/24 data-active:bg-primary data-active:bg-primary data-active:text-background data-active:text-background'
 
   const pillTriggerClassName =
-    'relative flex !h-auto w-full items-center justify-center overflow-hidden rounded-lg border border-foreground/12 bg-background/58 dark:bg-dark-background/58 px-3 py-3 transition-all duration-300 hover:border-foreground/28 data-active:border-foreground/18 data-active:bg-background dark:data-active:bg-dark-background data-active:text-foreground'
+    'relative flex !h-auto w-full items-center justify-center overflow-hidden rounded-lg border border-foreground/12 bg-background/58 bg-background/58 px-3 py-3 transition-all duration-300 hover:border-foreground/28 data-active:border-foreground/18 data-active:bg-background data-active:bg-background data-active:text-foreground'
 
   return (
     <Tabs
@@ -114,7 +114,7 @@ export function InspirationSeasonsTabs({
           const activeClassName =
             tabActiveClassName ?? 'text-foreground'
           const inactiveClassName =
-            tabInactiveClassName ?? 'text-ancient-water'
+            tabInactiveClassName ?? 'text-secondary'
 
           return (
             <TabsTrigger
@@ -148,7 +148,7 @@ export function InspirationSeasonsTabs({
                     'size-5 transition-colors',
                     variant === 'pill' ?
                       isActive ? season.iconColor
-                      : 'dark:text-dark-muted-foreground text-muted-foreground'
+                      : 'text-foreground/90 text-foreground/90'
                     : isActive ? activeClassName
                     : inactiveClassName
                   )}
@@ -161,7 +161,7 @@ export function InspirationSeasonsTabs({
                         'hidden font-medium sm:inline',
                         isActive ?
                           'text-foreground'
-                        : 'dark:text-dark-muted-foreground text-muted-foreground'
+                        : 'text-foreground/90 text-foreground/90'
                       ]
                     : [
                         'font-sans font-bold tracking-[-0.01em]',
@@ -192,7 +192,7 @@ export function InspirationSeasonsTabs({
             <div className='inspiration-seasons-tab-content-enter'>
               <Card
                 className={cn(
-                  'dark:bg-dark-background/58 relative overflow-hidden rounded-2xl border-foreground/12 bg-background/58 py-0',
+                  'bg-background/58 relative overflow-hidden rounded-2xl border-foreground/12 bg-background/58 py-0',
                   contentCardClassName
                 )}
               >
@@ -216,7 +216,7 @@ export function InspirationSeasonsTabs({
                     <div className='mb-5 flex items-center gap-4'>
                       <div
                         className={cn(
-                          'dark:bg-dark-background flex size-12 shrink-0 items-center justify-center rounded-xl border border-foreground/18 bg-background transition-shadow duration-300',
+                          'bg-background flex size-12 shrink-0 items-center justify-center rounded-xl border border-foreground/18 bg-background transition-shadow duration-300',
                           contentIconClassName
                         )}
                         style={
@@ -251,7 +251,7 @@ export function InspirationSeasonsTabs({
                     </div>
                     <P
                       className={cn(
-                        'text-ancient-water text-left text-lg leading-relaxed not-first:mt-0',
+                        'text-secondary text-left text-lg leading-relaxed not-first:mt-0',
                         contentTextClassName
                       )}
                     >
@@ -264,17 +264,17 @@ export function InspirationSeasonsTabs({
                       {season.tips.map((tip, index) => (
                         <li
                           key={index}
-                          className='inspiration-seasons-tip-enter dark:bg-dark-background/36 flex items-start gap-3 rounded-xl border border-foreground/10 bg-background/36 p-4'
+                          className='inspiration-seasons-tip-enter bg-background/36 flex items-start gap-3 rounded-xl border border-foreground/10 bg-background/36 p-4'
                           style={{
                             animationDelay: `${index * 0.1}s`
                           }}
                         >
-                          <div className='dark:bg-dark-background mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border border-foreground/18 bg-background'>
+                          <div className='bg-background mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border border-foreground/18 bg-background'>
                             <Check
                               className={`size-4 ${season.iconColor}`}
                             />
                           </div>
-                          <span className='leading-text-paragraph text-ancient-water'>
+                          <span className='leading-text-paragraph text-secondary'>
                             {tip}
                           </span>
                         </li>

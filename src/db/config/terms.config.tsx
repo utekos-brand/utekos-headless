@@ -12,7 +12,7 @@ function PolicyItem({
   return (
     <li>
       <span className='block font-semibold text-foreground'>{title}</span>
-      <span className='block text-muted-foreground'>{children}</span>
+      <span className='block text-foreground/90'>{children}</span>
     </li>
   )
 }

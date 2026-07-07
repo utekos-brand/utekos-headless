@@ -26,7 +26,7 @@ export async function NbccProductSection() {
   return (
     <article
       id='produkter'
-      className='dark:bg-dark-background bg-background px-4 py-20 sm:px-6 sm:py-24 lg:px-8'
+      className='bg-background px-4 py-20 sm:px-6 sm:py-24 lg:px-8'
     >
       <div className='mx-auto max-w-7xl'>
         <div
@@ -64,7 +64,7 @@ export async function NbccProductSection() {
                 key={product.title}
                 data-nbcc-reveal
                 data-nbcc-animate
-                className='group dark:border-dark-foreground/60 /80 overflow-hidden rounded-lg border-foreground/60 bg-card/80 py-0 shadow-none'
+                className='group border-foreground/60 /80 overflow-hidden rounded-lg border-foreground/60 bg-card/80 py-0 shadow-none'
               >
                 <CardHeader className='p-0'>
                   <NbccProductCarousel images={product.images} />
@@ -108,7 +108,7 @@ export async function NbccProductSection() {
             }}
             containerClassName='flex w-full max-w-3xl flex-col items-center'
             panelClassName='w-full'
-            buttonClassName='h-12 w-full justify-center gap-2 rounded-md border-foreground dark:border-dark-foreground bg-card  px-6 text-foreground  hover:bg-card/90 /90 sm:w-auto'
+            buttonClassName='h-12 w-full justify-center gap-2 rounded-md border-foreground bg-card  px-6 text-foreground  hover:bg-card/90 /90 sm:w-auto'
           />
         </div>
       </div>

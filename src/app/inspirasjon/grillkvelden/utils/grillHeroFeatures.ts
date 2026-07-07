@@ -2,14 +2,14 @@ import { Clock, Flame, Users } from 'lucide-react'
 import type { InspirationHeroFeature } from '../../layout/hero/types'
 
 const grillHeroFeatureCard = {
-  surface: 'var(--mountain-view)',
+  surface: 'var(--card)',
   border:
     'color-mix(in oklch, var(--foreground) 18%, transparent)',
-  titleColor: 'var(--foreground)',
-  descriptionColor: 'var(--foreground)',
-  iconSurface: 'var(--mineral-green)',
+  titleColor: 'var(--card-foreground)',
+  descriptionColor: 'var(--card-foreground)',
+  iconSurface: 'var(--secondary)',
   iconBorder: 'transparent',
-  iconColor: 'var(--fairest-jade)',
+  iconColor: 'var(--secondary-foreground)',
   iconClassName: 'border-0',
   shadow:
     '0 18px 46px -34px color-mix(in oklch, var(--background) 55%, transparent)'

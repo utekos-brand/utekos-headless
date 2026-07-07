@@ -7,7 +7,7 @@ import {
 import Link from 'next/link'
 
 const guaranteeIconClassName =
-  'flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground'
+  'flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-foreground/90'
 
 export function InfoSidebar() {
   return (

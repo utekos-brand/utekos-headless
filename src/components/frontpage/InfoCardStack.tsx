@@ -38,19 +38,19 @@ export function InfoCardStack() {
       <div
         className={cn(
           cardBaseClasses,
-          'dark:bg-dark-secondary dark:text-dark-secondary-foreground top-0 left-0 bg-secondary text-secondary-foreground',
+          'bg-secondary text-secondary-foreground top-0 left-0 bg-secondary text-secondary-foreground',
           'h-40 max-w-70 sm:h-48 sm:max-w-sm',
           'p-4 sm:p-6'
         )}
       >
         <TrafficLights variant='default' />
         <div className='mt-6 flex items-start gap-3'>
-          <ShoppingBag className='dark:text-dark-secondary-foreground h-4 w-4 shrink-0 text-secondary-foreground sm:h-5 sm:w-5' />
+          <ShoppingBag className='text-secondary-foreground h-4 w-4 shrink-0 text-secondary-foreground sm:h-5 sm:w-5' />
           <div>
-            <h3 className='dark:text-dark-secondary-foreground text-sm font-semibold text-secondary-foreground sm:text-base'>
+            <h3 className='text-secondary-foreground text-sm font-semibold text-secondary-foreground sm:text-base'>
               En trygg handel
             </h3>
-            <p className='dark:text-dark-secondary-foreground/85 mt-1 text-xs text-secondary-foreground/85 sm:text-sm'>
+            <p className='text-secondary-foreground/85 mt-1 text-xs text-secondary-foreground/85 sm:text-sm'>
               Sikre betalingsløsninger og 14 dagers angrerett.
             </p>
           </div>
@@ -59,7 +59,7 @@ export function InfoCardStack() {
       <div
         className={cn(
           cardBaseClasses,
-          'dark:bg-dark-primary overflow-hidden bg-primary text-primary-foreground',
+          'bg-primary overflow-hidden bg-primary text-primary-foreground',
           'h-40 max-w-70 sm:h-48 sm:max-w-sm',
           'p-4 sm:p-6',
           'top-28 left-12 sm:top-32 sm:left-1/4'

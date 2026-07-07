@@ -14,7 +14,7 @@ export function CustomerStoryView() {
       </div>
 
       <div
-        className='mx-6 h-px shrink-0 bg-card-foreground/22 sm:mx-8'
+        className='mx-6 h-px shrink-0 bg-border sm:mx-8'
         aria-hidden='true'
       />
 

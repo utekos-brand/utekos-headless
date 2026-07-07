@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import { MapPin } from 'lucide-react'
+import { cn } from '@/lib/utils/className'
 import { AboutBadge } from './AboutBadge'
+import { aboutSectionInsetClass } from './AboutPageShell'
 
 const pastEvents = [
   {
@@ -30,7 +32,12 @@ const fairImages = [
 export function AboutEvents() {
   return (
     <article className='bg-background py-20 text-foreground sm:py-28'>
-      <div className='mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8'>
+      <div
+        className={cn(
+          aboutSectionInsetClass,
+          'grid grid-cols-1 gap-12 lg:grid-cols-[0.9fr_1.1fr]'
+        )}
+      >
         <div>
           <AboutBadge className='mb-6'>Møteplasser</AboutBadge>
           <h2 className='text-4xl leading-tight font-semibold text-foreground sm:text-5xl'>

@@ -78,7 +78,7 @@ export function QuickViewModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className='max-h-screen overflow-y-auto bg-[#0d3333t] sm:max-w-4xl md:max-h-[70vh]'>
+      <DialogContent className='max-h-screen overflow-y-auto border-border bg-card text-card-foreground ring-border sm:max-w-4xl md:max-h-[70vh] [&_[data-slot=dialog-close]]:text-card-foreground [&_[data-slot=dialog-close]]:hover:bg-card-foreground/10'>
         {isLoading || !productData || !selectedVariant ?
           <div className='p-6'>
             <DialogTitle className='sr-only'>
@@ -91,13 +91,13 @@ export function QuickViewModal({
           </div>
         : <>
             <DialogHeader className='space-y-3 py-2'>
-              <DialogTitle className='text-3xl font-bold'>
+              <DialogTitle className='text-3xl font-bold text-card-foreground'>
                 {productData.title}
               </DialogTitle>
               {productData.description && (
                 <DialogDescription
                   render={
-                    <p className='max-w-2xl text-base leading-relaxed text-foreground' />
+                    <p className='max-w-2xl text-base leading-relaxed text-card-foreground/90' />
                   }
                 >
                   {productData.description}
@@ -108,7 +108,7 @@ export function QuickViewModal({
             <div className='grid grid-cols-1 gap-10 pb-2 lg:grid-cols-2 lg:gap-12'>
               <div className='relative'>
                 <div className='sticky top-6'>
-                  <div className='bg-havdyp relative aspect-square w-full overflow-hidden rounded-2xl shadow-lg'>
+                  <div className='relative aspect-square w-full overflow-hidden rounded-2xl border border-border bg-muted shadow-sm'>
                     {featuredImage && (
                       <Image
                         src={featuredImage.url}
@@ -128,10 +128,10 @@ export function QuickViewModal({
 
               <div className='flex flex-col gap-8'>
                 <div className='space-y-2'>
-                  <p className='text-sm tracking-wide text-foreground uppercase'>
+                  <p className='text-sm tracking-wide text-card-foreground/80 uppercase'>
                     Pris
                   </p>
-                  <div className='text-3xl font-bold'>
+                  <div className='text-3xl font-bold text-card-foreground'>
                     <Price
                       amount={selectedVariant.price.amount}
                       currencyCode={

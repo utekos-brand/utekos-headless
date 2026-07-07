@@ -1,34 +1,34 @@
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
 import { Card, CardContent } from '@/components/ui/card'
 import Image from 'next/image'
 import UtekosWordmark from '@/components/BrandComponents/utils/UtekosWordmark'
 import { grillSectionSurfaces } from '../theme/sectionSurfaces'
 
-const { light } = grillSectionSurfaces
+const { card } = grillSectionSurfaces
 
 export function GrillMasterSection() {
   return (
-    <article className={light.section}>
-      <div className='container mx-auto px-4'>
+    <article className={card.section}>
+      <InspirationContentShell>
         <div className='mx-auto max-w-3xl text-center'>
-          <h2 className={`mb-8 ${light.heading}`}>
+          <h2
+            className={`mb-8 text-2xl font-semibold sm:text-3xl md:text-4xl ${card.heading}`}
+          >
             <span className='inline-flex flex-wrap items-baseline justify-center gap-x-[0.22em] gap-y-2'>
               <span>Grillmestere elsker</span>
-              <UtekosWordmark
-                className='inline-block h-[0.78em] w-auto shrink-0 translate-y-[0.06em]'
-                style={{ color: 'var(--background)' }}
-              />
+              <UtekosWordmark className='inline-block h-[0.78em] w-auto shrink-0 translate-y-[0.06em] text-card-foreground' />
             </span>
           </h2>
 
-          <Card className='bg-demitasse border-foreground/18 shadow-[0_28px_80px_-54px_color-mix(in_oklch,var(--background)_82%,transparent)]'>
+          <Card className='rounded-lg border border-border bg-background text-foreground shadow-sm'>
             <CardContent className='p-8 sm:p-12'>
-              <blockquote className='leading-text-paragraph mb-6 text-xl tracking-[-0.02em] text-foreground'>
-                &quot;Jeg elsker å arrangere grillfester, men
-                hatet at folk dro inn så snart det ble kjølig.
-                Utekos endret alt. Festen fortsetter ute — rundt
-                grillen, der den hører hjemme.&quot;
+              <blockquote className='mb-6 text-lg leading-relaxed text-foreground sm:text-xl'>
+                &quot;Jeg elsker å arrangere grillfester, men hatet at
+                folk dro inn så snart det ble kjølig. Utekos endret
+                alt. Festen fortsetter ute — rundt grillen, der den
+                hører hjemme.&quot;
               </blockquote>
-              <div className='flex items-center justify-center gap-4'>
+              <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
                 <Image
                   src='/hans-age.webp'
                   alt='Hans Åge'
@@ -37,11 +37,11 @@ export function GrillMasterSection() {
                   sizes='48px'
                   className='size-12 rounded-full object-cover'
                 />
-                <div className='text-left'>
-                  <p className='leading-tight font-semibold tracking-[-0.01em] text-foreground'>
+                <div className='text-center sm:text-left'>
+                  <p className='font-semibold text-foreground'>
                     Hans Åge
                   </p>
-                  <p className='leading-text-paragraph text-ancient-water text-sm tracking-[-0.02em]'>
+                  <p className='text-sm text-foreground/80'>
                     Hobby-grillmester og livsnyter
                   </p>
                 </div>
@@ -49,7 +49,7 @@ export function GrillMasterSection() {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </InspirationContentShell>
     </article>
   )
 }

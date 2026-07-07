@@ -69,7 +69,7 @@ export function OrganicCircleWord({
           data-organic-circle-path=''
           d='M5,25 C5,8 25,5 50,5 C75,5 95,8 95,25 C95,42 75,45 50,45 C25,45 5,42 5,25 Z'
           fill='none'
-          stroke='var(--circle-stroke, var(--ancient-water))'
+          stroke='var(--circle-stroke, var(--secondary))'
           strokeWidth='2'
           strokeLinecap='round'
           strokeLinejoin='round'

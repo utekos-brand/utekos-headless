@@ -14,20 +14,20 @@ const benefits = [
   {
     label: '3-i-1 funksjonalitet',
     description: '— Parkas, oppfestet eller full lengde',
-    glowColor: 'var(--dazzle-blue',
-    surface: 'dazzle' as const
+    glowColor: 'var(--foreground)',
+    surface: 'muted' as const
   },
   {
     label: 'Lettvekt og kompakt',
     description: '— Bare ca. 800g, enkel å pakke',
-    glowColor: 'var(--orange-slice)',
-    surface: 'orange' as const
+    glowColor: 'var(--foreground)',
+    surface: 'muted' as const
   },
   {
     label: 'YKK®-toveisglidelås',
     description: '— Bransjens mest anerkjente glidelås',
-    glowColor: 'var(--dazzle-blue)',
-    surface: 'dazzle' as const
+    glowColor: 'var(--foreground)',
+    surface: 'muted' as const
   }
 ]
 
@@ -66,11 +66,11 @@ export function MikrofiberContentColumn() {
             }
           >
             <BrandBadge
-              tone='commerce-secondary'
-              className='gap-2 border border-background/12 dark:border-dark-background/12 px-4 py-2 text-sm font-medium'
+              tone='neutral'
+              className='gap-2 bg-background px-4 py-2 text-sm md:text-base tracking-normal font-utekos-text-medium text-foreground'
             >
               <Feather
-                className='text-orange-slice size-4'
+                  className='size-4 text-foreground'
                 aria-hidden='true'
               />
               <span>Ultralett allsidighet</span>
@@ -79,7 +79,7 @@ export function MikrofiberContentColumn() {
           <h2
             ref={h2Ref}
             className={cn(
-              'will-animate-fade-in-up font-sans text-balance text-muted-foreground dark:text-dark-muted-foreground',
+              'will-animate-fade-in-up font-sans text-balance text-foreground',
               h2InView && 'is-in-view'
             )}
             style={
@@ -93,7 +93,7 @@ export function MikrofiberContentColumn() {
           <p
             ref={pRef}
             className={cn(
-              'will-animate-fade-in-up leading-text-paragraph mt-6 max-w-2xl text-lg text-muted-foreground dark:text-dark-muted-foreground',
+              'will-animate-fade-in-up mt-6 max-w-2xl text-lg text-foreground',
               pInView && 'is-in-view'
             )}
             style={
@@ -108,7 +108,7 @@ export function MikrofiberContentColumn() {
             passformen kan justeres etter behov.
           </p>
 
-          <ul className='mt-8 space-y-3 text-muted-foreground dark:text-dark-muted-foreground'>
+          <ul className='mt-8 space-y-3 text-foreground'>
             {benefits.map((benefit, idx) => (
               <BenefitCard
                 key={benefit.label}
@@ -131,9 +131,9 @@ export function MikrofiberContentColumn() {
           >
             <Button
               asChild
-              variant='commerce-primary'
+              variant='default'
               size='lg'
-              className='group min-h-12 w-full gap-2 rounded-full px-6 py-3 text-base leading-[1.35] font-semibold whitespace-normal shadow-[0_18px_40px_-28px_color-mix(in_oklch,var(--primary)_70%,transparent)] transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:w-auto sm:whitespace-nowrap'
+              className='group min-h-12 w-full gap-2 rounded-full px-6 py-3 text-base leading-[1.35] font-utekos-text-medium whitespace-normal shadow-[0_18px_40px_-28px_color-mix(in_oklch,var(--background)_70%,transparent)] transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:w-auto sm:whitespace-nowrap'
             >
               <Link
                 href='/produkter/utekos-mikrofiber'

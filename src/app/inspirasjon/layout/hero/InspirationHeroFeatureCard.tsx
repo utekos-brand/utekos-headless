@@ -103,7 +103,7 @@ export function InspirationHeroFeatureCard({
 
           <p
             className={cn(
-              'inspirational-page-hero-card-description text-ancient-water pr-2',
+              'inspirational-page-hero-card-description text-secondary pr-2',
               descriptionClassName
             )}
             style={

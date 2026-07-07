@@ -25,9 +25,9 @@ export function NbccHeroSection() {
       initial='hidden'
       animate='visible'
       transition={{ staggerChildren: 0.085 }}
-      className='dark:bg-dark-background relative isolate overflow-hidden bg-background'
+      className='bg-background relative isolate overflow-hidden bg-background'
     >
-      <div className='dark:from-dark-background absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent' />
+      <div className='from-background absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent' />
 
       <div className='relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] lg:items-center lg:gap-x-16 lg:gap-y-0 lg:px-8 lg:py-28'>
         <motion.div
@@ -126,7 +126,7 @@ export function NbccHeroSection() {
           <Button
             asChild
             size='lg'
-            variant='commerce-primary'
+            variant='default'
             className='h-12 w-full justify-center rounded-md px-6 text-[15px] font-semibold sm:w-auto'
           >
             <Link
@@ -152,7 +152,7 @@ export function NbccHeroSection() {
             trackingData={nbccHeroTracking.secondary}
             containerClassName='min-w-0 w-full'
             panelClassName='w-full sm:max-w-[32rem]'
-            buttonClassName='h-12 w-full justify-center gap-2 rounded-md border border-commerce-secondary dark:border-dark-commerce-secondary bg-commerce-secondary dark:bg-dark-commerce-secondary px-6 text-[15px] font-semibold text-commerce-secondary-foreground dark:text-dark-commerce-secondary-foreground hover:bg-commerce-secondary-hover dark:hover:bg-dark-commerce-secondary-hover hover:text-commerce-secondary-hover-foreground dark:hover:text-dark-commerce-secondary-hover-foreground sm:w-auto'
+            buttonClassName='h-12 w-full justify-center gap-2 rounded-md border border-secondary bg-secondary px-6 text-[15px] font-semibold text-secondary-foreground hover:bg-secondary-hover hover:text-secondary-foreground sm:w-auto'
           />
         </motion.div>
 
@@ -171,7 +171,7 @@ export function NbccHeroSection() {
             <BadgeCheckIcon
               size={22}
               animate='check'
-              className='dark:text-dark-primary mt-0.5 shrink-0 text-primary'
+              className='text-primary mt-0.5 shrink-0 text-primary'
               aria-hidden
             />
             <span>

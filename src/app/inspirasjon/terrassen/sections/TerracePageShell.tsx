@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { TerraceMotionProvider } from './TerraceMotion'
 
 export function TerracePageShell({
@@ -8,7 +8,7 @@ export function TerracePageShell({
 }) {
   return (
     <TerraceMotionProvider>
-      <article className='bg-section overflow-x-clip text-foreground'>
+      <article className='overflow-x-clip bg-background text-foreground'>
         {children}
       </article>
     </TerraceMotionProvider>

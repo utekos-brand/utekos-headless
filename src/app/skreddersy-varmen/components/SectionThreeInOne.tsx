@@ -37,7 +37,7 @@ export function SectionThreeInOne() {
     <SkreddersyMotionProvider>
       <article
         aria-labelledby='threeinone-heading'
-        className='dark:bg-dark-background w-full bg-background text-foreground'
+        className='w-full bg-background text-foreground'
       >
         <m.div
           className='mx-auto max-w-4xl px-6 py-16 text-center md:py-24'
@@ -47,7 +47,7 @@ export function SectionThreeInOne() {
           variants={revealGroup}
         >
           <m.span
-            className='font-utekos-text-medium dark:text-dark-accent mb-3 block text-base leading-4 tracking-wide text-accent'
+            className='font-utekos-text-medium mb-3 block text-base leading-4 tracking-wide text-light'
             variants={revealItemLeft}
           >
             Adaptiv funksjonalitet
@@ -60,11 +60,11 @@ export function SectionThreeInOne() {
             Friheten til å velge
           </m.h2>
           <m.p
-            className='leading-text-paragraph /90 mx-auto max-w-2xl font-sans text-balance text-foreground/90'
+            className='leading-text-paragraph mx-auto max-w-2xl font-sans text-balance text-foreground/90'
             variants={revealItem}
           >
             Det unike med Utekos
-            <span className='dark:text-dark-primary font-bold text-primary'>
+            <span className='font-bold text-light'>
               ®
             </span>{' '}
             er transformasjonen. Fra en isolerende kokong til en
@@ -86,7 +86,7 @@ export function SectionThreeInOne() {
               custom={index}
             >
               <m.div
-                className='dark:border-dark-foreground/10  relative aspect-square w-full overflow-hidden border-y border-foreground/10 bg-card'
+                className='relative aspect-square w-full overflow-hidden border-y border-foreground/10 bg-card'
                 variants={revealScale}
               >
                 <Image
@@ -112,7 +112,7 @@ export function SectionThreeInOne() {
 
               <div className='mx-auto w-full max-w-xl px-6 pt-6 md:px-8'>
                 <m.div
-                  className='dark:text-dark-primary mb-2 flex items-center gap-2 text-primary'
+                  className='mb-2 flex items-center gap-2 text-primary'
                   variants={revealItemLeft}
                 >
                   <span className='inline-flex shrink-0'>
@@ -129,7 +129,7 @@ export function SectionThreeInOne() {
                   {step.title}
                 </m.h3>
                 <m.p
-                  className='leading-text-paragraph /85 mt-2 font-sans tracking-wide text-foreground/85 md:text-2xl'
+                  className='leading-text-paragraph mt-2 font-sans tracking-wide text-foreground/85 md:text-2xl'
                   variants={revealItem}
                 >
                   {step.description}
@@ -140,7 +140,7 @@ export function SectionThreeInOne() {
         </div>
 
         <div className='hidden w-full xl:flex'>
-          <div className='dark:border-dark-foreground/10  sticky top-0 flex h-screen w-1/2 items-center justify-center overflow-hidden border-r border-foreground/10 bg-card'>
+          <div className='sticky top-0 flex h-screen w-1/2 items-center justify-center overflow-hidden border-r border-foreground/10 bg-card'>
             {Steps.map((step, index) => (
               <m.div
                 key={step.id}
@@ -154,7 +154,7 @@ export function SectionThreeInOne() {
                 initial={index === 0 ? 'active' : 'inactive'}
                 variants={stickyImageMotion}
               >
-                <div className='dark:border-dark-foreground/15 dark:bg-dark-background/40 relative aspect-square w-[min(86%,82vh)] overflow-hidden rounded-3xl border border-foreground/15 bg-background/40 shadow-2xl'>
+                <div className='relative aspect-square w-[min(86%,82vh)] overflow-hidden rounded-3xl border border-foreground/15 bg-background/40 shadow-2xl'>
                   <Image
                     src={step.image}
                     alt={step.title}
@@ -168,7 +168,7 @@ export function SectionThreeInOne() {
                     )}
                     sizes='(max-width: 1279px) 0px, min(43vw, 82vh)'
                   />
-                  <div className='dark:from-dark-background absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-background to-transparent opacity-60' />
+                  <div className='absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-background to-transparent opacity-60' />
                 </div>
               </m.div>
             ))}
@@ -180,19 +180,19 @@ export function SectionThreeInOne() {
                   className={cn(
                     'h-1.5 rounded-full transition-all duration-500 motion-reduce:transition-none',
                     activeStep === i ?
-                      'dark:bg-dark-accent w-8 bg-accent shadow-[0_0_8px_var(--color-accent)]'
-                    : 'dark:bg-dark-foreground/30 w-2 bg-foreground/30'
+                      'bg-accent w-8  shadow-[0_0_8px_var(--color-accent)]'
+                    : 'w-2 bg-foreground/30'
                   )}
                 />
               ))}
             </div>
           </div>
 
-          <div className='dark:bg-dark-background flex w-1/2 flex-col bg-background'>
+          <div className='flex w-1/2 flex-col bg-background'>
             {Steps.map((step, index) => (
               <m.div
                 key={step.id}
-                className='dark:border-dark-foreground/10 flex min-h-screen flex-col justify-center border-b border-foreground/10 px-20 last:border-0'
+                className='flex min-h-screen flex-col justify-center border-b border-foreground/10 px-20 last:border-0'
                 initial='hidden'
                 whileInView='visible'
                 viewport={{
@@ -204,11 +204,11 @@ export function SectionThreeInOne() {
               >
                 <div>
                   <m.div
-                    className='dark:text-dark-primary mb-4 flex items-center gap-3 font-sans text-base leading-4 font-medium text-primary md:text-lg'
+                    className='mb-4 flex items-center gap-3 font-sans text-base leading-4 font-medium text-primary md:text-lg'
                     variants={revealItemLeft}
                   >
                     <m.span
-                      className='dark:text-dark-primary inline-flex shrink-0 text-primary'
+                      className='inline-flex shrink-0 text-primary'
                       variants={revealPop}
                     >
                       {step.icon}
@@ -226,7 +226,7 @@ export function SectionThreeInOne() {
                   </m.h3>
 
                   <m.p
-                    className='leading-text-paragraph /85 max-w-lg font-sans text-base text-foreground/85 md:text-2xl'
+                    className='leading-text-paragraph max-w-lg font-sans text-base text-foreground/85 md:text-2xl'
                     variants={revealItem}
                   >
                     {step.description}

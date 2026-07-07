@@ -9,13 +9,13 @@ export const renderMetafield = (
 ): React.ReactNode => {
   if (!fieldValue)
     return (
-      <p className='text-muted-foreground dark:text-dark-muted-foreground'>Ingen informasjon tilgjengelig</p>
+      <p className='text-foreground/90 text-foreground/90'>Ingen informasjon tilgjengelig</p>
     )
 
   const parsed = safeJsonParse(fieldValue, null) as RootNode | null
 
   if (!parsed) {
-    return <p className='text-muted-foreground dark:text-dark-muted-foreground'>Kunne ikke laste innhold</p>
+    return <p className='text-foreground/90 text-foreground/90'>Kunne ikke laste innhold</p>
   }
 
   return <RichTextRenderer content={parsed} />

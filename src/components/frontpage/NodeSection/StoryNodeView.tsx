@@ -11,22 +11,28 @@ interface StoryNodeViewProps {
   tone: 'before' | 'after'
 }
 
-const sharedStoryCardStyles = {
-  card: 'border-card-foreground/16 bg-[oklch(0.2956_0.0618_48.42)] text-card-foreground',
-  iconWrap:
-    'border-card-foreground/22 bg-[oklch(0.3565_0.0546_194.98)] text-card-foreground'
-} as const
-
 const toneStyles = {
   before: {
-    ...sharedStoryCardStyles,
-    glow: 'from-card-foreground/10 via-card-foreground/4 to-transparent',
-    description: 'text-card-foreground/86'
+    card: 'border-border bg-muted text-foreground',
+    iconWrap:
+      'border-border bg-background text-ceramic ring-1 ring-border/80',
+    glow: 'from-foreground/8 via-foreground/4 to-transparent',
+    description: 'text-foreground/86',
+    heading: 'text-foreground',
+    wordmark: 'text-foreground',
+    iconInset:
+      'shadow-[inset_0_1px_0_color-mix(in_oklch,var(--color-ceramic)_24%,transparent)]'
   },
   after: {
-    ...sharedStoryCardStyles,
+    card: 'border-border bg-card text-card-foreground',
+    iconWrap:
+      'border-secondary/35 bg-secondary text-secondary-foreground ring-1 ring-secondary-foreground/20',
     glow: 'from-card-foreground/12 via-card-foreground/5 to-transparent',
-    description: 'text-card-foreground/90'
+    description: 'text-card-foreground/90',
+    heading: 'text-card-foreground',
+    wordmark: 'text-card-foreground',
+    iconInset:
+      'shadow-[inset_0_1px_0_color-mix(in_oklch,var(--color-secondary-foreground)_28%,transparent)]'
   }
 } as const
 
@@ -57,8 +63,9 @@ export function StoryNodeView({
         <div className='flex min-w-0 items-center gap-4 sm:gap-5'>
           <div
             className={cn(
-              'flex size-13 shrink-0 items-center justify-center rounded-2xl border shadow-[inset_0_1px_0_color-mix(in_oklch,var(--color-card-foreground)_30%,transparent)] sm:size-16',
-              styles.iconWrap
+              'flex size-13 shrink-0 items-center justify-center rounded-2xl border sm:size-16',
+              styles.iconWrap,
+              styles.iconInset
             )}
           >
             <Icon
@@ -67,14 +74,22 @@ export function StoryNodeView({
             />
           </div>
 
-          <H3 className='inline-flex min-w-0 items-baseline gap-x-2 pb-0 text-3xl leading-none font-bold tracking-tight whitespace-nowrap text-card-foreground sm:text-4xl md:text-4xl lg:text-[2.85rem]'>
+          <H3
+            className={cn(
+              'inline-flex min-w-0 items-baseline gap-x-2 pb-0 text-3xl leading-none font-bold tracking-tight whitespace-nowrap sm:text-4xl md:text-4xl lg:text-[2.85rem]',
+              styles.heading
+            )}
+          >
             <span>{label}</span>
             <span className='inline-flex items-baseline gap-x-1'>
               <span className='sr-only'>Utekos</span>
               <UtekosWordmark
                 aria-hidden='true'
                 role='presentation'
-                className='h-[0.72em] w-[2.95em] translate-y-[0.055em] text-card-foreground'
+                className={cn(
+                  'h-[0.72em] w-[2.95em] translate-y-[0.055em]',
+                  styles.wordmark
+                )}
               />
               <span className='text-[0.82em] leading-none'>
                 ®:

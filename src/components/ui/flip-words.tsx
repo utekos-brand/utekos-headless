@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 
@@ -38,21 +38,7 @@ function shuffleUniqueWords(words: string[], avoidFirst?: string): string[] {
   return shuffled
 }
 
-function createInitialFlipWordState(
-  words: string[],
-  random: boolean
-): FlipWordState {
-  if (random) {
-    const [first = '', ...rest] = shuffleUniqueWords(words)
-    return {
-      currentIndex: 0,
-      currentWord: first,
-      isAnimating: false,
-      queue: rest,
-      wordKey: 0
-    }
-  }
-
+function createInitialFlipWordState(words: string[]): FlipWordState {
   return {
     currentIndex: 0,
     currentWord: words[0] ?? '',
@@ -120,8 +106,24 @@ export const FlipWords = ({
   random?: boolean
 }) => {
   const [wordState, setWordState] = useState(() =>
-    createInitialFlipWordState(words, random)
+    createInitialFlipWordState(words)
   )
+  const hasSeededRandomQueue = useRef(false)
+
+  useEffect(() => {
+    if (!random || hasSeededRandomQueue.current) {
+      return
+    }
+
+    hasSeededRandomQueue.current = true
+    const initialWord = words[0] ?? ''
+    const queue = shuffleUniqueWords(
+      words.filter(word => word !== initialWord),
+      initialWord
+    )
+
+    setWordState(state => ({ ...state, queue }))
+  }, [random, words])
 
   useEffect(() => {
     if (wordState.isAnimating) {

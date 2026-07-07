@@ -1,8 +1,9 @@
-import { H1 } from '@/components/typography/TypographyH1'
-import { H3 } from '@/components/typography/TypographyH3'
-import { Ingress } from '@/components/typography/Ingress'
-import { P } from '@/components/typography/TypographyP'
+import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
+import { InspirationFeatureCard } from '@/app/inspirasjon/components/cards/InspirationFeatureCard'
+import { InspirationHeroBreadcrumb } from '@/app/inspirasjon/layout/InspirationHeroBreadcrumb'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
+import { H1 } from '@/components/typography/TypographyH1'
+import { Lead } from '@/components/typography/Lead'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { terraceHeroFeatures } from '../utils/terraceHeroFeatures'
@@ -12,53 +13,51 @@ export function TerraceHeroSection() {
   return (
     <section
       aria-labelledby='din-terrasse-hele-året'
-      className='relative isolate overflow-hidden'
+      className='relative isolate overflow-x-clip border-b border-border bg-background text-foreground'
     >
-      <div className='relative z-10 container mx-auto flex min-h-[calc(100svh-5rem)] max-w-7xl items-end px-5 pt-12 pb-10 sm:px-6 sm:pt-32 sm:pb-14 lg:min-h-[760px] lg:pb-16'>
-        <MotionReveal
-          y={34}
-          amount={0.08}
-          className='w-full max-w-5xl'
-        >
-          <div className='max-w-5xl'>
-            <hgroup>
-              <H1
-                ID='din-terrasse-hele-året'
-                Text='Din terrasse, hele året'
-                className='text-foreground-on-dark -on-dark max-w-5xl tracking-normal'
-              />
-              <Ingress className='text-foreground-on-dark -on-dark mt-8 max-w-3xl text-lg'>
-                Fra morgenkaffen ute til stjerneklare kvelder:
-                gjør terrassen til det lune rommet du faktisk
-                bruker når luften blir kjølig.
-              </Ingress>
-            </hgroup>
+      <InspirationContentShell className='relative z-10 py-8 sm:py-10'>
+        <div className='flex min-w-0 flex-col items-start gap-2 md:gap-4'>
+          <MotionReveal y={24} amount={0.08} className='w-full min-w-0'>
+            <InspirationHeroBreadcrumb label='Terrassen' />
 
-            <div className='mt-9 flex flex-wrap gap-3 sm:gap-4'>
+            <H1
+              ID='din-terrasse-hele-året'
+              Text='Din terrasse, hele året'
+              className='max-w-4xl pt-4 text-4xl text-balance sm:text-5xl md:pt-6 lg:pt-8 lg:text-6xl xl:text-6xl'
+            />
+
+            <Lead className='mt-6 max-w-3xl'>
+              Fra morgenkaffen ute til stjerneklare kvelder:
+              gjør terrassen til det lune rommet du faktisk bruker
+              når luften blir kjølig.
+            </Lead>
+
+            <div className='mt-8 flex flex-wrap gap-3 sm:mt-9 sm:gap-4'>
               <BrandBadge
                 asChild
-                backgroundColor='var(--terrace-copper)'
-                textColor='var(--terrace-night)'
-                className='group focus-visible:outline-(--terrace-copper)on-reduce:transition-none min-h-12 border border-transparent px-6 py-3 text-base leading-4 font-bold shadow-[0_18px_42px_-30px_var(--terrace-copper)] transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105 focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:hover:translate-y-0'
+                backgroundColor='var(--primary)'
+                textColor='var(--primary-foreground)'
+                className='group min-h-12 border border-transparent px-6 py-3 text-base leading-4 font-bold transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none motion-reduce:transition-none motion-reduce:hover:translate-y-0'
               >
                 <Link href='/produkter'>
                   Se produkter
                   <ArrowRight className='ml-2 size-4 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0' />
                 </Link>
               </BrandBadge>
+
               <BrandBadge
                 asChild
-                backgroundColor='var(--terrace-glass)'
-                textColor='var(--terrace-cream)'
-                className='min-h-12 border border-(--terrace-line-dark) px-6 py-3 text-base leading-4 font-bold shadow-none backdrop-blur-md transition-transform duration-300 hover:-translate-y-0.5 hover:bg-(--terrace-glass-hover) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--terrace-cream) motion-reduce:transition-none motion-reduce:hover:translate-y-0'
+                backgroundColor='var(--secondary)'
+                textColor='var(--secondary-foreground)'
+                className='min-h-12 border border-border px-6 py-3 text-base leading-4 font-bold transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none motion-reduce:transition-none motion-reduce:hover:translate-y-0'
               >
                 <Link href='#bruksomrader'>Planlegg bruken</Link>
               </BrandBadge>
             </div>
-          </div>
+          </MotionReveal>
 
           <div
-            className='mt-10 grid gap-3 sm:grid-cols-3 lg:max-w-4xl'
+            className='mt-10 grid w-full grid-cols-1 items-start gap-3 sm:grid-cols-2 lg:max-w-4xl lg:grid-cols-3'
             aria-label='Tre grep for mer terrasseliv'
           >
             {terraceHeroFeatures.map((feature, index) => {
@@ -68,31 +67,35 @@ export function TerraceHeroSection() {
                 <MotionHeroCard
                   key={feature.title}
                   delay={0.18 + index * 0.08}
-                  className=' rounded-lg border border-(--terrace-line-dark) bg-card p-4 text-card-foreground shadow-[0_30px_70px_-54px_rgb(0_0_0/0.9)] sm:p-5'
+                  className='h-full'
                 >
-                  <div className='flex items-start gap-4'>
-                    <div className='dark:bg-dark-primary flex size-11 shrink-0 items-center justify-center rounded-lg border border-(--terrace-line-dark) bg-primary text-primary-foreground'>
-                      <Icon
-                        className='size-5'
-                        aria-hidden='true'
-                      />
-                    </div>
-                    <div className='min-w-0 pt-0.5'>
-                      <H3
-                        Text={feature.title}
-                        className='pb-0 text-xl leading-[1.05] text-card-foreground'
-                      />
-                      <P className='/80 mt-2 text-left text-sm leading-relaxed text-card-foreground/80 not-first:mt-2'>
-                        {feature.description}
-                      </P>
-                    </div>
-                  </div>
+                  <InspirationFeatureCard
+                    density='compact'
+                    footerMode='flow'
+                    icon={Icon}
+                    title={feature.title}
+                    description={feature.description}
+                    backgroundSlot={
+                      <>
+                        <div className='absolute inset-0 bg-card' />
+                        <div className='absolute inset-x-0 top-0 h-px bg-card-foreground/12' />
+                        <div className='absolute -top-20 -right-20 size-44 rounded-full bg-secondary/16 opacity-70 blur-3xl transition-opacity duration-300 group-hover:opacity-100' />
+                      </>
+                    }
+                    className='h-full min-h-0 rounded-2xl border-border bg-card text-card-foreground shadow-sm ring-border/50 transition-colors duration-300 hover:bg-muted/35 motion-reduce:transition-none'
+                    headerClassName='gap-4 px-4 pt-4 sm:px-5 sm:pt-5'
+                    iconContainerClassName='size-11 rounded-lg border-border bg-secondary text-secondary-foreground ring-border/50'
+                    iconClassName='size-5'
+                    titleClassName='min-h-11 text-left text-lg leading-snug font-semibold tracking-[-0.02em] text-card-foreground sm:text-xl'
+                    contentClassName='px-4 pt-3 pb-4 sm:px-5 sm:pb-5'
+                    descriptionClassName='max-w-[30ch] text-sm leading-relaxed text-card-foreground/80'
+                  />
                 </MotionHeroCard>
               )
             })}
           </div>
-        </MotionReveal>
-      </div>
+        </div>
+      </InspirationContentShell>
     </section>
   )
 }

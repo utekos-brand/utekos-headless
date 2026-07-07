@@ -54,7 +54,7 @@ export function AboutCarousel() {
 
   return (
     <SectionBox
-      bgcolor='bg-background dark:bg-dark-background'
+      bgcolor='bg-background'
       className=' border-b border-border'
     >
       <article ref={containerRef} className='relative'>
@@ -123,7 +123,7 @@ export function AboutCarousel() {
             }}
           >
             <div className=' relative max-w-6xl overflow-hidden rounded-[1.75rem] border border-border bg-[color-mix(in_oklab,var(--foreground)_8%,transparent)] p-3 shadow-2xl shadow-black/35 backdrop-blur-sm md:p-5'>
-              <div className='dark:via-dark-primary/55 absolute top-0 right-0 left-0 h-px bg-linear-to-r from-transparent via-primary/55 to-transparent' />
+              <div className='via-primary/55 absolute top-0 right-0 left-0 h-px bg-linear-to-r from-transparent via-primary/55 to-transparent' />
 
               <Carousel
                 setApi={setApi}
@@ -143,7 +143,7 @@ export function AboutCarousel() {
                       key={index}
                       className='md:basis-1/3 lg:basis-1/4'
                     >
-                      <div className='group  dark:bg-dark-background relative overflow-hidden rounded-[1.25rem] border border-border bg-background'>
+                      <div className='group  bg-background relative overflow-hidden rounded-[1.25rem] border border-border bg-background'>
                         <AspectRatio ratio={1 / 1}>
                           <Image
                             src={image.src}
@@ -152,7 +152,7 @@ export function AboutCarousel() {
                             className='object-cover transition-transform duration-1000 ease-out group-hover:scale-105'
                             sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
                           />
-                          <div className='dark:from-dark-background/62 absolute inset-0 bg-linear-to-t from-background/62 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100' />
+                          <div className='from-background/62 absolute inset-0 bg-linear-to-t from-background/62 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100' />
                         </AspectRatio>
                       </div>
                     </CarouselItem>
@@ -160,8 +160,8 @@ export function AboutCarousel() {
                 </CarouselContent>
 
                 <div className='hidden md:block'>
-                  <CarouselPrevious className=' dark:bg-dark-background dark:hover:border-dark-primary dark:hover:bg-dark-primary dark:hover:text-dark-background left-8 border-border bg-background text-foreground backdrop-blur-md hover:border-primary hover:bg-primary hover:text-background' />
-                  <CarouselNext className=' dark:bg-dark-background dark:hover:border-dark-primary dark:hover:bg-dark-primary dark:hover:text-dark-background right-8 border-border bg-background text-foreground backdrop-blur-md hover:border-primary hover:bg-primary hover:text-background' />
+                  <CarouselPrevious className=' bg-background hover:border-primary hover:bg-primary hover:text-background left-8 border-border bg-background text-foreground backdrop-blur-md hover:border-primary hover:bg-primary hover:text-background' />
+                  <CarouselNext className=' bg-background hover:border-primary hover:bg-primary hover:text-background right-8 border-border bg-background text-foreground backdrop-blur-md hover:border-primary hover:bg-primary hover:text-background' />
                 </div>
               </Carousel>
 
@@ -173,8 +173,8 @@ export function AboutCarousel() {
                     className={cn(
                       'h-1.5 rounded-full transition-all duration-300',
                       current === index + 1 ?
-                        'dark:bg-dark-primary w-8 bg-primary'
-                      : 'dark:bg-dark-foreground dark:hover:bg-dark-muted-foreground w-2 bg-foreground hover:bg-muted-foreground'
+                        'bg-primary w-8 bg-primary'
+                      : 'bg-foreground hover:bg-muted-foreground w-2 bg-foreground hover:bg-muted-foreground'
                     )}
                     aria-label={`Gå til bilde ${index + 1}`}
                   />
