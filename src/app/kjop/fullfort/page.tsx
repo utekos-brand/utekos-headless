@@ -32,7 +32,7 @@ export default async function KjopFullfortPage({
       </p>
 
       {klarnaOrderId ?
-        <p className='text-muted-foreground mt-3 text-sm text-muted-foreground'>
+        <p className='text-foreground/90 mt-3 text-sm text-foreground/90'>
           Klarna-referanse:{' '}
           <span className='font-mono text-foreground'>
             {klarnaOrderId}

@@ -16,7 +16,7 @@ export async function LandingFaq() {
     >
       <div className='mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16'>
         <div>
-          <p className='text-muted-foreground mb-3 text-sm leading-4 font-medium'>
+          <p className='text-foreground/90 mb-3 text-sm leading-4 font-medium'>
             Ofte spurt
           </p>
           <h2

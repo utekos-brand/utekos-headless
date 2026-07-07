@@ -55,7 +55,7 @@ export function InspirationGallerySection() {
                     <h3 className='font-sans text-base leading-snug font-bold text-foreground sm:text-lg'>
                       {image.title}
                     </h3>
-                    <p className='mt-2 text-sm leading-relaxed text-muted-foreground'>
+                    <p className='mt-2 text-sm leading-relaxed text-foreground/90'>
                       {image.description}
                     </p>
                   </div>

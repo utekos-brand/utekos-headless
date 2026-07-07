@@ -61,7 +61,7 @@ export function UpsellItem({
             <p className='line-clamp-2 text-sm font-medium text-foreground'>
               {product.title}
             </p>
-            <div className='mt-1 flex items-center gap-2 text-xs text-muted-foreground'>
+            <div className='mt-1 flex items-center gap-2 text-xs text-foreground/90'>
               {showDiscountHint ?
                 <>
                   <span className='line-through'>

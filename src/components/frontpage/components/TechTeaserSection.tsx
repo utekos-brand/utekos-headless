@@ -90,7 +90,7 @@ export default function TechTeaserSection() {
                       <span className='group-hover:text-secondary block text-base font-semibold text-foreground transition-colors'>
                         {item.title}
                       </span>
-                      <span className='group-hover:text-muted-foreground text-secondary block text-sm transition-colors'>
+                      <span className='group-hover:text-foreground/90 text-secondary block text-sm transition-colors'>
                         {item.desc}
                       </span>
                     </div>

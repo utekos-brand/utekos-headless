@@ -33,7 +33,7 @@ export const popularSpotsData: Destination[] = [
     name: 'Vestlandskysten',
     season: 'Høst/Vinter',
     highlight: 'Røft vær og friskt hav',
-    color: 'text-muted-foreground'
+    color: 'text-foreground/90'
   }
 ]
 
@@ -51,7 +51,7 @@ export function PopularSpotsGrid({
             Text='Hvor tar du ditt neste dykk?'
             className='text-foreground'
           />
-          <Lead className='mt-4 max-w-2xl pb-0 text-muted-foreground md:mt-6 md:pb-0 lg:pb-0'>
+          <Lead className='mt-4 max-w-2xl pb-0 text-foreground/90 md:mt-6 md:pb-0 lg:pb-0'>
             Fra urbane badstuer til øde fjellvann – Utekos er med deg der
             vannet er kaldt.
           </Lead>
@@ -76,7 +76,7 @@ export function PopularSpotsGrid({
                       aria-hidden='true'
                     />
                   </div>
-                  <P className='mb-2 text-sm text-muted-foreground not-first:mt-0'>
+                  <P className='mb-2 text-sm text-foreground/90 not-first:mt-0'>
                     {destination.season}
                   </P>
                   <P className='text-sm text-card-foreground/80 not-first:mt-0'>

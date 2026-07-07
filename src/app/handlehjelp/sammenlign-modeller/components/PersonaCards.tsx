@@ -21,7 +21,7 @@ export function PersonaCards() {
           <h2 className='mx-auto text-foreground md:max-w-3xl'>
             Hva er riktig Utekos for deg?
           </h2>
-          <p className='utekos-section-lead text-muted-foreground mx-auto mt-6 max-w-2xl text-muted-foreground md:max-w-3xl lg:max-w-4xl'>
+          <p className='utekos-section-lead text-foreground/90 mx-auto mt-6 max-w-2xl text-foreground/90 md:max-w-3xl lg:max-w-4xl'>
             Å velge riktig Utekos handler i stor grad om å finne
             balansen mellom varme, vekt, pakkvolum og hva du
             faktisk skal bruke jakken til.

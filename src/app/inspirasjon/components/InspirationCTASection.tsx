@@ -44,11 +44,11 @@ export function InspirationCTASection({
   primaryTrackId,
   secondaryTrackId,
   accentGlow = 'var(--secondary)',
-  showAccentGlow = true,
-  primaryButtonBg = 'var(--flame-orange)',
-  primaryButtonText = 'var(--black-beauty)',
+  showAccentGlow = false,
+  primaryButtonBg = 'var(--primary)',
+  primaryButtonText = 'var(--primary-foreground)',
   secondaryButtonBg = 'var(--secondary)',
-  secondaryButtonText = 'var(--foreground)',
+  secondaryButtonText = 'var(--secondary-foreground)',
   primaryButtonClassName,
   secondaryButtonClassName,
   sectionClassName,
@@ -71,7 +71,7 @@ export function InspirationCTASection({
         Text={lead}
         className={cn(
           'mx-auto mb-8 max-w-2xl pb-0 text-center md:pb-0 lg:pb-0',
-          'text-secondary',
+          'text-foreground/80',
           leadClassName
         )}
       />
@@ -81,7 +81,7 @@ export function InspirationCTASection({
           backgroundColor={primaryButtonBg}
           textColor={primaryButtonText}
           className={cn(
-            'group border-primary/24 min-h-14 border border-primary/24 px-8 py-4 text-base leading-4 font-bold tracking-normal shadow-xl transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105',
+            'group min-h-14 border border-transparent px-8 py-4 text-base leading-4 font-bold tracking-normal shadow-sm transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105',
             primaryButtonClassName
           )}
         >
@@ -95,7 +95,7 @@ export function InspirationCTASection({
           backgroundColor={secondaryButtonBg}
           textColor={secondaryButtonText}
           className={cn(
-            'border-background/14 min-h-14 border border-background/14 px-8 py-4 text-base leading-4 font-bold tracking-normal shadow-xl transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105',
+            'min-h-14 border border-border px-8 py-4 text-base leading-4 font-bold tracking-normal shadow-none transition-transform duration-300 hover:-translate-y-0.5 hover:brightness-105',
             secondaryButtonClassName
           )}
         >
@@ -113,7 +113,7 @@ export function InspirationCTASection({
   return (
     <article
       className={cn(
-        'relative overflow-hidden border-t border-foreground/12 py-24',
+        'relative overflow-hidden border-t border-border py-24',
         inspirationSurfaces.darkSection,
         sectionClassName
       )}

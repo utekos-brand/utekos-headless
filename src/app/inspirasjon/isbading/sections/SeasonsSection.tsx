@@ -15,7 +15,7 @@ export function SeasonsSection() {
       glowTokens={['var(--secondary)', 'var(--muted)']}
       sectionClassName='bg-background text-foreground border-t border-border'
       titleClassName='text-foreground'
-      leadClassName='text-muted-foreground'
+      leadClassName='text-foreground/90'
       showSectionGlow={false}
       showTabGlow={false}
       showCardGlow={false}

@@ -60,7 +60,7 @@ export function UseCasesGrid({
             Text='Fra forberedelse til varmen'
             className='text-foreground'
           />
-          <Lead className='mt-4 max-w-2xl pb-0 text-muted-foreground md:mt-6 md:pb-0 lg:pb-0'>
+          <Lead className='mt-4 max-w-2xl pb-0 text-foreground/90 md:mt-6 md:pb-0 lg:pb-0'>
             Isbading handler om ritualer. Utekos gjør hvert steg i prosessen
             mer behagelig.
           </Lead>

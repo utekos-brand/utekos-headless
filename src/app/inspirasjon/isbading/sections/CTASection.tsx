@@ -33,7 +33,7 @@ export async function CTASection() {
             Text='Sikre deg varmen nå'
             className='mx-auto max-w-3xl text-foreground'
           />
-          <Lead className='mx-auto mt-4 max-w-2xl pb-0 text-muted-foreground md:pb-0 lg:pb-0'>
+          <Lead className='mx-auto mt-4 max-w-2xl pb-0 text-foreground/90 md:pb-0 lg:pb-0'>
             Gjør som hundrevis av andre isbadere. Bestill din Comfyrobe i dag og
             kjenn forskjellen.
           </Lead>

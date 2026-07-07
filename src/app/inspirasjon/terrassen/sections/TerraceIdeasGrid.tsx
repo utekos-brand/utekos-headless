@@ -89,7 +89,7 @@ export function TerraceIdeasGrid({
                   contentClassName='px-6 pt-4 pb-5 sm:px-7'
                   descriptionClassName='max-w-[30ch] text-base leading-relaxed text-foreground/80'
                   footerClassName='border-border bg-muted/30 px-6 py-4 sm:px-7'
-                  footerLabelClassName='text-muted-foreground'
+                  footerLabelClassName='text-foreground/90'
                   footerValueClassName='text-secondary'
                 />
               </MotionCard>

@@ -67,7 +67,7 @@ export default async function ChristmasCampaign() {
               funksjonell varme
             </span>
           </h1>
-          <p className='mx-auto mt-6 max-w-2xl text-lg text-muted-foreground'>
+          <p className='mx-auto mt-6 max-w-2xl text-lg text-foreground/90'>
             Den perfekte gaven til livsnyteren som har alt –
             unntatt varmen. Sikre deg høstens store trend.
           </p>
@@ -79,7 +79,7 @@ export default async function ChristmasCampaign() {
               Se gavetipsene
               <ArrowRight className='ml-2 h-4 w-4' />
             </Link>
-            <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+            <div className='flex items-center gap-2 text-sm text-foreground/90'>
               <Truck className='h-4 w-4' />
               <span>Fri frakt over 999kr</span>
             </div>
@@ -99,7 +99,7 @@ export default async function ChristmasCampaign() {
                 <h3 className='font-semibold text-foreground'>
                   Sendes samme dag
                 </h3>
-                <p className='text-sm text-muted-foreground'>
+                <p className='text-sm text-foreground/90'>
                   Bestill før 17. des – vi garanterer levering
                   til jul!
                 </p>
@@ -115,7 +115,7 @@ export default async function ChristmasCampaign() {
                 <h3 className='font-semibold text-foreground'>
                   Utvidet bytterett
                 </h3>
-                <p className='text-sm text-muted-foreground'>
+                <p className='text-sm text-foreground/90'>
                   Bytt gaver frem til 15. januar.
                 </p>
               </div>
@@ -129,7 +129,7 @@ export default async function ChristmasCampaign() {
                 <h3 className='font-semibold text-foreground'>
                   Sikker betaling
                 </h3>
-                <p className='text-sm text-muted-foreground'>
+                <p className='text-sm text-foreground/90'>
                   Betal trygt med Vipps eller Klarna.
                 </p>
               </div>
@@ -147,7 +147,7 @@ export default async function ChristmasCampaign() {
           <h2 className='text-3xl font-bold'>
             Våre mest populære gaver
           </h2>
-          <p className=' mt-2 text-muted-foreground'>
+          <p className=' mt-2 text-foreground/90'>
             Produktene som garantert blir brukt – året rundt. Nå
             med julerabatt!
           </p>
@@ -175,7 +175,7 @@ export default async function ChristmasCampaign() {
               <h3 className='text-2xl font-bold'>
                 Utekos TechDown™
               </h3>
-              <p className='mt-2 text-muted-foreground'>
+              <p className='mt-2 text-foreground/90'>
                 Nyhet: Vår varmeste mest allsidige modell.
                 Optimalisert etter erfaringer og
                 tilbakemeldinger.
@@ -184,7 +184,7 @@ export default async function ChristmasCampaign() {
                 <span className='text-xl font-bold text-foreground'>
                   1 790 kr
                 </span>
-                <span className=' text-sm text-muted-foreground line-through'>
+                <span className=' text-sm text-foreground/90 line-through'>
                   1 999 kr
                 </span>
               </div>
@@ -216,7 +216,7 @@ export default async function ChristmasCampaign() {
               <h3 className='text-2xl font-bold'>
                 Utekos Mikrofiber™
               </h3>
-              <p className='mt-2 text-muted-foreground'>
+              <p className='mt-2 text-foreground/90'>
                 Lettvekt møter varme og allsidighet. Gir deg
                 følelsen av dun med ekstra fordeler.
               </p>
@@ -224,7 +224,7 @@ export default async function ChristmasCampaign() {
                 <span className='text-xl font-bold text-foreground'>
                   1 590 kr
                 </span>
-                <span className='text-sm text-muted-foreground line-through'>
+                <span className='text-sm text-foreground/90 line-through'>
                   2 290 kr
                 </span>
               </div>
@@ -254,14 +254,14 @@ export default async function ChristmasCampaign() {
 
             <div className='p-6'>
               <h3 className='text-2xl font-bold'>Utekos Dun™</h3>
-              <p className=' mt-2 text-muted-foreground'>
+              <p className=' mt-2 text-foreground/90'>
                 Klassisk dun-kvalitet for de kaldeste dagene.
               </p>
               <div className='mt-4 flex items-baseline gap-3'>
                 <span className='text-xl font-bold text-foreground'>
                   1 990 kr
                 </span>
-                <span className=' text-sm text-muted-foreground line-through'>
+                <span className=' text-sm text-foreground/90 line-through'>
                   3 290 kr
                 </span>
               </div>
@@ -291,7 +291,7 @@ export default async function ChristmasCampaign() {
 
             <div className='p-6'>
               <h3 className='text-2xl font-bold'>Comfyrobe™</h3>
-              <p className='text-muted-foreground mt-2'>
+              <p className='text-foreground/90 mt-2'>
                 Den ultimate skifteroben. Vindtett, vanntett og
                 foret.
               </p>
@@ -299,7 +299,7 @@ export default async function ChristmasCampaign() {
                 <span className='text-xl font-bold text-foreground'>
                   1 290 kr
                 </span>
-                <span className='text-muted-foreground text-sm line-through'>
+                <span className='text-foreground/90 text-sm line-through'>
                   1 690 kr
                 </span>
               </div>
@@ -337,7 +337,7 @@ export default async function ChristmasCampaign() {
             <h3 className='text-lg font-semibold'>
               Hele kolleksjonen
             </h3>
-            <p className='text-sm text-muted-foreground'>
+            <p className='text-sm text-foreground/90'>
               Utforsk alle våre produkter
             </p>
           </Link>
@@ -350,7 +350,7 @@ export default async function ChristmasCampaign() {
               <ShieldCheck className='h-8 w-8 text-blue-400' />
             </div>
             <h3 className='text-lg font-semibold'>Lær mer</h3>
-            <p className='text-sm text-muted-foreground'>
+            <p className='text-sm text-foreground/90'>
               Lær mer om funksjonaliteten.
             </p>
           </Link>
@@ -365,7 +365,7 @@ export default async function ChristmasCampaign() {
             <h3 className='text-lg font-semibold'>
               Usikker på størrelse?
             </h3>
-            <p className='text-sm text-muted-foreground'>
+            <p className='text-sm text-foreground/90'>
               Se vår størrelsesguide og tips.
             </p>
           </Link>

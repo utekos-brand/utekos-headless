@@ -29,7 +29,7 @@ export default function TestNewsletterPage() {
             required
             className='border-input bg-background w-full rounded border border-input bg-background p-2 text-foreground'
           />
-          <p className='text-muted-foreground mt-1 text-xs text-muted-foreground'>
+          <p className='text-foreground/90 mt-1 text-xs text-foreground/90'>
             Tips: Bruk alias (f.eks. din.epost+test1@gmail.com)
             for å teste flere ganger.
           </p>

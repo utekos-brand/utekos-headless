@@ -48,7 +48,7 @@ export function PreFooterNavigation() {
                 </div>
               </div>
 
-              <ArrowRight className='size-5 text-muted-foreground transition-all duration-400 group-hover:translate-x-2 group-hover:text-ceramic' />
+              <ArrowRight className='size-5 text-foreground/90 transition-all duration-400 group-hover:translate-x-2 group-hover:text-ceramic' />
             </Link>
           ))}
         </div>

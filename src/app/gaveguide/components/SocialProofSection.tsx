@@ -29,7 +29,7 @@ export function SocialProofSection() {
                 </div>
                 <div className='text-left'>
                   <p className='font-semibold'>Bjørg H.</p>
-                  <p className='text-muted-foreground text-sm text-muted-foreground'>
+                  <p className='text-foreground/90 text-sm text-foreground/90'>
                     Fornøyd gavemottaker
                   </p>
                 </div>

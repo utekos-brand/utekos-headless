@@ -20,9 +20,9 @@ const ratingVariants = cva('transition-colors', {
       destructive:
         'text-destructive fill-current text-destructive',
       outline:
-        'text-muted-foreground fill-transparent stroke-current text-muted-foreground',
+        'text-foreground/90 fill-transparent stroke-current text-foreground/90',
       secondary:
-        'text-muted-foreground fill-current text-muted-foreground',
+        'text-foreground/90 fill-current text-foreground/90',
       yellow: 'fill-current text-amber-600 dark:text-amber-400'
     }
   },
@@ -104,7 +104,7 @@ function RatingItem({
     const emptyIcon = React.cloneElement(Icon, {
       size,
       'className': cn(
-        'fill-muted-foreground/20 stroke-muted-foreground/10 text-muted-foreground/10 fill-muted-foreground/20 stroke-muted-foreground/10 text-muted-foreground/10',
+        'fill-muted-foreground/20 stroke-muted-foreground/10 text-foreground/90/10 fill-muted-foreground/20 stroke-muted-foreground/10 text-foreground/90/10',
         variant === 'yellow' &&
           'fill-amber-600/30 stroke-amber-600/10 text-amber-600/10 dark:fill-amber-400/30 dark:stroke-amber-400/10'
       ),

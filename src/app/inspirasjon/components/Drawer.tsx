@@ -71,7 +71,7 @@ const DrawerCart = ({ items = defaultItems }: DrawerCartProps) => {
                   </div>
                   <div className='flex-1 space-y-2'>
                     <h4 className='font-medium'>{item.name}</h4>
-                    <p className='text-muted-foreground text-muted-foreground text-sm'>{item.description}</p>
+                    <p className='text-foreground/90 text-foreground/90 text-sm'>{item.description}</p>
                     <p className='font-medium'>{item.price}</p>
                   </div>
                 </div>
@@ -87,11 +87,11 @@ const DrawerCart = ({ items = defaultItems }: DrawerCartProps) => {
           ))}
           <div className='my-4 space-y-2'>
             <div className='flex justify-between'>
-              <p className='text-muted-foreground text-muted-foreground'>Subtotal</p>
+              <p className='text-foreground/90 text-foreground/90'>Subtotal</p>
               <p>$247.99</p>
             </div>
             <div className='flex justify-between'>
-              <p className='text-muted-foreground text-muted-foreground'>Shipping</p>
+              <p className='text-foreground/90 text-foreground/90'>Shipping</p>
               <p>$10.00</p>
             </div>
             <Separator />

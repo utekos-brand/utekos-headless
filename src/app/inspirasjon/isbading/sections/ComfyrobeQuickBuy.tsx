@@ -150,7 +150,7 @@ export function ComfyrobeQuickBuy({ product }: Props) {
 
         <div className='flex gap-4'>
           <div className='flex-1 space-y-2'>
-            <label className='text-sm font-medium tracking-normal text-muted-foreground'>
+            <label className='text-sm font-medium tracking-normal text-foreground/90'>
               Farge
             </label>
             <div className='flex h-10 cursor-default items-center justify-center rounded-md border border-border bg-secondary text-sm leading-4 font-medium tracking-normal text-secondary-foreground ring-1 ring-border'>
@@ -158,7 +158,7 @@ export function ComfyrobeQuickBuy({ product }: Props) {
             </div>
           </div>
           <div className='flex-1 space-y-2'>
-            <label className='text-sm font-medium tracking-normal text-muted-foreground'>
+            <label className='text-sm font-medium tracking-normal text-foreground/90'>
               Modell
             </label>
             <div className='flex h-10 cursor-default items-center justify-center rounded-md border border-border bg-secondary text-sm leading-4 font-medium tracking-normal text-secondary-foreground ring-1 ring-border'>
@@ -169,12 +169,12 @@ export function ComfyrobeQuickBuy({ product }: Props) {
 
         <div className='space-y-3'>
           <div className='flex items-center justify-between'>
-            <label className='text-sm font-medium tracking-normal text-muted-foreground'>
+            <label className='text-sm font-medium tracking-normal text-foreground/90'>
               Velg størrelse
             </label>
             <Link
               href='/handlehjelp/storrelsesguide'
-              className='text-xs tracking-normal text-muted-foreground underline underline-offset-4 hover:text-card-foreground'
+              className='text-xs tracking-normal text-foreground/90 underline underline-offset-4 hover:text-card-foreground'
             >
               Størrelsesguide
             </Link>
@@ -197,14 +197,14 @@ export function ComfyrobeQuickBuy({ product }: Props) {
                     'relative flex h-12 items-center justify-center rounded-md border text-sm leading-4 font-medium tracking-normal transition-all',
                     isSelected ?
                       'border-primary bg-primary text-primary-foreground ring-1 ring-primary/35'
-                    : 'border-border bg-background text-muted-foreground hover:border-border hover:text-card-foreground',
+                    : 'border-border bg-background text-foreground/90 hover:border-border hover:text-card-foreground',
                     !isAvailable &&
-                      'cursor-not-allowed border-border/60 bg-muted/50 text-muted-foreground/60 line-through opacity-60'
+                      'cursor-not-allowed border-border/60 bg-muted/50 text-foreground/90/60 line-through opacity-60'
                   )}
                 >
                   {displayName}
                   {!isAvailable && (
-                    <span className='absolute -top-2 -right-2 rounded-full border border-border bg-muted px-1.5 py-0.5 text-[10px] leading-[1.2] text-muted-foreground'>
+                    <span className='absolute -top-2 -right-2 rounded-full border border-border bg-muted px-1.5 py-0.5 text-[10px] leading-[1.2] text-foreground/90'>
                       Tomt
                     </span>
                   )}
@@ -240,7 +240,7 @@ export function ComfyrobeQuickBuy({ product }: Props) {
               <VippsLogo className='h-5 w-auto text-primary' />
             </div>
             <div className='flex items-center gap-2'>
-              <KlarnaLogo className='h-6 w-auto text-muted-foreground' />
+              <KlarnaLogo className='h-6 w-auto text-foreground/90' />
             </div>
           </div>
         </div>

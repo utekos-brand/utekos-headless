@@ -2,7 +2,7 @@ export const boatingSeasonsCardTheme = {
   tabTriggerClassName:
     'border-border bg-background text-foreground hover:bg-muted data-active:border-secondary data-active:bg-secondary data-active:text-secondary-foreground',
   tabActiveClassName: 'text-secondary-foreground',
-  tabInactiveClassName: 'text-muted-foreground',
+  tabInactiveClassName: 'text-foreground/90',
   contentCardClassName:
     'border-border bg-background text-foreground shadow-sm',
   contentIconClassName:

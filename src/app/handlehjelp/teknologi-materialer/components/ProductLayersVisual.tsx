@@ -288,7 +288,7 @@ function MaterialCard({
               'bg-card-foreground/10',
               theme.text
             )
-          : 'border-card-foreground/10 bg-muted text-muted-foreground'
+          : 'border-card-foreground/10 bg-muted text-foreground/90'
         )}
       >
         <Icon className='h-6 w-6' aria-hidden />
@@ -298,7 +298,7 @@ function MaterialCard({
         <span
           className={cn(
             'text-xs font-bold tracking-widest uppercase transition-colors',
-            isActive ? theme.text : 'text-muted-foreground'
+            isActive ? theme.text : 'text-foreground/90'
           )}
         >
           {title}
@@ -308,7 +308,7 @@ function MaterialCard({
             'text-lg font-semibold transition-colors',
             isActive ?
               'text-card-foreground'
-            : 'text-muted-foreground'
+            : 'text-foreground/90'
           )}
         >
           {subtitle}

@@ -148,7 +148,7 @@ export function InspirationSeasonsTabs({
                     'size-5 transition-colors',
                     variant === 'pill' ?
                       isActive ? season.iconColor
-                      : 'text-muted-foreground text-muted-foreground'
+                      : 'text-foreground/90 text-foreground/90'
                     : isActive ? activeClassName
                     : inactiveClassName
                   )}
@@ -161,7 +161,7 @@ export function InspirationSeasonsTabs({
                         'hidden font-medium sm:inline',
                         isActive ?
                           'text-foreground'
-                        : 'text-muted-foreground text-muted-foreground'
+                        : 'text-foreground/90 text-foreground/90'
                       ]
                     : [
                         'font-sans font-bold tracking-[-0.01em]',

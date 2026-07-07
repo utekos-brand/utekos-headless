@@ -29,7 +29,7 @@ function BreadcrumbList({
     <ol
       data-slot='breadcrumb-list'
       className={cn(
-        'text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm wrap-break-word text-muted-foreground sm:gap-2.5',
+        'text-foreground/90 flex flex-wrap items-center gap-1.5 text-sm wrap-break-word text-foreground/90 sm:gap-2.5',
         className
       )}
       {...props}
@@ -63,7 +63,7 @@ function BreadcrumbLink({
     props: mergeProps<'a'>(
       {
         className: cn(
-          'text-muted-foreground hover:text-foreground text-muted-foreground transition-colors hover:text-foreground',
+          'text-foreground/90 hover:text-foreground text-foreground/90 transition-colors hover:text-foreground',
           className
         )
       },

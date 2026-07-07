@@ -35,7 +35,7 @@ export const iceBathingSeasons: InspirationSeasonDefinition[] = [
     value: 'autumn',
     label: 'Høst',
     iconName: 'Wind',
-    iconColor: 'text-muted-foreground',
+    iconColor: 'text-foreground/90',
     glowColor: 'var(--muted)',
     title: 'Tilvenningsfasen',
     description:

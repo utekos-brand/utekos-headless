@@ -21,7 +21,7 @@ export function DeepDiveSection() {
           >
             Se etter vær, vekt og hvor plagget skal bo
           </h2>
-          <p className='utekos-section-lead text-muted-foreground mx-auto mt-6 max-w-2xl text-muted-foreground'>
+          <p className='utekos-section-lead text-foreground/90 mx-auto mt-6 max-w-2xl text-foreground/90'>
             De fleste velger riktig når de starter med bruk, ikke
             materiale. Her er de viktigste valgene forklart kort.
           </p>
@@ -31,7 +31,7 @@ export function DeepDiveSection() {
           {deepDiveSections.map(section => (
             <li key={section.title}>
               <article className='mx-auto max-w-4xl py-10 lg:py-14'>
-                <p className='text-muted-foreground text-sm font-medium text-muted-foreground'>
+                <p className='text-foreground/90 text-sm font-medium text-foreground/90'>
                   {section.eyebrow}
                 </p>
                 <h3 className='mt-4 font-sans text-3xl leading-[0.98] font-bold text-foreground sm:text-4xl'>
@@ -43,7 +43,7 @@ export function DeepDiveSection() {
                   {section.points.map(point => (
                     <li
                       key={point}
-                      className='text-muted-foreground text-muted-foreground'
+                      className='text-foreground/90 text-foreground/90'
                     >
                       {point}
                     </li>

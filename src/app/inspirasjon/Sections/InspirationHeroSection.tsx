@@ -1,4 +1,5 @@
 import { InspirationContentShell } from '@/app/inspirasjon/components/InspirationContentShell'
+import { InspirationFeatureCard } from '@/app/inspirasjon/components/cards/InspirationFeatureCard'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { inspirationPages } from '../layout/inspirationPages'
@@ -17,12 +18,14 @@ export function InspirationPageCards() {
           >
             Utforsk inspirasjon etter situasjon
           </h2>
+
           <p className='mx-auto max-w-2xl text-base leading-relaxed text-card-foreground/90 sm:text-lg'>
             Finn ideer til situasjoner der komfort møter norsk
             natur. Velg temaet som passer deg best.
           </p>
         </div>
-        <ul className='mx-auto grid w-full max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+
+        <ul className='mx-auto grid w-full max-w-6xl grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
           {inspirationPages.map(page => {
             const Icon = page.icon
 
@@ -30,28 +33,40 @@ export function InspirationPageCards() {
               <li key={page.href}>
                 <Link
                   href={page.href}
-                  className='group flex h-full flex-col rounded-lg border border-border bg-background p-6 text-foreground shadow-sm transition-transform duration-300 hover:-translate-y-0.5 hover:border-secondary/50 motion-reduce:transition-none motion-reduce:hover:translate-y-0'
+                  className='group/link block rounded-3xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card focus-visible:outline-none'
+                  aria-label={`${page.label}: ${page.description}`}
                 >
-                  <div className='mb-4 flex items-start gap-4'>
-                    <div className='flex size-11 shrink-0 items-center justify-center rounded-lg border border-border bg-secondary text-secondary-foreground'>
-                      <Icon className='size-5' aria-hidden='true' />
-                    </div>
-                    <div className='min-w-0'>
-                      <h3 className='text-lg leading-snug font-bold text-foreground'>
-                        {page.label}
-                      </h3>
-                      <p className='mt-1 text-sm leading-relaxed text-foreground/80'>
-                        {page.description}
-                      </p>
-                    </div>
-                  </div>
-                  <span className='mt-auto inline-flex items-center gap-1 text-sm font-semibold text-secondary'>
-                    Les mer
-                    <ArrowRight
-                      className='size-4 transition-transform duration-300 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0'
-                      aria-hidden='true'
-                    />
-                  </span>
+                  <InspirationFeatureCard
+                    density='compact'
+                    footerMode='flow'
+                    icon={Icon}
+                    title={page.label}
+                    description={page.description}
+                    footer={
+                      <span className='inline-flex w-full items-center justify-between gap-4 text-sm leading-none font-semibold tracking-[-0.01em] text-foreground'>
+                        <span>Les mer</span>
+                        <ArrowRight
+                          className='size-4 transition-transform duration-300 group-hover/link:translate-x-1 motion-reduce:transition-none motion-reduce:group-hover/link:translate-x-0'
+                          aria-hidden='true'
+                        />
+                      </span>
+                    }
+                    backgroundSlot={
+                      <>
+                        <div className='absolute inset-0 bg-[linear-gradient(145deg,color-mix(in_oklch,var(--foreground)_5%,transparent),transparent_44%)]' />
+                        <div className='absolute inset-x-0 top-0 h-px bg-foreground/10' />
+                        <div className='absolute -top-24 -right-24 size-56 rounded-full bg-secondary/18 opacity-80 blur-3xl transition-opacity duration-300 group-hover/link:opacity-100' />
+                      </>
+                    }
+                    className='h-auto min-h-0 border-border bg-background text-foreground shadow-sm ring-border/50 transition-colors duration-300 hover:bg-muted/40 motion-reduce:transition-none'
+                    headerClassName='gap-4 px-5 pt-5 sm:px-6 sm:pt-6'
+                    iconContainerClassName='size-10 rounded-lg border-border bg-secondary text-secondary-foreground ring-border/50'
+                    iconClassName='size-5'
+                    titleClassName='min-h-0 text-left text-lg leading-snug font-bold tracking-[-0.02em] text-foreground'
+                    contentClassName='px-5 pt-3 pb-4 sm:px-6'
+                    descriptionClassName='max-w-[30ch] text-sm leading-relaxed text-foreground/80'
+                    footerClassName='border-border bg-muted/30 px-5 py-3.5 sm:px-6'
+                  />
                 </Link>
               </li>
             )

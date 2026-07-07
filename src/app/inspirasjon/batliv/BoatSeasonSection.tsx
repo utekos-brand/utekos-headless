@@ -10,9 +10,9 @@ export function BoatSeasonSection() {
       seasons={boatingSeasons}
       defaultValue='summer'
       glowTokens={['var(--secondary)', 'var(--muted)']}
-      sectionClassName='bg-card text-card-foreground border-t border-border'
+      sectionClassName='bg-surface-neutral text-card-foreground border-t border-border'
       titleClassName='text-card-foreground'
-      leadClassName='text-muted-foreground'
+      leadClassName='text-foreground/90'
       showSectionGlow={false}
       showTabGlow={false}
       showCardGlow={false}

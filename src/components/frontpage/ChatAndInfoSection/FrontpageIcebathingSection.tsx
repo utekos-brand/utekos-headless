@@ -173,7 +173,7 @@ export function FrontpageIceBathingSection() {
                     <h3 className='mb-0.5 text-base font-semibold text-white transition-colors group-hover:text-amber-100'>
                       {item.title}
                     </h3>
-                    <p className='text-muted-foreground group-hover:text-foreground text-sm transition-colors group-hover:text-foreground'>
+                    <p className='text-foreground/90 group-hover:text-foreground text-sm transition-colors group-hover:text-foreground'>
                       {item.desc}
                     </p>
                   </div>
@@ -212,7 +212,7 @@ export function FrontpageIceBathingSection() {
               </BrandBadge>
             </div>
 
-            <div className='motion-content text-muted-foreground mt-6 flex items-center gap-2 text-sm opacity-0'>
+            <div className='motion-content text-foreground/90 mt-6 flex items-center gap-2 text-sm opacity-0'>
               <AlertCircle className='text-primary h-4 w-4 text-primary' />
               <span className='italic'>
                 OBS: Begrenset antall igjen på lager.

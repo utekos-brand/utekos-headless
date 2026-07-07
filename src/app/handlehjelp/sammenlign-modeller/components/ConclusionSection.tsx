@@ -17,7 +17,7 @@ export function ConclusionSection() {
             <h2 className='font-sans text-4xl leading-[0.95] font-bold tracking-[-0.01em] text-foreground sm:text-6xl'>
               Et trygt valg på under ett minutt
             </h2>
-            <p className='leading-text-paragraph text-muted-foreground mt-6 text-lg text-muted-foreground sm:text-xl'>
+            <p className='leading-text-paragraph text-foreground/90 mt-6 text-lg text-foreground/90 sm:text-xl'>
               TechDown gir mest ro i skiftende vær. Dun gir mest
               varme per gram. Mikrofiber er lettest å pakke og
               vaske.
@@ -62,14 +62,14 @@ export function ConclusionSection() {
                 <summary className='cursor-pointer list-none font-sans text-xl leading-[1.05] font-bold tracking-[-0.01em] text-foreground marker:hidden'>
                   <span className='inline-flex w-full items-center justify-between gap-6'>
                     {item.question}
-                    <span className='text-muted-foreground text-2xl leading-none text-muted-foreground transition-transform duration-300 group-open:rotate-45'>
+                    <span className='text-foreground/90 text-2xl leading-none text-foreground/90 transition-transform duration-300 group-open:rotate-45'>
                       +
                     </span>
                   </span>
                 </summary>
                 <p
                   data-nosnippet
-                  className='leading-text-paragraph text-muted-foreground mt-4 max-w-2xl text-base text-muted-foreground'
+                  className='leading-text-paragraph text-foreground/90 mt-4 max-w-2xl text-base text-foreground/90'
                 >
                   {item.answer}
                 </p>

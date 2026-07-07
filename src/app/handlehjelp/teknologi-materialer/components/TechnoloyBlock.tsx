@@ -59,7 +59,7 @@ export const TechnologyBlock = ({
             'flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-colors',
             isActive ?
               'border-card-foreground/30 bg-card-foreground/10 text-card-foreground'
-            : 'border-border bg-muted text-muted-foreground'
+            : 'border-border bg-muted text-foreground/90'
           )}
         >
           <IconComponent className='h-6 w-6' aria-hidden />
@@ -69,7 +69,7 @@ export const TechnologyBlock = ({
             'text-xl font-bold transition-colors',
             isActive ?
               'text-card-foreground'
-            : 'text-muted-foreground'
+            : 'text-foreground/90'
           )}
         >
           {tech.title}
@@ -87,7 +87,7 @@ export const TechnologyBlock = ({
                 'rounded-full border px-2.5 py-1 text-sm font-medium transition-colors',
                 isActive ?
                   'border-card-foreground/20 bg-card-foreground/10 text-card-foreground'
-                : 'border-border bg-transparent text-muted-foreground'
+                : 'border-border bg-transparent text-foreground/90'
               )}
             >
               {product}

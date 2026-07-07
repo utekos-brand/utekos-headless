@@ -64,7 +64,7 @@ export function RecommendedItem({
             {product.title}
           </h4>
         </Link>
-        <p className='mt-1 text-sm text-muted-foreground'>
+        <p className='mt-1 text-sm text-foreground/90'>
           {formatPrice(product.priceRange.minVariantPrice)}
         </p>
       </div>

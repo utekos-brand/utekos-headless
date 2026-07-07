@@ -180,7 +180,7 @@ export const TechDownFeatureSection = () => {
                 <ArrowRight className='ml-2 size-5 transition-transform duration-300 group-hover:translate-x-1' />
               </Link>
             </BrandBadge>
-            <p className='mt-4 text-xs text-muted-foreground'>
+            <p className='mt-4 text-xs text-foreground/90'>
               *Tilbudet gjelder i en begrenset periode.
             </p>
           </div>

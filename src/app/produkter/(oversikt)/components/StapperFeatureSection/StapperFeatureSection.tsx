@@ -49,7 +49,7 @@ export function StapperFeatureSection() {
             <AnimatedBlock className='will-animate-fade-in-up'>
               <Badge
                 variant='outline'
-                className='mb-5 border-border bg-muted px-3.5 py-1.5 text-muted-foreground'
+                className='mb-5 border-border bg-muted px-3.5 py-1.5 text-foreground/90'
               >
                 Utekos Stapper™
               </Badge>

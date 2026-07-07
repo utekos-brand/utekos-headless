@@ -69,7 +69,7 @@ export function HytteSeasonsTabs() {
               </CardContent>
             </Card>
 
-            <figcaption className='font-sans text-2xl leading-none font-bold tracking-normal text-muted-foreground sm:text-3xl'>
+            <figcaption className='font-sans text-2xl leading-none font-bold tracking-normal text-foreground/90 sm:text-3xl'>
               {season.label}
             </figcaption>
           </figure>

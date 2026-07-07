@@ -37,7 +37,7 @@ type ContactFormData = z.infer<typeof ClientContactFormSchema>
 
 const initialState: ContactFormState = { message: '' }
 const contactFieldClassName =
-  'h-12 rounded-none border-foreground bg-card  text-card-foreground  tracking-normal placeholder:text-muted-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:border-primary focus-visible:ring-primary/35 focus-visible:ring-primary/35'
+  'h-12 rounded-none border-foreground bg-card  text-card-foreground  tracking-normal placeholder:text-foreground/90 placeholder:text-foreground/90 focus-visible:border-primary focus-visible:border-primary focus-visible:ring-primary/35 focus-visible:ring-primary/35'
 
 export function SupportForm({
   idPrefix = 'contact'
@@ -184,7 +184,7 @@ export function SupportForm({
                       name={field.name}
                       value={field.value ?? ''}
                     />
-                    <SelectTrigger className='border-foreground  focus-visible:border-primary focus-visible:ring-primary/35 data-placeholder:text-muted-foreground dark:[&_svg:not([class*=text-])]:text-card-foreground h-12 w-full rounded-none border-foreground bg-card tracking-normal text-card-foreground focus-visible:border-primary focus-visible:ring-primary/35 data-placeholder:text-muted-foreground [&_svg:not([class*=text-])]:text-card-foreground'>
+                    <SelectTrigger className='border-foreground  focus-visible:border-primary focus-visible:ring-primary/35 data-placeholder:text-foreground/90 dark:[&_svg:not([class*=text-])]:text-card-foreground h-12 w-full rounded-none border-foreground bg-card tracking-normal text-card-foreground focus-visible:border-primary focus-visible:ring-primary/35 data-placeholder:text-foreground/90 [&_svg:not([class*=text-])]:text-card-foreground'>
                       <SelectValue placeholder='Velg ditt land' />
                     </SelectTrigger>
                   </div>
@@ -250,7 +250,7 @@ export function SupportForm({
                         form.clearErrors('message')
                       }
                     }}
-                    className='border-foreground  placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/35 min-h-40 rounded-none border-foreground bg-card tracking-normal text-card-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/35'
+                    className='border-foreground  placeholder:text-foreground/90 focus-visible:border-primary focus-visible:ring-primary/35 min-h-40 rounded-none border-foreground bg-card tracking-normal text-card-foreground placeholder:text-foreground/90 focus-visible:border-primary focus-visible:ring-primary/35'
                   />
                 </FormControl>
                 <div className='leading-text-paragraph mt-1 flex items-center justify-between text-xs tracking-normal text-foreground'>

@@ -17,7 +17,7 @@ export const microfiberAdvantages: {
     title: 'Enkelt vedlikehold',
     description:
       'Tørker raskt og er enkel å vaske uten å bekymre seg for klumping.',
-    color: 'text-muted-foreground'
+    color: 'text-foreground/90'
   },
   {
     icon: 'feather',

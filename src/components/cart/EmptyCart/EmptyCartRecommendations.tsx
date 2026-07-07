@@ -11,7 +11,7 @@ export function EmptyCartRecommendations() {
 
   if (!products || products.length === 0) {
     return (
-      <div className='text-center text-muted-foreground'>
+      <div className='text-center text-foreground/90'>
         <p className='text-base text-foreground'>
           Handlekurven din er tom
         </p>

@@ -12,7 +12,7 @@ export function TableCellContent({
           <Check className='size-4' aria-hidden='true' />
           <span className='sr-only'>Ja</span>
         </span>
-      : <span className='text-muted-foreground text-sm text-muted-foreground'>
+      : <span className='text-foreground/90 text-sm text-foreground/90'>
           Nei
         </span>
   }

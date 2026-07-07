@@ -43,7 +43,7 @@ export function ComparisonTable() {
                 className='p-5 align-top font-sans text-base leading-[1.05] font-bold tracking-[-0.01em] text-card-foreground'
               >
                 <span>{row.feature}</span>
-                <span className='text-muted-foreground mt-2 block text-xs leading-[1.35] font-medium text-muted-foreground'>
+                <span className='text-foreground/90 mt-2 block text-xs leading-[1.35] font-medium text-foreground/90'>
                   {row.shortAnswer}
                 </span>
               </th>
