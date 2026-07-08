@@ -125,6 +125,31 @@ deployed until production has:
 Use this gate for any Next.js runtime, route, action, tracking client,
 server tracking, env, or build-affecting change.
 
+### Cookiebot and sGTM env (Preview + Production)
+
+Set these in Vercel before or with the Cookiebot deploy. Remove legacy
+Usercentrics keys after verification.
+
+| Key | Required | Canonical value | Notes |
+| --- | --- | --- | --- |
+| `NEXT_PUBLIC_TRACKING_SGTM_ORIGIN` | Recommended | `https://cloud.server.utekos.no` | First-party sGTM origin for GTM loader and noscript. Hostname-only `cloud.server.utekos.no` is accepted and normalized to `https://` at runtime. No trailing slash. |
+| `NEXT_PUBLIC_GOOGLE_GTM_ID` | Yes | `GTM-5TWMJQFP` | Web container loaded from sGTM origin. |
+| `NEXT_PUBLIC_COOKIEBOT_DOMAIN_GROUP_ID` | Optional | `f2145160-1ac5-4859-8385-36dc6327495f` | Defaults in code when unset. |
+| `GOOGLE_BROWSER_EVENT_TRANSPORT` | Prod | `sgtm` | Only after sGTM + GTM Preview + production smoke pass. |
+| `NEXT_PUBLIC_ENABLE_GTM_IN_DEV` | Local only | `1` | For local `tracking:smoke`; do not set in Production. |
+
+Remove after migration:
+
+- `NEXT_PUBLIC_USERCENTRICS_SGTM_ORIGIN`
+- `NEXT_PUBLIC_USERCENTRICS_SETTINGS_ID`
+- `NEXT_PUBLIC_USERCENTRICS_*_SERVICE_NAME`
+
+Redeploy Vercel after any env change. Verify with:
+
+```bash
+TRACKING_SMOKE_BASE_URL=https://utekos.no npm run tracking:smoke
+```
+
 Required sequence:
 
 1. Confirm project link with `.vercel/project.json` or `.vercel/repo.json`.

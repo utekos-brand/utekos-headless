@@ -135,6 +135,7 @@ sequenceDiagram
 | Cookiebot auto-blocking | Aktiv (`data-blockingmode="auto"`) |
 | GTM React-consent-gate | Fjernet — GTM lastes etter page-settle; Consent Initialisation i GTM |
 | Server consent cookie | `CookieConsent` lest av API-ruter |
+| sGTM env | `NEXT_PUBLIC_TRACKING_SGTM_ORIGIN=https://cloud.server.utekos.no` (hostname-only OK) |
 | Verifisering | `cookiebotConsent.test.ts`, `npm run tracking:smoke`, `npm run tracking:commerce-smoke` |
 
 **Forbedring:** Dedikert consent-smoke i CI; dokumentere eksakt tjenestenavn-match mot Cookiebot Admin ved hver tjenesteendring.

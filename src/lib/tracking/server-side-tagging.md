@@ -144,7 +144,8 @@ MICROSOFT_UET_CAPI_ACCESS_TOKEN=<UetTagAuthKey from GetUetTagAuthKey; required f
 ```
 
 `NEXT_PUBLIC_TRACKING_SGTM_ORIGIN` peker på `https://cloud.server.utekos.no`
-(sGTM på Google Cloud Run).
+(sGTM på Google Cloud Run). Hostname-only uten scheme aksepteres og
+normaliseres i `cookiebotConfig.ts`.
 
 Runtime henter **UetTagAuthKey** via OAuth refresh +
 [`GetUetTagAuthKey`](https://learn.microsoft.com/en-us/advertising/campaign-management-service/getuettagauthkey?view=bingads-13)

@@ -52,13 +52,15 @@ CMP (Usercentrics-produkt) er nå autoritativ samtykkekilde.
 
 **Gjenstår før produksjonssign-off:**
 
-- Vercel deploy med Cookiebot-endringer
-- `npm run tracking:smoke` og `npm run tracking:commerce-smoke` mot
-  preview/prod
+- Merge [PR #13](https://github.com/utekos-brand/utekos-headless/pull/13) og
+  Vercel production deploy
+- Vercel env: sett `NEXT_PUBLIC_TRACKING_SGTM_ORIGIN=https://cloud.server.utekos.no`
+  (eller `cloud.server.utekos.no` — normaliseres i runtime); fjern
+  `NEXT_PUBLIC_USERCENTRICS_SGTM_ORIGIN` og øvrige `NEXT_PUBLIC_USERCENTRICS_*`
+- `TRACKING_SMOKE_BASE_URL=https://utekos.no npm run tracking:smoke` etter deploy
+- `npm run tracking:commerce-smoke` mot prod
 - GTM Preview: Cookiebot CMP-tag + Consent Initialisation
 - Cookiebot Admin: scanner må matche tjenestenavn i `cookiebotConfig.ts`
-- Sett `NEXT_PUBLIC_TRACKING_SGTM_ORIGIN` i Vercel (erstatter
-  `NEXT_PUBLIC_USERCENTRICS_SGTM_ORIGIN` om den finnes)
 
 ### Nåværende operativ beslutning
 

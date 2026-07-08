@@ -344,6 +344,8 @@ See
 Minimum:
 
 - `NEXT_PUBLIC_TRACKING_SGTM_ORIGIN=https://cloud.server.utekos.no`
+  (hostname-only `cloud.server.utekos.no` is normalized to `https://` in
+  `cookiebotConfig.ts`; no trailing slash)
 - `NEXT_PUBLIC_GOOGLE_GTM_ID=GTM-5TWMJQFP`
 - `gtm-preview` and `gtm-server` are recreated in Google Cloud
   project `project-c683eb2c-20ae-4ec2-ac3`, region

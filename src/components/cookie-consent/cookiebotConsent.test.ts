@@ -8,7 +8,8 @@ import {
 import {
   COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME,
   COOKIEBOT_META_SERVICE_NAME,
-  COOKIEBOT_POSTHOG_SERVICE_NAME
+  COOKIEBOT_POSTHOG_SERVICE_NAME,
+  normalizeTrackingSgtmOrigin
 } from './cookiebotConfig'
 
 test('parseCookiebotConsentCookieValue reads encoded Cookiebot object values', () => {
@@ -41,6 +42,21 @@ test('parseCookiebotConsentCookie reads CookieConsent from request cookie header
     statistics: false,
     marketing: true
   })
+})
+
+test('normalizeTrackingSgtmOrigin accepts hostname-only and full https origin', () => {
+  assert.equal(
+    normalizeTrackingSgtmOrigin('cloud.server.utekos.no'),
+    'https://cloud.server.utekos.no'
+  )
+  assert.equal(
+    normalizeTrackingSgtmOrigin('https://cloud.server.utekos.no/'),
+    'https://cloud.server.utekos.no'
+  )
+  assert.equal(
+    normalizeTrackingSgtmOrigin(undefined),
+    'https://cloud.server.utekos.no'
+  )
 })
 
 test('createCookiebotConsentState maps categories to provider service gates', () => {

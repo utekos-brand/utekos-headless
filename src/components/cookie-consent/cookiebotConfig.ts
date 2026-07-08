@@ -4,10 +4,27 @@ export const COOKIEBOT_DOMAIN_GROUP_ID =
 export const COOKIEBOT_SCRIPT_URL = 'https://consent.cookiebot.com/uc.js'
 export const COOKIEBOT_CONSENT_COOKIE_NAME = 'CookieConsent'
 
-export const TRACKING_SGTM_ORIGIN = (
+const DEFAULT_TRACKING_SGTM_ORIGIN = 'https://cloud.server.utekos.no'
+
+export function normalizeTrackingSgtmOrigin(
+  value: string | undefined,
+  fallback = DEFAULT_TRACKING_SGTM_ORIGIN
+): string {
+  const trimmed = value?.trim().replace(/\/$/, '') ?? ''
+  if (!trimmed) {
+    return fallback
+  }
+
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed
+  }
+
+  return `https://${trimmed}`
+}
+
+export const TRACKING_SGTM_ORIGIN = normalizeTrackingSgtmOrigin(
   process.env.NEXT_PUBLIC_TRACKING_SGTM_ORIGIN
-  || 'https://cloud.server.utekos.no'
-).replace(/\/$/, '')
+)
 
 export const COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME = 'Google Analytics'
 export const COOKIEBOT_GOOGLE_ADS_SERVICE_NAME = 'Google Ads'
