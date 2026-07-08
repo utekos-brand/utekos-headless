@@ -1,24 +1,18 @@
 import { z } from 'zod'
 
-export const usercentricsConsentSchema = z
+export const cookiebotConsentSchema = z
   .object({
     necessary: z.literal(true),
     preferences: z.boolean(),
     statistics: z.boolean(),
     marketing: z.boolean(),
     services: z.record(z.string(), z.boolean()),
-    source: z.literal('usercentrics')
+    source: z.literal('cookiebot')
   })
   .strict()
 
-export const usercentricsConsentEventDetailSchema = z
-  .object({
-    event: z.literal('consent_status')
-  })
-  .catchall(z.unknown())
-
-export type UsercentricsConsentState = z.infer<typeof usercentricsConsentSchema>
+export type CookiebotConsentState = z.infer<typeof cookiebotConsentSchema>
 export type ConsentCategory = keyof Pick<
-  UsercentricsConsentState,
+  CookiebotConsentState,
   'necessary' | 'preferences' | 'statistics' | 'marketing'
 >

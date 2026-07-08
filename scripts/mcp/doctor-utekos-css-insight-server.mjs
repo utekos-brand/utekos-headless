@@ -179,7 +179,6 @@ async function main() {
       check(checks, 'inventory:no_shadcn_default_css', !inventoryPaths.has('src/components/shadcn-default.css'), 'shadcn default excluded')
       check(checks, 'inventory:semantic_light', inventoryPaths.has('src/tokens/semantic.light.css'), inventoryPaths.has('src/tokens/semantic.light.css') ? 'present' : 'missing')
       check(checks, 'inventory:css_module', inventoryPaths.has('src/app/inspirasjon/components/cards/CardGridCols3.module.css'), inventoryPaths.has('src/app/inspirasjon/components/cards/CardGridCols3.module.css') ? 'present' : 'missing')
-      check(checks, 'inventory:usercentrics_css', inventoryPaths.has('src/components/cookie-consent/usercentrics.custom.css'), inventoryPaths.has('src/components/cookie-consent/usercentrics.custom.css') ? 'present' : 'missing')
       check(checks, 'inventory:gcloud_excluded', ![...inventoryPaths].some(file => file.startsWith('gcloud components install')), 'gcloud cache excluded')
 
       const graph = await withTimeout(

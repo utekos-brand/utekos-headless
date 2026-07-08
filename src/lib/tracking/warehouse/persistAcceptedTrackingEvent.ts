@@ -14,7 +14,7 @@ type TrackingConsent = {
   statistics: boolean
   marketing: boolean
   services: Record<string, boolean>
-  source: 'usercentrics' | 'shopify'
+  source: 'cookiebot' | 'shopify'
 }
 
 export async function persistAcceptedTrackingEvent(

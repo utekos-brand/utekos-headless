@@ -1,11 +1,11 @@
 import { defaultConsentState } from '@/components/cookie-consent/defaultConsentState'
-import { createUsercentricsConsentState } from '@/components/cookie-consent/createUsercentricsConsentState'
-import { parseUsercentricsAllowedDps } from '@/components/cookie-consent/parseUsercentricsAllowedDps'
-import type { UsercentricsConsentState } from '@/components/cookie-consent/usercentricsConsentSchema'
+import { createCookiebotConsentState } from '@/components/cookie-consent/createCookiebotConsentState'
+import { parseCookiebotConsentCookie } from '@/components/cookie-consent/parseCookiebotConsentCookie'
+import type { CookiebotConsentState } from '@/components/cookie-consent/cookiebotConsentSchema'
 import type { NextRequest } from 'next/server'
 
-export function getRequestConsentState(request: NextRequest): UsercentricsConsentState {
-  const allowedDps = parseUsercentricsAllowedDps(request.headers.get('cookie'))
+export function getRequestConsentState(request: NextRequest): CookiebotConsentState {
+  const categories = parseCookiebotConsentCookie(request.headers.get('cookie'))
 
-  return allowedDps ? createUsercentricsConsentState(allowedDps) : defaultConsentState
+  return categories ? createCookiebotConsentState(categories) : defaultConsentState
 }

@@ -13,7 +13,7 @@
 
 import Script from 'next/script'
 import { useConsentForService } from '@/components/cookie-consent/useConsent'
-import { USERCENTRICS_KLARNA_OSM_SERVICE_NAME } from '@/components/cookie-consent/usercentricsConfig'
+import { COOKIEBOT_KLARNA_OSM_SERVICE_NAME } from '@/components/cookie-consent/cookiebotConfig'
 
 const KLARNA_ON_SITE_MESSAGING_SCRIPT_ID = 'klarna-on-site-messaging-websdk'
 const KLARNA_ON_SITE_MESSAGING_SCRIPT_URL = 'https://js.klarna.com/web-sdk/v1/klarna.js'
@@ -21,7 +21,7 @@ const KLARNA_CLIENT_ID = process.env.NEXT_PUBLIC_KLARNA_CLIENT_ID
 const KLARNA_ENVIRONMENT = process.env.NEXT_PUBLIC_KLARNA_ENVIRONMENT ?? 'production'
 
 export function KlarnaOnSiteMessagingScript() {
-  const hasMarketingConsent = useConsentForService(USERCENTRICS_KLARNA_OSM_SERVICE_NAME)
+  const hasMarketingConsent = useConsentForService(COOKIEBOT_KLARNA_OSM_SERVICE_NAME)
 
   if (!hasMarketingConsent) {
     return null

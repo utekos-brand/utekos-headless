@@ -16,7 +16,7 @@ import type { LogPayload } from 'types/tracking/log/LogPayload'
  *
  * Web Vitals are handled separately by `WebVitalsReporter`.
  * Optional analytics, replay and browser profiling are initialized elsewhere
- * only after Usercentrics consent.
+ * only after Cookiebot consent.
  */
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'

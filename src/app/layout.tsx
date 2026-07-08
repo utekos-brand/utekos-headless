@@ -12,7 +12,7 @@ import Header from '@/components/header/Header'
 import { SiteChrome } from '@/components/layout/SiteChrome'
 import { OnlineStoreJsonLd } from './OnlineStoreJsonLd'
 import { CartProviderLoader } from '@/components/providers/CartProviderLoader'
-import { UsercentricsScript } from '@/components/cookie-consent/UsercentricsScript'
+import { CookieScript } from '@/components/layout/CookieScript'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import type { Metadata } from 'next'
 import { Google_Sans, Google_Sans_Flex } from 'next/font/google'
@@ -117,7 +117,7 @@ export default async function RootLayout({
           enableColorScheme
           disableTransitionOnChange
         >
-          <UsercentricsScript />
+          <CookieScript />
           <OnlineStoreJsonLd />
           <Suspense fallback={null}>
             <CartProviderLoader>

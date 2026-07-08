@@ -18,7 +18,7 @@ Core stack:
 - Deployment and hosting: Vercel
 - Frontend: Next.js 16.2 / React 19.2
 - Commerce: Shopify headless
-- Consent: Usercentrics
+- Consent: Cookiebot CMP by Usercentrics
 - Tag management: Google Tag Manager web + server-side GTM
 - Web and product analytics: Google Analytics + PostHog
 - Structured content: Sanity
@@ -251,7 +251,7 @@ Status date: 2026-07-07.
   provider/source, reason, and replay policy are visible. Use
   `ops.dead_letter_summary` and provider-specific context before
   treating row counts as action signals.
-- PostHog must remain consent-gated through Usercentrics. Current
+- PostHog must remain consent-gated through Cookiebot. Current
   practice is explicit product events, manual pageviews,
   `autocapture: false`, and optional session replay only with strict
   input/text/network masking.
@@ -303,10 +303,10 @@ flowchart TD start[Oppgave om main-documentation] -->
 agents[agents.txt] agents --> specialized{Spesialisert domene?}
 specialized -->|Next.js| nextjs[official-docs/llms.txt]
 specialized -->|Google| google[google/agents.txt] specialized
--->|Consent| uc[usercentrics/agents.txt] specialized -->|Motion|
+specialized -->|Consent| cb[docs/Cookiebot + cookiebotConfig.ts] specialized -->|Motion|
 motion[25-motion/agents.txt] specialized -->|Nei / usikker|
 llms[llms.txt] nextjs --> companion[*.llm.md] google -->
-companion uc --> companion motion --> companion llms -->
+companion cb --> companion motion --> companion llms -->
 companion
 
 ### Required env for core storefront E2E
@@ -340,10 +340,12 @@ npm run db:reset   # apply migrations
 ### Cloud Run sGTM env (production)
 
 See
-[src/lib/tracking/server-side-tagging.md](src/lib/tracking/server-side-tagging.md).
+  [src/lib/tracking/server-side-tagging.md](src/lib/tracking/server-side-tagging.md).
 Minimum:
 
-- `NEXT_PUBLIC_USERCENTRICS_SGTM_ORIGIN=https://cloud.server.utekos.no`
+- `NEXT_PUBLIC_TRACKING_SGTM_ORIGIN=https://cloud.server.utekos.no`
+  (hostname-only `cloud.server.utekos.no` is normalized to `https://` in
+  `cookiebotConfig.ts`; no trailing slash)
 - `NEXT_PUBLIC_GOOGLE_GTM_ID=GTM-5TWMJQFP`
 - `gtm-preview` and `gtm-server` are recreated in Google Cloud
   project `project-c683eb2c-20ae-4ec2-ac3`, region

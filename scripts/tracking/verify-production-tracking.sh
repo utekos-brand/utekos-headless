@@ -45,14 +45,6 @@ SMOKE_OUTPUT="$("$PWCLI" -s="$SESSION" run-code "async (page) => {
     permissions: ['geolocation']
   });
   const smokePage = await smokeContext.newPage();
-  const requiredServices = [
-    'Google Analytics',
-    'Google Ads',
-    'Facebook Pixel',
-    'Microsoft Advertising Remarketing',
-    'Microsoft Clarity',
-    'PostHog'
-  ];
   const optionalRequestPatterns = [
     'connect.facebook.net',
     'facebook.com/tr',
@@ -69,81 +61,82 @@ SMOKE_OUTPUT="$("$PWCLI" -s="$SESSION" run-code "async (page) => {
   await smokePage.goto(baseUrl);
   await smokePage.waitForTimeout(3500);
 
-  const freshState = await smokePage.evaluate(required => {
+  const freshState = await smokePage.evaluate(() => {
     const dataLayer = Array.isArray(window.dataLayer) ? window.dataLayer : [];
-    const consentEvents = dataLayer.filter(item => item && typeof item === 'object' && item.event === 'consent_status');
-    const latestConsent = consentEvents.at(-1) || {};
-    const loaderCount = [...document.scripts].filter(script => script.src === 'https://web.cmp.usercentrics.eu/ui/loader.js').length;
+    const consentDefaults = dataLayer.filter(item => item?.[0] === 'consent');
+    const loaderCount = [...document.scripts].filter(script => script.src === 'https://consent.cookiebot.com/uc.js').length;
     const gtmScriptUrls = [...document.scripts]
       .map(script => script.src)
       .filter(src => src.includes('cloud.server.utekos.no'));
+    const consent = window.Cookiebot?.consent || {};
 
     return {
-      consentEventCount: consentEvents.length,
-      consentType: latestConsent.type,
+      consentDefaultCount: consentDefaults.length,
       gtmScriptUrls,
       loaderCount,
-      missingServices: required.filter(service => typeof latestConsent[service] !== 'boolean'),
-      serviceStates: Object.fromEntries(required.map(service => [service, latestConsent[service]])),
-      unexpectedlyGranted: required.filter(service => latestConsent[service] === true)
+      consent,
+      unexpectedlyGranted: ['preferences', 'statistics', 'marketing'].filter(category => consent[category] === true)
     };
-  }, requiredServices);
+  });
 
-  const preConsentForbiddenRequests = requests.filter(url =>
-    optionalRequestPatterns.some(pattern => url.includes(pattern))
-  );
+  const preConsentForbiddenRequests = requests.filter(url => {
+    if (!optionalRequestPatterns.some(pattern => url.includes(pattern))) {
+      return false
+    }
+
+    // Microsoft UET advanced consent may emit consent/default pings before explicit accept.
+    if (url.includes('bat.bing.net') && (url.includes('evt=consent') || url.includes('asc=D'))) {
+      return false
+    }
+
+    // Clarity may emit cookieless collect pings while analytics consent is denied.
+    if (url.includes('clarity.ms/collect')) {
+      return false
+    }
+
+    return true
+  });
 
   const requestCountBeforeAccept = requests.length;
   const responseCountBeforeAccept = responses.length;
-  await smokePage.evaluate(async () => {
-    await window.__ucCmp?.acceptAllConsents();
+  await smokePage.evaluate(() => {
+    window.Cookiebot?.submitCustomConsent?.(true, true, true);
   });
   await smokePage.waitForTimeout(3500);
 
-  const acceptedState = await smokePage.evaluate(required => {
-    const dataLayer = Array.isArray(window.dataLayer) ? window.dataLayer : [];
-    const consentEvents = dataLayer.filter(item => item && typeof item === 'object' && item.event === 'consent_status');
-    const latestConsent = consentEvents.at(-1) || {};
+  const acceptedState = await smokePage.evaluate(() => {
+    const consent = window.Cookiebot?.consent || {};
     const gtmScriptUrls = [...document.scripts]
       .map(script => script.src)
       .filter(src => src.includes('cloud.server.utekos.no'));
 
     return {
-      notGranted: required.filter(service => latestConsent[service] !== true),
+      notGranted: ['preferences', 'statistics', 'marketing'].filter(category => consent[category] !== true),
       gtmScriptUrls
     };
-  }, requiredServices);
+  });
   const acceptedRequests = requests.slice(requestCountBeforeAccept);
   const acceptedResponses = responses.slice(responseCountBeforeAccept);
   const googleTagStatuses = acceptedResponses
     .filter(response => response.url.includes('/gtag/js?id=' + canonicalGoogleTagId))
     .map(response => response.status);
 
-  await smokePage.evaluate(async () => {
-    await window.__ucCmp?.denyAllConsents();
+  await smokePage.evaluate(() => {
+    window.Cookiebot?.submitCustomConsent?.(false, false, false);
   });
   await smokePage.waitForTimeout(1500);
 
-  const withdrawnState = await smokePage.evaluate(required => {
-    const dataLayer = Array.isArray(window.dataLayer) ? window.dataLayer : [];
-    const consentEvents = dataLayer.filter(item => item && typeof item === 'object' && item.event === 'consent_status');
-    const latestConsent = consentEvents.at(-1) || {};
-
+  const withdrawnState = await smokePage.evaluate(() => {
+    const consent = window.Cookiebot?.consent || {};
     return {
-      stillGranted: required.filter(service => latestConsent[service] === true)
+      stillGranted: ['preferences', 'statistics', 'marketing'].filter(category => consent[category] === true)
     };
-  }, requiredServices);
+  });
 
   const failures = [];
 
-  if (freshState.loaderCount !== 1) failures.push('Expected exactly one Usercentrics loader.');
-  if (freshState.consentEventCount !== 1) failures.push('Expected exactly one initial consent_status event.');
-  if (freshState.consentType !== 'IMPLICIT') failures.push('Fresh browser did not receive implicit initial consent.');
-  if (freshState.gtmScriptUrls.some(url => url.includes('/u2/'))) failures.push('Stale Usercentrics resilient GTM loader is active.');
-  if (freshState.gtmScriptUrls.some(url => url.includes('/gtm.js?id=GTM-5TWMJQFP'))) {
-    failures.push('sGTM web-container loader loaded before consent.');
-  }
-  if (freshState.missingServices.length > 0) failures.push('Required Usercentrics services are missing.');
+  if (freshState.loaderCount !== 1) failures.push('Expected exactly one Cookiebot loader.');
+  if (freshState.consentDefaultCount < 1) failures.push('Expected initial default-denied consent command.');
   if (freshState.unexpectedlyGranted.length > 0) failures.push('Optional tracking services were implicitly granted.');
   if (preConsentForbiddenRequests.length > 0) failures.push('Optional vendor requests occurred before consent.');
   if (!acceptedState.gtmScriptUrls.some(url => url.includes('/gtm.js?id=GTM-5TWMJQFP'))) {

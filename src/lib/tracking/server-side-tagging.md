@@ -2,7 +2,7 @@
 
 ## Valgt arkitektur
 
-- Usercentrics CMP v3 med settings ID `9suQr3rGddL3Tb` er eneste samtykkeplattform.
+- Cookiebot CMP med domain group ID `f2145160-1ac5-4859-8385-36dc6327495f` er samtykkeplattformen.
 - Google Cloud Run hoster sGTM-containeren etter DNS-cutover.
 - `cloud.server.utekos.no` er førsteparts-endepunktet.
 - Supabase event ledger er autoritativt revisjons- og retry-lag.
@@ -65,7 +65,7 @@ Produksjonsdomenet peker nå til ny Cloud Run domain mapping og er verifisert gr
 | `https://cloud.server.utekos.no/ns.html?id=GTM-5TWMJQFP` | HTTP 200 |
 | `https://cloud.server.utekos.no/gtag/js?id=GT-MKRLF5WK` | HTTP 200 |
 
-Etter DNS-cutover er Google sitt helsesjekkendepunkt `/healthy`, ikke Usercentrics sitt tidligere `/healthz`.
+Etter DNS-cutover er Google sitt helsesjekkendepunkt `/healthy`.
 
 ## Verifiserte endepunkter for produksjonsdomene (før DNS-cutover, 2026-06-15)
 
@@ -86,61 +86,50 @@ Etter DNS-cutover er Google sitt helsesjekkendepunkt `/healthy`, ikke Usercentri
 `G-FCES3L0M9M` og `AW-18180376403`. Direkte `G-FCES3L0M9M`-script er derfor ikke et
 produksjonsakseptkriterium.
 
-## Samtykkeflyt
+## Samtykkeflyt (Cookiebot)
 
-Usercentrics auto-blocking krever at `autoblocker.js` parses før `loader.js` og før tredjepartsscripts. I
-Next.js 16 kan ikke `src/proxy.ts` transformere HTML-en som senere rendres av `NextResponse.next()`, så
-autoblocker prependes ikke via proxy. `next/script strategy="beforeInteractive"` ble testet lokalt, men
-Usercentrics autoblocker blokkerte Next.js RSC/bootstrap inline-scripts (`Unexpected server data: missing
-bootstrap script`). Derfor skal autoblocker ikke aktiveres globalt på Vercel før Next sine bootstrap-scripts
-kan bypasse auto-blocking trygt, for eksempel med en dokumentert Usercentrics allowlist.
+Cookiebot CMP lastes med `data-blockingmode="auto"`. Consent Mode v2
+defaults (`denied`) settes før Cookiebot i
+[`CookieScript.tsx`](../../components/layout/CookieScript.tsx).
 
-`<head>`-rekkefølge i [`UsercentricsScript.tsx`](../../components/cookie-consent/UsercentricsScript.tsx):
+`<head>`-rekkefølge:
 
-1. `autoblocker.js` (kun lokal/dev fallback; returnerer `null` på Vercel)
-2. Google Consent Mode defaults (`denied` fail-closed)
-3. `https://cloud.server.utekos.no/uc-consent-signals.js` (**før** CMP)
-4. `loader.js` (`async`, `data-settings-id`)
+1. Google Consent Mode defaults (`denied` fail-closed) + `url_passthrough`
+2. Cookiebot `uc.js` (`data-cbid`, `data-blockingmode="auto"`)
 
-GTM lastes ikke lenger globalt i `<head>`. [`ConsentGatedGoogleTagManager.tsx`](../../components/analytics/ConsentGatedGoogleTagManager.tsx)
-monterer [`GoogleTagManagerScript.tsx`](../../components/analytics/GoogleTagManagerScript.tsx) først etter
-`Google Analytics` eller `Google Ads`-samtykke og etter page-settle/idle. DataLayer og Consent Mode defaults
-opprettes fortsatt tidlig, slik at events kan pushes før containeren lastes.
+GTM lastes etter page-settle via
+[`ConsentGatedGoogleTagManager.tsx`](../../components/analytics/ConsentGatedGoogleTagManager.tsx)
+uten React-consent-gate. Consent Initialisation i GTM + Cookiebot CMP-tag
+styrer tag-firing sammen med appens `gtag('consent','update')`.
 
-Nettleseren bruker `ucEvent`; serverrutene leser `ucConsentAllowedDps` fra requesten.
+Nettleseren bruker `CookiebotOnAccept` / `CookiebotOnConsentReady`;
+serverrutene leser `CookieConsent` fra request-cookies.
 
-Google Consent Mode v2 oppdateres via
-[`UsercentricsConsentProvider.tsx`](../../components/cookie-consent/UsercentricsConsentProvider.tsx) på
-`ucEvent`.
+Google Consent Mode v2, Microsoft UET consent og Clarity `consentv2`
+oppdateres via
+[`CookiebotConsentProvider.tsx`](../../components/cookie-consent/CookiebotConsentProvider.tsx).
 
-Provider-dispatch opprettes bare når eventet har nødvendig DPS-samtykke:
+Provider-dispatch opprettes bare når eventet har nødvendig
+kategori-samtykke:
 
-- `Google Analytics` for dataLayer/sGTM (browser) og GA4 Measurement Protocol fallback for samtykkede
-  browser business-events med `ga4Data.client_id`. `PageView` holdes på sGTM for å unngå duplisering.
+- `Google Analytics` for dataLayer/sGTM (browser) og GA4 Measurement
+  Protocol fallback for samtykkede browser business-events med
+  `ga4Data.client_id`. `PageView` holdes på sGTM for å unngå duplisering.
 - `Facebook Pixel` for Meta Pixel og direkte Meta CAPI.
-- `Microsoft Advertising Remarketing` for Microsoft UET browser-events. Shopify purchase kan i tillegg
-  Conversions API når UET tag ApiToken-env er satt (se
-  `microsoftUetCapiTokenEnvKeys.ts`) og checkout-attribusjonen inneholder
-  `msclkid`.
+- `Microsoft Advertising Remarketing` for Microsoft UET browser-events.
+  Shopify purchase kan i tillegg Conversions API når UET tag ApiToken-env
+  er satt (se `microsoftUetCapiTokenEnvKeys.ts`) og checkout-attribusjonen
+  inneholder `msclkid`.
 
-Shopify-webhooks lagres alltid i ledgeret, men sendes ikke til annonseplattformer uten dokumenterbart
-samtykke. Microsoft CAPI bruker bare checkout-attribusjon som ble fanget ved markedsføringssamtykke.
+Shopify-webhooks lagres alltid i ledgeret, men sendes ikke til
+annonseplattformer uten dokumenterbart samtykke. Microsoft CAPI bruker
+bare checkout-attribusjon som ble fanget ved markedsføringssamtykke.
 
 ## Vercel-miljøvariabler
 
 ```text
-NEXT_PUBLIC_USERCENTRICS_SETTINGS_ID=9suQr3rGddL3Tb
-NEXT_PUBLIC_USERCENTRICS_SGTM_ORIGIN=https://cloud.server.utekos.no
-NEXT_PUBLIC_USERCENTRICS_CONSENT_EVENT_NAME=ucEvent
-NEXT_PUBLIC_USERCENTRICS_GOOGLE_ANALYTICS_SERVICE_NAME=<exact DPS name from Admin>
-NEXT_PUBLIC_USERCENTRICS_GOOGLE_ADS_SERVICE_NAME=Google Ads
-NEXT_PUBLIC_USERCENTRICS_META_SERVICE_NAME=Facebook Pixel
-NEXT_PUBLIC_USERCENTRICS_MICROSOFT_SERVICE_NAME=Microsoft Advertising Remarketing
-NEXT_PUBLIC_USERCENTRICS_CLARITY_SERVICE_NAME=Microsoft Clarity
-NEXT_PUBLIC_USERCENTRICS_POSTHOG_SERVICE_NAME=PostHog
-NEXT_PUBLIC_USERCENTRICS_VERCEL_ANALYTICS_SERVICE_NAME=Vercel Analytics
-NEXT_PUBLIC_USERCENTRICS_CHATBASE_SERVICE_NAME=Chatbase
-NEXT_PUBLIC_USERCENTRICS_KLARNA_OSM_SERVICE_NAME=Klarna On-site Messaging
+NEXT_PUBLIC_COOKIEBOT_DOMAIN_GROUP_ID=f2145160-1ac5-4859-8385-36dc6327495f
+NEXT_PUBLIC_TRACKING_SGTM_ORIGIN=https://cloud.server.utekos.no
 NEXT_PUBLIC_GOOGLE_GTM_ID=GTM-5TWMJQFP
 NEXT_PUBLIC_GTM_RESILIENT_SCRIPT_URL=<optional override; only after a newly generated loader is verified>
 NEXT_PUBLIC_GTM_RESILIENT_NOSCRIPT_URL=<optional; default ns.html?id=GTM-5TWMJQFP>
@@ -154,8 +143,9 @@ MICROSOFT_UET_CAPI_ACCESS_TOKEN=<UetTagAuthKey from GetUetTagAuthKey; required f
 # Not valid for Conversions API auth: MICROSOFT_ADS_ACCESS_TOKEN, MICROSOFT_ADS_DEVELOPER_TOKEN
 ```
 
-`NEXT_PUBLIC_USERCENTRICS_SGTM_ORIGIN` forblir `https://cloud.server.utekos.no` når samme domene flyttes fra
-Usercentrics til Cloud Run. Ingen app-endring er nødvendig så lenge subdomenet beholdes.
+`NEXT_PUBLIC_TRACKING_SGTM_ORIGIN` peker på `https://cloud.server.utekos.no`
+(sGTM på Google Cloud Run). Hostname-only uten scheme aksepteres og
+normaliseres i `cookiebotConfig.ts`.
 
 Runtime henter **UetTagAuthKey** via OAuth refresh +
 [`GetUetTagAuthKey`](https://learn.microsoft.com/en-us/advertising/campaign-management-service/getuettagauthkey?view=bingads-13)
@@ -173,7 +163,7 @@ Ads API og erstatter ikke UET tag ApiToken på `capi.uet.microsoft.com`.
 Standard GTM-script er direkte sGTM-loader:
 `https://cloud.server.utekos.no/gtm.js?id=GTM-5TWMJQFP`.
 
-En tidligere Usercentrics Resilient Script Loader fortsatte å servere webcontainer-versjon `98` etter at
+En tidligere resilient GTM-loader fortsatte å servere webcontainer-versjon `98` etter at
 versjon `99` var publisert. `NEXT_PUBLIC_GTM_RESILIENT_SCRIPT_URL` skal derfor være unset. En resilient
 override kan bare aktiveres etter at en ny URL er generert og verifisert mot gjeldende publiserte
 webcontainer-versjon.
@@ -182,21 +172,18 @@ Aktiver `GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm` først etter vellykket GTM Web + s
 
 Lokal smoke: sett `NEXT_PUBLIC_ENABLE_GTM_IN_DEV=1` (ikke i produksjon uten behov).
 
-## Manuell ekstern konfigurasjon (GTM + Usercentrics Admin)
+## Manuell ekstern konfigurasjon (GTM + Cookiebot Admin)
 
-### Usercentrics Admin
+### Cookiebot Admin
 
-- [x] Publiser ruleset/settings `9suQr3rGddL3Tb`
-- [x] Legg til Google Analytics, Google Ads og Facebook Pixel
-- [x] Klassifiser Microsoft Clarity som `Statistikk`
-- [x] Fjern `PostHog.com` og duplisert egendefinert PostHog; behold én `PostHog` som `Statistikk`
-- [x] Synkroniser publiserte DPS-navn med `NEXT_PUBLIC_USERCENTRICS_*_SERVICE_NAME`
-- [x] Verifiser publisert tjenestekart og bannerkonfigurasjon
-- [x] Deaktiver gammel Resilient Script Loader som serverte webcontainer-versjon `98`
+- [x] Domain group `f2145160-1ac5-4859-8385-36dc6327495f` aktiv
+- [ ] Scanner må klassifisere alle aktive trackers (Meta, Clarity, UET, PostHog, osv.)
+- [ ] Synkroniser publiserte tjenestenavn med `cookiebotConfig.ts`
+- [ ] Verifiser banner, godta, avslå og tilbaketrekking på `utekos.no` etter deploy
 
 ### GTM Server container
 
-- [x] Behold Usercentrics consent-signals-client
+- [x] sGTM endepunkter verifisert på `cloud.server.utekos.no`
 - [x] Fjern duplisert GA4-client og feilkonfigurert server-tag
 - [x] Aktiver gtag/dependency-serving i kanonisk GA4-client og map `G-FCES3L0M9M`
 - [x] Publiser server-versjon `17`
@@ -235,7 +222,7 @@ Rollback-versjoner er web `98` og server `15`.
 
 - Verifiser på **https://utekos.no** (ikke googletagmanager.com): Tag Assistant Connected + GTM Preview
 - Standardstatus, godta, avslå og tilbaketrekking i Tag Assistant
-- `ucEvent`, `ucConsentAllowedDps` og sGTM Preview
+- `CookieConsent`, Cookiebot-events og sGTM Preview
 - Microsoft UET browser: `add_to_cart` og `purchase` skal gi 204-respons mot `ti=97247724` med `event_id`,
   `gv`, `gc`, `prodid`, `pagetype` og `msclkid` når Microsoft-samtykke foreligger.
 - Microsoft UET CAPI: `sendMicrosoftUetPurchase` skal ikke returnere
@@ -249,4 +236,4 @@ Rollback-versjoner er web `98` og server `15`.
   Browser business-events som `select_item`, `add_to_cart`, `begin_checkout`, `view_item`,
   `view_item_list`, `search` og `generate_lead` kan køes til GA4 Measurement Protocol når sGTM-eventtaggen
   ikke kan bevises å sende dem.
-- Ukjente tjenester i DPS-skanningen er klassifisert
+- Ukjente tjenester i Cookiebot-skanningen er klassifisert

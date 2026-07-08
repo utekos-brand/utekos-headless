@@ -1,5 +1,5 @@
 import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
-import { USERCENTRICS_MICROSOFT_SERVICE_NAME } from '@/components/cookie-consent/usercentricsConfig'
+import { COOKIEBOT_MICROSOFT_SERVICE_NAME } from '@/components/cookie-consent/cookiebotConfig'
 import { mapToCanonicalEventName } from '@/lib/tracking/events/mapToCanonicalEventName'
 import type { MetaEventData, MetaEventType } from 'types/tracking/meta/event'
 
@@ -167,7 +167,7 @@ export function setMicrosoftUetUserData({
   phone
 }: MicrosoftUetUserData): void {
   if (typeof window === 'undefined') return
-  if (!hasServiceConsent(USERCENTRICS_MICROSOFT_SERVICE_NAME)) return
+  if (!hasServiceConsent(COOKIEBOT_MICROSOFT_SERVICE_NAME)) return
   if (!email && !phone) return
 
   getMicrosoftUetQueue().push('set', {
@@ -191,7 +191,7 @@ export function trackMicrosoftUetEvent({
   eventId
 }: TrackMicrosoftUetEventOptions): void {
   if (typeof window === 'undefined') return
-  if (!hasServiceConsent(USERCENTRICS_MICROSOFT_SERVICE_NAME)) return
+  if (!hasServiceConsent(COOKIEBOT_MICROSOFT_SERVICE_NAME)) return
 
   const eventAction = eventName ?? action
   if (!eventAction) return

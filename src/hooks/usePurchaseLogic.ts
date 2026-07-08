@@ -13,7 +13,7 @@ import { getClientMetaUserData } from '@/lib/tracking/meta/utils/getClientMetaUs
 import { hasCategoryConsent } from '@/lib/tracking/consent/hasCategoryConsent'
 import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
-import { USERCENTRICS_META_SERVICE_NAME } from '@/components/cookie-consent/usercentricsConfig'
+import { COOKIEBOT_META_SERVICE_NAME } from '@/components/cookie-consent/cookiebotConfig'
 import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { getVariants } from '@/app/skreddersy-varmen/utekos-orginal/utils/getVariants'
 import { getSelectableSizes, PRODUCT_VARIANTS } from '@/api/constants'
@@ -236,7 +236,7 @@ export function usePurchaseLogic({ products }: UsePurchaseLogicProps) {
       const value = (Number.parseFloat(selectedVariant.price.amount) || 0) * quantity
       const currency = selectedVariant.price.currencyCode
       const userData: MetaUserData | undefined =
-        hasServiceConsent(USERCENTRICS_META_SERVICE_NAME) ? getClientMetaUserData() : undefined
+        hasServiceConsent(COOKIEBOT_META_SERVICE_NAME) ? getClientMetaUserData() : undefined
 
       if (hasCategoryConsent('marketing')) {
         const captureBody: CaptureBody = {

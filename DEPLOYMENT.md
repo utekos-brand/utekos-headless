@@ -49,7 +49,7 @@ Run these before deciding the release order:
 | --- | --- | --- | --- |
 | Supabase schema read/write from runtime | Apply required migration to `hkoawfbomhnzupcsdggb`; verify schema dump contains new objects. | Vercel after Supabase. | `db lint`, schema dump grep, targeted runtime smoke. |
 | Tracking runtime writes to `ops.provider_dispatch_attempts` | Ensure required columns, constraints, statuses, and views exist. | Vercel after Supabase. | Provider rows, skip classification, dead-letter summary. |
-| PostHog client/runtime tracking | Ensure Usercentrics service name and env vars are present. | Vercel. | Consent-gated init, no autocapture drift, masked replay, safe events only. |
+| PostHog client/runtime tracking | Ensure Cookiebot statistics consent is mapped and env vars are present. | Vercel. | Consent-gated init, no autocapture drift, masked replay, safe events only. |
 | Google/Meta/Microsoft provider diagnostics | Configure local/provider credentials outside generated files. | Usually no Vercel deploy unless runtime changed. | Read-only probes and provider dashboard/API status. |
 | MCP server/template changes | Update committed templates, then regenerate generated files locally. | No app deploy unless app runtime changed. | `mcp:build`, `mcp:doctor`, relevant MCP doctor. |
 | GTM or sGTM behavior | Verify current docs, container IDs, workspace state, and consent model. | GTM publish only with explicit approval; Vercel if app loader changed. | GTM Preview, sGTM endpoints, production tracking smoke. |
@@ -125,6 +125,31 @@ deployed until production has:
 Use this gate for any Next.js runtime, route, action, tracking client,
 server tracking, env, or build-affecting change.
 
+### Cookiebot and sGTM env (Preview + Production)
+
+Set these in Vercel before or with the Cookiebot deploy. Remove legacy
+Usercentrics keys after verification.
+
+| Key | Required | Canonical value | Notes |
+| --- | --- | --- | --- |
+| `NEXT_PUBLIC_TRACKING_SGTM_ORIGIN` | Recommended | `https://cloud.server.utekos.no` | First-party sGTM origin for GTM loader and noscript. Hostname-only `cloud.server.utekos.no` is accepted and normalized to `https://` at runtime. No trailing slash. |
+| `NEXT_PUBLIC_GOOGLE_GTM_ID` | Yes | `GTM-5TWMJQFP` | Web container loaded from sGTM origin. |
+| `NEXT_PUBLIC_COOKIEBOT_DOMAIN_GROUP_ID` | Optional | `f2145160-1ac5-4859-8385-36dc6327495f` | Defaults in code when unset. |
+| `GOOGLE_BROWSER_EVENT_TRANSPORT` | Prod | `sgtm` | Only after sGTM + GTM Preview + production smoke pass. |
+| `NEXT_PUBLIC_ENABLE_GTM_IN_DEV` | Local only | `1` | For local `tracking:smoke`; do not set in Production. |
+
+Remove after migration:
+
+- `NEXT_PUBLIC_USERCENTRICS_SGTM_ORIGIN`
+- `NEXT_PUBLIC_USERCENTRICS_SETTINGS_ID`
+- `NEXT_PUBLIC_USERCENTRICS_*_SERVICE_NAME`
+
+Redeploy Vercel after any env change. Verify with:
+
+```bash
+TRACKING_SMOKE_BASE_URL=https://utekos.no npm run tracking:smoke
+```
+
 Required sequence:
 
 1. Confirm project link with `.vercel/project.json` or `.vercel/repo.json`.
@@ -146,7 +171,7 @@ provider OK without provider-specific proof.
 
 | Surface | Required proof |
 | --- | --- |
-| Consent | Usercentrics state, accept/deny/withdraw behavior, no optional providers before consent. |
+| Consent | Cookiebot state, accept/deny/withdraw behavior, default-denied Consent Mode, and no optional provider identifiers before consent. |
 | Google | dataLayer/sGTM evidence, GA4/Ads status as applicable, no native Ads double count. |
 | Meta | Pixel browser evidence, CAPI/provider row, Dataset Quality read-only probe when credentials permit. |
 | Microsoft UET | Browser network or queue evidence, UET CAPI purchase row/status for purchase flows. |
