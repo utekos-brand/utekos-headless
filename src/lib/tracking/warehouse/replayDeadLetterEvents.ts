@@ -10,6 +10,9 @@ export async function replayDeadLetterEvents() {
   let alreadySucceeded = 0
   let attemptNotFound = 0
   let invalidMetadata = 0
+  let invalidPayload = 0
+  let outsideProviderReplayWindow = 0
+  let requiresAttributionRepair = 0
   let unsupportedSource = 0
   let processingFailed = 0
   let claimed = 0
@@ -28,6 +31,9 @@ export async function replayDeadLetterEvents() {
         alreadySucceeded,
         attemptNotFound,
         invalidMetadata,
+        invalidPayload,
+        outsideProviderReplayWindow,
+        requiresAttributionRepair,
         unsupportedSource,
         processingFailed,
         dispatch: null,
@@ -45,6 +51,9 @@ export async function replayDeadLetterEvents() {
     if (outcome === 'already_succeeded') alreadySucceeded += 1
     if (outcome === 'attempt_not_found') attemptNotFound += 1
     if (outcome === 'invalid_metadata') invalidMetadata += 1
+    if (outcome === 'invalid_payload') invalidPayload += 1
+    if (outcome === 'outside_provider_replay_window') outsideProviderReplayWindow += 1
+    if (outcome === 'requires_attribution_repair') requiresAttributionRepair += 1
     if (outcome === 'unsupported_source') unsupportedSource += 1
     if (outcome === 'processing_failed') processingFailed += 1
   }
@@ -72,6 +81,9 @@ export async function replayDeadLetterEvents() {
     alreadySucceeded,
     attemptNotFound,
     invalidMetadata,
+    invalidPayload,
+    outsideProviderReplayWindow,
+    requiresAttributionRepair,
     unsupportedSource,
     processingFailed,
     dispatch

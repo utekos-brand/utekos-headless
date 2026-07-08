@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { sendGA4Event } from '@/lib/tracking/server/sendGA4Events'
 import type { CurrencyCode } from 'types/commerce/CurrencyCode'
 import { parseClientIdFromGaCookie } from './parseClientIdFromGaCookie'
+import { toNumericGaSessionId } from './toNumericGaSessionId'
 
 export type AnalyticsItem = {
   item_id: string
@@ -102,41 +103,6 @@ export type TrackServerEventResult =
 const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 const GA_API_SECRET = process.env.GA_API_SECRET
 
-function toNumericSessionId(input?: string): number | undefined {
-  if (!input) return undefined
-
-  const raw = String(input).trim()
-  if (!raw) return undefined
-
-  const direct = Number(raw)
-  if (Number.isFinite(direct)) {
-    return direct
-  }
-
-  const normalized = raw.replace(/^GS\d+\.\d+\./, '')
-  const tokens = normalized.split(/[.$]/)
-
-  for (const token of tokens) {
-    const match = token.match(/^s?(\d{6,})$/)
-    if (match?.[1]) {
-      const parsed = Number(match[1])
-      if (Number.isFinite(parsed)) {
-        return parsed
-      }
-    }
-  }
-
-  const embedded = normalized.match(/(?:^|[.$])s?(\d{6,})/)
-  if (embedded?.[1]) {
-    const parsed = Number(embedded[1])
-    if (Number.isFinite(parsed)) {
-      return parsed
-    }
-  }
-
-  return undefined
-}
-
 function toGaUserProperties(
   userProperties?: Record<string, unknown>
 ): Record<string, { value: string | number | boolean }> | undefined {
@@ -230,7 +196,7 @@ export async function trackServerEvent(
   }
 
   let clientId = overrides?.clientId
-  let sessionId = toNumericSessionId(overrides?.sessionId)
+  let sessionId = toNumericGaSessionId(overrides?.sessionId)
 
   try {
     const cookieStore = await cookies()
@@ -241,7 +207,7 @@ export async function trackServerEvent(
 
     if (sessionId === undefined) {
       const containerId = GA_MEASUREMENT_ID.replace(/^G-/, '')
-      sessionId = toNumericSessionId(cookieStore.get(`_ga_${containerId}`)?.value)
+      sessionId = toNumericGaSessionId(cookieStore.get(`_ga_${containerId}`)?.value)
     }
   } catch {
     // Background workers and webhook execution do not have a request cookie context.

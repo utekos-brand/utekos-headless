@@ -1,4 +1,5 @@
 import { getBrowserCookie } from './getBrowserCookie'
+import { toNumericGaSessionIdString } from './toNumericGaSessionId'
 
 export function getGaSessionIdFromBrowser(): string | undefined {
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.replace('G-', '')
@@ -13,7 +14,5 @@ export function getGaSessionIdFromBrowser(): string | undefined {
     return undefined
   }
 
-  const parts = sessionCookie.split('.')
-
-  return parts.length >= 3 ? parts[2] : undefined
+  return toNumericGaSessionIdString(sessionCookie)
 }

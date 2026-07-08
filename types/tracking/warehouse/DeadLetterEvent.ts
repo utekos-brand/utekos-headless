@@ -16,5 +16,8 @@ export type DeadLetterRequeueOutcome =
   | 'already_succeeded'
   | 'attempt_not_found'
   | 'invalid_metadata'
+  | 'invalid_payload'
+  | 'outside_provider_replay_window'
+  | 'requires_attribution_repair'
   | 'unsupported_source'
   | 'processing_failed'

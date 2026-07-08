@@ -8,6 +8,22 @@ import { trackServerEvent } from './trackingServerEvent'
 import type { MetaEventPayload } from 'types/tracking/meta'
 import type { GoogleBrowserEventResult } from 'types/tracking/event'
 
+function stringifyFailureDetails(details: unknown): string | undefined {
+  if (details === undefined || details === null) {
+    return undefined
+  }
+
+  if (typeof details === 'string') {
+    return details.slice(0, 500)
+  }
+
+  try {
+    return JSON.stringify(details).slice(0, 500)
+  } catch {
+    return 'unserializable_details'
+  }
+}
+
 export async function sendGA4BrowserEvent(
   payload: MetaEventPayload,
   userContext: { clientIp?: string | undefined; userAgent?: string | undefined }
@@ -58,10 +74,17 @@ export async function sendGA4BrowserEvent(
   )
 
   if (!result.ok) {
+    const details = stringifyFailureDetails(result.details)
+    const error = [
+      result.reason,
+      result.status !== undefined ? `status=${result.status}` : null,
+      details ? `details=${details}` : null
+    ].filter(Boolean).join(' | ')
+
     return {
       success: false,
       provider: 'google',
-      error: result.reason,
+      error,
       ...(result.details !== undefined ? { details: result.details } : {})
     }
   }

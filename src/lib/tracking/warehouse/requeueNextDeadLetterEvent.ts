@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { deadLetterEventMetadataSchema } from '@/lib/tracking/warehouse/deadLetterEventMetadataSchema'
+import { getDeadLetterReplayBlock } from '@/lib/tracking/warehouse/deadLetterReplayEligibility'
 import { parseDeadLetterProvider } from '@/lib/tracking/warehouse/parseDeadLetterProvider'
 import { DEAD_LETTER_REPLAY_ACTOR } from '@/lib/tracking/warehouse/deadLetterReplayActor'
 import { getTrackingWarehouse } from '@/lib/tracking/warehouse/getTrackingWarehouse'
@@ -19,6 +20,8 @@ export async function requeueNextDeadLetterEvent(): Promise<DeadLetterRequeueOut
         select
           id,
           source,
+          reason,
+          created_at,
           metadata
         from ops.dead_letter_events
         where resolved_at is null
@@ -36,6 +39,7 @@ export async function requeueNextDeadLetterEvent(): Promise<DeadLetterRequeueOut
 
       const deadLetterId = String(deadLetter.id)
       const source = String(deadLetter.source)
+      const reason = String(deadLetter.reason ?? '')
       const provider = parseDeadLetterProvider(source)
 
       if (!provider) {
@@ -69,6 +73,89 @@ export async function requeueNextDeadLetterEvent(): Promise<DeadLetterRequeueOut
       }
 
       const attemptId = parsedMetadata.data.providerDispatchAttemptId
+      const attemptRows = await transaction`
+        select
+          status,
+          dispatch_mode,
+          skip_reason,
+          created_at
+        from ops.provider_dispatch_attempts
+        where id = ${attemptId}
+          and provider = ${provider}
+        limit 1
+      `
+
+      const attempt = attemptRows[0]
+
+      if (!attempt) {
+        await transaction`
+          update ops.dead_letter_events
+          set
+            resolution_code = 'attempt_not_found',
+            resolution_note = ${`Missing provider dispatch attempt ${attemptId}`},
+            resolved_by = ${DEAD_LETTER_REPLAY_ACTOR},
+            resolved_at = now()
+          where id = ${deadLetterId}
+            and resolved_at is null
+        `
+        return 'attempt_not_found' as const
+      }
+
+      const replayBlock = getDeadLetterReplayBlock({
+        provider,
+        reason,
+        skipReason: attempt.skip_reason === null ? null : String(attempt.skip_reason),
+        deadLetterCreatedAt: deadLetter.created_at instanceof Date ?
+          deadLetter.created_at
+        : String(deadLetter.created_at),
+        attemptCreatedAt: attempt.created_at instanceof Date ? attempt.created_at : String(attempt.created_at)
+      })
+
+      if (replayBlock) {
+        await transaction`
+          update ops.dead_letter_events
+          set
+            resolution_code = ${replayBlock.code},
+            resolution_note = ${replayBlock.note},
+            resolved_by = ${DEAD_LETTER_REPLAY_ACTOR},
+            resolved_at = now()
+          where id = ${deadLetterId}
+            and resolved_at is null
+        `
+        return replayBlock.code
+      }
+
+      const attemptStatus = String(attempt.status ?? '')
+      const dispatchMode = String(attempt.dispatch_mode ?? '')
+
+      if (attemptStatus === 'succeeded') {
+        await transaction`
+          update ops.dead_letter_events
+          set
+            resolution_code = 'already_succeeded',
+            resolution_note = ${`Provider dispatch attempt ${attemptId} is succeeded`},
+            resolved_by = ${DEAD_LETTER_REPLAY_ACTOR},
+            resolved_at = now()
+          where id = ${deadLetterId}
+            and resolved_at is null
+        `
+        return 'already_succeeded' as const
+      }
+
+      if (dispatchMode !== 'server_retry' || attemptStatus !== 'dead_lettered') {
+        await transaction`
+          update ops.dead_letter_events
+          set
+            resolution_code = 'attempt_not_found',
+            resolution_note = ${`Provider dispatch attempt ${attemptId} is ${attemptStatus || 'unknown'} with dispatch_mode ${dispatchMode || 'unknown'}`},
+            resolved_by = ${DEAD_LETTER_REPLAY_ACTOR},
+            resolved_at = now()
+          where id = ${deadLetterId}
+            and resolved_at is null
+        `
+        return 'attempt_not_found' as const
+      }
+
       const requeuedRows = await transaction`
         update ops.provider_dispatch_attempts
         set
@@ -98,38 +185,6 @@ export async function requeueNextDeadLetterEvent(): Promise<DeadLetterRequeueOut
             and resolved_at is null
         `
         return 'requeued' as const
-      }
-
-      const attemptRows = await transaction`
-        select status
-        from ops.provider_dispatch_attempts
-        where id = ${attemptId}
-          and provider = ${provider}
-        limit 1
-      `
-
-      const resolutionCode =
-        attemptRows.length === 0 ? 'attempt_not_found'
-        : String(attemptRows[0]?.status ?? '') === 'succeeded' ? 'already_succeeded'
-        : 'attempt_not_found'
-      const resolutionNote =
-        attemptRows.length === 0
-          ? `Missing provider dispatch attempt ${attemptId}`
-          : `Provider dispatch attempt ${attemptId} is ${String(attemptRows[0]?.status ?? 'unknown')}`
-
-      await transaction`
-        update ops.dead_letter_events
-        set
-          resolution_code = ${resolutionCode},
-          resolution_note = ${resolutionNote.slice(0, 4000)},
-          resolved_by = ${DEAD_LETTER_REPLAY_ACTOR},
-          resolved_at = now()
-        where id = ${deadLetterId}
-          and resolved_at is null
-      `
-
-      if (resolutionCode === 'already_succeeded') {
-        return 'already_succeeded' as const
       }
 
       return 'attempt_not_found' as const

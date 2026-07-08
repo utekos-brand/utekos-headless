@@ -14,6 +14,12 @@ const DEFAULT_LIMIT = 100
 const SUPPORTED_REPLAY_PROVIDERS = new Set(['meta', 'google', 'microsoft_uet'])
 const TRACKING_SOURCE_PREFIX = 'tracking:'
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+const HOUR_MS = 60 * 60 * 1000
+const PROVIDER_REPLAY_WINDOW_MS = {
+  google: 72 * HOUR_MS,
+  meta: 7 * 24 * HOUR_MS,
+  microsoft_uet: 7 * 24 * HOUR_MS
+}
 
 const deadLetterReplayRowSchema = z.object({
   id: z.string().min(1),
@@ -82,7 +88,39 @@ function hasMissingClientIdReason(reason, skipReason) {
   return normalized.includes('missing_client_id') || normalized.includes('missing client_id')
 }
 
-function classifyReplayRow(row) {
+function hasInvalidQueuedPayloadReason(reason) {
+  return String(reason ?? '').toLowerCase().includes('invalid queued tracking payload')
+}
+
+function toTime(value) {
+  if (value instanceof Date) {
+    const time = value.getTime()
+    return Number.isFinite(time) ? time : null
+  }
+
+  if (typeof value === 'string' && value.trim() !== '') {
+    const time = new Date(value).getTime()
+    return Number.isFinite(time) ? time : null
+  }
+
+  return null
+}
+
+function isOutsideProviderReplayWindow(provider, createdAt, generatedAt) {
+  const replayWindowMs = PROVIDER_REPLAY_WINDOW_MS[provider]
+  if (!replayWindowMs) {
+    return false
+  }
+
+  const createdTime = toTime(createdAt)
+  if (createdTime === null) {
+    return false
+  }
+
+  return generatedAt.getTime() - createdTime > replayWindowMs
+}
+
+function classifyReplayRow(row, generatedAt = new Date()) {
   const parsed = deadLetterReplayRowSchema.parse(row)
   const source = parsed.source
   const provider = getReplayProvider(source)
@@ -164,6 +202,24 @@ function classifyReplayRow(row) {
     }
   }
 
+  if (hasInvalidQueuedPayloadReason(parsed.reason)) {
+    return {
+      ...base,
+      eligible: false,
+      classification: 'invalid_payload',
+      requiredAction: 'Do not replay invalid queued payload rows; repair the tracking payload contract first.'
+    }
+  }
+
+  if (isOutsideProviderReplayWindow(provider, parsed.created_at, generatedAt)) {
+    return {
+      ...base,
+      eligible: false,
+      classification: 'outside_provider_replay_window',
+      requiredAction: `${provider} replay window has expired; do not send stale provider events.`
+    }
+  }
+
   if (dispatchMode !== 'server_retry') {
     return {
       ...base,
@@ -210,7 +266,8 @@ function normalizeSummaryRows(summaryRows) {
 
 export function buildReplayPlan(deadLetterRows, summaryRows = [], options = {}) {
   const generatedAt = options.generatedAt ?? new Date().toISOString()
-  const items = deadLetterRows.map(classifyReplayRow)
+  const generatedAtDate = new Date(generatedAt)
+  const items = deadLetterRows.map(row => classifyReplayRow(row, generatedAtDate))
   const eligibleCount = items.filter(item => item.eligible).length
 
   return {

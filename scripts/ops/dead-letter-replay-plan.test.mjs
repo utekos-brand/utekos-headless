@@ -56,6 +56,39 @@ test('buildReplayPlan blocks Google missing client_id rows from replay', () => {
   assert.match(plan.items[0].requiredAction, /Do not replay missing client_id rows/)
 })
 
+test('buildReplayPlan blocks invalid payload rows from replay', () => {
+  const plan = buildReplayPlan([
+    createDeadLetterRow({
+      reason: 'Invalid queued tracking payload: []'
+    })
+  ])
+
+  assert.equal(plan.totals.eligibleRequeue, 0)
+  assert.equal(plan.items[0].classification, 'invalid_payload')
+})
+
+test('buildReplayPlan blocks stale rows outside provider replay windows', () => {
+  const plan = buildReplayPlan([
+    createDeadLetterRow({
+      source: 'tracking:google',
+      provider: 'google',
+      reason: 'ga_error',
+      created_at: '2026-07-04T12:00:00.000Z'
+    }),
+    createDeadLetterRow({
+      source: 'tracking:meta',
+      provider: 'meta',
+      reason: 'temporary provider timeout',
+      created_at: '2026-06-29T12:00:00.000Z'
+    })
+  ], [], {
+    generatedAt: '2026-07-08T12:00:00.000Z'
+  })
+
+  assert.equal(plan.totals.eligibleRequeue, 0)
+  assert.equal(plan.classifications.outside_provider_replay_window, 2)
+})
+
 test('buildReplayPlan rejects unsupported sources and invalid metadata', () => {
   const plan = buildReplayPlan([
     createDeadLetterRow({
