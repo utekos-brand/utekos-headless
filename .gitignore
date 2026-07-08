@@ -206,6 +206,7 @@ docs/
 /.env.tunnel.example
 
 # accidental local SDK / tooling trees
+merchant-api-samples/
 gcloud components install alpha beta skaffold minikube kubectl gke-gcloud-auth-plugin/
 /output/
 .playwright-cli/
