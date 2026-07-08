@@ -162,30 +162,6 @@ trackingendringer og providerendringer.
 - Flytt eller unignore de nye Meta/Microsoft runbookene dersom de
   skal være en del av tracked repo-dokumentasjon.
 
-## Shadcn MCP og cardproduction
-
-Dato: 2026-06-18
-
-- `utekos-shadcn-context` er utvidet som read-only MCP-overflate
-  for den konkrete cardproduction-flaten:
-  `src/components/cards/*`,
-  `src/app/inspirasjon/cardproduction/*`,
-  `src/app/inspirasjon/components/cards/*` og
-  `src/app/inspirasjon/components/items/*`, i tillegg til
-  `scripts/shadcn/academy/*`, `components.json`,
-  `src/globals.css` og `src/components/ui/*`.
-- Shadcn ChatGPT tunnelprofilen `utekos-chatgpt-shadcn` er
-  initialisert lokalt og `npm run mcp:tunnel:doctor:shadcn`
-  passerer. `npm run mcp:chatgpt:doctor` bekrefter
-  shadcn-profilen, men samlet doctor feiler fortsatt når Docker
-  Desktop ikke kjører fordi `live_ops`-profilen krever Docker.
-- `src/app/inspirasjon/cardproduction/layout.tsx` skal kun være
-  layout-wrapper. Synlig card-production-innhold ligger i
-  `page.tsx` og `CardShowCase.tsx`.
-- Cardproduction-fargenotat følger Canva-palettsporet: dyp
-  maritim base, varm plomme/ganache-kontrast og naturkomplement i
-  oliven-/skogfamilien, implementert med eksisterende
-  OKLCH-tokens fremfor inline fargeverdier.
 
 ## Cloud Run sGTM-hosting
 
@@ -339,9 +315,10 @@ Gjeldende status etter 2026-07-07-herdingen står i
   `ecomm_pagetype`.
 - Shopify `orders-paid` kan sende Microsoft purchase via UET
   Conversions API når
-  `MICROSOFT_UET_CAPI_TOKEN`/`UTEKOS_MICROSOFT_UET_CAPI_TOKEN`
-  finnes og checkout-attribusjonen inneholder `msclkid`.
-  `MICROSOFT_ADS_DEVELOPER_TOKEN` er ikke brukt som CAPI-token.
+  `MICROSOFT_UET_CAPI_TOKEN`/`UTEKOS_MICROSOFT_UET_CAPI_TOKEN`/`MICROSOFT_UET_CAPI_ACCESS_TOKEN`
+  (UET tag ApiToken per Microsoft Conversions API docs) finnes og
+  checkout-attribusjonen inneholder `msclkid`.
+  `MICROSOFT_ADS_ACCESS_TOKEN` er OAuth Ads API, ikke UET tag ApiToken.
 - Shopify product create/update/delete webhooks invalidierer
   `products`, `product-{handle}` og `related-products-{handle}`
   med `revalidateTag(tag, { expire: 0 })`.

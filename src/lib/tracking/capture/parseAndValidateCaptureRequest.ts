@@ -1,12 +1,12 @@
 // Path: src/lib/tracking/capture/parseAndValidateCaptureRequest.ts
 
 import { NextResponse } from 'next/server'
-import { getStorageKey } from '@/lib/utils/getStorageKey'
+import { getStorageKeys } from '@/lib/utils/getStorageKey'
 import type { NextRequest } from 'next/server'
 import type { CaptureBody } from 'types/tracking/meta'
 
 type ValidationResult =
-  | { success: true; body: CaptureBody; token: string }
+  | { success: true; body: CaptureBody; token: string; tokens: string[] }
   | { success: false; errorResponse: NextResponse }
 
 export async function parseAndValidateCaptureRequest(
@@ -25,8 +25,8 @@ export async function parseAndValidateCaptureRequest(
     }
   }
 
-  const token = getStorageKey(body)
-  if (!token) {
+  const tokens = getStorageKeys(body)
+  if (tokens.length === 0) {
     return {
       success: false,
       errorResponse: NextResponse.json(
@@ -36,5 +36,5 @@ export async function parseAndValidateCaptureRequest(
     }
   }
 
-  return { success: true, body, token }
+  return { success: true, body, token: tokens[0]!, tokens }
 }

@@ -204,3 +204,10 @@ docs/
 /.env.mcp.example
 .env.tunnel.example
 /.env.tunnel.example
+
+# accidental local SDK / tooling trees
+gcloud components install alpha beta skaffold minikube kubectl gke-gcloud-auth-plugin/
+/output/
+.playwright-cli/
+.vc-config.json
+/types/codex-log.md

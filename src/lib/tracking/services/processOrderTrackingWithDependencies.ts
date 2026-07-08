@@ -6,8 +6,24 @@ import type { MetaEventPayload } from 'types/tracking/meta'
 import type { ProviderDispatchAttemptInput } from 'types/tracking/event'
 import type { GooglePurchaseDispatchResult } from '@/lib/tracking/google/sendGooglePurchase'
 import type { MicrosoftUetPurchaseDispatchResult } from '@/lib/tracking/microsoft-uet/sendMicrosoftUetPurchase'
+import { shouldEnqueueMicrosoftUetRetry } from '@/lib/tracking/microsoft-uet/shouldEnqueueMicrosoftUetRetry'
 import { createTrackingContext } from '@/lib/tracking/utils/createTrackingContext'
 import { buildOrderPurchaseTrackingPayload } from '@/lib/tracking/orders/buildOrderPurchaseTrackingPayload'
+import { enqueueMicrosoftUetRetryDispatch } from '@/lib/tracking/warehouse/enqueueMicrosoftUetRetryDispatch'
+
+type MetaPurchaseDispatchResult =
+  | {
+      success: true
+      events_received?: number | undefined
+      fbtrace_id?: string | undefined
+    }
+  | {
+      success: false
+      skipped?: boolean | undefined
+      reason?: string | undefined
+      error?: string | undefined
+      details?: unknown | undefined
+    }
 
 type TrackingConsent = {
   necessary: boolean
@@ -32,6 +48,7 @@ export type ProcessOrderTrackingDependencies = {
     consent: TrackingConsent,
     providers: readonly []
   ) => Promise<void>
+  sendMetaPurchase?: (context: TrackingContext) => Promise<MetaPurchaseDispatchResult>
   sendGooglePurchase: (context: TrackingContext) => Promise<GooglePurchaseDispatchResult>
   sendMicrosoftUetPurchase?: (
     payload: MetaEventPayload,
@@ -47,6 +64,10 @@ function getNoteAttribute(order: OrderPaid, name: string): string | undefined {
 
 function hasGoogleClientId(order: OrderPaid, attribution: CheckoutAttribution | null): boolean {
   return Boolean(attribution?.ga_client_id ?? getNoteAttribute(order, '_ga_client_id'))
+}
+
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error)
 }
 
 function getTokenPresence(value: string | null | undefined): 'present' | 'missing' {
@@ -72,9 +93,20 @@ export async function processOrderTrackingWithDependencies(
   const context = createTrackingContext(order, redisData)
   const payload = buildOrderPurchaseTrackingPayload(order, redisData)
   const hasClientId = hasGoogleClientId(order, redisData)
+  const metaDispatchPromise: Promise<MetaPurchaseDispatchResult | undefined> =
+    deps.sendMetaPurchase ?
+      redisData ?
+        deps.sendMetaPurchase(context)
+      : Promise.resolve<MetaPurchaseDispatchResult>({
+          success: false,
+          skipped: true,
+          reason: 'missing_attribution'
+        } satisfies MetaPurchaseDispatchResult)
+    : Promise.resolve(undefined)
 
-  const [ledgerSettled, googleSettled, microsoftSettled] = await Promise.allSettled([
+  const [ledgerSettled, metaSettled, googleSettled, microsoftSettled] = await Promise.allSettled([
     deps.persistAcceptedTrackingEvent(payload, getShopifyConsent(), []),
+    metaDispatchPromise,
     hasClientId ? deps.sendGooglePurchase(context) : Promise.resolve(undefined),
     deps.sendMicrosoftUetPurchase ?
       deps.sendMicrosoftUetPurchase(payload, redisData)
@@ -82,6 +114,14 @@ export async function processOrderTrackingWithDependencies(
   ])
 
   const ledgerOk = ledgerSettled.status === 'fulfilled'
+  const metaResult = metaSettled.status === 'fulfilled' ? metaSettled.value : undefined
+  const metaOk = metaResult?.success === true
+  const metaSkippedReason =
+    metaOk ? undefined
+    : metaSettled.status === 'rejected' ? getErrorMessage(metaSettled.reason)
+    : !deps.sendMetaPurchase ? 'not_configured'
+    : metaResult?.success === false ? metaResult.reason ?? metaResult.error ?? 'dispatch_failed'
+    : 'dispatch_failed'
   const googleResult = googleSettled.status === 'fulfilled' ? googleSettled.value : undefined
   const googleOk = googleResult?.success === true
   const googleSkippedReason =
@@ -112,6 +152,25 @@ export async function processOrderTrackingWithDependencies(
     )
   }
 
+  if (!metaOk && deps.sendMetaPurchase) {
+    await deps.logger(
+      metaResult?.success === false && metaResult.skipped === true ? 'WARN' : 'ERROR',
+      metaResult?.success === false && metaResult.skipped === true ?
+        'Meta Purchase Skipped'
+      : 'Meta Purchase Failed',
+      {
+        orderId: order.id,
+        reason: metaSkippedReason,
+        attributionFound: !!redisData,
+        hasFbp: !!context.customer.fbp,
+        hasFbc: !!context.customer.fbc,
+        hasCartToken: !!order.cart_token,
+        hasCheckoutToken: !!order.checkout_token
+      },
+      { source: 'orders-paid webhook' }
+    )
+  }
+
   if (!microsoftOk && deps.sendMicrosoftUetPurchase) {
     await deps.logger(
       microsoftResult?.success === false && microsoftResult.skipped ? 'WARN' : 'ERROR',
@@ -132,6 +191,22 @@ export async function processOrderTrackingWithDependencies(
 
   if (payload.eventId && payload.eventName && deps.recordProviderDispatchAttempt) {
     const auditWrites = [
+      deps.recordProviderDispatchAttempt({
+        eventId: payload.eventId,
+        eventName: payload.eventName,
+        provider: 'meta',
+        success: metaOk,
+        skipped:
+          !deps.sendMetaPurchase
+          || (metaResult?.success === false && metaResult.skipped === true),
+        skipReason:
+          !deps.sendMetaPurchase ? 'not_configured'
+          : metaResult?.success === false && metaResult.skipped === true ? metaSkippedReason
+          : undefined,
+        error: metaOk ? undefined : metaSkippedReason,
+        retryable: false,
+        dispatchMode: 'server_direct'
+      }),
       deps.recordProviderDispatchAttempt({
         eventId: payload.eventId,
         eventName: payload.eventName,
@@ -172,10 +247,34 @@ export async function processOrderTrackingWithDependencies(
         { source: 'orders-paid webhook' }
       )
     }
+
+    if (
+      redisData
+      && shouldEnqueueMicrosoftUetRetry(microsoftResult, microsoftSettled, redisData)
+      && payload.eventId
+      && payload.eventName
+    ) {
+      try {
+        await enqueueMicrosoftUetRetryDispatch(payload, redisData)
+      } catch (error) {
+        await deps.logger(
+          'ERROR',
+          'Microsoft UET retry enqueue failed',
+          {
+            orderId: order.id,
+            eventId: payload.eventId,
+            error: getErrorMessage(error)
+          },
+          { source: 'orders-paid webhook' }
+        )
+      }
+    }
   }
 
   const details = {
     orderId: order.id,
+    metaOk,
+    metaSkippedReason,
     googleOk,
     googleSkippedReason,
     microsoftOk,

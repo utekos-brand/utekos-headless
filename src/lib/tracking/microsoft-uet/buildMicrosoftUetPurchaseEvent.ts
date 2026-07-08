@@ -42,7 +42,7 @@ export const microsoftUetCapiPurchaseEventSchema = z
   .object({
     eventType: z.literal('custom'),
     eventId: z.string().min(1),
-    eventName: z.literal('purchase'),
+    eventName: z.literal('PRODUCT_PURCHASE'),
     eventTime: z.number().int().positive(),
     eventSourceUrl: z.string().url().optional(),
     adStorageConsent: z.literal('G'),
@@ -182,7 +182,7 @@ export function buildMicrosoftUetPurchaseEvent(
   return microsoftUetCapiPurchaseEventSchema.parse({
     eventType: 'custom',
     eventId: payload.eventId,
-    eventName: 'purchase',
+    eventName: 'PRODUCT_PURCHASE',
     eventTime: payload.eventTime ?? Math.floor(Date.now() / 1000),
     eventSourceUrl: payload.eventSourceUrl,
     adStorageConsent: 'G',

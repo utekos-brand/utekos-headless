@@ -1,4 +1,8 @@
-import type { CatalogSyncProduct, CatalogSyncVariant, CatalogSyncWeightUnit } from '@/lib/catalog-sync/types'
+import type {
+  CatalogSyncProduct,
+  CatalogSyncVariant,
+  CatalogSyncWeightUnit
+} from '@/lib/catalog-sync/types'
 import { isValidGtin } from '@/lib/gtin/isValidGtin'
 import { normalizeGtin } from '@/lib/gtin/normalizeGtin'
 import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
@@ -14,13 +18,16 @@ function stripHtml(value: string) {
     .replace(/<[^>]+>/g, ' ')
     .replace(/&nbsp;/gi, ' ')
     .replace(/&amp;/gi, '&')
-    .replace(/&#39;/gi, '\'')
+    .replace(/&#39;/gi, "'")
     .replace(/&quot;/gi, '"')
     .replace(/\s+/g, ' ')
     .trim()
 }
 
-function buildMerchantProductTitle(product: CatalogSyncProduct, variant: CatalogSyncVariant) {
+function buildMerchantProductTitle(
+  product: CatalogSyncProduct,
+  variant: CatalogSyncVariant
+) {
   if (variant.title === 'Default Title') {
     return product.title.trim()
   }
@@ -35,7 +42,10 @@ function buildMerchantProductTitle(product: CatalogSyncProduct, variant: Catalog
     : `${product.title.trim()} - ${variant.title.trim()}`
 }
 
-function buildMerchantProductLink(handle: string, variantId: string) {
+function buildMerchantProductLink(
+  handle: string,
+  variantId: string
+) {
   return `https://utekos.no/produkter/${handle}?variant=${encodeURIComponent(variantId)}`
 }
 
@@ -46,12 +56,16 @@ function buildMerchantBrand(product: CatalogSyncProduct) {
     return vendor
   }
 
-  const ownBrandSignals = [product.title, product.handle].some(signal => /^utekos\b/i.test(signal.trim()))
+  const ownBrandSignals = [product.title, product.handle].some(
+    signal => /^utekos\b/i.test(signal.trim())
+  )
 
   return ownBrandSignals ? 'Utekos' : undefined
 }
 
-function shouldUseSkuAsMerchantMpn(sku: string | null | undefined) {
+function shouldUseSkuAsMerchantMpn(
+  sku: string | null | undefined
+) {
   const normalizedSku = sku?.trim()
 
   if (!normalizedSku) {
@@ -84,20 +98,27 @@ function convertMoneyStringToMicros(value: string) {
     throw new Error(`Invalid money value "${value}"`)
   }
 
-  const [wholePart, fractionalPart = ''] = normalizedValue.split('.')
+  const [wholePart, fractionalPart = ''] =
+    normalizedValue.split('.')
   const micros = `${wholePart}${fractionalPart.padEnd(6, '0').slice(0, 6)}`
 
   return micros.replace(/^0+(?=\d)/, '')
 }
 
-function buildMerchantPrice(value: string, currencyCode: string) {
+function buildMerchantPrice(
+  value: string,
+  currencyCode: string
+) {
   return {
     amountMicros: convertMoneyStringToMicros(value),
     currencyCode
   }
 }
 
-function buildMerchantSalePrice(variant: CatalogSyncVariant, currencyCode: string) {
+function buildMerchantSalePrice(
+  variant: CatalogSyncVariant,
+  currencyCode: string
+) {
   const compareAtPrice = variant.compareAtPrice?.trim()
 
   if (!compareAtPrice) {
@@ -107,7 +128,10 @@ function buildMerchantSalePrice(variant: CatalogSyncVariant, currencyCode: strin
   const currentPrice = Number(variant.price)
   const originalPrice = Number(compareAtPrice)
 
-  if (!Number.isFinite(currentPrice) || !Number.isFinite(originalPrice)) {
+  if (
+    !Number.isFinite(currentPrice) ||
+    !Number.isFinite(originalPrice)
+  ) {
     return null
   }
 
@@ -116,23 +140,29 @@ function buildMerchantSalePrice(variant: CatalogSyncVariant, currencyCode: strin
   }
 
   return {
-    regularPrice: buildMerchantPrice(compareAtPrice, currencyCode),
+    regularPrice: buildMerchantPrice(
+      compareAtPrice,
+      currencyCode
+    ),
     salePrice: buildMerchantPrice(variant.price, currencyCode)
   }
 }
 
-function buildMerchantShippingWeight(weight: number | null, weightUnit: CatalogSyncWeightUnit) {
+function buildMerchantShippingWeight(
+  weight: number | null,
+  weightUnit: CatalogSyncWeightUnit
+) {
   if (!weight || !Number.isFinite(weight) || weight <= 0) {
     return undefined
   }
 
-  return {
-    value: Number(weight.toFixed(4)),
-    unit: weightUnit
-  }
+  return { value: Number(weight.toFixed(4)), unit: weightUnit }
 }
 
-function getSelectedOptionValue(variant: CatalogSyncVariant, names: string[]) {
+function getSelectedOptionValue(
+  variant: CatalogSyncVariant,
+  names: string[]
+) {
   const normalizedNames = names.map(name => name.toLowerCase())
   const option = variant.selectedOptions.find(item =>
     normalizedNames.includes(item.name.trim().toLowerCase())
@@ -159,7 +189,9 @@ function buildMerchantAdditionalImageLinks(
     })
     .slice(0, 10)
 
-  return additionalImageLinks.length > 0 ? additionalImageLinks : undefined
+  return additionalImageLinks.length > 0 ?
+      additionalImageLinks
+    : undefined
 }
 
 export function buildMerchantProductInput(
@@ -169,46 +201,56 @@ export function buildMerchantProductInput(
   const config = getMerchantCenterConfig()
   const offerId = cleanShopifyId(variant.id)
   const itemGroupId = cleanShopifyId(product.id)
-  const imageLink = variant.image?.url || product.featuredImage?.url
+  const imageLink =
+    variant.image?.url || product.featuredImage?.url
 
   if (!offerId) {
-    return {
-      ok: false,
-      reason: 'missing_offer_id'
-    }
+    return { ok: false, reason: 'missing_offer_id' }
   }
 
   if (!itemGroupId) {
-    return {
-      ok: false,
-      reason: 'missing_item_group_id'
-    }
+    return { ok: false, reason: 'missing_item_group_id' }
   }
 
   if (!imageLink) {
-    return {
-      ok: false,
-      reason: 'missing_image_link'
-    }
+    return { ok: false, reason: 'missing_image_link' }
   }
 
   if (!variant.price.trim()) {
-    return {
-      ok: false,
-      reason: 'missing_price'
-    }
+    return { ok: false, reason: 'missing_price' }
   }
 
   const normalizedGtin = normalizeGtin(variant.barcode)
-  const gtin = normalizedGtin && isValidGtin(normalizedGtin) ? normalizedGtin : undefined
-  const mpn = !gtin && shouldUseSkuAsMerchantMpn(variant.sku) ? variant.sku?.trim() : undefined
+  const gtin =
+    normalizedGtin && isValidGtin(normalizedGtin) ?
+      normalizedGtin
+    : undefined
+  const mpn =
+    !gtin && shouldUseSkuAsMerchantMpn(variant.sku) ?
+      variant.sku?.trim()
+    : undefined
   const brand = buildMerchantBrand(product)
-  const salePrice = buildMerchantSalePrice(variant, config.defaults.currencyCode)
-  const productLink = buildMerchantProductLink(product.handle, variant.id)
-  const additionalImageLinks = buildMerchantAdditionalImageLinks(product, imageLink)
+  const salePrice = buildMerchantSalePrice(
+    variant,
+    config.defaults.currencyCode
+  )
+  const productLink = buildMerchantProductLink(
+    product.handle,
+    variant.id
+  )
+  const additionalImageLinks = buildMerchantAdditionalImageLinks(
+    product,
+    imageLink
+  )
   const productType = product.productType?.trim()
-  const color = getSelectedOptionValue(variant, ['color', 'farge'])
-  const size = getSelectedOptionValue(variant, ['size', 'størrelse'])
+  const color = getSelectedOptionValue(variant, [
+    'color',
+    'farge'
+  ])
+  const size = getSelectedOptionValue(variant, [
+    'size',
+    'størrelse'
+  ])
   const productAttributes: Record<string, unknown> = {
     title: buildMerchantProductTitle(product, variant),
     description: stripHtml(product.descriptionHtml),
@@ -223,12 +265,20 @@ export function buildMerchantProductInput(
     productTypes: productType ? [productType] : undefined,
     color,
     size,
-    customLabel0: variant.customLabel0?.value?.trim() || undefined,
-    customLabel1: variant.customLabel1?.value?.trim() || undefined,
-    customLabel2: variant.customLabel2?.value?.trim() || undefined,
-    customLabel3: variant.customLabel3?.value?.trim() || undefined,
-    customLabel4: variant.customLabel4?.value?.trim() || undefined,
-    shippingWeight: buildMerchantShippingWeight(variant.weight, variant.weightUnit)
+    customLabel0:
+      variant.customLabel0?.value?.trim() || undefined,
+    customLabel1:
+      variant.customLabel1?.value?.trim() || undefined,
+    customLabel2:
+      variant.customLabel2?.value?.trim() || undefined,
+    customLabel3:
+      variant.customLabel3?.value?.trim() || undefined,
+    customLabel4:
+      variant.customLabel4?.value?.trim() || undefined,
+    shippingWeight: buildMerchantShippingWeight(
+      variant.weight,
+      variant.weightUnit
+    )
   }
 
   let identifierStrategy: MerchantProductIdentifierStrategy
@@ -237,7 +287,10 @@ export function buildMerchantProductInput(
     productAttributes.price = salePrice.regularPrice
     productAttributes.salePrice = salePrice.salePrice
   } else {
-    productAttributes.price = buildMerchantPrice(variant.price, config.defaults.currencyCode)
+    productAttributes.price = buildMerchantPrice(
+      variant.price,
+      config.defaults.currencyCode
+    )
   }
 
   if (brand) {

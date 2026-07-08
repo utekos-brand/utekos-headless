@@ -2,6 +2,7 @@ import 'server-only'
 
 import { getTrackingWarehouse } from '@/lib/tracking/warehouse/getTrackingWarehouse'
 import { providerDispatchQueueItemSchema } from '@/lib/tracking/warehouse/providerDispatchQueueItemSchema'
+import { SERVER_RETRY_PROVIDERS } from 'types/tracking/warehouse/ProviderDispatchQueueItem'
 import type { ProviderDispatchQueueItem } from 'types/tracking/warehouse/ProviderDispatchQueueItem'
 
 export async function claimProviderDispatchAttempts(
@@ -18,12 +19,12 @@ export async function claimProviderDispatchAttempts(
       select id
       from ops.provider_dispatch_attempts
       where (
-        provider in ('meta', 'google')
+        provider in ${sql(SERVER_RETRY_PROVIDERS)}
         and dispatch_mode = 'server_retry'
         and status in ('pending', 'retry_scheduled')
         and coalesce(next_attempt_at, created_at) <= now()
       ) or (
-        provider in ('meta', 'google')
+        provider in ${sql(SERVER_RETRY_PROVIDERS)}
         and dispatch_mode = 'server_retry'
         and status = 'processing'
         and updated_at <= now() - interval '10 minutes'

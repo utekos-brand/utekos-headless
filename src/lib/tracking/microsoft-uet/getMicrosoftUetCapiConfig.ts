@@ -2,6 +2,8 @@ import 'server-only'
 
 import { z } from 'zod'
 
+import { resolveMicrosoftUetCapiTokenFromEnv } from '@/lib/tracking/microsoft-uet/microsoftUetCapiTokenEnvKeys'
+
 const microsoftUetCapiConfigSchema = z
   .object({
     tagId: z.string().trim().regex(/^\d+$/),
@@ -18,9 +20,6 @@ export function getMicrosoftUetCapiConfig(): MicrosoftUetCapiConfig {
       ?? process.env.UTEKOS_MICROSOFT_TAG_ID
       ?? process.env.NEXT_PUBLIC_MICROSOFT_UET_TAG_ID
       ?? '97247724',
-    apiToken:
-      process.env.MICROSOFT_UET_CAPI_TOKEN
-      ?? process.env.UTEKOS_MICROSOFT_UET_CAPI_TOKEN
-      ?? process.env.MICROSOFT_ADS_UET_CAPI_TOKEN
+    apiToken: resolveMicrosoftUetCapiTokenFromEnv()
   })
 }

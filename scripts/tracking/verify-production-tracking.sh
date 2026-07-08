@@ -92,11 +92,9 @@ SMOKE_OUTPUT="$("$PWCLI" -s="$SESSION" run-code "async (page) => {
   const preConsentForbiddenRequests = requests.filter(url =>
     optionalRequestPatterns.some(pattern => url.includes(pattern))
   );
-  const googleTagStatuses = responses
-    .filter(response => response.url.includes('/gtag/js?id=' + canonicalGoogleTagId))
-    .map(response => response.status);
 
   const requestCountBeforeAccept = requests.length;
+  const responseCountBeforeAccept = responses.length;
   await smokePage.evaluate(async () => {
     await window.__ucCmp?.acceptAllConsents();
   });
@@ -106,12 +104,20 @@ SMOKE_OUTPUT="$("$PWCLI" -s="$SESSION" run-code "async (page) => {
     const dataLayer = Array.isArray(window.dataLayer) ? window.dataLayer : [];
     const consentEvents = dataLayer.filter(item => item && typeof item === 'object' && item.event === 'consent_status');
     const latestConsent = consentEvents.at(-1) || {};
+    const gtmScriptUrls = [...document.scripts]
+      .map(script => script.src)
+      .filter(src => src.includes('cloud.server.utekos.no'));
 
     return {
-      notGranted: required.filter(service => latestConsent[service] !== true)
+      notGranted: required.filter(service => latestConsent[service] !== true),
+      gtmScriptUrls
     };
   }, requiredServices);
   const acceptedRequests = requests.slice(requestCountBeforeAccept);
+  const acceptedResponses = responses.slice(responseCountBeforeAccept);
+  const googleTagStatuses = acceptedResponses
+    .filter(response => response.url.includes('/gtag/js?id=' + canonicalGoogleTagId))
+    .map(response => response.status);
 
   await smokePage.evaluate(async () => {
     await window.__ucCmp?.denyAllConsents();
@@ -134,13 +140,16 @@ SMOKE_OUTPUT="$("$PWCLI" -s="$SESSION" run-code "async (page) => {
   if (freshState.consentEventCount !== 1) failures.push('Expected exactly one initial consent_status event.');
   if (freshState.consentType !== 'IMPLICIT') failures.push('Fresh browser did not receive implicit initial consent.');
   if (freshState.gtmScriptUrls.some(url => url.includes('/u2/'))) failures.push('Stale Usercentrics resilient GTM loader is active.');
-  if (!freshState.gtmScriptUrls.some(url => url.includes('/gtm.js?id=GTM-5TWMJQFP'))) {
-    failures.push('Direct sGTM web-container loader is missing.');
+  if (freshState.gtmScriptUrls.some(url => url.includes('/gtm.js?id=GTM-5TWMJQFP'))) {
+    failures.push('sGTM web-container loader loaded before consent.');
   }
   if (freshState.missingServices.length > 0) failures.push('Required Usercentrics services are missing.');
   if (freshState.unexpectedlyGranted.length > 0) failures.push('Optional tracking services were implicitly granted.');
   if (preConsentForbiddenRequests.length > 0) failures.push('Optional vendor requests occurred before consent.');
-  if (!googleTagStatuses.includes(200)) failures.push('sGTM did not serve the canonical Google tag destination.');
+  if (!acceptedState.gtmScriptUrls.some(url => url.includes('/gtm.js?id=GTM-5TWMJQFP'))) {
+    failures.push('Direct sGTM web-container loader is missing after consent.');
+  }
+  if (!googleTagStatuses.includes(200)) failures.push('sGTM did not serve the canonical Google tag destination after consent.');
   if (acceptedState.notGranted.length > 0) failures.push('Accept all did not grant every required tracking service.');
   if (acceptedRequests.some(url => url.includes('www.google-analytics.com/g/collect'))) {
     failures.push('GA4 fell back to the direct Google Analytics collect endpoint after consent.');
@@ -153,6 +162,7 @@ SMOKE_OUTPUT="$("$PWCLI" -s="$SESSION" run-code "async (page) => {
     preConsentForbiddenRequests,
     canonicalGoogleTagId,
     googleTagStatuses,
+    acceptedGtmScriptUrls: acceptedState.gtmScriptUrls,
     acceptedState,
     withdrawnState,
     failures

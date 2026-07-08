@@ -37,7 +37,6 @@
         "shadcn@latest",
         "mcp"
       ]
-    }
   },
   "chrome-devtools": {
     "command": "npx",
@@ -65,5 +64,9 @@
   "langchain": {
     "type": "http",
     "url": "https://eu.api.smith.langchain.com/mcp"
+  },
+  "LangSmith": {
+    "url": "https://eu.api.smith.langchain.com/mcp"
   }
+}
 }

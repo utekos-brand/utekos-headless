@@ -62,6 +62,7 @@ test('persists a full purchase payload and dispatches Google when GA client id e
     ts: Date.now()
   }
   const persisted: Array<{ payload: unknown; providers: readonly string[] }> = []
+  const metaDispatches: unknown[] = []
   const googleDispatches: unknown[] = []
   const microsoftDispatches: unknown[] = []
   const providerAudits: ProviderDispatchAttemptInput[] = []
@@ -70,6 +71,14 @@ test('persists a full purchase payload and dispatches Google when GA client id e
     getRedisAttribution: async () => attribution,
     persistAcceptedTrackingEvent: async (payload, _consent, providers) => {
       persisted.push({ payload, providers })
+    },
+    sendMetaPurchase: async context => {
+      metaDispatches.push(context)
+      return {
+        success: true,
+        events_received: 1,
+        fbtrace_id: 'meta-trace'
+      }
     },
     sendGooglePurchase: async context => {
       googleDispatches.push(context)
@@ -91,7 +100,7 @@ test('persists a full purchase payload and dispatches Google when GA client id e
         tagId: '97247724',
         status: 200,
         eventId: payload.eventId ?? 'missing',
-        eventName: 'purchase',
+        eventName: 'PRODUCT_PURCHASE',
         itemCount: 1,
         value: 5980,
         currency: 'NOK'
@@ -105,6 +114,7 @@ test('persists a full purchase payload and dispatches Google when GA client id e
 
   assert.equal(result.success, true)
   assert.equal(persisted.length, 1)
+  assert.equal(metaDispatches.length, 1)
   assert.equal(googleDispatches.length, 1)
   assert.equal(microsoftDispatches.length, 1)
   assert.deepEqual(providerAudits.map(item => ({
@@ -113,6 +123,7 @@ test('persists a full purchase payload and dispatches Google when GA client id e
     skipped: item.skipped,
     dispatchMode: item.dispatchMode
   })), [
+    { provider: 'meta', success: true, skipped: false, dispatchMode: 'server_direct' },
     { provider: 'google', success: true, skipped: false, dispatchMode: 'server_direct' },
     { provider: 'microsoft_uet', success: true, skipped: false, dispatchMode: 'server_direct' }
   ])
@@ -120,6 +131,8 @@ test('persists a full purchase payload and dispatches Google when GA client id e
   assert.equal((persisted[0]?.payload as { eventData?: { transaction_id?: string } }).eventData?.transaction_id, '123456789')
   assert.deepEqual(result.details, {
     orderId: 123456789,
+    metaOk: true,
+    metaSkippedReason: undefined,
     googleOk: true,
     googleSkippedReason: undefined,
     microsoftOk: true,
@@ -141,6 +154,9 @@ test('persists purchase payload and logs skip when GA client id is missing', asy
     getRedisAttribution: async () => null,
     persistAcceptedTrackingEvent: async payload => {
       persisted.push(payload)
+    },
+    sendMetaPurchase: async () => {
+      throw new Error('Meta dispatch should not run without checkout attribution')
     },
     sendGooglePurchase: async () => {
       throw new Error('Google dispatch should not run without GA client id')
@@ -167,6 +183,13 @@ test('persists purchase payload and logs skip when GA client id is missing', asy
     dispatchMode: item.dispatchMode
   })), [
     {
+      provider: 'meta',
+      success: false,
+      skipped: true,
+      skipReason: 'missing_attribution',
+      dispatchMode: 'server_direct'
+    },
+    {
       provider: 'google',
       success: false,
       skipped: true,
@@ -182,8 +205,11 @@ test('persists purchase payload and logs skip when GA client id is missing', asy
     }
   ])
   assert.equal(logs.some(log => log.level === 'WARN' && log.message === 'GA4 Purchase Skipped'), true)
+  assert.equal(logs.some(log => log.level === 'WARN' && log.message === 'Meta Purchase Skipped'), true)
   assert.deepEqual(result.details, {
     orderId: 123456789,
+    metaOk: false,
+    metaSkippedReason: 'missing_attribution',
     googleOk: false,
     googleSkippedReason: 'missing_client_id',
     microsoftOk: false,

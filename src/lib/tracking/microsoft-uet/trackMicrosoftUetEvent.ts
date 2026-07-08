@@ -15,6 +15,7 @@ type MicrosoftUetQueue = {
   push: (...items: MicrosoftUetQueueItem[]) => number | void
 }
 type MicrosoftUetPageType =
+  | 'PURCHASE'
   | 'cart'
   | 'category'
   | 'home'
@@ -122,6 +123,29 @@ function getMicrosoftUetEventAction(eventName: string): string {
   return canonicalEventName === 'custom' ? eventName : canonicalEventName
 }
 
+function getMicrosoftUetGoalCompatibilityEvents(eventName: string): Array<{
+  eventAction: string
+  pageType?: MicrosoftUetPageType
+}> {
+  const canonicalEventName = mapToCanonicalEventName(eventName)
+
+  switch (canonicalEventName) {
+    case 'begin_checkout':
+      return [{ eventAction: 'AutoEvent_begin_checkout' }]
+    case 'purchase':
+      return [{ eventAction: 'PRODUCT_PURCHASE', pageType: 'PURCHASE' }]
+    case 'add_to_cart':
+    case 'custom':
+    case 'generate_lead':
+    case 'page_view':
+    case 'search':
+    case 'select_item':
+    case 'view_item':
+    case 'view_item_list':
+      return []
+  }
+}
+
 function getMicrosoftUetEventLabel(eventData: MetaEventData | undefined): string | undefined {
   return eventData?.content_name ?? eventData?.transaction_id ?? eventData?.order_id ?? eventData?.content_category
 }
@@ -196,8 +220,7 @@ export function dispatchMicrosoftUetBrowserEvent({
   const value = eventData?.value
   const productIds = getEventDataProductIds(eventData)
   const currency = eventData?.currency
-
-  trackMicrosoftUetEvent({
+  const baseEvent = {
     eventName: getMicrosoftUetEventAction(eventName),
     category: eventData?.content_category ?? 'ecommerce',
     label: getMicrosoftUetEventLabel(eventData),
@@ -207,7 +230,17 @@ export function dispatchMicrosoftUetBrowserEvent({
     productId: productIds,
     pageType: getMicrosoftUetPageType(eventName),
     ...(eventId ? { eventId } : {})
-  })
+  } satisfies TrackMicrosoftUetEventOptions
+
+  trackMicrosoftUetEvent(baseEvent)
+
+  for (const compatibilityEvent of getMicrosoftUetGoalCompatibilityEvents(eventName)) {
+    trackMicrosoftUetEvent({
+      ...baseEvent,
+      eventName: compatibilityEvent.eventAction,
+      pageType: compatibilityEvent.pageType ?? baseEvent.pageType
+    })
+  }
 }
 
 export function trackMicrosoftUetProductPurchase({
@@ -228,9 +261,9 @@ export function trackMicrosoftUetProductPurchase({
   }
 
   trackMicrosoftUetEvent({
-    eventName: 'purchase',
+    eventName: 'PRODUCT_PURCHASE',
     productId,
-    pageType: 'purchase',
+    pageType: 'PURCHASE',
     revenueValue,
     currency,
     ...(eventId ? { eventId } : {})

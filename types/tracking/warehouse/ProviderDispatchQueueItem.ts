@@ -1,4 +1,6 @@
-export type TrackingProvider = 'meta' | 'google'
+export type TrackingProvider = 'meta' | 'google' | 'microsoft_uet'
+
+export const SERVER_RETRY_PROVIDERS = ['meta', 'google', 'microsoft_uet'] as const satisfies readonly TrackingProvider[]
 
 export type ProviderDispatchQueueItem = {
   id: string

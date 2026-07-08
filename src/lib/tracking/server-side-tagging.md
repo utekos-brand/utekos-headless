@@ -119,7 +119,8 @@ Provider-dispatch opprettes bare når eventet har nødvendig DPS-samtykke:
   browser business-events med `ga4Data.client_id`. `PageView` holdes på sGTM for å unngå duplisering.
 - `Facebook Pixel` for Meta Pixel og direkte Meta CAPI.
 - `Microsoft Advertising Remarketing` for Microsoft UET browser-events. Shopify purchase kan i tillegg
-  sendes via Microsoft UET CAPI når `MICROSOFT_UET_CAPI_TOKEN` er satt og checkout-attribusjonen inneholder
+  Conversions API når UET tag ApiToken-env er satt (se
+  `microsoftUetCapiTokenEnvKeys.ts`) og checkout-attribusjonen inneholder
   `msclkid`.
 
 Shopify-webhooks lagres alltid i ledgeret, men sendes ikke til annonseplattformer uten dokumenterbart
@@ -147,18 +148,27 @@ NEXT_PUBLIC_ENABLE_GTM_IN_DEV=1
 NEXT_PUBLIC_MICROSOFT_UET_TAG_ID=97247724
 NEXT_PUBLIC_ENABLE_MICROSOFT_UET_IN_DEV=1
 GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm
-MICROSOFT_UET_CAPI_TOKEN=<token from Microsoft Advertising UET tag setup; optional but required for server-side purchase>
+MICROSOFT_UET_CAPI_ACCESS_TOKEN=<UetTagAuthKey from GetUetTagAuthKey; required for server-side purchase>
+# Project aliases for the same Microsoft-documented UET tag token:
+# MICROSOFT_UET_CAPI_TOKEN, UTEKOS_MICROSOFT_UET_CAPI_TOKEN, MICROSOFT_ADS_UET_CAPI_TOKEN
+# Not valid for Conversions API auth: MICROSOFT_ADS_ACCESS_TOKEN, MICROSOFT_ADS_DEVELOPER_TOKEN
 ```
 
 `NEXT_PUBLIC_USERCENTRICS_SGTM_ORIGIN` forblir `https://cloud.server.utekos.no` når samme domene flyttes fra
 Usercentrics til Cloud Run. Ingen app-endring er nødvendig så lenge subdomenet beholdes.
 
-Microsoft CAPI-tokenet er ikke det samme som developer token. Offisiell Microsoft-dokumentasjon sier at
-tokenet kan hentes i Microsoft Advertising UI ved å velge `Use Conversions API` på UET-tagen, eller via
-Campaign Management-operasjonen
-[`GetUetTagAuthKey`](https://learn.microsoft.com/en-us/advertising/campaign-management-service/getuettagauthkey?view=bingads-13).
-API-operasjonen krever OAuth `Authorization: Bearer <access token>`, `DeveloperToken`, `CustomerAccountId`
-og `CustomerId`; `MICROSOFT_DEVELOPER_TOKEN` alene er derfor ikke nok.
+Runtime henter **UetTagAuthKey** via OAuth refresh +
+[`GetUetTagAuthKey`](https://learn.microsoft.com/en-us/advertising/campaign-management-service/getuettagauthkey?view=bingads-13)
+i `resolveMicrosoftUetCapiApiToken` (kort cache + retry ved 401/403).
+Env-alias under er fallback/bootstrap, ikke primær runtime-kilde når OAuth finnes.
+
+```bash
+npm run microsoft-ads:fetch-uet-auth-key
+```
+
+Microsoft dokumenterer Conversions API-auth som **UET tagID + token**
+(`Authorization: Bearer <ApiToken>`). `MICROSOFT_ADS_ACCESS_TOKEN` er OAuth for
+Ads API og erstatter ikke UET tag ApiToken på `capi.uet.microsoft.com`.
 
 Standard GTM-script er direkte sGTM-loader:
 `https://cloud.server.utekos.no/gtm.js?id=GTM-5TWMJQFP`.
@@ -200,6 +210,22 @@ Lokal smoke: sett `NEXT_PUBLIC_ENABLE_GTM_IN_DEV=1` (ikke i produksjon uten beho
 - [x] Sett `GT-MKRLF5WK` som kanonisk Google-tag med `server_container_url=https://cloud.server.utekos.no`
 - [x] Publiser web-versjon `99`
 - [x] Verifiser direkte sGTM-script inneholder webcontainer-versjon `99`
+- [ ] **2026-07-07:** Workspace `106` oppdaterer trigger `122` (`Canonical GA4 business events`) til
+  `^(page_view|view_item_list|select_item|view_item|add_to_cart|begin_checkout|purchase|search|generate_lead)$`.
+  Live publisert versjon er fortsatt `102` med gammel regex uten `select_item`/`view_item_list` til OAuth
+  reauth gir `tagmanager.edit.containerversions` + `tagmanager.publish`. Kjør
+  `npm run tracking:gtm-publish-commerce` etter `gtm-mcp-auth`.
+
+GTM API-pekere for web-container `GTM-5TWMJQFP`:
+
+| Felt | Verdi |
+| --- | --- |
+| Account ID | `6295468138` (`Utekos Marketing Group \| Tracking`) |
+| Container ID | `220236256` |
+| Workspace ID | `106` (`Default Workspace`) |
+| Trigger ID | `122` (`Canonical GA4 business events`) |
+| GA4 event tag ID | `118` (`Google Analytics GA4-hendelse`, `__gaawe`) |
+| Canonical Google tag ID | `109` (`GT-MKRLF5WK`) |
 
 Servicekontonøkkelen er rotert og GA4 property `489598217`, Realtime API, Data API og Admin API er verifisert
 med HTTP 200. GTM OAuth-tokenet har nødvendige scopes for Quick Preview, container-versjoner og publisering.
@@ -212,8 +238,11 @@ Rollback-versjoner er web `98` og server `15`.
 - `ucEvent`, `ucConsentAllowedDps` og sGTM Preview
 - Microsoft UET browser: `add_to_cart` og `purchase` skal gi 204-respons mot `ti=97247724` med `event_id`,
   `gv`, `gc`, `prodid`, `pagetype` og `msclkid` når Microsoft-samtykke foreligger.
-- Microsoft UET CAPI: `sendMicrosoftUetPurchase` skal ikke lenger returnere `missing_capi_token` etter at
-  `MICROSOFT_UET_CAPI_TOKEN` er lagt inn i Vercel Production.
+- Microsoft UET CAPI: `sendMicrosoftUetPurchase` skal ikke returnere
+  `missing_capi_token` når minst ett UET CAPI-env er satt i Vercel
+  Production (`MICROSOFT_UET_CAPI_ACCESS_TOKEN` eller aliasene i
+  [DEPLOYMENT.md](../../../DEPLOYMENT.md)). `MICROSOFT_ADS_ACCESS_TOKEN`
+  alene er ikke tilstrekkelig.
 - Meta Pixel og direkte CAPI deler `event_id`
 - Meta sendes aldri via sGTM
 - Browser-`PageView` dupliseres ikke via Measurement Protocol når `GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm`.

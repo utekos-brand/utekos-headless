@@ -43,6 +43,14 @@ const staticAssetHeaders = [
   }
 ]
 
+const serverlessTraceExcludes = [
+  'gcloud components install alpha beta skaffold minikube kubectl gke-gcloud-auth-plugin/**',
+  'output/**',
+  '.playwright-cli/**',
+  '.vc-config.json',
+  'types/codex-log.md'
+]
+
 const nextConfig: NextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   poweredByHeader: false,
@@ -52,7 +60,9 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: process.cwd()
   },
-  serverExternalPackages: ['@sentry/profiling-node'],
+  outputFileTracingExcludes: {
+    '*': serverlessTraceExcludes
+  },
   ...(ENABLE_DOCKER_STANDALONE_OUTPUT ?
     { output: 'standalone' }
   : {}),

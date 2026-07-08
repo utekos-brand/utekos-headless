@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
   const context = adaptRequestToCaptureContext(req)
   const result = await processCapture(
-    validation.token,
+    validation.tokens,
     validation.body,
     context,
     {

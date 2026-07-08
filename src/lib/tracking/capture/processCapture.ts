@@ -8,13 +8,16 @@ import type {
 import type { CaptureBody } from 'types/tracking/meta'
 
 export async function processCapture(
-  token: string,
+  tokens: string | string[],
   body: CaptureBody,
   context: CaptureContext,
   deps: CaptureDependencies
 ): Promise<CaptureResult> {
   const payload = prepareCaptureData(body, context)
   const { userData } = payload
+  const storageTokens = Array.isArray(tokens) ? tokens : [tokens]
+  const primaryToken = storageTokens[0]
+
   await deps.logger(
     'INFO',
     '📩📩📩 Capture Identifiers 📩📩📩',
@@ -36,13 +39,16 @@ export async function processCapture(
       ga_session_id: payload.ga_session_id ? 'Captured' : 'Missing'
     },
     {
-      token,
+      token: primaryToken,
+      storageTokenCount: storageTokens.length,
       checkoutUrl: payload.checkoutUrl
     }
   )
 
   try {
-    await deps.redisSet(`checkout:${token}`, payload, 604800)
+    await Promise.all(
+      storageTokens.map(token => deps.redisSet(`checkout:${token}`, payload, 604800))
+    )
     return { success: true }
   } catch (error: unknown) {
     const errorMessage =
@@ -50,8 +56,8 @@ export async function processCapture(
     await deps.logger(
       'ERROR',
       'Redis save failed',
-      { error: errorMessage },
-      { token }
+      { error: errorMessage, storageTokenCount: storageTokens.length },
+      { token: primaryToken }
     )
 
     return { success: false, error: 'Failed to save checkout data' }

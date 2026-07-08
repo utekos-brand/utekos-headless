@@ -6,13 +6,22 @@ import process from 'node:process'
 import { randomUUID } from 'node:crypto'
 
 import { BetaAnalyticsDataClient } from '@google-analytics/data'
-import { GoogleAuth } from 'google-auth-library'
+import { GoogleAuth, OAuth2Client } from 'google-auth-library'
 import { McpServer, StdioServerTransport } from '@modelcontextprotocol/server'
 import { z } from 'zod/v4'
 
 const repoRoot = path.resolve(process.env.UTEKOS_REPO_ROOT ?? process.cwd())
 const profile = 'utekos_chatgpt_commerce_tracking'
 const mode = 'live-diagnostics-read-only'
+const microsoftOAuthTokenUrl = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
+const microsoftOAuthScope = 'https://ads.microsoft.com/msads.manage offline_access'
+const googleOAuthTokenUrl = 'https://oauth2.googleapis.com/token'
+const googleAdsOAuthScope = 'https://www.googleapis.com/auth/adwords'
+const googleTagManagerReadonlyScope = 'https://www.googleapis.com/auth/tagmanager.readonly'
+
+let cachedMicrosoftAdsAccessToken = null
+let cachedMicrosoftAdsAccessTokenExpiresAt = 0
+let rotatedMicrosoftAdsRefreshToken = ''
 
 const canonicalTools = [
   'commerce_tracking_bootstrap',
@@ -100,6 +109,9 @@ const providerDefinitions = [
       'GOOGLE_ADS_DEVELOPER_TOKEN',
       'GOOGLE_ADS_ACCESS_TOKEN',
       'GOOGLE_ADS_OAUTH_ACCESS_TOKEN',
+      'GOOGLE_ADS_CLIENT_ID',
+      'GOOGLE_ADS_CLIENT_SECRET',
+      'GOOGLE_ADS_REFRESH_TOKEN',
       'GOOGLE_ADS_SERVICE_ACCOUNT_JSON',
       'GOOGLE_DATAMANAGER_SERVICE_ACCOUNT_JSON',
       'GOOGLE_DATA_MANAGER_SERVICE_ACCOUNT_JSON',
@@ -111,8 +123,8 @@ const providerDefinitions = [
   {
     id: 'google_tag_manager',
     label: 'Google Tag Manager',
-    env: ['GTM_CLIENT_ID', 'GTM_CLIENT_SECRET', 'GTM_PROJECT_ID', 'GTM_ACCESS_TOKEN', 'GOOGLE_TAG_MANAGER_ACCESS_TOKEN', 'GTM_ACCOUNT_ID', 'GTM_CONTAINER_ID', 'GTM_WORKSPACE_ID', 'NEXT_PUBLIC_GOOGLE_GTM_ID'],
-    credentialFiles: []
+    env: ['GTM_CLIENT_ID', 'GTM_CLIENT_SECRET', 'GTM_PROJECT_ID', 'GTM_ACCESS_TOKEN', 'GOOGLE_TAG_MANAGER_ACCESS_TOKEN', 'GTM_SERVICE_ACCOUT', 'GTM_SERVICE_ACCOUNT', 'GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON', 'GTM_ACCOUNT_ID', 'GTM_CONTAINER_ID', 'GTM_WORKSPACE_ID', 'NEXT_PUBLIC_GOOGLE_GTM_ID'],
+    credentialFiles: ['GTM_SERVICE_ACCOUT', 'GTM_SERVICE_ACCOUNT', 'GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON']
   },
   {
     id: 'meta',
@@ -332,7 +344,7 @@ function readCredentialCandidate(value) {
   if (!trimmed) return ''
   if (trimmed.startsWith('{')) return trimmed
   const fullPath = path.isAbsolute(trimmed) ? trimmed : repoPath(trimmed)
-  if (!fs.existsSync(fullPath)) return trimmed
+  if (!fs.existsSync(fullPath)) return ''
   return fs.readFileSync(fullPath, 'utf8')
 }
 
@@ -345,7 +357,9 @@ function credentialJsonFor(keys, defaultPaths = []) {
 
   for (const candidate of candidates) {
     try {
-      const parsed = JSON.parse(readCredentialCandidate(candidate))
+      const credentialCandidate = readCredentialCandidate(candidate)
+      if (!credentialCandidate) continue
+      const parsed = JSON.parse(credentialCandidate)
       if (parsed && typeof parsed.client_email === 'string' && typeof parsed.private_key === 'string') {
         return {
           clientEmail: parsed.client_email,
@@ -429,11 +443,17 @@ function googleAdsApiVersion() {
 function googleAdsCredentialMode() {
   if (secretEnvValue('GOOGLE_ADS_ACCESS_TOKEN') || secretEnvValue('GOOGLE_ADS_OAUTH_ACCESS_TOKEN')) return 'access_token'
   if (
+    secretEnvValue('GOOGLE_ADS_CLIENT_ID')
+    && secretEnvValue('GOOGLE_ADS_CLIENT_SECRET')
+    && secretEnvValue('GOOGLE_ADS_REFRESH_TOKEN')
+  ) {
+    return 'refresh_token'
+  }
+  if (
     secretEnvValue('GOOGLE_ADS_SERVICE_ACCOUNT_JSON')
     || secretEnvValue('GOOGLE_DATAMANAGER_SERVICE_ACCOUNT_JSON')
     || secretEnvValue('GOOGLE_DATA_MANAGER_SERVICE_ACCOUNT_JSON')
     || secretEnvValue('GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON')
-    || secretEnvValue('GOOGLE_APPLICATION_CREDENTIALS')
     || fileExists('src/api/lib/cloud-credentials/google-ads-service-account.json')
     || fileExists('src/api/lib/cloud-credentials/tag-manager-credentials.json')
   ) {
@@ -451,6 +471,9 @@ function googleAdsConfig() {
     customerId: rawCustomerId ? normalizeGoogleAdsCustomerId(rawCustomerId) : '',
     loginCustomerId: rawLoginCustomerId ? normalizeGoogleAdsCustomerId(rawLoginCustomerId) : '',
     developerToken: secretEnvValue('GOOGLE_ADS_DEVELOPER_TOKEN'),
+    clientId: secretEnvValue('GOOGLE_ADS_CLIENT_ID'),
+    clientSecret: secretEnvValue('GOOGLE_ADS_CLIENT_SECRET'),
+    refreshToken: secretEnvValue('GOOGLE_ADS_REFRESH_TOKEN'),
     credentialMode: googleAdsCredentialMode()
   }
 }
@@ -459,13 +482,35 @@ async function googleAdsAccessToken() {
   const explicitToken = secretEnvValue('GOOGLE_ADS_ACCESS_TOKEN') || secretEnvValue('GOOGLE_ADS_OAUTH_ACCESS_TOKEN')
   if (explicitToken) return explicitToken
 
+  const config = googleAdsConfig()
+  if (config.clientId && config.clientSecret && config.refreshToken) {
+    const response = await readJsonEndpoint(googleOAuthTokenUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        client_id: config.clientId,
+        client_secret: config.clientSecret,
+        refresh_token: config.refreshToken,
+        grant_type: 'refresh_token',
+        scope: googleAdsOAuthScope
+      })
+    })
+
+    if (!response.ok || typeof response.body?.access_token !== 'string') {
+      throw new Error(response.body?.error_description || response.body?.error || 'Google OAuth refresh-token exchange failed.')
+    }
+
+    return response.body.access_token
+  }
+
   const serviceAccount = credentialJsonFor(
     [
       'GOOGLE_ADS_SERVICE_ACCOUNT_JSON',
       'GOOGLE_DATAMANAGER_SERVICE_ACCOUNT_JSON',
       'GOOGLE_DATA_MANAGER_SERVICE_ACCOUNT_JSON',
-      'GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON',
-      'GOOGLE_APPLICATION_CREDENTIALS'
+      'GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON'
     ],
     [
       'src/api/lib/cloud-credentials/google-ads-service-account.json',
@@ -570,13 +615,24 @@ function envRequirementStatus(presence, requirements) {
       .split('|')
       .map(item => item.trim())
       .filter(Boolean)
-    const presentAlternatives = alternatives.filter(key => presence.env.get(key)?.present)
+    const alternativeGroups = alternatives.map(alternative =>
+      alternative
+        .split('+')
+        .map(item => item.trim())
+        .filter(Boolean)
+    )
+    const presentAlternatives = alternativeGroups
+      .filter(group => group.every(key => presence.env.get(key)?.present))
+      .map(group => group.join('+'))
+    const missingAlternatives = alternativeGroups
+      .filter(group => !group.every(key => presence.env.get(key)?.present))
+      .map(group => group.filter(key => !presence.env.get(key)?.present).join('+'))
 
     return {
       requirement,
       satisfied: presentAlternatives.length > 0,
       present_alternatives: presentAlternatives,
-      missing_alternatives: alternatives.filter(key => !presentAlternatives.includes(key))
+      missing_alternatives: missingAlternatives
     }
   })
 }
@@ -1479,7 +1535,7 @@ server.registerTool(
         envRequirements: [
           'GOOGLE_ADS_CUSTOMER_ID',
           'GOOGLE_ADS_DEVELOPER_TOKEN',
-          'GOOGLE_ADS_ACCESS_TOKEN|GOOGLE_ADS_OAUTH_ACCESS_TOKEN|GOOGLE_ADS_SERVICE_ACCOUNT_JSON|GOOGLE_DATAMANAGER_SERVICE_ACCOUNT_JSON|GOOGLE_DATA_MANAGER_SERVICE_ACCOUNT_JSON|GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON',
+          'GOOGLE_ADS_ACCESS_TOKEN|GOOGLE_ADS_OAUTH_ACCESS_TOKEN|GOOGLE_ADS_CLIENT_ID+GOOGLE_ADS_CLIENT_SECRET+GOOGLE_ADS_REFRESH_TOKEN|GOOGLE_ADS_SERVICE_ACCOUNT_JSON|GOOGLE_DATAMANAGER_SERVICE_ACCOUNT_JSON|GOOGLE_DATA_MANAGER_SERVICE_ACCOUNT_JSON|GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON',
           'GOOGLE_ADS_LOGIN_CUSTOMER_ID'
         ],
         externalActions: [
@@ -1586,7 +1642,7 @@ server.registerTool(
         status: 'implemented_config_missing',
         evidenceTool: 'gtm_api_workspace_probe',
         evidenceSummary: 'Tool is implemented, but the latest probe fails closed because OAuth access token and numeric GTM account/container ids are missing.',
-        envRequirements: ['GTM_ACCESS_TOKEN|GOOGLE_TAG_MANAGER_ACCESS_TOKEN', 'GTM_ACCOUNT_ID', 'GTM_CONTAINER_ID', 'GTM_WORKSPACE_ID'],
+        envRequirements: ['GTM_ACCESS_TOKEN|GOOGLE_TAG_MANAGER_ACCESS_TOKEN|GTM_SERVICE_ACCOUT|GTM_SERVICE_ACCOUNT|GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON', 'GTM_ACCOUNT_ID', 'GTM_CONTAINER_ID|NEXT_PUBLIC_GOOGLE_GTM_ID', 'GTM_WORKSPACE_ID'],
         externalActions: [
           'Complete GTM OAuth or provide a short-lived access token with read scope.',
           'Set numeric GTM account id and container id; public GTM container id alone is not enough for GTM API v2.',
@@ -2445,7 +2501,7 @@ function microsoftAdsEnvironment() {
 
 function microsoftAdsConfig() {
   const accessToken = secretEnvValue('MICROSOFT_ADS_ACCESS_TOKEN')
-  const refreshToken = secretEnvValue('MICROSOFT_ADS_REFRESH_TOKEN')
+  const refreshToken = rotatedMicrosoftAdsRefreshToken || secretEnvValue('MICROSOFT_ADS_REFRESH_TOKEN')
   const rawCustomerId = secretEnvValue('MICROSOFT_ADS_CUSTOMER_ID')
   const rawAccountId = secretEnvValue('MICROSOFT_ADS_ACCOUNT_ID')
   const rawStoreId = secretEnvValue('MICROSOFT_MERCHANT_CENTER_STORE_ID')
@@ -2533,20 +2589,87 @@ function microsoftAdsNamespace(service) {
   return 'https://bingads.microsoft.com/CampaignManagement/v13'
 }
 
+async function googleTagManagerAccessToken() {
+  const explicitToken = secretEnvValue('GTM_ACCESS_TOKEN') || secretEnvValue('GOOGLE_TAG_MANAGER_ACCESS_TOKEN')
+  if (explicitToken) return explicitToken
+
+  const serviceAccount = credentialJsonFor(
+    [
+      'GTM_SERVICE_ACCOUT',
+      'GTM_SERVICE_ACCOUNT',
+      'GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON',
+      'GOOGLE_APPLICATION_CREDENTIALS'
+    ],
+    [
+      'src/api/lib/cloud-credentials/tag-manager-credentials.json',
+      'src/api/lib/cloud-credentials/google-tag-manager-credentials.json'
+    ]
+  )
+  const auth = new GoogleAuth({
+    credentials: {
+      client_email: serviceAccount.clientEmail,
+      private_key: serviceAccount.privateKey
+    },
+    scopes: [googleTagManagerReadonlyScope],
+    ...(serviceAccount.projectId ? { projectId: serviceAccount.projectId } : {})
+  })
+  const client = await auth.getClient()
+  const token = await client.getAccessToken()
+  return typeof token === 'string' ? token : token?.token ?? ''
+}
+
+async function resolveGtmContainerId({ token, accountId, configuredContainerId, publicContainerId }) {
+  if (configuredContainerId) return configuredContainerId
+  if (!publicContainerId) return ''
+
+  const response = await readJsonEndpoint(`https://www.googleapis.com/tagmanager/v2/accounts/${encodeURIComponent(accountId)}/containers`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error(response.body?.error?.message || `GTM container lookup failed with HTTP ${response.status}.`)
+  }
+
+  const containers = Array.isArray(response.body?.container) ? response.body.container : []
+  const match = containers.find(container =>
+    container?.publicId === publicContainerId
+    || container?.containerId === publicContainerId
+  )
+
+  return typeof match?.containerId === 'string' ? match.containerId : ''
+}
+
 async function microsoftAdsAccessToken() {
   const config = microsoftAdsConfig()
-  if (config.accessToken) return config.accessToken
-  if (!config.refreshToken || !config.clientId) return ''
+  const cachedTokenClaims = decodeJwtPayload(cachedMicrosoftAdsAccessToken ?? '')
+  const cachedExpiresAt =
+    typeof cachedTokenClaims?.exp === 'number' ?
+      cachedTokenClaims.exp * 1000
+    : cachedMicrosoftAdsAccessTokenExpiresAt
+
+  if (
+    cachedMicrosoftAdsAccessToken
+    && cachedExpiresAt > Date.now() + 60_000
+  ) {
+    return cachedMicrosoftAdsAccessToken
+  }
+
+  if (!config.refreshToken || !config.clientId) {
+    return config.accessToken
+  }
 
   const body = new URLSearchParams({
     client_id: config.clientId,
     grant_type: 'refresh_token',
     refresh_token: config.refreshToken,
-    scope: 'https://ads.microsoft.com/msads.manage offline_access'
+    scope: microsoftOAuthScope
   })
   if (config.clientSecret) body.set('client_secret', config.clientSecret)
 
-  const response = await readJsonEndpoint('https://login.microsoftonline.com/common/oauth2/v2.0/token', {
+  const response = await readJsonEndpoint(microsoftOAuthTokenUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -2556,6 +2679,14 @@ async function microsoftAdsAccessToken() {
 
   if (!response.ok || typeof response.body?.access_token !== 'string') {
     throw new Error(response.body?.error_description || response.body?.error || 'Microsoft OAuth refresh-token exchange failed.')
+  }
+
+  cachedMicrosoftAdsAccessToken = response.body.access_token
+  cachedMicrosoftAdsAccessTokenExpiresAt =
+    Date.now() + Math.max(0, Number(response.body?.expires_in ?? 3600) - 60) * 1000
+
+  if (typeof response.body?.refresh_token === 'string' && response.body.refresh_token.trim()) {
+    rotatedMicrosoftAdsRefreshToken = response.body.refresh_token
   }
 
   return response.body.access_token
@@ -2691,7 +2822,7 @@ function googleAdsMissingRequirements(requireCustomerId) {
   if (requireCustomerId && !config.customerId) missing.push('GOOGLE_ADS_CUSTOMER_ID')
   if (!config.developerToken) missing.push('GOOGLE_ADS_DEVELOPER_TOKEN')
   if (config.credentialMode === 'missing') {
-    missing.push('GOOGLE_ADS_ACCESS_TOKEN|GOOGLE_ADS_OAUTH_ACCESS_TOKEN|GOOGLE_ADS_SERVICE_ACCOUNT_JSON')
+    missing.push('GOOGLE_ADS_ACCESS_TOKEN|GOOGLE_ADS_OAUTH_ACCESS_TOKEN|GOOGLE_ADS_CLIENT_ID+GOOGLE_ADS_CLIENT_SECRET+GOOGLE_ADS_REFRESH_TOKEN|GOOGLE_ADS_SERVICE_ACCOUNT_JSON')
   }
   return missing
 }
@@ -3760,7 +3891,7 @@ server.registerTool(
     const response = await readJsonEndpoint(url.toString(), {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        AuthenticationToken: accessToken,
         DeveloperToken: config.developerToken,
         CustomerId: config.customerId,
         CustomerAccountId: config.accountId,
@@ -3874,29 +4005,28 @@ server.registerTool(
   },
   async () => {
     const startedAt = nowIso()
-    const token = secretEnvValue('GTM_ACCESS_TOKEN') || secretEnvValue('GOOGLE_TAG_MANAGER_ACCESS_TOKEN')
     const accountId = secretEnvValue('GTM_ACCOUNT_ID')
-    const containerId = secretEnvValue('GTM_CONTAINER_ID')
+    const configuredContainerId = secretEnvValue('GTM_CONTAINER_ID')
     const workspaceId = secretEnvValue('GTM_WORKSPACE_ID')
     const publicContainerId = secretEnvValue('NEXT_PUBLIC_GOOGLE_GTM_ID') || 'GTM-5TWMJQFP'
     const baseData = {
       account_id: accountId || null,
-      container_id: containerId || null,
+      container_id: configuredContainerId || null,
       workspace_id: workspaceId || null,
       public_container_id: publicContainerId,
       http_status: null,
       workspaces: []
     }
 
-    if (!token || !accountId || !containerId) {
+    if (!accountId) {
       return textResult(
         createEnvelope('gtm_api_workspace_probe', startedAt, baseData, {
           ok: false,
           errors: [
             makeError(
               'GTM_API_CONFIG_MISSING',
-              'GTM_ACCESS_TOKEN/GOOGLE_TAG_MANAGER_ACCESS_TOKEN plus GTM_ACCOUNT_ID and GTM_CONTAINER_ID are required for authenticated GTM API reads.',
-              'Complete GTM OAuth or provide a short-lived access token and the numeric GTM account/container ids, then rerun this tool.',
+              'GTM_ACCOUNT_ID is required for authenticated GTM API reads.',
+              'Set numeric GTM account id, then rerun this tool.',
               'google_tag_manager'
             )
           ],
@@ -3911,16 +4041,48 @@ server.registerTool(
       )
     }
 
-    const url = new URL(`https://www.googleapis.com/tagmanager/v2/accounts/${encodeURIComponent(accountId)}/containers/${encodeURIComponent(containerId)}/workspaces`)
-    const response = await readJsonEndpoint(url.toString(), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    let token = ''
+    let containerId = configuredContainerId
+    let response
+    try {
+      token = await googleTagManagerAccessToken()
+      if (!token) throw new Error('Missing GTM OAuth token or service-account credentials.')
+      containerId = await resolveGtmContainerId({ token, accountId, configuredContainerId, publicContainerId })
+      if (!containerId) throw new Error('GTM_CONTAINER_ID is missing and no matching container was found for the public GTM id.')
+
+      const url = new URL(`https://www.googleapis.com/tagmanager/v2/accounts/${encodeURIComponent(accountId)}/containers/${encodeURIComponent(containerId)}/workspaces`)
+      response = await readJsonEndpoint(url.toString(), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+    } catch (error) {
+      return textResult(
+        createEnvelope('gtm_api_workspace_probe', startedAt, baseData, {
+          ok: false,
+          errors: [
+            makeError(
+              'GTM_API_CONFIG_MISSING',
+              error instanceof Error ? error.message : 'GTM API authentication failed.',
+              'Provide GTM_SERVICE_ACCOUT/GTM_SERVICE_ACCOUNT/GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON or GTM_ACCESS_TOKEN, plus GTM_ACCOUNT_ID and either numeric GTM_CONTAINER_ID or public NEXT_PUBLIC_GOOGLE_GTM_ID.',
+              'google_tag_manager'
+            )
+          ],
+          sources: [
+            { url: 'https://developers.google.com/tag-platform/tag-manager/api/v2', type: 'official-docs' },
+            { url: 'https://developers.google.com/tag-platform/tag-manager/api/reference/rest/v2/accounts.containers.workspaces', type: 'official-docs' }
+          ],
+          networkAccess: true,
+          next: ['This tool intentionally does not call quick_preview, create_version, or publish operations.']
+        }),
+        'Authenticated GTM API config is missing.'
+      )
+    }
     const workspaces = (response.body?.workspace ?? []).map(normalizeGtmWorkspace)
     const data = {
       ...baseData,
+      container_id: containerId || null,
       http_status: response.status,
       workspaces
     }

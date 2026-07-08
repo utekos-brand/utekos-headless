@@ -63,7 +63,7 @@ test('builds a Microsoft UET CAPI purchase event with msclkid and ecommerce data
   const event = buildMicrosoftUetPurchaseEvent(payload, attribution)
 
   assert.equal(event.eventType, 'custom')
-  assert.equal(event.eventName, 'purchase')
+  assert.equal(event.eventName, 'PRODUCT_PURCHASE')
   assert.equal(event.eventId, 'shopify_order_123456789')
   assert.equal(event.eventTime, 1781431500)
   assert.equal(event.userData?.msclkid, 'dd4afcccb1c9a4cad9544dd7e5006')
@@ -90,6 +90,6 @@ test('builds the documented Microsoft UET CAPI request body shape', () => {
 
   assert.equal(requestBody.dataProvider, 'utekos-headless')
   assert.equal(requestBody.continueOnValidationError, false)
-  assert.equal(requestBody.data[0]?.eventName, 'purchase')
+  assert.equal(requestBody.data[0]?.eventName, 'PRODUCT_PURCHASE')
   assert.equal(requestBody.data[0]?.userData?.msclkid, 'dd4afcccb1c9a4cad9544dd7e5006')
 })

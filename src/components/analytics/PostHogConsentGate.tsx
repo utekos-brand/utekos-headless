@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { usePostHog } from '@posthog/react'
+import { getPostHogPageviewUrl } from '@/lib/tracking/posthog/getPostHogPageviewUrl'
 
 export function PostHogConsentGate() {
   const postHog = usePostHog()
@@ -13,7 +14,7 @@ export function PostHogConsentGate() {
     if (!postHog) return
 
     postHog.capture('$pageview', {
-      $current_url: window.location.href
+      $current_url: getPostHogPageviewUrl(window.location)
     })
   }, [pathname, postHog, searchParams])
 

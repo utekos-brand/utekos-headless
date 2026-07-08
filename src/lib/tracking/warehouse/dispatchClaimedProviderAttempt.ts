@@ -4,6 +4,7 @@ import { sendGA4BrowserEvent } from '@/lib/tracking/google/sendGA4BrowserEvent'
 import { getMetaApiErrorDetails } from '@/lib/tracking/meta/getMetaApiErrorDetails'
 import { sendMetaBrowserEvent } from '@/lib/tracking/meta/sendMetaBrowserEvent'
 import { prepareEventContext } from '@/lib/tracking/services/prepareEventContext'
+import { dispatchMicrosoftUetQueuedAttempt } from '@/lib/tracking/warehouse/dispatchMicrosoftUetQueuedAttempt'
 import { trackingEventPayloadSchema } from '@/lib/tracking/utils/trackingEventPayloadSchema'
 import type {
   ProviderDispatchQueueItem,
@@ -14,6 +15,10 @@ import type { MetaEventPayload } from 'types/tracking/meta'
 export async function dispatchClaimedProviderAttempt(
   attempt: ProviderDispatchQueueItem
 ): Promise<ProviderDispatchResult> {
+  if (attempt.provider === 'microsoft_uet') {
+    return dispatchMicrosoftUetQueuedAttempt(attempt)
+  }
+
   const parsedPayload = trackingEventPayloadSchema.safeParse(attempt.payload)
 
   if (!parsedPayload.success) {

@@ -37,6 +37,44 @@ receive equal dedication in diagnostics, auth, smoke tests, provider
 status, documentation, and operational follow-up. Half-configured
 tracking or diagnostics are not acceptable.
 
+## Learned User Preferences
+
+- For remediation from `FLOW.md`, follow the prioritized task order,
+  execute one item at a time, get approval before each item, and keep
+  verification gates intact.
+- When API names overlap or deprecations are involved, verify against
+  current official documentation before recommending implementation
+  paths.
+- Treat the current Chatbase bot as legacy; plan a new AI customer
+  assistant instead of extending Chatbase.
+- Workflow SDK v5 and Vercel Marketplace Shopify Integration require
+  explicit user approval before install or shop connection.
+
+## Learned Workspace Facts
+
+- `FLOW.md` is the canonical prioritized map for tracking,
+  observability, analytics, gap remediation, and MCP status.
+- Google Merchant work must use Merchant API, not the deprecated
+  Google Content API for Shopping.
+- Microsoft Shopping Content API is distinct from Google's deprecated
+  Content API naming and remains part of the current Microsoft MCP
+  probe surface.
+- Google Merchant Center is verified through `merchant:preflight` with
+  the primary API product source and an autofeed source visible.
+- The Microsoft commerce-tracking MCP surface has been verified green
+  for Ads, Shopping, UET, and Clarity probes after the latest
+  remediation.
+- `@google/genai` should keep `allowBuilds: false` in
+  `pnpm-workspace.yaml`; the npm package ships prebuilt `dist/` and
+  does not need its prepare script at install.
+- `mapi-devdocs` MCP is the official Merchant API documentation
+  surface; it does not return live Merchant Center account data.
+- LangChain/LangSmith is under evaluation for agent tracing and
+  evaluation; it is not an active project dependency yet.
+- Microsoft Ads API OAuth must use a Microsoft Entra identity; a
+  Google-linked Microsoft Advertising login for the same email causes
+  `IdentityTypeMismatch (Code 126)` on API calls.
+
 Follow these steps for each interaction:
 
 1. User Identification:
@@ -198,9 +236,17 @@ Status date: 2026-07-07.
   `skip_reason='missing_client_id'`, not an active dead-letter
   failure.
 - Provider dispatch modes are `server_retry`, `server_direct`, and
-  `client_observed`. The retry claimant only owns `meta` and `google`
-  rows with `dispatch_mode='server_retry'`. Microsoft UET purchase
-  rows are direct audit/status rows, not generic retry-queue rows.
+  `client_observed`. The retry claimant owns `meta`, `google`, and
+  `microsoft_uet` rows with `dispatch_mode='server_retry'`.
+  `replay-dead-letter` re-queues unresolved `ops.dead_letter_events`
+  for those providers.
+- Microsoft UET CAPI purchase requires the **UET tag ApiToken**
+  documented for Conversions API auth (`tagID` + token,
+  `Authorization: Bearer <ApiToken>`). Project env aliases:
+  `MICROSOFT_UET_CAPI_ACCESS_TOKEN`, `MICROSOFT_UET_CAPI_TOKEN`, etc.
+  This is **not** `MICROSOFT_ADS_ACCESS_TOKEN` (OAuth Ads API). See
+  [DEPLOYMENT.md](DEPLOYMENT.md) Microsoft env gate and
+  [Microsoft Conversions API guide](https://learn.microsoft.com/en-us/advertising/guides/uet-conversion-api-integration?view=bingads-13).
 - Dead-letter counts are only useful when resolved/unresolved state,
   provider/source, reason, and replay policy are visible. Use
   `ops.dead_letter_summary` and provider-specific context before
@@ -332,6 +378,7 @@ explicitly asks for that cost-bearing provider mutation.
 
 ### Tracking warehouse (Supabase)
 
+- **End-to-end flyt:** [FLOW.md](FLOW.md) — innsamling, leveranse, bruk, gap-register og MCP-status.
 - **Kanonisk tracking-lager:** `hkoawfbomhnzupcsdggb`
   (`supabase-pink-lens`, eu-north-1). Appen kobler via
   `SUPABASE_VERCEL_POSTGRES_URL_NON_POOLING`.

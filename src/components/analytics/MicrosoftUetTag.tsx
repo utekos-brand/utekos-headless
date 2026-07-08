@@ -52,14 +52,14 @@ const MICROSOFT_UET_ENHANCED_CONVERSIONS_SCRIPT = `
       setMicrosoftUetPid();
       var payload = {
         ecomm_prodid: productId,
-        ecomm_pagetype: 'purchase',
+        ecomm_pagetype: 'PURCHASE',
         revenue_value: Number(revenueValue) || 0,
         currency: currency || 'NOK'
       };
       if (eventId) {
         payload.event_id = eventId;
       }
-      window.uetq.push('event', 'purchase', payload);
+      window.uetq.push('event', 'PRODUCT_PURCHASE', payload);
     };
 
     setMicrosoftUetPid();
@@ -104,6 +104,40 @@ export function MicrosoftUetTag({ tagId = MICROSOFT_UET_TAG_ID }: MicrosoftUetTa
       ad_storage: hasMarketingConsent ? 'granted' : 'denied'
     })
   }, [hasMarketingConsent])
+
+  useEffect(() => {
+    if (!SHOULD_LOAD_MICROSOFT_UET || !tagId || !hasMarketingConsent) return
+
+    function getExternalEventLabel(url: string): string | null {
+      try {
+        const parsed = new URL(url, window.location.href)
+        if ((parsed.protocol !== 'http:' && parsed.protocol !== 'https:') || parsed.origin === window.location.origin) {
+          return null
+        }
+
+        return `${parsed.origin}${parsed.pathname}`
+      } catch {
+        return null
+      }
+    }
+
+    function reportOutboundClick(event: MouseEvent): void {
+      if (!(event.target instanceof Element)) return
+      const anchor = event.target.closest<HTMLAnchorElement>('a[href]')
+      if (!anchor) return
+      const eventLabel = getExternalEventLabel(anchor.href)
+      if (!eventLabel) return
+
+      window.uetq = window.uetq || []
+      window.uetq.push('event', 'AutoEvent_outbound_click', {
+        event_category: 'outbound',
+        event_label: eventLabel
+      })
+    }
+
+    document.addEventListener('click', reportOutboundClick, true)
+    return () => document.removeEventListener('click', reportOutboundClick, true)
+  }, [hasMarketingConsent, tagId])
 
   if (!SHOULD_LOAD_MICROSOFT_UET || !tagId || !hasMarketingConsent) return null
 
