@@ -1,9 +1,9 @@
 import { after, type NextRequest, NextResponse } from 'next/server'
-import { usercentricsConsentSchema } from '@/components/cookie-consent/usercentricsConsentSchema'
+import { cookiebotConsentSchema } from '@/components/cookie-consent/cookiebotConsentSchema'
 import { persistConsentSnapshot } from '@/lib/tracking/warehouse/persistConsentSnapshot'
 
 export async function POST(request: NextRequest) {
-  const parsedConsent = usercentricsConsentSchema.safeParse(await request.json())
+  const parsedConsent = cookiebotConsentSchema.safeParse(await request.json())
 
   if (!parsedConsent.success) {
     return NextResponse.json(

@@ -12,17 +12,17 @@ import { persistAcceptedTrackingEvent } from '@/lib/tracking/warehouse/persistAc
 import { getRequestConsentState } from '@/lib/tracking/consent/getRequestConsentState'
 import { getProvidersForAcceptedTrackingEvent } from '@/lib/tracking/warehouse/getProvidersForAcceptedTrackingEvent'
 import {
-  USERCENTRICS_GOOGLE_ANALYTICS_SERVICE_NAME,
-  USERCENTRICS_META_SERVICE_NAME,
-  USERCENTRICS_MICROSOFT_SERVICE_NAME
-} from '@/components/cookie-consent/usercentricsConfig'
+  COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME,
+  COOKIEBOT_META_SERVICE_NAME,
+  COOKIEBOT_MICROSOFT_SERVICE_NAME
+} from '@/components/cookie-consent/cookiebotConfig'
 
 export async function POST(request: NextRequest) {
   const consent = getRequestConsentState(request)
   const providerConsent = {
-    meta: consent.services[USERCENTRICS_META_SERVICE_NAME] === true,
-    google: consent.services[USERCENTRICS_GOOGLE_ANALYTICS_SERVICE_NAME] === true,
-    microsoft: consent.services[USERCENTRICS_MICROSOFT_SERVICE_NAME] === true
+    meta: consent.services[COOKIEBOT_META_SERVICE_NAME] === true,
+    google: consent.services[COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME] === true,
+    microsoft: consent.services[COOKIEBOT_MICROSOFT_SERVICE_NAME] === true
   }
 
   const validation = await parseAndValidateEventPayload(request)
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     try {
       await persistAcceptedTrackingEvent(payload, {
         ...consent,
-        source: 'usercentrics'
+        source: 'cookiebot'
       }, providers)
     } catch (error) {
       await logToAppLogs(

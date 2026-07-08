@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { USERCENTRICS_MICROSOFT_SERVICE_NAME } from '@/components/cookie-consent/usercentricsConfig'
+import { COOKIEBOT_MICROSOFT_SERVICE_NAME } from '@/components/cookie-consent/cookiebotConfig'
 import { setLatestConsentServices } from '@/lib/tracking/consent/latestConsentServices'
 import {
   dispatchMicrosoftUetBrowserEvent,
@@ -49,7 +49,7 @@ test('does not queue Microsoft UET events without Microsoft consent', () => {
 test('queues add_to_cart with documented ecommerce payload', () => {
   const queue = setBrowserQueue()
   setLatestConsentServices({
-    [USERCENTRICS_MICROSOFT_SERVICE_NAME]: true
+    [COOKIEBOT_MICROSOFT_SERVICE_NAME]: true
   })
 
   dispatchMicrosoftUetBrowserEvent({
@@ -83,7 +83,7 @@ test('queues add_to_cart with documented ecommerce payload', () => {
 test('queues checkout with canonical action and existing Microsoft auto-goal action', () => {
   const queue = setBrowserQueue()
   setLatestConsentServices({
-    [USERCENTRICS_MICROSOFT_SERVICE_NAME]: true
+    [COOKIEBOT_MICROSOFT_SERVICE_NAME]: true
   })
 
   dispatchMicrosoftUetBrowserEvent({
@@ -118,7 +118,7 @@ test('queues checkout with canonical action and existing Microsoft auto-goal act
 test('queues browser purchase with canonical action and product-goal action', () => {
   const queue = setBrowserQueue()
   setLatestConsentServices({
-    [USERCENTRICS_MICROSOFT_SERVICE_NAME]: true
+    [COOKIEBOT_MICROSOFT_SERVICE_NAME]: true
   })
 
   dispatchMicrosoftUetBrowserEvent({
@@ -159,7 +159,7 @@ test('queues browser purchase with canonical action and product-goal action', ()
 test('queues product purchase with Microsoft product-goal event and page type', () => {
   const queue = setBrowserQueue()
   setLatestConsentServices({
-    [USERCENTRICS_MICROSOFT_SERVICE_NAME]: true
+    [COOKIEBOT_MICROSOFT_SERVICE_NAME]: true
   })
 
   trackMicrosoftUetProductPurchase({

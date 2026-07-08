@@ -3,7 +3,7 @@
 import Script from 'next/script'
 import { useEffect } from 'react'
 import { useConsentForService } from '@/components/cookie-consent/useConsent'
-import { USERCENTRICS_MICROSOFT_SERVICE_NAME } from '@/components/cookie-consent/usercentricsConfig'
+import { COOKIEBOT_MICROSOFT_SERVICE_NAME } from '@/components/cookie-consent/cookiebotConfig'
 
 const DEFAULT_MICROSOFT_UET_TAG_ID = '97247724'
 
@@ -70,7 +70,7 @@ function createMicrosoftUetBootstrapScript(tagId: string): string {
   return `
     (function(w,d,t,u,o) {
       w[u] = w[u] || [];
-      w[u].push('consent', 'default', { ad_storage: 'granted' });
+      w[u].push('consent', 'default', { ad_storage: 'denied' });
       o = {
         ti: ${JSON.stringify(tagId)},
         enableAutoSpaTracking: true,
@@ -96,7 +96,7 @@ function createMicrosoftUetBootstrapScript(tagId: string): string {
 }
 
 export function MicrosoftUetTag({ tagId = MICROSOFT_UET_TAG_ID }: MicrosoftUetTagProps) {
-  const hasMarketingConsent = useConsentForService(USERCENTRICS_MICROSOFT_SERVICE_NAME)
+  const hasMarketingConsent = useConsentForService(COOKIEBOT_MICROSOFT_SERVICE_NAME)
 
   useEffect(() => {
     window.uetq = window.uetq || []
@@ -139,7 +139,7 @@ export function MicrosoftUetTag({ tagId = MICROSOFT_UET_TAG_ID }: MicrosoftUetTa
     return () => document.removeEventListener('click', reportOutboundClick, true)
   }, [hasMarketingConsent, tagId])
 
-  if (!SHOULD_LOAD_MICROSOFT_UET || !tagId || !hasMarketingConsent) return null
+  if (!SHOULD_LOAD_MICROSOFT_UET || !tagId) return null
 
   return (
     <>

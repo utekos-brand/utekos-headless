@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { PostHogProvider, usePostHog } from '@posthog/react'
 import { useConsentForService } from '@/components/cookie-consent/useConsent'
-import { USERCENTRICS_POSTHOG_SERVICE_NAME } from '@/components/cookie-consent/usercentricsConfig'
+import { COOKIEBOT_POSTHOG_SERVICE_NAME } from '@/components/cookie-consent/cookiebotConfig'
 
 const POSTHOG_API_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY ?? process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN
 const POSTHOG_API_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST!
@@ -30,7 +30,7 @@ function PostHogConsentLifecycle() {
 }
 
 export function PostHogClientProvider({ children }: { children: React.ReactNode }) {
-  const hasPostHogConsent = useConsentForService(USERCENTRICS_POSTHOG_SERVICE_NAME)
+  const hasPostHogConsent = useConsentForService(COOKIEBOT_POSTHOG_SERVICE_NAME)
 
   if (!hasPostHogConsent || !POSTHOG_API_KEY || !POSTHOG_API_HOST) {
     return null

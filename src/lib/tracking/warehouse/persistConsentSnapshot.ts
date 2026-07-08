@@ -1,11 +1,11 @@
 import 'server-only'
 
 import { getTrackingWarehouse } from '@/lib/tracking/warehouse/getTrackingWarehouse'
-import type { UsercentricsConsentState } from '@/components/cookie-consent/usercentricsConsentSchema'
+import type { CookiebotConsentState } from '@/components/cookie-consent/cookiebotConsentSchema'
 import type postgres from 'postgres'
 
 export async function persistConsentSnapshot(
-  consent: UsercentricsConsentState,
+  consent: CookiebotConsentState,
   identifiers: {
     anonymousId?: string | null
     externalId?: string | null
@@ -29,7 +29,7 @@ export async function persistConsentSnapshot(
       ${identifiers.anonymousId ?? null},
       ${identifiers.externalId ?? null},
       ${sql.json(consent as postgres.JSONValue)},
-      'usercentrics',
+      'cookiebot',
       now()
     )
   `

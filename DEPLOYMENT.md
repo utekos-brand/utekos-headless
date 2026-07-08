@@ -49,7 +49,7 @@ Run these before deciding the release order:
 | --- | --- | --- | --- |
 | Supabase schema read/write from runtime | Apply required migration to `hkoawfbomhnzupcsdggb`; verify schema dump contains new objects. | Vercel after Supabase. | `db lint`, schema dump grep, targeted runtime smoke. |
 | Tracking runtime writes to `ops.provider_dispatch_attempts` | Ensure required columns, constraints, statuses, and views exist. | Vercel after Supabase. | Provider rows, skip classification, dead-letter summary. |
-| PostHog client/runtime tracking | Ensure Usercentrics service name and env vars are present. | Vercel. | Consent-gated init, no autocapture drift, masked replay, safe events only. |
+| PostHog client/runtime tracking | Ensure Cookiebot statistics consent is mapped and env vars are present. | Vercel. | Consent-gated init, no autocapture drift, masked replay, safe events only. |
 | Google/Meta/Microsoft provider diagnostics | Configure local/provider credentials outside generated files. | Usually no Vercel deploy unless runtime changed. | Read-only probes and provider dashboard/API status. |
 | MCP server/template changes | Update committed templates, then regenerate generated files locally. | No app deploy unless app runtime changed. | `mcp:build`, `mcp:doctor`, relevant MCP doctor. |
 | GTM or sGTM behavior | Verify current docs, container IDs, workspace state, and consent model. | GTM publish only with explicit approval; Vercel if app loader changed. | GTM Preview, sGTM endpoints, production tracking smoke. |
@@ -146,7 +146,7 @@ provider OK without provider-specific proof.
 
 | Surface | Required proof |
 | --- | --- |
-| Consent | Usercentrics state, accept/deny/withdraw behavior, no optional providers before consent. |
+| Consent | Cookiebot state, accept/deny/withdraw behavior, default-denied Consent Mode, and no optional provider identifiers before consent. |
 | Google | dataLayer/sGTM evidence, GA4/Ads status as applicable, no native Ads double count. |
 | Meta | Pixel browser evidence, CAPI/provider row, Dataset Quality read-only probe when credentials permit. |
 | Microsoft UET | Browser network or queue evidence, UET CAPI purchase row/status for purchase flows. |

@@ -1,16 +1,21 @@
-import { createUsercentricsConsentState } from './createUsercentricsConsentState'
-import { parseUsercentricsAllowedDps, parseUsercentricsAllowedDpsValue } from './parseUsercentricsAllowedDps'
-import type { UsercentricsConsentState } from './usercentricsConsentSchema'
+import { createCookiebotConsentState } from './createCookiebotConsentState'
+import { parseCookiebotConsentCookie } from './parseCookiebotConsentCookie'
+import type { CookiebotConsentState } from './cookiebotConsentSchema'
 
-export function readStoredConsentState(): UsercentricsConsentState | null {
+export function readStoredConsentState(): CookiebotConsentState | null {
   if (typeof window === 'undefined') {
     return null
   }
 
-  const allowedDps =
-    typeof window.ucConsentAllowedDpsString === 'string' ?
-      parseUsercentricsAllowedDpsValue(window.ucConsentAllowedDpsString)
-    : parseUsercentricsAllowedDps(document.cookie)
+  if (window.Cookiebot?.consent) {
+    return createCookiebotConsentState({
+      preferences: window.Cookiebot.consent.preferences,
+      statistics: window.Cookiebot.consent.statistics,
+      marketing: window.Cookiebot.consent.marketing
+    })
+  }
 
-  return allowedDps ? createUsercentricsConsentState(allowedDps) : null
+  const categories = parseCookiebotConsentCookie(document.cookie)
+
+  return categories ? createCookiebotConsentState(categories) : null
 }

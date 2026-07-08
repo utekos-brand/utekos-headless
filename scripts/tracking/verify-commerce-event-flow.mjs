@@ -23,17 +23,6 @@ const requiredEvents = [
 
 const requiredProviders = ['google', 'meta']
 const requiredDataLayerEvents = ['select_item', 'add_to_cart', 'begin_checkout']
-const consentedServices = [
-  'Usercentrics Consent Management Platform',
-  'Facebook Pixel',
-  'Google Ads',
-  'Google Analytics',
-  'Google Tag Manager',
-  'Microsoft Advertising Remarketing',
-  'Microsoft Clarity',
-  'PostHog'
-]
-
 function networkEvidenceFromUrl(url) {
   try {
     const parsedUrl = new URL(url)
@@ -117,15 +106,24 @@ function parseTrackingRequest(request) {
 }
 
 async function grantTrackingConsent(page) {
-  await page.evaluate(async services => {
-    await Promise.race([
-      window.__ucCmp?.acceptAllConsents?.() ?? Promise.resolve(),
-      new Promise(resolve => window.setTimeout(resolve, 3000))
-    ])
-
-    const allowedDps = `${services.join(',')},`
-    document.cookie = `ucConsentAllowedDps=${encodeURIComponent(allowedDps)}; path=/; max-age=31536000; SameSite=Lax`
-    window.ucConsentAllowedDpsString = allowedDps
+  await page.evaluate(() => {
+    const consentCookie = "{necessary:true,preferences:true,statistics:true,marketing:true,method:'explicit'}"
+    document.cookie = `CookieConsent=${encodeURIComponent(consentCookie)}; path=/; max-age=31536000; SameSite=Lax`
+    window.Cookiebot = {
+      ...(window.Cookiebot || {}),
+      consent: {
+        necessary: true,
+        preferences: true,
+        statistics: true,
+        marketing: true,
+        method: 'explicit'
+      },
+      consented: true,
+      declined: false,
+      hasResponse: true,
+      renew: window.Cookiebot?.renew || function() {},
+      runScripts: window.Cookiebot?.runScripts || function() {}
+    }
     window.gtag?.('consent', 'update', {
       analytics_storage: 'granted',
       ad_storage: 'granted',
@@ -135,16 +133,11 @@ async function grantTrackingConsent(page) {
       personalization_storage: 'denied',
       security_storage: 'granted'
     })
-    window.dispatchEvent(new CustomEvent('ucEvent', {
-      detail: {
-        event: 'consent_status',
-        type: 'EXPLICIT',
-        action: 'onAcceptAllServices',
-        ucConsentAllowedDps: allowedDps,
-        ...Object.fromEntries(services.map(service => [service, true]))
-      }
-    }))
-  }, consentedServices)
+    window.uetq = window.uetq || []
+    window.uetq.push('consent', 'update', { ad_storage: 'granted' })
+    window.dispatchEvent(new Event('CookiebotOnConsentReady'))
+    window.dispatchEvent(new Event('CookiebotOnAccept'))
+  })
 }
 
 async function installSyntheticIdentifiers(page) {

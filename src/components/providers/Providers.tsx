@@ -8,7 +8,7 @@ import { CartMutationProvider } from '@/clients/CartMutationProvider'
 import { serverActions } from '@/constants/serverActions'
 import { CartIdProvider } from '@/components/providers/CartIdProvider'
 import type { DehydratedState } from '@tanstack/react-query'
-import { UsercentricsConsentProvider } from '@/components/cookie-consent/UsercentricsConsentProvider'
+import { CookiebotConsentProvider } from '@/components/cookie-consent/CookiebotConsentProvider'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 
 const EssentialTrackingServices = dynamic(
@@ -55,7 +55,7 @@ export default function Providers({
   )
 
   return (
-    <UsercentricsConsentProvider>
+    <CookiebotConsentProvider>
       <ThemeProvider
         attribute='class'
         defaultTheme='dark'
@@ -82,6 +82,6 @@ export default function Providers({
       </ThemeProvider>
       <EssentialTrackingServices />
       <DeferredTrackingServices />
-    </UsercentricsConsentProvider>
+    </CookiebotConsentProvider>
   )
 }

@@ -258,6 +258,7 @@
       ],
       "autoApprove": [],
       "headers": {
+        "Authorization": "Bearer ${GITHUB_PAT}",
         "X-MCP-Toolsets": "all"
       }
     },

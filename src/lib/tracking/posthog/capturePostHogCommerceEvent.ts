@@ -1,5 +1,5 @@
 import posthog from 'posthog-js'
-import { USERCENTRICS_POSTHOG_SERVICE_NAME } from '@/components/cookie-consent/usercentricsConfig'
+import { COOKIEBOT_POSTHOG_SERVICE_NAME } from '@/components/cookie-consent/cookiebotConfig'
 import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
 import type { MetaEventPayload } from 'types/tracking/meta/event'
 
@@ -64,7 +64,7 @@ export function getPostHogCommerceEvent(payload: MetaEventPayload): PostHogComme
 
 export function capturePostHogCommerceEvent(payload: MetaEventPayload): void {
   if (typeof window === 'undefined') return
-  if (!hasServiceConsent(USERCENTRICS_POSTHOG_SERVICE_NAME)) return
+  if (!hasServiceConsent(COOKIEBOT_POSTHOG_SERVICE_NAME)) return
 
   const event = getPostHogCommerceEvent(payload)
   if (!event) return

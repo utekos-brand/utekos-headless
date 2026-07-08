@@ -1377,7 +1377,7 @@ server.registerTool(
         status: 'verified_live',
         evidenceTool: 'gtm_sgtm_endpoint_status_probe',
         evidenceSummary: 'Public first-party sGTM/GTM endpoints are verified reachable with HTTP 200 in the local doctor.',
-        envRequirements: ['NEXT_PUBLIC_USERCENTRICS_SGTM_ORIGIN', 'NEXT_PUBLIC_GOOGLE_GTM_ID'],
+        envRequirements: ['NEXT_PUBLIC_TRACKING_SGTM_ORIGIN', 'NEXT_PUBLIC_GOOGLE_GTM_ID'],
         externalActions: ['Use browser/network and GTM Preview before claiming tag firing correctness; public endpoint reachability alone is not event verification.'],
         verificationCommand: 'npm run mcp:commerce-tracking:doctor',
         rerunTools: ['gtm_sgtm_endpoint_status_probe', 'browser_network_requests'],
@@ -1470,7 +1470,7 @@ server.registerTool(
         externalActions: [
           'Verify UET-Clarity linkage in Microsoft Clarity.',
           'Verify Advertising Dashboard connection for Microsoft Ads and any Google Ads linkage used for analysis.',
-          'Browser-smoke Consent API V2 with ad_Storage and analytics_Storage for each Usercentrics consent state.'
+          'Browser-smoke Consent API V2 with ad_Storage and analytics_Storage for each Cookiebot consent state.'
         ],
         verificationCommand: 'npm run mcp:commerce-tracking:doctor',
         rerunTools: ['microsoft_clarity_ads_status_probe'],
@@ -3396,14 +3396,14 @@ server.registerTool(
   'gtm_sgtm_endpoint_status_probe',
   {
     title: 'GTM sGTM Endpoint Status Probe',
-    description: 'Read public first-party Usercentrics sGTM/GTM endpoint statuses for Utekos without mutating GTM or Usercentrics configuration.',
+    description: 'Read public first-party sGTM/GTM endpoint statuses for Utekos without mutating GTM or Cookiebot configuration.',
     inputSchema: z.object({}),
     outputSchema: envelopeSchema('gtm_sgtm_endpoint_status_probe', gtmSgtmEndpointStatusDataSchema),
     annotations: liveReadAnnotations
   },
   async () => {
     const startedAt = nowIso()
-    const origin = normalizeBaseUrl(secretEnvValue('NEXT_PUBLIC_USERCENTRICS_SGTM_ORIGIN') || 'https://cloud.server.utekos.no')
+    const origin = normalizeBaseUrl(secretEnvValue('NEXT_PUBLIC_TRACKING_SGTM_ORIGIN') || 'https://cloud.server.utekos.no')
     const gtmId = secretEnvValue('NEXT_PUBLIC_GOOGLE_GTM_ID') || 'GTM-5TWMJQFP'
     const canonicalGoogleTagId = secretEnvValue('CANONICAL_GOOGLE_TAG_ID') || 'GT-MKRLF5WK'
     const endpoints = await Promise.all([
@@ -3430,7 +3430,7 @@ server.registerTool(
               makeError(
                 'GTM_SGTM_ENDPOINT_STATUS_FAILED',
                 'One or more public sGTM/GTM endpoints failed.',
-                'Verify Usercentrics sGTM publication, DNS, and canonical GTM/Google tag IDs.',
+                'Verify sGTM publication, DNS, Cookiebot consent, and canonical GTM/Google tag IDs.',
                 'google_tag_manager'
               )
             ],
@@ -3987,7 +3987,7 @@ server.registerTool(
               )
             ],
         sources: microsoftClaritySources(),
-        next: ['Browser smoke must verify Clarity Consent API V2 receives ad_Storage and analytics_Storage according to Usercentrics consent.']
+        next: ['Browser smoke must verify Clarity Consent API V2 receives ad_Storage and analytics_Storage according to Cookiebot consent.']
       }),
       missing.length === 0 ? 'Microsoft Clarity ads readiness prerequisites are present.' : 'Microsoft Clarity ads readiness prerequisites are incomplete.'
     )
@@ -4543,8 +4543,8 @@ server.registerTool(
       present: item.paths.some(fileExists)
     }))
     const consentSources = [
-      { path: 'src/components/cookie-consent/usercentricsConfig.ts', purpose: 'Usercentrics service names and settings' },
-      { path: 'src/components/cookie-consent/UsercentricsConsentProvider.tsx', purpose: 'Browser consent event handling' },
+      { path: 'src/components/cookie-consent/cookiebotConfig.ts', purpose: 'Cookiebot categories and provider mapping' },
+      { path: 'src/components/cookie-consent/CookiebotConsentProvider.tsx', purpose: 'Browser consent event handling' },
       { path: 'src/lib/tracking/consent/getRequestConsentState.ts', purpose: 'Server request consent extraction' },
       { path: 'src/lib/tracking/server-side-tagging.md', purpose: 'sGTM and consent architecture' }
     ].map(item => ({ ...item, exists: fileExists(item.path) }))
@@ -4627,7 +4627,7 @@ server.registerTool(
         { domain: 'google', paths: ['docs/google/google-analytics/', 'docs/google/google-ads/', 'docs/data-manager-api/events/send-events.md', 'src/lib/google/data-manager/', 'src/lib/tracking/server-side-tagging.md'] },
         { domain: 'microsoft', paths: ['docs/microsoft/advertising-api.md', 'src/lib/tracking/microsoft-uet/', 'src/lib/tracking/server-side-tagging.md'] },
         { domain: 'merchant', paths: ['docs/merchant/README.md', 'docs/merchant/product_data_specs.md', 'docs/merchant/order_tracking_signals.md'] },
-        { domain: 'consent', paths: ['docs/consent-management/usercentrics/', 'docs/consent-management/usercentrics/server-side-tagging/sgtm/'] },
+        { domain: 'consent', paths: ['docs/', 'src/components/cookie-consent/', 'src/lib/tracking/server-side-tagging.md'] },
         { domain: 'shopify', paths: ['docs/shopify/', 'docs/shopify/items-info.md'] }
       ],
       source_files: [

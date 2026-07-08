@@ -211,7 +211,7 @@ export const privacySections: Section[] = [
     content: (
       <>
         <p>
-          Usercentrics CMP er vår samtykkeplattform. Den registrerer og dokumenterer
+          Cookiebot CMP er vår samtykkeplattform. Den registrerer og dokumenterer
           valgene dine for nødvendige, funksjonelle, statistiske og
           markedsføringsrelaterte informasjonskapsler.
         </p>

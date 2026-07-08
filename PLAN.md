@@ -19,6 +19,47 @@ Deploy-/migrasjonsrekkefølge er nå kanonisk dokumentert i
 deploys, Supabase-mutasjoner, env-endringer, GTM-publiseringer,
 trackingendringer og providerendringer.
 
+### Cookiebot CMP-migrering
+
+Dato: 2026-07-08
+
+Usercentrics CMP v3-runtime er fjernet fra applikasjonen. Cookiebot
+CMP (Usercentrics-produkt) er nå autoritativ samtykkekilde.
+
+- Domain group ID: `f2145160-1ac5-4859-8385-36dc6327495f`
+- Loader: `https://consent.cookiebot.com/uc.js` med
+  `data-blockingmode="auto"`
+- Server consent cookie: `CookieConsent` (ikke `ucConsentAllowedDps`)
+- Window-events: `CookiebotOnConsentReady`, `CookiebotOnAccept`,
+  `CookiebotOnDecline`
+- GTM lastes uten React-consent-gate; Consent Initialisation i GTM
+  + default-denied i `CookieScript.tsx`
+- Microsoft UET bootstrap lastes alltid (advanced consent); events
+  er fortsatt marketing-gated
+- Tjenestenavn styres i
+  `src/components/cookie-consent/cookiebotConfig.ts`
+
+**Verifisert lokalt:**
+
+- `npx tsx --test src/components/cookie-consent/cookiebotConsent.test.ts`: grønn
+- `pnpm exec tsc --noEmit`: grønn
+- `npm run tracking:smoke` mot `localhost:3000`: grønn (2026-07-08)
+- `npm run mcp:commerce-tracking:doctor`: grønn (Meta, Microsoft, sGTM live)
+- Supabase `marketing.event_ledger`: aktiv (228 PageView siste 7 dager)
+- Supabase provider dispatch: `meta` 876 succeeded, `google` 655 succeeded
+- Browser-smoke på `localhost:3000` (Cookiebot loader, consent defaults,
+  ingen Usercentrics-scripts)
+
+**Gjenstår før produksjonssign-off:**
+
+- Vercel deploy med Cookiebot-endringer
+- `npm run tracking:smoke` og `npm run tracking:commerce-smoke` mot
+  preview/prod
+- GTM Preview: Cookiebot CMP-tag + Consent Initialisation
+- Cookiebot Admin: scanner må matche tjenestenavn i `cookiebotConfig.ts`
+- Sett `NEXT_PUBLIC_TRACKING_SGTM_ORIGIN` i Vercel (erstatter
+  `NEXT_PUBLIC_USERCENTRICS_SGTM_ORIGIN` om den finnes)
+
 ### Nåværende operativ beslutning
 
 - Supabase er kanonisk tracking-, audit- og provider-statuslager.
@@ -253,17 +294,14 @@ Denne seksjonen beskriver den eldre tracking-gjenopprettingen.
 Gjeldende status etter 2026-07-07-herdingen står i
 `Telemetry- og plattformherding` over.
 
-### Tracking-gjenoppretting 2026-06-11
+### Tracking-gjenoppretting 2026-06-11 (historisk — erstattet av Cookiebot 2026-07-08)
 
-- Usercentrics ruleset `9suQr3rGddL3Tb` er publisert med Google
-  Analytics (`Statistikk`), Google Ads (`Markedsføring`) og
-  Facebook Pixel (`Markedsføring`).
-- Microsoft Clarity er flyttet til `Statistikk`. `PostHog.com` og
-  én duplisert egendefinert PostHog er fjernet; én `PostHog` som
-  `Statistikk` er beholdt.
-- Usercentrics sitt faktiske DPS-navn for Meta-kanalen er
-  `Facebook Pixel`; applikasjon, diagnostikk, smoke-test og
-  Vercel-miljø skal bruke dette eksakte navnet.
+- Cookiebot domain group `f2145160-1ac5-4859-8385-36dc6327495f` er
+  aktiv CMP. Tidligere Usercentrics ruleset `9suQr3rGddL3Tb` er
+  avviklet i runtime.
+- Tjenestenavn for Meta-kanalen er `Facebook Pixel`; applikasjon,
+  diagnostikk, smoke-test og Vercel-miljø skal bruke dette eksakte
+  navnet via `cookiebotConfig.ts`.
 - GTM web-versjon `99` og server-versjon `17` er publisert.
   Rollback-versjoner er web `98` og server `15`.
 - Servicekontonøkkelen er rotert. GA4 property `489598217`, Admin
@@ -279,28 +317,21 @@ Gjeldende status etter 2026-07-07-herdingen står i
   serverte taggen inkluderer både `G-FCES3L0M9M` og
   `AW-18180376403`. Direkte `/gtag/js?id=G-FCES3L0M9M` returnerer
   fortsatt 400, men er ikke den kanoniske loaderen.
-- Produksjonsappen brukte fortsatt en gammel Usercentrics
-  resilient-loader som serverte web-versjon `98`. Appen er endret
-  til direkte `/gtm.js?id=GTM-5TWMJQFP` som standard; stale
-  Vercel-override skal fjernes før produksjonsdeploy.
+- Gammel resilient GTM-loader (web-versjon `98`) er fjernet. Appen
+  bruker direkte `/gtm.js?id=GTM-5TWMJQFP`; stale Vercel-override
+  skal fjernes før produksjonsdeploy.
 
-### Implementert lokalt
+### Implementert lokalt (Cookiebot)
 
-- Usercentrics CMP v3-loaderen kjøres i dokumenthodet med
-  kanonisk rekkefølge: Consent Mode defaults →
-  `uc-consent-signals.js` → autoblocker → loader.
-- GTM (`GTM-5TWMJQFP`) lastes tidlig i `<head>` via synkron
-  bootstrap og sGTM-endepunkt `cloud.server.utekos.no`; Consent
-  Mode styrer tag-firing. dataLayer-pushes og
-  Meta/PostHog/Chatbase m.fl. monteres fortsatt etter tjeneste-
-  eller kategorisamtykke.
-- GTM-noscript iframe peker på sGTM `ns.html`. Direkte Microsoft
-  UET-loader og direkte Microsoft browser-events er fjernet fra
-  aktiv flyt.
-- Usercentrics `ucEvent` oppdaterer React-gates og Google Consent
-  Mode uten reload. Endringer lagres i
-  `marketing.consent_snapshots` med faktiske tilgjengelige
-  identifikatorer.
+- Cookiebot CMP lastes i dokumenthodet med kanonisk rekkefølge:
+  Consent Mode defaults (`denied`) → Cookiebot `uc.js`
+  (`data-blockingmode="auto"`).
+- GTM (`GTM-5TWMJQFP`) lastes etter page-settle via
+  `ConsentGatedGoogleTagManager` uten React-consent-gate; Consent
+  Mode og GTM Consent Initialisation styrer tag-firing.
+- Cookiebot-events oppdaterer React-gates, Google Consent Mode,
+  Microsoft UET consent og Clarity `consentv2` uten reload.
+  Endringer lagres i `marketing.consent_snapshots`.
 - `/api/tracking-events` validerer en streng, versjonert
   Zod-kontrakt og avviser valgfri lagring fail-closed når verken
   Meta-, Google- eller Microsoft-samtykke kan dokumenteres.
@@ -350,7 +381,7 @@ Gjeldende status etter 2026-07-07-herdingen står i
 
 ### Verifisert lokalt
 
-- `npx tsx --test src/components/cookie-consent/usercentricsConsentDiagnostics.test.ts`:
+- `npx tsx --test src/components/cookie-consent/cookiebotConsent.test.ts`:
   grønn.
 - Målrettet ESLint for endrede tracking- og consentfiler: grønn.
 - `npm run tracking:smoke` er lagt til som deterministisk
@@ -417,31 +448,26 @@ Les [AGENTS/tracking.md] Dato: 2026-06-08
 - Meta, Google og andre annonseplattformer skal integreres som
   provider-adaptere bak `/api/tracking-events`, ikke via
   PostHog-proxien.
-- `cloud.server.utekos.no` er produksjonsdomene for
-  Usercentrics-administrert server-side GTM.
-- Usercentrics CMP v3 med ruleset-ID `9suQr3rGddL3Tb` er
-  autoritativ samtykkekilde. Utekos sin event collector leser
-  Usercentrics sin offisielle førsteparts-cookie
-  `ucConsentAllowedDps` server-side og lagrer normalisert status
-  i event-ledgeret.
+- `cloud.server.utekos.no` er produksjonsdomene for server-side GTM.
+- Cookiebot CMP med domain group `f2145160-1ac5-4859-8385-36dc6327495f`
+  er autoritativ samtykkekilde. Utekos sin event collector leser
+  Cookiebot sin førsteparts-cookie `CookieConsent` server-side og
+  lagrer normalisert status i event-ledgeret.
 - Google-nettleserevents skal eies av sGTM når
   `GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm` aktiveres. Direkte GA4
   Measurement Protocol beholdes for Shopify-, offline- og
   server-only-events.
 - `GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm` skal ikke aktiveres før
-  Usercentrics-containeren, custom domain, consent-signaler og
-  GTM-containerne er verifisert.
-- Usercentrics Server-Side Tracking med **sGTM Container** er
-  valgt som administrert hosting. Cloud Run og Meta Signals
-  Gateway skal ikke brukes fordi Meta allerede har direkte
-  Pixel + CAPI.
-- Usercentrics sin offisielle `ucConsentAllowedDps` brukes som
-  server-side samtykkesignal. Provider-dispatch og retry-kø
-  opprettes bare for tjenester som hadde dokumentert DPS-samtykke
-  da eventet ble mottatt.
-- Usercentrics må publisere window-eventet `ucEvent` med
-  `consent_status` og tjenestenavn. Uten eventet forblir alle
-  valgfrie provider-events fail-closed.
+  sGTM-endepunkter, GTM Consent Initialisation og Cookiebot CMP er
+  verifisert.
+- Server-side GTM hostes på Google Cloud Run. Meta Signals Gateway
+  skal ikke brukes fordi Meta allerede har direkte Pixel + CAPI.
+- `CookieConsent` brukes som server-side samtykkesignal.
+  Provider-dispatch og retry-kø opprettes bare for tjenester som
+  hadde dokumentert kategori-samtykke da eventet ble mottatt.
+- Cookiebot må publisere window-events (`CookiebotOnAccept` m.fl.)
+  med kategorisamtykke. Uten synkronisert consent forblir valgfrie
+  provider-events fail-closed.
 - `/sporing` er kun en deaktivert `204`-sink for den tidligere
   server-side GTM-løsningen.
 
@@ -453,7 +479,7 @@ Dato: 2026-06-08
   er låst til versjon `10.56.0`.
 - Node-profilering bruker `nodeProfilingIntegration()`. Browser
   replay, tracing og profilering er deaktivert inntil de kan
-  initialiseres eksplisitt bak Usercentrics-tjenesten
+  initialiseres eksplisitt bak Cookiebot statistics-tjenesten
   `Sentry Replay`.
 - `Document-Policy: js-profiling` sendes på dokumentresponser for
   å aktivere browser-profilering.

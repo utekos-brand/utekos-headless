@@ -1,6 +1,6 @@
 import { logAttribution } from '@/lib/tracking/log/logAttribution'
 import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
-import { USERCENTRICS_META_SERVICE_NAME } from '@/components/cookie-consent/usercentricsConfig'
+import { COOKIEBOT_META_SERVICE_NAME } from '@/components/cookie-consent/cookiebotConfig'
 import type { DispatchPixelsOptions } from 'types/cart'
 
 export function dispatchAddToCartPixels({
@@ -20,7 +20,7 @@ export function dispatchAddToCartPixels({
 
   if (typeof window === 'undefined') return
 
-  if (hasServiceConsent(USERCENTRICS_META_SERVICE_NAME) && window.fbq) {
+  if (hasServiceConsent(COOKIEBOT_META_SERVICE_NAME) && window.fbq) {
     window.fbq(
       'track',
       'AddToCart',

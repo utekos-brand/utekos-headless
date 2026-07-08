@@ -1,16 +1,18 @@
 # FLOW — tracking, observability og analytics
 
-Status date: 2026-07-07
+Status date: 2026-07-08
 
 Kanonisk oversikt over hvordan Utekos samler, leverer og bruker data for
 annonsering, produktanalyse og drift. Les dette sammen med
 [AGENTS.md](AGENTS.md), [PLAN.md](PLAN.md), [DEPLOYMENT.md](DEPLOYMENT.md) og
 [src/lib/tracking/server-side-tagging.md](src/lib/tracking/server-side-tagging.md).
 
-**Dokumentasjonsstatus:** Basert på kildekode, live
-`npm run mcp:commerce-tracking:doctor` (2026-07-07), og verifiserte
-subagent-kartlegginger. Live probe-status kan endre seg når `.env.mcp.local`
-oppdateres — kjør doctor før operasjonelle beslutninger.
+**Dokumentasjonsstatus:** Oppdatert 2026-07-08 for Cookiebot CMP-migrering.
+Lokal verifisering: `cookiebotConsent.test.ts` grønn, `tracking:smoke` grønn mot
+`localhost:3000` (med `NEXT_PUBLIC_ENABLE_GTM_IN_DEV=1`). Produksjon (`utekos.no`)
+kjører fortsatt gammel Usercentrics-runtime til Cookiebot-endringene er deployet.
+Supabase warehouse mottar events (siste 7 dager verifisert); `consent_snapshots`
+viser `cookiebot` fra lokal smoke og `usercentrics` fra produksjon.
 
 ---
 
@@ -30,14 +32,14 @@ publiseres eller brukes videre.* FLOW.md skiller eksplisitt:
 
 | Lag | Hva | Eksempler |
 | --- | --- | --- |
-| **Innsamling** | Consent → browser/server → lager | Usercentrics, `dispatchMetaTrackingEvent`, `/api/tracking-events` |
+| **Innsamling** | Consent → browser/server → lager | Cookiebot, `dispatchMetaTrackingEvent`, `/api/tracking-events` |
 | **Leveranse** | Provider dispatch, cron sync, GTM publish | Meta CAPI, GA4 MP, UET CAPI, Merchant API |
 | **Bruk** | Hvem leser data og handler på den | Ads-plattformer, PostHog CRO, Clarity replay, MCP doctor, agenter |
 
 ```mermaid
 flowchart LR
   subgraph collect [Innsamling]
-    UC[Usercentrics]
+    CB[Cookiebot]
     Browser[dispatchMetaTrackingEvent]
     API["/api/tracking-events"]
     WH["Supabase ledger"]
@@ -55,7 +57,7 @@ flowchart LR
     MCP[MCP doctor]
     Action[CRO og optimalisering]
   end
-  UC --> Browser --> API --> WH
+  CB --> Browser --> API --> WH
   WH --> Queue --> Cron --> Providers --> Ads
   Browser --> PH
   Browser --> Clarity
@@ -75,51 +77,53 @@ flowchart LR
 | **Meta / Google Ads / Microsoft Ads** | Algoritme-inndata og attribusjon | Primær produktanalyse |
 | **Microsoft Clarity** | Atferdsinnsikt (heatmaps, recordings) | Kanonisk ledger eller finans |
 | **Sentry** | Feil og ytelse (server/edge primært) | Marketing attribusjon |
-| **Usercentrics** | Consent-autoritet (fail-closed) | Event-lagring |
+| **Cookiebot** | Consent-autoritet (fail-closed) | Event-lagring |
 
 ---
 
-## 2. Consent-lag (Usercentrics)
+## 2. Consent-lag (Cookiebot)
 
 ### Faktisk flyt
 
 ```mermaid
 sequenceDiagram
   participant Page as utekos.no
-  participant UC as Usercentrics CMP
+  participant CB as Cookiebot CMP
   participant SGTM as cloud.server.utekos.no
   participant GTM as GTM web
   participant API as /api/consent-snapshots
   participant DB as marketing.consent_snapshots
 
-  Page->>SGTM: uc-consent-signals.js
-  Page->>UC: loader.js settings 9suQr3rGddL3Tb
-  UC->>Page: ucEvent consent update
+  Page->>Page: gtag/uetq consent default denied
+  Page->>CB: uc.js domain group f2145160-1ac5-4859-8385-36dc6327495f
+  CB->>Page: CookiebotOnConsentReady / OnAccept
   Page->>GTM: gtag consent update
+  Page->>Page: uetq + clarity consentv2 update
   Page->>API: POST consent snapshot
   API->>DB: persist
 ```
 
 **Kjernefiler:**
 
-- [src/components/cookie-consent/UsercentricsScript.tsx](src/components/cookie-consent/UsercentricsScript.tsx) — CMP loader, Consent Mode v2 defaults (`denied`)
-- [src/components/cookie-consent/UsercentricsConsentProvider.tsx](src/components/cookie-consent/UsercentricsConsentProvider.tsx) — `ucEvent`, `gtag('consent','update')`
-- [src/components/cookie-consent/usercentricsConfig.ts](src/components/cookie-consent/usercentricsConfig.ts) — DPS-navn
+- [src/components/layout/CookieScript.tsx](src/components/layout/CookieScript.tsx) — Consent Mode v2 defaults (`denied`) + Cookiebot `uc.js` (`data-blockingmode="auto"`)
+- [src/components/cookie-consent/CookiebotConsentProvider.tsx](src/components/cookie-consent/CookiebotConsentProvider.tsx) — `CookiebotOnAccept`, `gtag('consent','update')`, `uetq`, `clarity('consentv2')`
+- [src/components/cookie-consent/cookiebotConfig.ts](src/components/cookie-consent/cookiebotConfig.ts) — domain group ID og tjenestenavn
+- [src/components/cookie-consent/parseCookiebotConsentCookie.ts](src/components/cookie-consent/parseCookiebotConsentCookie.ts) — server-side parsing av `CookieConsent`
 - [src/app/api/consent-snapshots/route.ts](src/app/api/consent-snapshots/route.ts) — server persist
 
-### DPS-tjenester og consentflate
+### Tjenester og consentflate
 
-| DPS-navn (Usercentrics) | Flate | Aktiverer |
+| Tjenestenavn (Cookiebot) | Kategori | Aktiverer |
 | --- | --- | --- |
-| Google Analytics | Statistics | dataLayer, GTM load |
-| Google Ads | Marketing | GTM load (sammen med GA) |
+| Google Analytics | Statistics | dataLayer, GA pageview |
+| Google Ads | Marketing | GTM (sammen med GA via Consent Initialisation) |
 | Facebook Pixel | Marketing | Meta Pixel |
-| Microsoft Advertising Remarketing | Marketing | UET browser |
-| Microsoft Clarity | Statistics | Clarity (via GTM/sGTM; ikke egen SDK i `src/`) |
+| Microsoft Advertising Remarketing | Marketing | UET browser-events |
+| Microsoft Clarity | Statistics | Clarity (via GTM/sGTM + `consentv2`) |
 | PostHog | Statistics | PostHog init |
 | Vercel Analytics / Speed Insights | Statistics | Vercel telemetry |
 | Sentry Replay | Statistics | **Ikke implementert** (navn finnes, ingen runtime) |
-| Chatbase (legacy) | Marketing | Finnes i nåværende consent-gate, men skal ikke videreutvikles; ny AI-kundeassistent planlegges separat |
+| Chatbase (legacy) | Preferences | Finnes i consent-gate, men skal ikke videreutvikles; ny AI-kundeassistent planlegges separat |
 | Klarna On-site Messaging | Marketing | Klarna OSM WebSDK |
 
 ### Status og gap
@@ -127,12 +131,13 @@ sequenceDiagram
 | | Status |
 | --- | --- |
 | Consent fail-closed | Implementert |
-| sGTM consent signals | Verifisert på `cloud.server.utekos.no` |
-| Autoblocker | Bevisst **av** (bryter Next.js 16 RSC bootstrap) |
-| Usercentrics Admin MCP | **Finnes ikke** — verifisering via `usercentricsConsentDiagnostics.test.ts`, `npm run tracking:smoke` |
-| Server consent cookie | `ucConsentAllowedDps` lest av API-ruter |
+| sGTM endepunkter | Verifisert på `cloud.server.utekos.no` |
+| Cookiebot auto-blocking | Aktiv (`data-blockingmode="auto"`) |
+| GTM React-consent-gate | Fjernet — GTM lastes etter page-settle; Consent Initialisation i GTM |
+| Server consent cookie | `CookieConsent` lest av API-ruter |
+| Verifisering | `cookiebotConsent.test.ts`, `npm run tracking:smoke`, `npm run tracking:commerce-smoke` |
 
-**Forbedring:** Dedikert consent-smoke i CI; dokumentere eksakt DPS-label-match mot Usercentrics Admin ved hver tjenesteendring.
+**Forbedring:** Dedikert consent-smoke i CI; dokumentere eksakt tjenestenavn-match mot Cookiebot Admin ved hver tjenesteendring.
 
 ---
 
@@ -361,10 +366,21 @@ Consent (GA/Ads) → ConsentGatedGoogleTagManager
 | | Verdi |
 | --- | --- |
 | Account | `5806691920` |
-| Produkter (API) | 16 varianter |
+| Produkter (API) | 16/16 varianter prosessert |
+| Feedkvalitet (API) | 15/16 GTIN, bilder OK |
+| Account policy | **CRITICAL Misrepresentation** |
 | Cron | `0 */6 * * *` → [syncCatalogToMerchantCenter](src/lib/google/merchant-center/sync/syncCatalogToMerchantCenter.ts) |
-| Datakilder | API `Utekos API Primary (NO-no)` + AUTOFEED `utekos.no` (dual primary — risiko) |
+| Datakilder | API `Utekos API Primary Product Source (NO-no)` + AUTOFEED `utekos.no` (dual primary — aktiv opprydding) |
 | Microsoft MMC | GMC-import daglig 06:00 → store `50039313` |
+
+### Aktive Merchant-blokkere
+
+| Blokkering | Nåværende status | Neste handling |
+| --- | --- | --- |
+| Account-level Misrepresentation | Live diagnostikk viser CRITICAL account issue; alle produkter er disapproved på account policy, ikke produktfeed-defekter | Deploy og browser-verifiser lokale transparensfikser, deretter Merchant re-review |
+| Lokale transparensfikser | Implementert lokalt: synlig kontaktinfo på `/kontaktskjema`, checkout-transparens, korrigert shipping JSON-LD, `/vilkar-betingelser` i sitemap, og site audit dekker `/om-oss` | Fullfør build/deploy-smoke, prod-browser-sjekk og Merchant re-review før lukking |
+| Dual primary source | API-kilde og AUTOFEED er begge live | Deaktiver AUTOFEED i Merchant Center UI etter eksplisitt godkjenning; verifiser API som eneste kanoniske kilde |
+| Shopify/Data Manager residue | Shopify Google & YouTube app er disconnected, men Google Ads Data Manager viser fortsatt Shopify/Customer Match-residue; Ads-konto er suspended og kan blokkere UI-opprydding | Verifiser i Ads UI eller via partnerLinks når tilgjengelig; `gcloud` kan ikke rydde Ads/Data Manager |
 
 ### GTM publish-status
 
@@ -372,7 +388,7 @@ Consent (GA/Ads) → ConsentGatedGoogleTagManager
 | --- | --- |
 | Live web container | Versjon **103** (`Web: GA4 commerce trigger includes select_item + view_item_list`) |
 | Trigger **122** | Live regex inkluderer `select_item`/`view_item_list` — read-only preflight 2026-07-07 |
-| Workspace **106** | Trigger `122` har forventet regex; workspace status viser fortsatt én `updated` change |
+| Workspace **106** | Har fortsatt én `updated` change; ikke aktivt gap så lenge live v103 er korrekt |
 | Native Google Ads conversion tags | Bevisst **utelatt** (dobbeltelling mot GA4-import) |
 
 ### Google MCP probe-status (live 2026-07-07)
@@ -381,7 +397,7 @@ Consent (GA/Ads) → ConsentGatedGoogleTagManager
 | --- | --- | --- |
 | `gtm_sgtm_endpoint_status_probe` | Ja | Vedlikehold |
 | `ga4_event_status_probe` | Ja | Verifiser property `489598217` forblir tilgjengelig |
-| `merchant_center_status_probe` | Nei | Legg `GOOGLE_MERCHANT_*` i `.env.mcp.local`; `npm run merchant:preflight` fungerer via `.env.local` |
+| `merchant_center_status_probe` | Delvis | `npm run merchant:preflight` fungerer via `.env.local`; commerce MCP krever fortsatt `GOOGLE_MERCHANT_*` i `.env.mcp.local` |
 | `gtm_api_workspace_probe` | Nei | OAuth token + numeriske account/container IDs |
 | `google_ads_account_access_probe` | Nei | Developer token + OAuth |
 | `google_ads_campaign_performance_probe` | Nei | Samme |
@@ -392,29 +408,161 @@ Consent (GA/Ads) → ConsentGatedGoogleTagManager
 
 ## 7. Meta
 
-### Flyt
+Status date: 2026-07-08. Live API/MCP-verifisering samme dag via
+`project-0-utekos-headless-meta-ads` (read-only) og
+`meta_dataset_quality_probe` (commerce-tracking doctor).
 
-| Lag | Implementasjon |
+### Ambisjon vs. virkelighet
+
+| Område | Ambisjon (målbilde) | Virkelighet (2026-07-08) |
+| --- | --- | --- |
+| **Attribusjon** | Pixel + CAPI med stabil `eventID`-deduplisering og høy EMQ på Purchase/Checkout | Purchase EMQ **9.3** (live). InitiateCheckout/SelectItem **4.4**. `dedupe_key_feedback` **mangler** på alle 13 registrerte events i Dataset Quality API |
+| **Browser** | Consent-gatet Pixel, én PageView per navigasjon, `eventID` på alle standard events | Implementert via `MarketingPixels` → `PixelLogic` + `dispatchMetaTrackingEvent`. PageView fires direkte med `fbq` og hub med `sendBrowserEvent: false` (unngår dobbel Pixel) |
+| **Server (browser-origin)** | Alle marketing-events med consent → ledger + `server_retry` → CAPI | Implementert: `/api/tracking-events` → `persistAcceptedTrackingEvent` → cron `retry-dispatch` → `sendMetaBrowserEvent` |
+| **Server (purchase)** | Shopify `orders-paid` → dedikert CAPI Purchase med `shopify_order_{id}` | **Koblet lokalt** i [processOrderTrackingWithDependencies.ts](src/lib/tracking/services/processOrderTrackingWithDependencies.ts). Krever Redis checkout-attribusjon (`fbp`/`fbc`); skip ved `missing_attribution`. **Production deploy + provider-smoke gjenstår** |
+| **Katalog** | Shopify → Meta Product Catalog for dynamiske annonser | [catalogSync.ts](src/lib/tracking/meta/catalogSync.ts) + cron `sync-catalog` (04:00). Katalog `690208780604782` |
+| **Ads-innsikt** | Daglig spend/ROAS i Supabase + operativ lesing | Cron `sync-meta-insights` (05:00) skriver `campaign_insights` + `meta_quality_snapshots`. **Ingen app-dashboard eller agent-leser** |
+| **MCP diagnostikk** | Read-only dataset quality + Ads API-innsikt uten write | `meta_dataset_quality_probe` **live**. `meta-ads` MCP **live** (`health_check`, `get_insights`, `validate_token`). Write-tools (campaign/creative/audience) krever eksplisitt godkjenning per handling |
+| **Eksterne MCP-er** | Facebook Ads MCP, Supermetrics, Third Bridge | Kun `meta-ads-mcp` (npx) er konfigurert i [config/mcp/servers.base.json](config/mcp/servers.base.json). `https://mcp.facebook.com/ads`, `https://ai.thirdbridge.com/mcp/sse`, `https://mcp.supermetrics.com/mcp` er **ikke** registrert i prosjekt-MCP |
+
+### Kontoer og identifikatorer (live API 2026-07-08)
+
+| Ressurs | Verdi |
 | --- | --- |
-| Browser | `MarketingPixels` → `MetaPixelEvents` → `fbq` + `eventID` |
-| Server queue | `/api/tracking-events` → `server_retry` → cron → `sendMetaBrowserEvent` (CAPI) |
-| Purchase webhook | Ledger + Meta CAPI **koblet lokalt** via `sendMetaPurchase`; production deploy/provider-verifikasjon gjenstår |
-| Insights cron | `sync-meta-insights` → `campaign_insights`, `meta_quality_snapshots` |
+| Ad account (primær) | `act_772268237116474` — **Utekos Offisiell** (NOK, timezone `America/Los_Angeles`) |
+| Andre kontoer | `act_1369297397317769` (UMG Performance), `act_1430130638731476` (Sandbox) |
+| Pixel / dataset | `1092362672918571` (`NEXT_PUBLIC_META_PIXEL_ID` / `META_PIXEL_ID`) |
+| Product catalog | `690208780604782` |
+| Business (primær) | Utekos Marketing Data Layer `1384717111999921` |
+| App ID (token) | `1154247890253046` |
 
-### Hensikt
+### Pakker og biblioteker
 
-Maksimal event-kvalitet til Meta-algoritmen: deduplisering via `eventID`, CAPI
-for browser events, dataset quality snapshots for diagnostikk.
+| Pakke / overflate | Versjon / kilde | Bruk |
+| --- | --- | --- |
+| `facebook-nodejs-business-sdk` | `^24.0.1` | CAPI (`sendMetaBrowserEvent`, `sendMetaPurchase`), Ads Insights cron (`AdAccount.getInsights`), catalog sync (`ProductCatalog`) |
+| `@types/facebook-nodejs-business-sdk` | `^24.0.0` | TypeScript-typer for SDK |
+| Native `fbq` (inline script) | Meta `fbevents.js` | Browser Pixel i [MetaPixelEvents.tsx](src/components/analytics/Meta/MetaPixelEvents.tsx) — **ingen** `react-facebook-pixel` eller `@facebook/meta-pixel` npm-pakke |
+| `meta-ads-mcp` | npx (MCP) | Read/write Ads Graph API via Cursor MCP; prosjekt bruker read-only diagnostikk |
+| Commerce Tracking MCP | `scripts/mcp/utekos-commerce-tracking-server.mjs` | `meta_dataset_quality_probe` mot Graph `dataset_quality` v25.0 |
 
-### Status og gap
+### Arkitektur
 
-| | Status |
-| --- | --- |
-| Pixel + browser CAPI queue | Implementert |
-| `meta_dataset_quality_probe` | **Live** (2026-07-07 doctor) |
-| Purchase CAPI fra webhook | **Løst lokalt** — [sendMetaPurchase.ts](src/lib/tracking/meta/sendMetaPurchase.ts) koblet; production deploy/provider-verifikasjon gjenstår |
-| Insights i Supabase | Skrives, ikke lest av app |
-| Meta write MCP | Krever eksplisitt godkjenning per handling |
+```mermaid
+flowchart TD
+  subgraph browser [Browser consent-gated]
+    CB[Cookiebot Facebook Pixel]
+    MP[MarketingPixels / MetaPixelEvents]
+    PL[PixelLogic fbq init + PageView]
+    Hub[dispatchMetaTrackingEvent]
+    Pixel[sendMetaPixelEvent fbq track]
+    API["POST /api/tracking-events"]
+  end
+  subgraph server [Server]
+    PB[processMetaParamBuilderRequest]
+    Ledger[marketing.event_ledger]
+    Queue["ops.provider_dispatch_attempts server_retry meta"]
+    Cron["/api/cron/retry-dispatch */2"]
+    CAPI[sendMetaBrowserEvent]
+    WH["Shopify orders-paid"]
+    PCAPI[sendMetaPurchase server_direct]
+    Sync["sync-meta-insights cron 05:00"]
+    Cat["sync-catalog cron 04:00"]
+  end
+  subgraph meta [Meta]
+    PixelAPI[Graph Conversions API]
+    DQ[Dataset Quality API]
+    Ads[Marketing API Insights]
+    Catalog[Product Catalog API]
+  end
+  CB --> MP --> PL
+  PL --> Hub
+  Hub --> Pixel
+  Hub --> API
+  API --> PB --> Ledger
+  API --> Queue --> Cron --> CAPI --> PixelAPI
+  WH --> PCAPI --> PixelAPI
+  WH --> Ledger
+  Sync --> Ads
+  Sync --> DQ
+  Cat --> Catalog
+```
+
+### Event-katalog (kode → Meta)
+
+Alle browser-events går via [dispatchMetaTrackingEvent.ts](src/lib/tracking/meta/dispatchMetaTrackingEvent.ts)
+med consent `Facebook Pixel` ([cookiebotConfig.ts](src/components/cookie-consent/cookiebotConfig.ts)).
+Standard events bruker `fbq('track', …)`; øvrige bruker `trackCustom`.
+
+| Meta event | Kanonisk | Browser Pixel | CAPI queue (`server_retry`) | CAPI purchase (`server_direct`) | Trigger / fil |
+| --- | --- | --- | --- | --- | --- |
+| `PageView` | `page_view` | Ja (`PixelLogic` direkte + hub uten re-fire) | Ja (med marketing/statistics consent) | — | [PixelLogic.tsx](src/components/analytics/Meta/PixelLogic.tsx) per route |
+| `ViewContent` | `view_item` | Ja | Ja | — | [ProductViewTracking.tsx](src/components/analytics/ProductViewTracking.tsx) |
+| `ViewItemList` / `ViewCategory` | `view_item_list` | Ja (`trackCustom` for list) | Ja | — | [ProductListTracking.tsx](src/components/analytics/ProductListTracking.tsx) |
+| `SelectItem` | `select_item` | Custom | Ja | — | [ProductCard.tsx](src/components/ProductCard/ProductCard.tsx) |
+| `AddToCart` | `add_to_cart` | Ja | Ja | — | [trackAddToCart.ts](src/lib/tracking/client/trackAddToCart.ts), diverse PDP-komponenter |
+| `InitiateCheckout` | `begin_checkout` | Ja | Ja | — | [CheckoutButton.tsx](src/components/cart/CheckoutButton/CheckoutButton.tsx), [usePurchaseLogic.ts](src/hooks/usePurchaseLogic.ts) |
+| `Purchase` | `purchase` | Ja (takkside) | Ja (browser path) | Ja (`shopify_order_{id}`) | [usePurchaseLogic.ts](src/hooks/usePurchaseLogic.ts) browser; webhook [sendMetaPurchase.ts](src/lib/tracking/meta/sendMetaPurchase.ts) |
+| `Lead` | `generate_lead` | Ja | Ja | — | [trackNewsletterConversion.ts](src/components/analytics/Meta/trackNewsletterConversion.ts) |
+| `Search` | `search` | Custom | Ja (hvis implementert) | — | Kontrakt i [mapToCanonicalEventName.ts](src/lib/tracking/events/mapToCanonicalEventName.ts); **ingen aktiv kaller funnet** |
+| `InteractWithAccordion` | `custom` | Custom | Ja | — | [ProductDetailsAccordionSection.tsx](src/app/produkter/[handle]/components/ProductDetailsAccordionSection.tsx) |
+| `OpenQuickView` | `custom` | Custom | Ja | — | [NewProductLaunchSection.tsx](src/components/frontpage/components/TechDownCampaign/NewProductLaunchSection.tsx) |
+| `HeroInteract` | `custom` | Custom | Ja | — | Frontpage / isbading hero CTA |
+| `LandingSectionView` / `LandingCTAClick` / `LandingScrollDepth` | `custom` | Custom | Ja | — | [LandingTracking.tsx](src/app/skreddersy-varmen/components/LandingTracking.tsx) |
+| `CompleteRegistration` | `custom` | Custom | Ja | — | Type definert; **ingen aktiv kaller funnet** |
+
+**Deduplisering:** Browser sender `eventID` til `fbq` og samme `eventId` i CAPI-payload. Purchase webhook bruker deterministisk `eventId: shopify_order_{order.id}` (ikke delt med browser takk-side med mindre eksplisitt matchet).
+
+**Meta mottar ikke:** PostHog-events, Microsoft UET, GA4 dataLayer (parallelle spor, ikke Meta).
+
+### Dataset Quality (live 2026-07-08)
+
+`meta_dataset_quality_probe` returnerte **13** event-rader. EMQ (`event_match_quality_score`):
+
+| Event | EMQ | Merknad |
+| --- | --- | --- |
+| Purchase | **9.3** | Sterkest — webhook + browser spor |
+| PageView, ViewContent, ViewItemList, AddToCart, Landing* | **6.1** | Middels |
+| InitiateCheckout, SelectItem, InteractWithAccordion, OpenQuickView | **4.4** | Under mål — sjekk `fbp`/`fbc`/email_hash på checkout og produktklikk |
+| SubscribedButtonClick | null | Registrert i Meta, lav/ingen volum |
+
+Alle rader: `event_coverage_percentage: null`, `dedupe_feedback_present: false` — Meta eksponerer ikke dedupe-feedback i dagens probe-respons; forbedring krever manuell Events Manager-sjekk eller utvidet Graph-feltliste.
+
+### Provider dispatch og crons
+
+| Path | Modus | Detalj |
+| --- | --- | --- |
+| Browser hub → `/api/tracking-events` | `server_retry` | Kun `meta` (ikke `microsoft_uet` i Meta-kø) |
+| `orders-paid` → `sendMetaPurchase` | `server_direct` | Audit i `provider_dispatch_attempts`; **ikke** retry-kø. Skip uten Redis-attribusjon |
+| `retry-dispatch` | cron `*/2` | [dispatchClaimedProviderAttempt.ts](src/lib/tracking/warehouse/dispatchClaimedProviderAttempt.ts) → `sendMetaBrowserEvent` |
+| `sync-meta-insights` | cron `05:00` | [syncMetaInsightsAndQuality.ts](src/lib/tracking/meta/insights/syncMetaInsightsAndQuality.ts) |
+| `sync-catalog` | cron `04:00` | [catalogSync.ts](src/lib/tracking/meta/catalogSync.ts) |
+
+Env-gate: `META_ACCESS_TOKEN` / `META_SYSTEM_USER_TOKEN`, `META_PIXEL_ID`, `META_AD_ACCOUNT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, valgfri `META_TEST_EVENT_CODE`, `META_CAPI_ENABLED=false` fail-closed.
+
+### MCP og operativ innsikt
+
+| Overflate | Status | Read-only default |
+| --- | --- | --- |
+| `meta_dataset_quality_probe` | **Live** | Ja |
+| `meta-ads` / `meta-ads-read-only` MCP | **Live** (`health_check`, `get_ad_accounts`, `get_insights`, `validate_token`) | `meta-ads-read-only` subset; full server har write-tools |
+| `meta-ads` campaign/creative/audience writes | Tilgjengelig i MCP | **Blokkert** uten eksplisitt brukergodkjenning ([AGENTS.md](AGENTS.md)) |
+| Facebook `mcp.facebook.com/ads` | Ikke konfigurert | — |
+| Supermetrics / Third Bridge MCP | Ikke konfigurert | — |
+
+Detaljert ads-rapport (2026-07-07): [.agent/META/STATUS.md](.agent/META/STATUS.md).
+
+### Status og gap (prioritert)
+
+| P | Gap | Konsekvens | Neste handling |
+| --- | --- | --- | --- |
+| **P1** | Purchase CAPI ikke production-verifisert | Meta kan mangle server Purchase selv om kode er koblet | Deploy + `tracking:commerce-smoke` + Events Manager Test Events |
+| **P1** | Lav EMQ på InitiateCheckout / SelectItem (4.4) | Dårligere optimalisering mot checkout | Sikre capture-identifiers før checkout; verifiser `fbp`/`fbc` i Redis-attribusjon |
+| **P1** | Ingen dedupe-feedback i Dataset Quality API | Uklart om Pixel+CAPI dedupliseres optimalt | Events Manager → Overview → Deduplication; vurder felles `eventId` på Purchase browser + webhook |
+| **P2** | `campaign_insights` / `meta_quality_snapshots` uten leser | Cron-data ubrukt operativt | Bygg read-only view eller ukentlig agent-rapport (`.agent/META/`) |
+| **P2** | Ad account timezone `America/Los_Angeles` | `date_preset=yesterday` i API ≠ norsk kalenderdag | Bruk eksplisitt `time_range` (som i STATUS.md) for norske rapporter |
+| **P2** | `Search` / `CompleteRegistration` i kontrakt uten kaller | Død kontrakt eller manglende implementasjon | Implementer eller fjern fra `MetaEventType` |
+| **P3** | Eksterne MCP-er (Supermetrics, Facebook hosted) | Mangler alternativ innsikt | Evaluer kun etter behov; ikke påkrevd for kjerne-flyt |
 
 ---
 
@@ -538,7 +686,7 @@ npm run tracking:commerce-smoke   # ledger + provider evidence
 npm run merchant:preflight      # Google GMC (via .env.local)
 ```
 
-### Live probe-matrise (2026-07-07)
+### Live probe-matrise (oppdatert 2026-07-08)
 
 | Provider | Implementert | Live verifisert | Fail-closed årsak | Neste handling |
 | --- | --- | --- | --- | --- |
@@ -547,19 +695,23 @@ npm run merchant:preflight      # Google GMC (via .env.local)
 | sGTM/GTM public | Ja | Ja | — | Vedlikehold |
 | GA4 | Ja | Ja | — | Vedlikehold property-tilgang |
 | Meta Dataset Quality | Ja | Ja | — | Roter token ved eksponering |
+| Meta Ads API (`meta-ads` MCP) | Ja | Ja | — | Read-only insights i agent; write-tools krever eksplisitt godkjenning per handling |
 | Microsoft UET public | Ja | Ja | — | Vedlikehold |
 | Microsoft Ads auth | Ja | Ja | — | Refresh token ved utløp |
-| Microsoft Shopping | Ja | Ja | — | Verifiser produktantall etter GMC-sync |
+| Microsoft Shopping | Ja | Ja | — | Verifiser produktantall etter GMC-sync og AUTOFEED-opprydding |
 | Microsoft Clarity config | Ja | Ja | — | Workaround for Ads Dashboard |
-| Merchant Center MCP | Ja | Nei | `.env.mcp.local` merchant env | Synk env med `.env.local` |
+| Merchant preflight | Ja | Ja | — | Løs account-level Misrepresentation; ikke feed-defekter |
+| Merchant Center MCP | Ja | Delvis | `.env.mcp.local` merchant env | Synk env med `.env.local` hvis MCP-proben skal være live |
 | Google Ads (4 probes) | Ja | Nei | OAuth/dev token | Fullfør Google Ads OAuth |
-| GTM API workspace | Ja | Nei | OAuth + numeric IDs | Reauth + publish v106 |
+| GTM API workspace | Ja | Nei | OAuth + numeric IDs | Reauth bare ved workspace-inspeksjon; ingen publish uten godkjenning |
 | PostHog | Ja | Nei | API key/project id | Legg til i `.env.mcp.local` |
 | Sentry | Ja | Nei | Token scope | Utvid token |
 | Vercel | Ja | Nei | `VERCEL_TOKEN` | Legg til token |
 | Microsoft Ads account/campaign | Ja | Nei | Credential/scope | Verifiser CustomerId/AccountId |
 
-**Doctor-sammendrag:** 4 verified live, 11 fail-closed (per `provider_access_remediation_report`).
+**Merk:** Commerce doctor-tall fra 2026-07-07 er historiske. For Google
+Merchant skal `npm run merchant:preflight` og Merchant Center UI-status veie
+tyngst inntil `.env.mcp.local` er synket med Merchant-credentials.
 
 ---
 
@@ -590,15 +742,16 @@ flowchart LR
 
 | P | Gap | Konsekvens | Anbefalt handling |
 | --- | --- | --- | --- |
-| **P0** | Meta Purchase CAPI ikke på webhook | **Løst lokalt** — production deploy og Meta-verifikasjon gjenstår | `sendMetaPurchase` er koblet i `processOrderTracking`; verifiser etter deploy |
-| **P0** | Supabase data skrives, lite leses | **Løst lokalt** — operativ rapport; ingen ekstern alert-kanal | `npm run ops:provider-dispatch-report`; bruk `--fail-on-alerts` for lokal terskelalarm |
-| **P0** | GTM commerce trigger preflight | Live v103 inneholder `select_item`/`view_item_list`; workspace 106 viser fortsatt én `updated` change | Ikke republiser uten eksplisitt godkjenning; verifiser Tag Assistant/GA4 Realtime |
-| **P1** | Merchant/Google Ads MCP fail-closed | Agent mangler live Google Ads-innsikt | Synk `.env.mcp.local`; fullfør OAuth |
-| **P1** | PostHog `$pageview` med full URL | Query-param lekkasje | **Løst lokalt:** origin + pathname uten query params eller fragment; verifiser PostHog capture etter deploy |
+| **P0** | Merchant account-level Misrepresentation | Alle produkter er disapproved på account policy selv om API-feeden er prosessert | Deploy og verifiser lokale transparensfikser, kjør prod/browser-smoke, be om Merchant re-review |
+| **P0** | GMC dual primary (API + AUTOFEED) | Uklar kanonisk kilde for Google/Microsoft import og policy-diagnostikk | Deaktiver AUTOFEED `utekos.no` i Merchant Center UI etter eksplisitt godkjenning; bekreft API som eneste primærkilde |
+| **P0** | Merchant-fikser er lokale, ikke produksjonsverifisert | Det er for tidlig å lukke Misrepresentation-remediering | Kjør build/deploy-gater, prod-sjekk `/kontaktskjema`, checkout-notice, shipping JSON-LD, sitemap og site-audit |
+| **P1** | Shopify/Data Manager residue | Shopify app er disconnected, men Google Ads Data Manager kan fortsatt vise Shopify/Customer Match; Ads suspension kan blokkere UI-endringer | Verifiser via Ads UI eller partnerLinks når tilgjengelig; slett kun verifiserte lenker etter godkjenning |
+| **P1** | Merchant/Google Ads MCP fail-closed | Agent mangler bred live Google Ads-innsikt | Synk `.env.mcp.local`; fullfør OAuth/dev-token når Ads-kontoen tillater det |
+| **P1** | Lokale tracking-fikser ikke production/provider-verifisert | Meta Purchase CAPI, PostHog pageview og dead-letter replay kan ikke lukkes før deploy-smoke | Etter deploy: `tracking:commerce-smoke`, provider checks, PostHog capture og dead-letter route guards |
 | **P1** | Clarity ↔ Microsoft Ads Dashboard | Ingen kampanje+replay i ett UI | Clarity-filtre + MCP; support-sak `clarityMS@microsoft.com` |
 | **P1** | Klarna product feed | Blokkerer Klarna-annonsering | Implementer feed-generator |
-| **P1** | GMC dual primary (API + AUTOFEED) | Forvirring Microsoft/Google import | Deaktiver AUTOFEED når API er kanonisk |
-| **P2** | Sentry Replay ikke consent-koblet | Mangler client session-feildiagnostikk | Implementer etter Usercentrics DPS |
+| **P1** | PostHog MCP + CRO-dashboards | Produktanalyse finnes, men operativ CRO-loop er ikke etablert | Synk PostHog MCP env og bygg checkout-/UTM-dashboards uten rå query params |
+| **P2** | Sentry Replay ikke consent-koblet | Mangler client session-feildiagnostikk | Implementer etter Cookiebot statistics-tjeneste |
 | **P2** | Schema-only tabeller | Forvirring om live status | Dokumenter eller implementer |
 | **P2** | `client_observed` dispatch_mode | Ubrukt kontrakt | Implementer eller fjern fra schema |
 
@@ -642,7 +795,7 @@ flowchart LR
 
 ---
 
-## 14. Verifiserte påstander (kilde-ettersjekk 2026-07-07)
+## 14. Verifiserte påstander (kilde-ettersjekk 2026-07-08)
 
 | Påstand | Verifisert i |
 | --- | --- |
@@ -652,6 +805,8 @@ flowchart LR
 | Browser hub fan-out | [dispatchMetaTrackingEvent.ts](src/lib/tracking/meta/dispatchMetaTrackingEvent.ts) |
 | Retry cron hvert 2. min | [vercel.json](vercel.json) |
 | Merchant sync hvert 6. time | [vercel.json](vercel.json) |
+| Merchant API feed prosessert | Live `npm run merchant:preflight` 2026-07-08: 16/16 varianter, 15/16 GTIN, bilder OK |
+| Merchant policy root cause | Live Merchant-diagnostikk 2026-07-08: CRITICAL account-level Misrepresentation; ikke produktfeed-defekt |
 
 ---
 
@@ -668,148 +823,28 @@ flowchart LR
 
 ---
 
-## 16. Topp 10 — første endringer og oppgraderinger
+## 16. Prioriterte neste handlinger (2026-07-08)
 
-Handlingsprioritert liste som syntetiserer gapene i §12 til konkrete første steg.
-Rangert etter forretningspåvirkning: merkevarevekst, flere kjøp, lavere CPA, og
-lukket innsamling → leveranse → bruk-løkke.
+Denne listen erstatter den gamle «Topp 10»-listen. Ferdig verifiserte punkter er
+fjernet fra aktiv prioritet; lokale kodefikser står igjen bare som deploy- og
+verifikasjonsgater.
 
-```mermaid
-flowchart TD
-  P1["1 Meta Purchase CAPI"]
-  P2["2 Supabase operativ loop"]
-  P3["3 GTM v106 publish"]
-  P4["4 MCP credentials live"]
-  P5["5 Dead-letter replay"]
-  P6["6 PostHog probe + dashboards"]
-  P7["7 GMC single primary"]
-  P8["8 Klarna product feed"]
-  P9["9 Consent CI smoke"]
-  P10["10 Meta insights reader"]
+| Prioritet | Handling | Lukkes når |
+| --- | --- | --- |
+| 1 | Fullfør Merchant Misrepresentation-remediering | Lokale transparensfikser er deployet, browser-verifisert i prod, og Merchant re-review er sendt/godkjent |
+| 2 | Gjør API til eneste Merchant-primary source | AUTOFEED `utekos.no` er deaktivert i Merchant Center UI etter godkjenning, og preflight viser API-kilden som kanonisk |
+| 3 | Rydd Shopify/Data Manager-residue | Shopify/Customer Match-residue er bekreftet fjernet eller dokumentert blokkert av Ads suspension |
+| 4 | Åpne nødvendige MCP-prober | `.env.mcp.local` har Merchant/PostHog/Sentry/Vercel/Google Ads credentials der tilgjengelig, og doctor viser oppdatert live-status |
+| 5 | Verifiser lokale tracking-fikser etter deploy | Meta Purchase CAPI, PostHog `$pageview` og dead-letter replay guards er runtime/provider-verifisert |
+| 6 | Etabler neste analytics-bruk | PostHog CRO-dashboards, Klarna feed eller Meta insights-leser prioriteres etter Merchant policy er stabil |
 
-  P1 --> P2
-  P2 --> P4
-  P3 --> P6
-  P4 --> P10
-```
+### Bevisst utelatt fra aktiv prioritet
 
-### 1. Koble `sendMetaPurchase` på Shopify `orders-paid` webhook
+Disse er ikke aktive remediation-punkter nå:
 
-| | |
-| --- | --- |
-| **Hvorfor** | Meta-algoritmen mangler server-side purchase. Browser CAPI-kø dekker ikke webhook-kjøp. Maksimal datakvalitet til Meta (70 % paid media). |
-| **Gap i dag** | **Løst lokalt** — `sendMetaPurchase` er koblet i [`processOrderTrackingWithDependencies.ts`](src/lib/tracking/services/processOrderTrackingWithDependencies.ts); production deploy og provider-verifikasjon gjenstår. |
-| **Handling** | Ferdig lokalt: `sendMetaPurchase` kjøres fra Shopify `orders-paid` når checkout-attribusjon finnes, og audit skrives via `recordProviderDispatchAttempt` (`server_direct`). |
-| **Godkjenning** | Ingen provider-skriving utover eksisterende CAPI-kontrakt; deploy etter [DEPLOYMENT.md](DEPLOYMENT.md). |
-| **Verifikasjon** | `npm run tracking:commerce-smoke`; Meta Events Manager dedup med `event_id`; `meta_dataset_quality_probe`. |
-
-### 2. Etabler operativ Supabase feedback-loop (dashboard + alerting)
-
-| | |
-| --- | --- |
-| **Hvorfor** | Data skrives til `event_ledger`, `provider_dispatch_attempts`, `dead_letter_events` — men ingen leser dem operativt. Lukker «registrert men glemt»-problemet. |
-| **Gap i dag** | **Løst lokalt** — views finnes (`ops.provider_dispatch_health`, `ops.dead_letter_summary`) og [`provider-dispatch-feedback-report.mjs`](scripts/ops/provider-dispatch-feedback-report.mjs) gir operativ rapport + terskelalarm; app-dashboard og ekstern alert-kanal gjenstår. |
-| **Handling** | Kjør `npm run ops:provider-dispatch-report` for read-only rapport over kødybde, skip-rate per provider og unresolved dead letters. Bruk `-- --fail-on-alerts` eller `OPS_PROVIDER_DISPATCH_FAIL_ON_ALERTS=1` når rapporten skal gi non-zero alert-exit. |
-| **Godkjenning** | Supabase read-only views krever ingen schema-mutasjon; alerting-kanaler krever eksplisitt valg. |
-| **Verifikasjon** | `node --test scripts/ops/provider-dispatch-feedback-report.test.mjs`; read-only SQL mot views via rapportscript når warehouse-env er tilgjengelig. |
-
-### 3. Verifiser GTM commerce trigger live
-
-| | |
-| --- | --- |
-| **Hvorfor** | `select_item` / `view_item_list` må fyre i live GTM for Google Shopping/liste-innsikt. |
-| **Gap i dag** | Read-only preflight 2026-07-07 viser at live v103 allerede inneholder forventet regex, men workspace 106 viser fortsatt én `updated` change på trigger `122`. |
-| **Handling** | Ikke republiser uten separat godkjenning. Reconcile workspace 106 og verifiser live-firing med Tag Assistant/GA4 Realtime. |
-| **Godkjenning** | **GTM publish krever fortsatt eksplisitt brukergodkjenning** før handling. |
-| **Verifikasjon** | Live `/gtm.js?id=GTM-5TWMJQFP` returnerer v103 med forventet regex; GA4 Realtime for `select_item`/`view_item_list`; `ga4_event_status_probe`. |
-
-### 4. Synk `.env.mcp.local` og åpne fail-closed MCP probes
-
-| | |
-| --- | --- |
-| **Hvorfor** | 11 av 28 commerce-tracking probes er fail-closed — agenter mangler live innsikt i Google Ads, Merchant, PostHog, Sentry, Vercel. |
-| **Gap i dag** | §10 — doctor viser 4 verified live, 11 fail-closed. |
-| **Handling** | Lokal template/manifest er synket slik at `.env.mcp.example` nå viser probe-nøklene uten hemmelige verdier. Neste manuelle steg: fyll `.env.mcp.local` med `GOOGLE_MERCHANT_ACCOUNT_ID` + `GOOGLE_MERCHANT_QUOTA_PROJECT`, Google Ads developer token + read-token (`GOOGLE_ADS_ACCESS_TOKEN` eller `GOOGLE_ADS_OAUTH_ACCESS_TOKEN`) + `GOOGLE_ADS_CUSTOMER_ID`, `POSTHOG_PROJECT_ID` + `POSTHOG_PERSONAL_API_KEY`/`POSTHOG_CUSTOM_API_KEY`, `SENTRY_AUTH_TOKEN` + `SENTRY_ORG` + `SENTRY_PROJECT`, `VERCEL_TOKEN` + `VERCEL_PROJECT_ID`, og `GTM_ACCESS_TOKEN`/`GOOGLE_TAG_MANAGER_ACCESS_TOKEN` + numeriske `GTM_ACCOUNT_ID`/`GTM_CONTAINER_ID`. Kjør deretter `npm run mcp:build && npm run mcp:doctor`. |
-| **Godkjenning** | Kun credential-synk; ingen provider-mutasjon. |
-| **Verifikasjon** | `npm run mcp:commerce-tracking:doctor` — mål: ≥ 15 live probes. |
-
-### 5. Operasjonaliser dead-letter replay
-
-| | |
-| --- | --- |
-| **Hvorfor** | Etter 5 retries → `dead_letter_events` uten replay-verktøy. Tapte konverteringer for Meta/Google. |
-| **Gap i dag** | **Løst lokalt** — [`dead-letter-replay-plan.mjs`](scripts/ops/dead-letter-replay-plan.mjs) klassifiserer unresolved dead letters read-only, og `/api/cron/replay-dead-letter` er fail-closed bak `CRON_SECRET` + `DEAD_LETTER_REPLAY_ENABLED=1`. |
-| **Handling** | Kjør `npm run ops:dead-letter-replay-plan` først. Reparer rader klassifisert som `requires_attribution_repair`, `invalid_metadata`, `attempt_not_found`, `provider_mismatch`, `non_retry_dispatch_mode` eller `non_dead_letter_attempt_status`; replay kun `eligible_requeue`. |
-| **Godkjenning** | Replay er provider-dispatch og Supabase-mutasjon. Før første production run må bruker eksplisitt godkjenne: «Approve one production dead-letter replay run for N eligible row(s) by enabling `DEAD_LETTER_REPLAY_ENABLED=1` and invoking `/api/cron/replay-dead-letter` with `CRON_SECRET`?» |
-| **Verifikasjon** | `node --test scripts/ops/dead-letter-replay-plan.test.mjs`; `node --import tsx --test src/lib/tracking/warehouse/replayDeadLetterEvents.test.ts src/lib/tracking/warehouse/isDeadLetterReplayEnabled.test.ts`; etter godkjent deploy: route uten env gir `403`, uten secret gir `401`, planrapport viser bare godkjente `eligible_requeue`, og `ops.dead_letter_summary` trender ned etter replay. |
-
-### 6. Fiks PostHog MCP probe + etabler CRO-dashboards
-
-| | |
-| --- | --- |
-| **Hvorfor** | App sender `utekos_*` og `$pageview`; `posthog_event_status_probe` søker kanoniske navn (`page_view`, `add_to_cart`) — gir falsk «ingen data». PostHog er underutnyttet for funnels/replay. |
-| **Gap i dag** | §5 P1 — probe-query mismatch; ingen etablerte CRO-dashboards. |
-| **Handling** | Fiks HogQL i [`utekos-commerce-tracking-server.mjs`](scripts/mcp/utekos-commerce-tracking-server.mjs) til `utekos_${canonical}` + `$pageview`. Bygg PostHog-dashboards: checkout-funnel, UTM-segmentering (via landing-attribution, ikke rå query i pageview). |
-| **Godkjenning** | Probe-fiks er kode; dashboards er read-only i PostHog. |
-| **Verifikasjon** | `posthog_event_status_probe` med `observed: true`; manuell funnel-review i PostHog UI. |
-
-### 7. Konsolider Google Merchant Center (én kanonisk datakilde)
-
-| | |
-| --- | --- |
-| **Hvorfor** | Dual primary: API `Utekos API Primary` + AUTOFEED `utekos.no` — forvirrer Microsoft GMC-import og produktantall. |
-| **Gap i dag** | §6 P1, §8 — 16 API-produkter vs. import-tall kan avvike. |
-| **Handling** | Verifiser API-sync via [`syncCatalogToMerchantCenter`](src/lib/google/merchant-center/sync/syncCatalogToMerchantCenter.ts). Deaktiver AUTOFEED i Merchant Center når API er kanonisk. `npm run merchant:preflight`. |
-| **Godkjenning** | **Krever eksplisitt godkjenning** for Merchant Center-konfigurasjonsendring. |
-| **Verifikasjon** | `merchant_center_status_probe`; `microsoft_shopping_content_status_probe` produktantall. |
-
-### 8. Implementer Klarna product feed
-
-| | |
-| --- | --- |
-| **Hvorfor** | Blokkerer Klarna-annonsering og utvidet Klarna Ads-bruk. |
-| **Gap i dag** | §9 P1 — kun referanse i [`draft.md`](draft.md); feed ikke implementert. |
-| **Handling** | Bygg produktfeed-generator fra Shopify-katalog (samme kilde som GMC). Publiser på stabil URL. Gradvis utvid OSM-plasseringer etter feed er live. |
-| **Godkjenning** | Feed-publisering krever godkjenning; se Klarna-verneavsnitt under. |
-| **Verifikasjon** | Klarna feed-validering; eksisterende Express Checkout og OSM fortsatt grønn. |
-
-### 9. Consent-smoke i CI + dedikert consent-diagnostikk
-
-| | |
-| --- | --- |
-| **Hvorfor** | Usercentrics har ingen Admin MCP. Fail-closed consent er fundament for all sporingsdata — feil her undergraver alt annet. |
-| **Gap i dag** | §2 — kun unit test + manuell `npm run tracking:smoke`. |
-| **Handling** | Legg `npm run tracking:smoke` i CI etter deploy-preview. Vurder `usercentrics_dps_inventory_probe` i commerce MCP. Dokumenter DPS-label-match ved hver tjenesteendring. |
-| **Godkjenning** | CI-endring krever ingen provider-mutasjon. |
-| **Verifikasjon** | `usercentricsConsentDiagnostics.test.ts` grønn; smoke grønn mot preview/prod. |
-
-### 10. Les og bruk Meta insights/quality fra Supabase
-
-| | |
-| --- | --- |
-| **Hvorfor** | Cron `sync-meta-insights` skriver `campaign_insights` + `meta_quality_snapshots` — ingen consumer. Kobler annonsekvalitet (events + annonser + optimalisering) til beslutninger. |
-| **Gap i dag** | §7 — cron skriver, app leser ikke. Meta-innsikt delt i tre: event-kvalitet, annonsekvalitet, styringsinnsikt. |
-| **Handling** | Bygg read-only leser (dashboard eller ukentlig rapport) mot `marketing.campaign_insights` og `marketing.meta_quality_snapshots`. Fremtidig: genai-agent (§13) — **ikke** auto-mutere campaigns uten godkjenning. |
-| **Godkjenning** | Read-only først; campaign/budget-endringer krever eksplisitt godkjenning per handling. |
-| **Verifikasjon** | SQL-spørring mot snapshots; sammenlign med Meta Ads UI og `meta_dataset_quality_probe`. |
-
-### Klarna — verne om eksisterende implementasjon
-
-Følgende skal **ikke fjernes eller refaktoreres** i disse 10 endringene:
-
-| Komponent | Fil |
-| --- | --- |
-| Express Checkout (PDP) | [`KlarnaProductExpressCheckout.tsx`](src/components/klarna/KlarnaProductExpressCheckout.tsx) |
-| On-site Messaging | PDP + `/handlehjelp/klarna` |
-| Consent-gate | `Klarna On-site Messaging` DPS i Usercentrics |
-| Notifications webhook | [`/api/klarna/notifications`](src/app/api/klarna/notifications/route.ts) |
-
-Punkt 8 (product feed) er **additivt** — det utvider Kanal, ikke erstatter checkout/OSM.
-
-### Bevisst utelatt fra topp 10
-
-Disse hører i §13 (fremtidige integrasjoner), ikke som første endringer:
-
+- GTM commerce trigger for `select_item`/`view_item_list` (live v103 er verifisert)
+- Merchant produktfeed-defekt som root cause (live diagnose peker på account policy)
+- Microsoft kjerneprober UET/auth/Shopping/Clarity (live grønn 2026-07-07)
 - Ny AI-kundeassistent (ikke legacy Chatbase)
 - Google genai-agenter (10k GCP credit)
 - LangChain / LangSmith
@@ -831,6 +866,10 @@ Disse hører i §13 (fremtidige integrasjoner), ikke som første endringer:
 
 | Dato | Endring |
 | --- | --- |
+| 2026-07-08 | §7 Meta: full omskriving med ambisjon/virkelighet, event-katalog, pakker, Dataset Quality (live), MCP-status og lenke til `.agent/META/STATUS.md` |
+| 2026-07-08 | Oppdatert Merchant-status: CRITICAL account-level Misrepresentation, API-feed prosessert, dual source fortsatt aktiv |
+| 2026-07-08 | Fjernet GTM live trigger fra aktive remediation-punkter; live v103 beholdes som baseline |
+| 2026-07-08 | Konsolidert §12 og §16 rundt aktive Merchant/Data Manager/deploy-verifikasjonsgater |
 | 2026-07-07 | GTM read-only preflight: live v103 har `select_item`/`view_item_list`; ingen publish utført |
 | 2026-07-07 | Løst lokalt: dead-letter replay operasjonalisert med dry-run plan og fail-closed route guard |
 | 2026-07-07 | §16 punkt 4 lokal MCP env-template/manifest synket for fail-closed probes; manuell secret-sync gjenstår |

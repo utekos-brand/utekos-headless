@@ -2,13 +2,34 @@ import type { KlarnaPaymentsButtons } from 'klarna-payments-sdk'
 
 declare global {
   interface Window {
-    __ucCmp?: {
-      isInitialized: () => Promise<boolean>
-      showFirstLayer: () => Promise<void>
-      showSecondLayer: () => Promise<void>
+    Cookiebot?: {
+      consent: {
+        necessary: boolean
+        preferences: boolean
+        statistics: boolean
+        marketing: boolean
+        method: string | null
+      }
+      consented: boolean
+      declined: boolean
+      hasResponse: boolean
+      renew: () => void
+      runScripts: () => void
+      submitCustomConsent: (
+        optinPreferences: boolean,
+        optinStatistics: boolean,
+        optinMarketing: boolean
+      ) => void
     }
 
-    ucConsentAllowedDpsString?: string
+    clarity?: (
+      command: 'consentv2',
+      consent: {
+        source?: string
+        ad_Storage: 'granted' | 'denied'
+        analytics_Storage: 'granted' | 'denied'
+      }
+    ) => void
 
     fbq: {
       (method: 'init', pixelId: string, userData?: Record<string, unknown>): void

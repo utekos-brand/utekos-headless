@@ -6,10 +6,10 @@ import { pushGoogleDataLayerEvent } from '@/lib/tracking/google/pushGoogleDataLa
 import { dispatchMicrosoftUetBrowserEvent } from '@/lib/tracking/microsoft-uet/trackMicrosoftUetEvent'
 import { capturePostHogCommerceEvent } from '@/lib/tracking/posthog/capturePostHogCommerceEvent'
 import {
-  USERCENTRICS_GOOGLE_ANALYTICS_SERVICE_NAME,
-  USERCENTRICS_META_SERVICE_NAME,
-  USERCENTRICS_MICROSOFT_SERVICE_NAME
-} from '@/components/cookie-consent/usercentricsConfig'
+  COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME,
+  COOKIEBOT_META_SERVICE_NAME,
+  COOKIEBOT_MICROSOFT_SERVICE_NAME
+} from '@/components/cookie-consent/cookiebotConfig'
 import { mapToCanonicalEventName } from '@/lib/tracking/events/mapToCanonicalEventName'
 import type { MetaEventPayload } from 'types/tracking/meta/event'
 import type { DispatchMetaTrackingEventInput } from './types'
@@ -24,9 +24,9 @@ export async function dispatchMetaTrackingEvent({
   ga4Data,
   sendBrowserEvent = true
 }: DispatchMetaTrackingEventInput): Promise<void> {
-  const hasMetaConsent = hasServiceConsent(USERCENTRICS_META_SERVICE_NAME)
-  const hasGoogleAnalyticsConsent = hasServiceConsent(USERCENTRICS_GOOGLE_ANALYTICS_SERVICE_NAME)
-  const hasMicrosoftUetConsent = hasServiceConsent(USERCENTRICS_MICROSOFT_SERVICE_NAME)
+  const hasMetaConsent = hasServiceConsent(COOKIEBOT_META_SERVICE_NAME)
+  const hasGoogleAnalyticsConsent = hasServiceConsent(COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME)
+  const hasMicrosoftUetConsent = hasServiceConsent(COOKIEBOT_MICROSOFT_SERVICE_NAME)
   const hasMarketingEventConsent = hasMetaConsent || hasMicrosoftUetConsent
   const resolvedGa4Data = hasGoogleAnalyticsConsent ? ga4Data ?? resolveClientGA4Data() : undefined
 

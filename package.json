@@ -31,8 +31,6 @@
     "clean": "rm -rf .next",
     "sync": "node scripts/deploy/sync-and-deploy.mjs",
     "knip": "knip",
-    "usercentrics:css": "node scripts/print-usercentrics-custom-css.mjs",
-    "validate:usercentrics-docs": "node scripts/usercentrics-docs/validate.mjs",
     "tracking:smoke": "bash scripts/tracking/verify-production-tracking.sh",
     "tracking:commerce-smoke": "node scripts/tracking/verify-commerce-event-flow.mjs",
     "tracking:gtm-publish-commerce": "node scripts/tracking/publish-gtm-commerce-trigger.mjs",
