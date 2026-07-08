@@ -18,9 +18,9 @@ import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { hasCategoryConsent } from '@/lib/tracking/consent/hasCategoryConsent'
 import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
 import {
-  USERCENTRICS_META_SERVICE_NAME,
-  USERCENTRICS_VERCEL_ANALYTICS_SERVICE_NAME
-} from '@/components/cookie-consent/usercentricsConfig'
+  COOKIEBOT_META_SERVICE_NAME,
+  COOKIEBOT_VERCEL_ANALYTICS_SERVICE_NAME
+} from '@/components/cookie-consent/cookiebotConfig'
 
 const CHECKOUT_TRACKING_NAVIGATION_TIMEOUT_MS = 1200
 
@@ -86,7 +86,7 @@ export const CheckoutButton = ({
       const eventID = rawEventID.replace('evt_', 'ic_')
       const value = Number.parseFloat(subtotalAmount || '0') || 0
       const userData: MetaUserData | undefined =
-        hasServiceConsent(USERCENTRICS_META_SERVICE_NAME) ?
+        hasServiceConsent(COOKIEBOT_META_SERVICE_NAME) ?
           getClientMetaUserData()
         : undefined
 
@@ -158,7 +158,7 @@ export const CheckoutButton = ({
 
     if (
       hasServiceConsent(
-        USERCENTRICS_VERCEL_ANALYTICS_SERVICE_NAME
+        COOKIEBOT_VERCEL_ANALYTICS_SERVICE_NAME
       )
     ) {
       track('Vercel Analytics', {

@@ -11,7 +11,7 @@ import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { track } from '@vercel/analytics/react'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
 import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
-import { USERCENTRICS_VERCEL_ANALYTICS_SERVICE_NAME } from '@/components/cookie-consent/usercentricsConfig'
+import { COOKIEBOT_VERCEL_ANALYTICS_SERVICE_NAME } from '@/components/cookie-consent/cookiebotConfig'
 import type { AccordionSectionData } from '@types'
 
 export function ProductDetailsAccordionSection({
@@ -56,7 +56,7 @@ export function ProductDetailsAccordionSection({
           handleInteraction()
           if (
             hasServiceConsent(
-              USERCENTRICS_VERCEL_ANALYTICS_SERVICE_NAME
+              COOKIEBOT_VERCEL_ANALYTICS_SERVICE_NAME
             )
           ) {
             track('ProductPageAccordionInteraction', {
