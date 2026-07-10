@@ -11,10 +11,6 @@
     {
       "path": "/api/cron/retry-dispatch",
       "schedule": "*/2 * * * *"
-    },
-    {
-      "path": "/api/cron/replay-dead-letter",
-      "schedule": "*/15 * * * *"
     }
   ],
   "regions": ["arn1"]

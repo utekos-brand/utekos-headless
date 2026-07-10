@@ -1,4 +1,8 @@
 import * as Sentry from '@sentry/nextjs'
+import {
+  CHROME_EXTENSION_URL_PATTERN,
+  isIgnorableClientError
+} from '@/lib/observability/client/isIgnorableClientError'
 import type { LogPayload } from 'types/tracking/log/LogPayload'
 
 /**
@@ -29,7 +33,8 @@ Sentry.init({
   integrations: [],
   sendDefaultPii: false,
   enableLogs: true,
-  tracesSampleRate: 0
+  tracesSampleRate: 0,
+  denyUrls: [CHROME_EXTENSION_URL_PATTERN]
 })
 
 const MAX_REPORTED_ERRORS = 10
@@ -104,12 +109,21 @@ try {
     }
     // #endregion
 
+    const stack = event.error instanceof Error ? event.error.stack : undefined
+    if (
+      isIgnorableClientError({
+        message: event.message,
+        source: event.filename,
+        stack
+      })
+    ) return
+
     beaconError('client_error', {
       message: event.message,
       source: event.filename,
       line: event.lineno,
       column: event.colno,
-      stack: event.error instanceof Error ? event.error.stack : undefined
+      stack
     })
   })
 

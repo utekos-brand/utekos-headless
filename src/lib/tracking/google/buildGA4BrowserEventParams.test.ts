@@ -34,3 +34,36 @@ test('builds GA4 browser fallback params with event identity and source URL', ()
     }
   ])
 })
+
+test('removes query and hash from GA4 page_location', () => {
+  const params = buildGA4BrowserEventParams({
+    eventId: 'landing-event',
+    eventSourceUrl: 'https://utekos.no/skreddersy-varmen?utm_source=facebook&fbclid=test#checkout',
+    eventData: {}
+  })
+
+  assert.equal(params.page_location, 'https://utekos.no/skreddersy-varmen')
+})
+
+test('keeps 100-character GA4 Measurement Protocol page_location values', () => {
+  const prefix = 'https://utekos.no/'
+  const eventSourceUrl = `${prefix}${'a'.repeat(100 - prefix.length)}`
+  const params = buildGA4BrowserEventParams({
+    eventId: 'max-length-event',
+    eventSourceUrl,
+    eventData: {}
+  })
+
+  assert.equal(params.page_location, eventSourceUrl)
+})
+
+test('omits 101-character GA4 Measurement Protocol page_location values', () => {
+  const prefix = 'https://utekos.no/'
+  const params = buildGA4BrowserEventParams({
+    eventId: 'oversized-event',
+    eventSourceUrl: `${prefix}${'a'.repeat(101 - prefix.length)}`,
+    eventData: {}
+  })
+
+  assert.equal(params.page_location, undefined)
+})
