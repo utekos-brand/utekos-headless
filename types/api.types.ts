@@ -76,6 +76,22 @@ export type ShopifyCreateCartOperation = ShopifyOperation<
   }
 >
 
+export type ShopifyCartAttributesUpdateOperation = ShopifyOperation<
+  {
+    cartAttributesUpdate: {
+      cart: ShopifyCart
+      userErrors?: {
+        field: string[] | null
+        message: string
+      }[]
+    }
+  },
+  {
+    cartId: string
+    attributes: { key: string; value: string }[]
+  }
+>
+
 export type ShopifyRemoveFromCartOperation = ShopifyOperation<
   { cartLinesRemove: { cart: ShopifyCart } },
   { cartId: string; lineIds: string[] }

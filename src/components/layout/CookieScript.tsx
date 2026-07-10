@@ -1,5 +1,6 @@
 import Script from 'next/script'
 import {
+  COOKIEBOT_BLOCKING_MODE,
   COOKIEBOT_DOMAIN_GROUP_ID,
   COOKIEBOT_SCRIPT_URL
 } from '@/components/cookie-consent/cookiebotConfig'
@@ -33,7 +34,7 @@ export const CookieScript = () => {
         id='Cookiebot'
         src={COOKIEBOT_SCRIPT_URL}
         data-cbid={COOKIEBOT_DOMAIN_GROUP_ID}
-        data-blockingmode='auto'
+        data-blockingmode={COOKIEBOT_BLOCKING_MODE}
         strategy='beforeInteractive'
       />
     </>

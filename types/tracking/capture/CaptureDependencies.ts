@@ -7,6 +7,10 @@ export type CaptureDependencies = {
     value: CheckoutAttribution,
     ttlSeconds: number
   ) => Promise<void>
+  persistCheckoutAttributionSnapshot?: (
+    value: CheckoutAttribution,
+    storageTokens: string[]
+  ) => Promise<void>
   logger: (
     level: 'INFO' | 'ERROR',
     message: string,

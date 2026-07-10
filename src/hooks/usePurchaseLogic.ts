@@ -8,12 +8,16 @@ import { useCartMutations } from '@/hooks/useCartMutations'
 import { useOptimisticCartUpdate } from '@/hooks/useOptimisticCartUpdate'
 import { getCartIdFromCookie } from '@/lib/actions/getCartIdFromCookie'
 import { trackAddToCart } from '@/lib/tracking/client/trackAddToCart'
+import { resolveClientGA4Data } from '@/lib/tracking/google/getClientGA4Data'
 import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
 import { getClientMetaUserData } from '@/lib/tracking/meta/utils/getClientMetaUserData'
 import { hasCategoryConsent } from '@/lib/tracking/consent/hasCategoryConsent'
 import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
-import { COOKIEBOT_META_SERVICE_NAME } from '@/components/cookie-consent/cookiebotConfig'
+import {
+  COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME,
+  COOKIEBOT_META_SERVICE_NAME
+} from '@/components/cookie-consent/cookiebotConfig'
 import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { getVariants } from '@/app/skreddersy-varmen/utekos-orginal/utils/getVariants'
 import { getSelectableSizes, PRODUCT_VARIANTS } from '@/api/constants'
@@ -30,6 +34,14 @@ type ConfiguredSelectionCartResult = {
   cartId: string | null
   product: ShopifyProduct
   selectedVariant: ShopifyProductVariant
+}
+
+const CHECKOUT_TRACKING_NAVIGATION_TIMEOUT_MS = 1200
+
+function waitForCheckoutTrackingDeadline() {
+  return new Promise<void>(resolve => {
+    window.setTimeout(resolve, CHECKOUT_TRACKING_NAVIGATION_TIMEOUT_MS)
+  })
 }
 
 function normalizeSelectedSize(size: string, selectableSizes: readonly string[]): string {
@@ -218,15 +230,13 @@ export function usePurchaseLogic({ products }: UsePurchaseLogicProps) {
     })
   }
 
-  const trackCheckoutStart = ({
+  const trackCheckoutStart = async ({
     cartId,
     checkoutUrl,
-    product,
     selectedVariant
   }: {
     cartId: string | null
     checkoutUrl: string
-    product: ShopifyProduct
     selectedVariant: ShopifyProductVariant
   }) => {
     try {
@@ -239,10 +249,16 @@ export function usePurchaseLogic({ products }: UsePurchaseLogicProps) {
         hasServiceConsent(COOKIEBOT_META_SERVICE_NAME) ? getClientMetaUserData() : undefined
 
       if (hasCategoryConsent('marketing')) {
+        const ga4Data =
+          hasServiceConsent(COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME) ?
+            await resolveClientGA4Data()
+          : undefined
         const captureBody: CaptureBody = {
           cartId,
           checkoutUrl,
           eventId: eventID,
+          ...(ga4Data?.client_id ? { gaClientId: ga4Data.client_id } : {}),
+          ...(ga4Data?.session_id ? { gaSessionId: ga4Data.session_id } : {}),
           ...(userData ? { userData } : {})
         }
 
@@ -287,12 +303,14 @@ export function usePurchaseLogic({ products }: UsePurchaseLogicProps) {
       return
     }
 
-    trackCheckoutStart({
-      cartId: result.cartId,
-      checkoutUrl,
-      product: result.product,
-      selectedVariant: result.selectedVariant
-    })
+    await Promise.race([
+      trackCheckoutStart({
+        cartId: result.cartId,
+        checkoutUrl,
+        selectedVariant: result.selectedVariant
+      }),
+      waitForCheckoutTrackingDeadline()
+    ])
 
     window.location.assign(checkoutUrl)
   }

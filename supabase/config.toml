@@ -65,6 +65,7 @@ schema_paths = [
   "./schemas/00_extensions.sql",
   "./schemas/10_schemas.sql",
   "./schemas/20_marketing.sql",
+  "./schemas/25_commerce.sql",
   "./schemas/30_partner.sql",
   "./schemas/40_ops.sql",
   "./schemas/50_analytics_fdw.sql",

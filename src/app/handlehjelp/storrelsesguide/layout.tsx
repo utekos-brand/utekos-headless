@@ -2,26 +2,10 @@ import { UtekosBreadcrumbBar } from '@/components/navigation/UtekosBreadcrumbBar
 import { SizeGuideJsonLd } from './components/SizeGuideJsonLd'
 import type { ReactNode } from 'react'
 import {
+  googleSans,
   utekosText,
   utekosTextMedium
 } from '@/app/fonts/font.config'
-import { Google_Sans, Google_Sans_Flex } from 'next/font/google'
-
-const googleSansFlex = Google_Sans_Flex({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-sans',
-  preload: true,
-  axes: ['GRAD', 'ROND']
-})
-
-const googleSans = Google_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-sans',
-  axes: ['GRAD'],
-  preload: true
-})
 export default function SizeGuideLayout({
   children
 }: {
@@ -30,7 +14,7 @@ export default function SizeGuideLayout({
   return (
     <>
       <article
-        className={`${utekosText.variable} ${utekosTextMedium.variable} ${googleSans.variable} ${googleSansFlex.variable}`}
+        className={`${utekosText.variable} ${utekosTextMedium.variable} ${googleSans.variable}`}
       >
         <SizeGuideJsonLd />
         <UtekosBreadcrumbBar

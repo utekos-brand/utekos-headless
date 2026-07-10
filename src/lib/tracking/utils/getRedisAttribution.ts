@@ -3,6 +3,7 @@
 import { redisGet } from '@/lib/redis/redisGet'
 import { safeString } from '@/lib/utils/safeString'
 import { logToAppLogs } from '@/lib/utils/logToAppLogs'
+import { getCheckoutAttributionSnapshotByTokens } from '@/lib/tracking/warehouse/getCheckoutAttributionSnapshotByTokens'
 import type { OrderPaid } from 'types/commerce/order/OrderPaid'
 import type { CheckoutAttribution } from 'types/tracking/user/CheckoutAttribution'
 
@@ -31,6 +32,21 @@ export async function getRedisAttribution(
       }
     } catch (e) {
       console.error(`[Webhooks] Redis read error for key ${key}:`, e)
+    }
+  }
+
+  if (!redisData && possibleKeys.length > 0) {
+    try {
+      const snapshotData = await getCheckoutAttributionSnapshotByTokens(
+        possibleKeys.map(key => key.replace(/^checkout:/, ''))
+      )
+      if (snapshotData) {
+        redisData = snapshotData
+        foundKey = 'supabase:checkout_attribution_snapshot'
+        console.log('[Webhooks] Attribution found in Supabase checkout attribution snapshot')
+      }
+    } catch (e) {
+      console.error('[Webhooks] Supabase checkout attribution snapshot read error:', e)
     }
   }
 

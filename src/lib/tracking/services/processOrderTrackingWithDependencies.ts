@@ -9,7 +9,6 @@ import type { MicrosoftUetPurchaseDispatchResult } from '@/lib/tracking/microsof
 import { shouldEnqueueMicrosoftUetRetry } from '@/lib/tracking/microsoft-uet/shouldEnqueueMicrosoftUetRetry'
 import { createTrackingContext } from '@/lib/tracking/utils/createTrackingContext'
 import { buildOrderPurchaseTrackingPayload } from '@/lib/tracking/orders/buildOrderPurchaseTrackingPayload'
-import { enqueueMicrosoftUetRetryDispatch } from '@/lib/tracking/warehouse/enqueueMicrosoftUetRetryDispatch'
 
 type MetaPurchaseDispatchResult =
   | {
@@ -41,6 +40,11 @@ type TrackingLogger = (
   context?: Record<string, unknown>
 ) => Promise<void>
 
+type MicrosoftUetRetryEnqueue = (
+  payload: MetaEventPayload,
+  attribution: CheckoutAttribution
+) => Promise<void>
+
 export type ProcessOrderTrackingDependencies = {
   getRedisAttribution: (order: OrderPaid) => Promise<CheckoutAttribution | null>
   persistAcceptedTrackingEvent: (
@@ -55,6 +59,7 @@ export type ProcessOrderTrackingDependencies = {
     attribution: CheckoutAttribution | null
   ) => Promise<MicrosoftUetPurchaseDispatchResult>
   recordProviderDispatchAttempt?: ((input: ProviderDispatchAttemptInput) => Promise<void>) | undefined
+  enqueueMicrosoftUetRetryDispatch?: MicrosoftUetRetryEnqueue | undefined
   logger: TrackingLogger
 }
 
@@ -255,7 +260,13 @@ export async function processOrderTrackingWithDependencies(
       && payload.eventName
     ) {
       try {
-        await enqueueMicrosoftUetRetryDispatch(payload, redisData)
+        const enqueueMicrosoftRetryDispatch =
+          deps.enqueueMicrosoftUetRetryDispatch
+          ?? (
+            await import('@/lib/tracking/warehouse/enqueueMicrosoftUetRetryDispatch')
+          ).enqueueMicrosoftUetRetryDispatch
+
+        await enqueueMicrosoftRetryDispatch(payload, redisData)
       } catch (error) {
         await deps.logger(
           'ERROR',

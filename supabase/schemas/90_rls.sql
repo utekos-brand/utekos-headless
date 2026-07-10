@@ -16,6 +16,12 @@ alter table marketing.consent_snapshots enable row level security;
 alter table marketing.event_ledger enable row level security;
 alter table marketing.meta_quality_snapshots enable row level security;
 alter table marketing.campaign_insights enable row level security;
+alter table marketing.checkout_attribution_snapshots enable row level security;
+alter table marketing.checkout_attribution_lookup_tokens enable row level security;
+
+alter table commerce.shopify_graphql_requests enable row level security;
+alter table commerce.shopify_order_snapshots enable row level security;
+alter table commerce.shopify_order_line_items enable row level security;
 
 alter table partner.sources enable row level security;
 alter table partner.referrals enable row level security;

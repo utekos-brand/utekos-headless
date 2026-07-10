@@ -4,6 +4,7 @@ import { mutationCartDiscountCodesUpdate } from '@/api/graphql/mutations/cart'
 import { shopifyFetch } from '@/api/shopify/request/fetchShopify'
 import { performCartCreateMutation } from '@/lib/actions/perform/performCartCreateMutation'
 import { performCartLinesAddMutation } from '@/lib/actions/perform/performCartLinesAddMutation'
+import { syncCartMarketingAttributesSafely } from '@/lib/actions/perform/syncCartMarketingAttributes'
 import { mapThrownErrorToActionResult } from '@/lib/errors/mapThrownErrorToActionResult'
 import { getCartIdFromCookie } from '@/lib/actions/getCartIdFromCookie'
 import { setCartIdInCookie } from '@/lib/actions/setCartIdInCookie'
@@ -60,6 +61,12 @@ export const addCartLinesAction = async (
 
     if (!rawCart) {
       throw new Error('Klarte ikke å legge produkt(er) i handlekurv.')
+    }
+
+    const attributedCart =
+      await syncCartMarketingAttributesSafely(rawCart.id)
+    if (attributedCart) {
+      rawCart = attributedCart
     }
 
     if (rawCart.id) {

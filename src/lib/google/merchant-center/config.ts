@@ -133,7 +133,10 @@ function readMerchantCredentialsFromConfiguredPath() {
 
   const credentialPath =
     path.isAbsolute(configuredPath) ? configuredPath : (
-      path.join(process.cwd(), configuredPath)
+      path.join(
+        /* turbopackIgnore: true */ process.cwd(),
+        configuredPath
+      )
     )
 
   if (!existsSync(credentialPath)) {
@@ -155,7 +158,10 @@ function readCredentialFileIfPath(value: string) {
 
   const credentialPath =
     path.isAbsolute(normalizedValue) ? normalizedValue : (
-      path.join(process.cwd(), normalizedValue)
+      path.join(
+        /* turbopackIgnore: true */ process.cwd(),
+        normalizedValue
+      )
     )
 
   if (!existsSync(credentialPath)) {

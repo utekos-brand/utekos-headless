@@ -260,11 +260,18 @@ Microsoft UET `server_retry` enqueue/dispatch.
 Preflight:
 
 ```bash
+node --import tsx --test src/lib/tracking/warehouse/replayDeadLetterSchedule.test.ts
 node --import tsx --test src/lib/tracking/warehouse/replayDeadLetterEvents.test.ts
+node --import tsx --test src/lib/tracking/google/buildGA4BrowserEventParams.test.ts
 node --import tsx --test src/lib/tracking/microsoft-uet/microsoftUetCapiTokenEnvKeys.test.ts
 node --import tsx --test src/lib/tracking/microsoft-uet/shouldEnqueueMicrosoftUetRetry.test.ts
 pnpm exec tsc --noEmit
 ```
+
+`/api/cron/replay-dead-letter` is manual-only. It must not be listed in
+`vercel.json` under `crons`; the route remains available for a separately
+approved one-time invocation. Never leave `DEAD_LETTER_REPLAY_ENABLED=1`
+as the normal production state.
 
 Post-deploy (no secret):
 
@@ -273,6 +280,10 @@ curl -s -o /dev/null -w "%{http_code}\n" https://utekos.no/api/cron/replay-dead-
 # Expect 401 when route exists; 404 means not deployed.
 npm run ops:provider-dispatch-report
 ```
+
+After removing an accidental recurring schedule, inspect at least one full
+previous schedule interval in Vercel logs and confirm that no new scheduled
+`403` calls appear.
 
 First production replay run requires **explicit user approval** (provider
 dispatch). Do not blindly replay Google dead letters with reason

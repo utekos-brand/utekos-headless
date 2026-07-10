@@ -88,14 +88,23 @@ produksjonsakseptkriterium.
 
 ## Samtykkeflyt (Cookiebot)
 
-Cookiebot CMP lastes med `data-blockingmode="auto"`. Consent Mode v2
-defaults (`denied`) settes før Cookiebot i
+Cookiebot CMP lastes uten `data-blockingmode="auto"` som standard, slik
+Next.js sine egne streaming-/hydration-scripts ikke blir forsøkt blokkert
+eller re-kjørt av Cookiebot auto-blocking. Dette er manuell blocking:
+tracking- og tredjepartsscript lastes bare gjennom appens egne
+samtykkegater, Consent Mode defaults og Cookiebot runtime-state.
+
+Rollback kan gjøres med `NEXT_PUBLIC_COOKIEBOT_BLOCKING_MODE=auto`, men
+auto-blocking er ikke normaltilstanden så lenge Next.js 16/PPR streamer
+inline `$RC`/`$RV`-scripts.
+
+Consent Mode v2 defaults (`denied`) settes før Cookiebot i
 [`CookieScript.tsx`](../../components/layout/CookieScript.tsx).
 
 `<head>`-rekkefølge:
 
 1. Google Consent Mode defaults (`denied` fail-closed) + `url_passthrough`
-2. Cookiebot `uc.js` (`data-cbid`, `data-blockingmode="auto"`)
+2. Cookiebot `uc.js` (`data-cbid`; ingen auto-blocking som standard)
 
 GTM lastes etter page-settle via
 [`ConsentGatedGoogleTagManager.tsx`](../../components/analytics/ConsentGatedGoogleTagManager.tsx)
@@ -129,6 +138,7 @@ bare checkout-attribusjon som ble fanget ved markedsføringssamtykke.
 
 ```text
 NEXT_PUBLIC_COOKIEBOT_DOMAIN_GROUP_ID=f2145160-1ac5-4859-8385-36dc6327495f
+NEXT_PUBLIC_COOKIEBOT_BLOCKING_MODE=<unset for manual blocking; auto only for rollback>
 NEXT_PUBLIC_TRACKING_SGTM_ORIGIN=https://cloud.server.utekos.no
 NEXT_PUBLIC_GOOGLE_GTM_ID=GTM-5TWMJQFP
 NEXT_PUBLIC_GTM_RESILIENT_SCRIPT_URL=<optional override; only after a newly generated loader is verified>

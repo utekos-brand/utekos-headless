@@ -4,11 +4,16 @@
 
 STATUS: SGTM ER FLYTTET TIL NYTT GOOGLE CLOUD-PROSJEKT;
 PRODUKSJONSDOMENET ER VERIFISERT GRØNT; TELEMETRY- OG
-PLATTFORMHERDING ER IMPLEMENTERT LOKALT I READ-ONLY/FAIL-CLOSED
-MODUS; SUPABASE PRODUCTION-MUTASJON FOR TELEMETRY-HERDING ER
-UTFØRT OG VERIFISERT; VERCEL PRODUCTION DEPLOY ER GODKJENT FOR
-DENNE RELEASEN; PROVIDER WRITES OG GTM PUBLISH ER FORTSATT
-BLOKKERT UTEN SEPARAT EKSPLISITT GODKJENNING
+PLATTFORMHERDING ER IMPLEMENTERT I READ-ONLY/FAIL-CLOSED MODUS;
+SUPABASE PRODUCTION-MUTASJON FOR TELEMETRY-HERDING, SHOPIFY-
+HISTORIKK OG CHECKOUT-ATTRIBUTION SNAPSHOT ER UTFØRT OG
+VERIFISERT; VERCEL PRODUCTION DEPLOY
+`utekos-headless-55g9vsbve-utekos-marketing-group.vercel.app`
+ER READY FOR TARGET `production`; COMMERCIAL INTELLIGENCE-PLANEN
+ER OPPRETTET; PROVIDER DEAD-LETTER-REGISTERET BLE GJENÅPNET
+2026-07-10 AV 48 GOOGLE `page_location`-FEIL, MED LOKAL RETTING
+VERIFISERT MEN IKKE PRODUKSJONSDEPLOYET; PROVIDER WRITES OG GTM PUBLISH ER
+FORTSATT BLOKKERT UTEN SEPARAT EKSPLISITT GODKJENNING
 
 ## Telemetry- og plattformherding
 
@@ -18,6 +23,10 @@ Deploy-/migrasjonsrekkefølge er nå kanonisk dokumentert i
 [DEPLOYMENT.md](DEPLOYMENT.md). Den skal leses før alle production
 deploys, Supabase-mutasjoner, env-endringer, GTM-publiseringer,
 trackingendringer og providerendringer.
+
+Kommersiell styringsplan for Supabase, BigQuery, PostHog, Vercel
+Workflows, MCP/agenter og kundechatbot ligger i
+[COMMERCIAL_INTELLIGENCE_PLAN.md](COMMERCIAL_INTELLIGENCE_PLAN.md).
 
 ### Cookiebot CMP-migrering
 
@@ -117,6 +126,47 @@ CMP (Usercentrics-produkt) er nå autoritativ samtykkekilde.
   Microsoft UET purchase som `server_direct`. Generisk retry-claiming
   er fortsatt avgrenset til `meta` og `google` med
   `dispatch_mode='server_retry'`.
+- Shopify Admin GraphQL er koblet som Supabase-side commerce bridge i
+  private `commerce`-schema. Production-migrasjonene
+  `20260708153048_shopify_graphql_bridge.sql` og
+  `20260708161740_fix_shopify_collect_pg_net.sql` er kjørt. Shopify
+  credentials ligger i Supabase Vault som `shopify_store_domain` og
+  `shopify_admin_api_token`, ikke i SQL eller tabeller.
+- Full Shopify-historikk er importert fra query
+  `updated_at:>2000-01-01T00:00:00Z`: 804 ordre og 1222 linjevarer
+  ligger i `commerce.shopify_order_snapshots` og
+  `commerce.shopify_order_line_items`. Importen brukte 7 GraphQL
+  request-logger totalt, med historikk fra 2022-06-09 08:15:05 UTC
+  til 2026-07-08 13:58:40 UTC.
+- `commerce.shopify_order_attribution_readiness` viser etter full
+  import 535 ordre med `missing_ga_client_id`, 263 ordre med
+  `missing_paid_click_id`, 4 ordre `ready_for_provider_repair` og 2
+  ordre med `missing_meta_browser_ids`. Attribute-key count over de
+  804 ordrene: `_fbp` 363, `_ga_session_id` 271, `_ga_client_id` 269,
+  `_fbc` 213, `gclid` 6, `gbraid` 2 og `msclkid` 2.
+- Supabase production har nå varig checkout-attribution snapshot:
+  migrasjonen `20260708161741_checkout_attribution_snapshots.sql`
+  opprettet `marketing.checkout_attribution_snapshots` og
+  `marketing.checkout_attribution_lookup_tokens`. Tabellene har RLS,
+  service-role-only grants og token-indeks for bredere lookup enn bare
+  `checkout_token`/`cart_token`.
+- Kode er oppdatert slik `/api/checkout/capture-identifiers`
+  skriver samme attribution-payload til Redis og Supabase snapshot.
+  `orders-paid` attribution lookup har også Supabase snapshot-fallback
+  hvis Redis bommer eller er utløpt. Dette er deployet i production
+  med Vercel deployment
+  `utekos-headless-55g9vsbve-utekos-marketing-group.vercel.app`.
+- Kode er oppdatert for fremtidige ordre: eksisterende Shopify
+  carts får nå marketing-attributter synket via Storefront
+  `cartAttributesUpdate` etter cart line add/update og i
+  `/api/checkout/capture-identifiers` før checkout. Dette dekker
+  tilfeller der `_ga`, `_fbp`, `_fbc` eller paid click-id dukker opp
+  etter at carten først ble opprettet. Dette er deployet i production,
+  men full commerce purchase-smoke gjenstår før runtime-flyten er
+  signert av.
+- `npm run ops:identifier-coverage-report` er lagt til som read-only
+  P0-rapport for Shopify attribution readiness, checkout snapshot-
+  coverage, provider purchase delivery og uløste dead letters.
 - PostHog er endret til eksplisitt, samtykkegatet produktanalyse:
   `autocapture: false`, manuell `$pageview`, trygg commerce-helper,
   `NEXT_PUBLIC_POSTHOG_KEY` med legacy fallback, og session replay
@@ -147,8 +197,8 @@ CMP (Usercentrics-produkt) er nå autoritativ samtykkekilde.
 - Targeted unit tests for order tracking og PostHog commerce helper:
   fire av fire tester grønn.
 - `pnpm exec tsc --noEmit`: grønn.
-- `npm run build`: grønn med kun font fallback warnings for
-  `Google Sans Flex` og `Google Sans`.
+- `npm run build`: grønn. Etter lokal, ikke-deployet fontopprydding er nyeste
+  build-logg fri for `Google Sans Flex`/`Google Sans` fallback-warnings.
 - Supabase migration history matcher nå lokale migrasjoner etter
   kontrollert repair: `20260609204152` ble markert reverted fordi den
   var samme `add_website_visitor_events` som lokal `20260609192500`.
@@ -163,10 +213,58 @@ CMP (Usercentrics-produkt) er nå autoritativ samtykkekilde.
   `ops.provider_dispatch_health`, `ops.dead_letter_summary`,
   `dispatch_mode`, `skip_reason` og dead-letter resolution-felter
   finnes.
+- Supabase production query bekrefter at `commerce`-schemaet finnes
+  med Shopify GraphQL request-logg, order snapshots, line items og
+  attribution-readiness-view. Første Shopify GraphQL-call returnerte
+  HTTP 200, 0 GraphQL-feil, `has_next_page=true`, og importerte 5
+  ordre.
+- Etter full historikk-paginering er siste Shopify-side samlet med
+  `has_next_page=false`; production har nå 7 Shopify GraphQL request
+  logs, 804 ordre og 1222 linjevarer i `commerce`.
+- Supabase production migration history matcher lokal etter
+  `20260708161741_checkout_attribution_snapshots.sql`.
+- Supabase production schema dump bekrefter
+  `marketing.checkout_attribution_snapshots` og
+  `marketing.checkout_attribution_lookup_tokens` med primærnøkler,
+  FK, indekser, RLS og service_role `select/insert/update`.
+- Rollback-smoke mot production bekreftet at snapshot- og token-insert
+  validerer, og at testdata ikke ble liggende etter `rollback`.
+- `TRACKING_COMMERCE_SMOKE_SYNTHETIC_IDS=1 npm run tracking:commerce-smoke`
+  2026-07-08T20:41Z beviste ny samtykket checkout-capture i production.
+  Smoke-eventen `ic_1783543301472_3da1da34-77f5-43e8-acde-5094a11c434f`
+  fikk checkout snapshot med primary storage token, Microsoft `msclkid`,
+  GA client/session id, Meta `fbp` og external id. `npm run
+  ops:identifier-coverage-report` 2026-07-08T20:42Z viser nå 1 snapshot-rad
+  med 100% dekning for GA client/session id, Meta `fbp`, external id,
+  Microsoft `msclkid` og paid click id. Rapporten klassifiserer Microsoft
+  UET `missing_capi_token` som historisk radgjeld fordi nyeste purchase-rad
+  fra før smoken er `missing_attribution`. Full purchase delivery er fortsatt
+  ikke bevist før en faktisk ny testordre eller ny live purchase-event-id
+  finnes etter grønn checkout-capture.
+- Provider dead-letter-registeret ble klassifisert/lukket i production
+  2026-07-08T20:33Z uten provider replay: 340
+  `requires_attribution_repair`, 28
+  `historical_ga4_session_id_payload_bug`, 11
+  `outside_provider_replay_window`, 2 `invalid_payload` og 1
+  `historical_ga4_page_location_payload_bug`. Etterpå var
+  `npm run ops:provider-dispatch-report -- --fail-on-alerts` grønn
+  med 0 active queue rows, 0 failed/dead-lettered rows, 0 unresolved
+  dead letters og 0 alerts. `npm run ops:dead-letter-replay-plan --
+  --limit=500` viste 0 unresolved og 0 replay-kandidater. Denne
+  statusen ble foreldet 2026-07-10: 48 nye Google `ga_error`-rader
+  er uløste fordi `page_location` oversteg 100 tegn. Lokal retting
+  fjerner query/hash og utelater fortsatt overlang verdi. Den
+  tilbakevendende Vercel-cronen er fjernet lokalt fordi replay-ruten
+  er manuell og godkjenningsgated. Produksjonsdeploy, observasjon av
+  nye events og eventuell engangsreplay krever separate porter.
+- GA4 browser fallback sender nå `page_location` uten query/hash og
+  dropper ugyldige/overlange URL-er før Measurement Protocol.
 - Constraint-query bekrefter at `provider_dispatch_attempts` tillater
   `skipped_unqualified` og har `dispatch_mode`-sjekk for
   `server_retry`, `server_direct` og `client_observed`.
 - `npx supabase db lint --linked --schema marketing,ops,analytics`:
+  grønn, "No schema errors found".
+- `npx supabase db lint --linked --schema commerce,marketing,ops,analytics`:
   grønn, "No schema errors found".
 - Secret scan av `.env.mcp.example`, `.mcp.json`,
   `config/mcp/credentials.manifest.json`,
@@ -175,10 +273,11 @@ CMP (Usercentrics-produkt) er nå autoritativ samtykkekilde.
 
 ### Ikke utført med vilje
 
-- Browser commerce smoke er ikke kjørt fordi den sender live
-  tracking-events og nå krever en konkret
-  `TRACKING_COMMERCE_SMOKE_PURCHASE_EVENT_ID` for Microsoft UET CAPI
-  purchase-status.
+- Browser commerce smoke er kjørt for `select_item`, `add_to_cart`,
+  `begin_checkout`, provider rows, Cookiebot/Clarity/PostHog evidence og
+  checkout attribution snapshot. Full purchase-smoke er ikke kjørt fordi den
+  krever faktisk testordre eller konkret
+  `TRACKING_COMMERCE_SMOKE_PURCHASE_EVENT_ID` etter ny checkout-capture.
 - Tokenrotasjon hos Google/Meta/Microsoft er ikke utført fra repoet.
   Lokale eksponerte verdier er fjernet; providerrotasjon må gjøres
   separat dersom verdiene var ekte.
@@ -189,11 +288,24 @@ CMP (Usercentrics-produkt) er nå autoritativ samtykkekilde.
 
 - Følg [DEPLOYMENT.md](DEPLOYMENT.md) for release order ved videre
   arbeid: Supabase først når runtime krever nye databaseobjekter,
-  deretter Vercel production deploy, deretter
+  deretter Vercel production deploy ved runtime-endringer, deretter
   provider-/tracking-smoke.
 - Denne tråden har eksplisitt godkjent og gjennomført Supabase
-  production-mutasjon for telemetry-herdingen. Vercel production
-  deploy er også eksplisitt godkjent for denne releasen.
+  production-mutasjon for telemetry-herdingen, Shopify-historikk og
+  checkout-attribution snapshot samt dead-letter-klassifisering.
+  Vercel production deployment
+  `utekos-headless-55g9vsbve-utekos-marketing-group.vercel.app` ble
+  opprettet 2026-07-08T18:55:14.894Z og er `READY` for target
+  `production`. Det som fortsatt mangler er full provider-/commerce-smoke
+  og en reell checkout-capture som skriver snapshot-rad, ikke selve
+  deployen.
+- GA4 BigQuery-linken er aktiv for property `489598217`, men
+  BigQuery-datasettet `analytics_489598217` finnes ikke ennå i
+  `project-c683eb2c-20ae-4ec2-ac3`. `npm run
+  ops:ga4-bigquery-readiness` 2026-07-08T20:48Z bekreftet dette read-only
+  med `ga4_bigquery_dataset_missing`, 0 `events_*` og 0
+  `events_intraday_*`. BigQuery Wrapper/read models skal vente til
+  datasettet og minst én GA4 event-tabell finnes.
 - Fyll Microsoft Advertising/Shopping/Clarity credentials i lokal
   secret store, kjør Microsoft read-only probes, og marker
   Microsoft OK først når OAuth, account access, campaign status, UET,

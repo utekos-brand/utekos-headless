@@ -5,6 +5,7 @@ import { track } from '@vercel/analytics'
 import * as React from 'react'
 import { cn } from '@/lib/utils/className'
 import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { resolveClientGA4Data } from '@/lib/tracking/google/getClientGA4Data'
 import { getClientMetaUserData } from '@/lib/tracking/meta/utils/getClientMetaUserData'
 import { Button } from '@/components/ui/button'
 import type {
@@ -18,6 +19,7 @@ import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { hasCategoryConsent } from '@/lib/tracking/consent/hasCategoryConsent'
 import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
 import {
+  COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME,
   COOKIEBOT_META_SERVICE_NAME,
   COOKIEBOT_VERCEL_ANALYTICS_SERVICE_NAME
 } from '@/components/cookie-consent/cookiebotConfig'
@@ -116,10 +118,16 @@ export const CheckoutButton = ({
       }
 
       if (hasCategoryConsent('marketing')) {
+        const ga4Data =
+          hasServiceConsent(COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME) ?
+            await resolveClientGA4Data()
+          : undefined
         const captureBody: CaptureBody = {
           cartId,
           checkoutUrl,
           eventId: eventID,
+          ...(ga4Data?.client_id ? { gaClientId: ga4Data.client_id } : {}),
+          ...(ga4Data?.session_id ? { gaSessionId: ga4Data.session_id } : {}),
           ...(userData ? { userData } : {})
         }
 

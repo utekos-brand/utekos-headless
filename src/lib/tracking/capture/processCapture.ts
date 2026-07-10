@@ -17,6 +17,18 @@ export async function processCapture(
   const { userData } = payload
   const storageTokens = Array.isArray(tokens) ? tokens : [tokens]
   const primaryToken = storageTokens[0]
+  const snapshotWrite = deps.persistCheckoutAttributionSnapshot ?
+    deps.persistCheckoutAttributionSnapshot(payload, storageTokens).catch(async error => {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown snapshot persistence error'
+      await deps.logger(
+        'ERROR',
+        'Checkout attribution snapshot persistence failed',
+        { error: errorMessage, storageTokenCount: storageTokens.length },
+        { token: primaryToken }
+      )
+    })
+  : Promise.resolve()
 
   await deps.logger(
     'INFO',
@@ -49,8 +61,10 @@ export async function processCapture(
     await Promise.all(
       storageTokens.map(token => deps.redisSet(`checkout:${token}`, payload, 604800))
     )
+    await snapshotWrite
     return { success: true }
   } catch (error: unknown) {
+    await snapshotWrite
     const errorMessage =
       error instanceof Error ? error.message : 'Unknown Redis error'
     await deps.logger(

@@ -46,7 +46,9 @@ export async function writeAppLogToRedis(logEntry: AppLogEntry): Promise<void> {
 
   if (result === 'timeout') {
     void writeOperation
-    console.warn(`Redis app log timed out after ${REDIS_LOG_TIMEOUT_MS}ms`)
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(`Redis app log timed out after ${REDIS_LOG_TIMEOUT_MS}ms`)
+    }
     return
   }
 

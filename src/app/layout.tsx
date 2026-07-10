@@ -2,6 +2,7 @@
 
 import '../globals.css'
 import {
+  googleSans,
   utekosText,
   utekosTextMedium
 } from '@/app/fonts/font.config'
@@ -15,25 +16,6 @@ import { CartProviderLoader } from '@/components/providers/CartProviderLoader'
 import { CookieScript } from '@/components/layout/CookieScript'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import type { Metadata } from 'next'
-import { Google_Sans, Google_Sans_Flex } from 'next/font/google'
-
-const googleSansFlex = Google_Sans_Flex({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-sans',
-  preload: true,
-  fallback: ['sans-serif', 'system-ui', 'Helvetica'],
-  axes: ['GRAD', 'ROND']
-})
-
-const googleSans = Google_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-sans',
-  axes: ['GRAD'],
-  preload: true,
-  fallback: ['sans-serif', 'system-ui', 'Helvetica']
-})
 
 export const metadata: Metadata = {
   icons: { icon: '/icon.png', apple: '/apple-icon.png' },
@@ -107,7 +89,7 @@ export default async function RootLayout({
       lang='no'
       translate='no'
       suppressHydrationWarning
-      className={`${utekosText.variable} ${utekosTextMedium.variable} ${googleSans.variable} ${googleSansFlex.variable}`}
+      className={`${utekosText.variable} ${utekosTextMedium.variable} ${googleSans.variable}`}
     >
       <body className='scroll-smooth bg-background text-foreground antialiased dark:bg-background dark:text-foreground'>
         <ThemeProvider

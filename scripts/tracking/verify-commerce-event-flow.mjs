@@ -14,6 +14,7 @@ const warehousePollIntervalMs = Number(process.env.TRACKING_COMMERCE_SMOKE_WAREH
 const requireSucceeded = process.env.TRACKING_COMMERCE_SMOKE_REQUIRE_SUCCEEDED === '1'
 const useSyntheticIdentifiers = process.env.TRACKING_COMMERCE_SMOKE_SYNTHETIC_IDS === '1'
 const purchaseEventId = process.env.TRACKING_COMMERCE_SMOKE_PURCHASE_EVENT_ID || ''
+const syntheticMicrosoftClickId = 'dd4afcccb1c9a4cad9544dd7e5006'
 
 const requiredEvents = [
   { canonicalEventName: 'select_item', eventName: 'SelectItem' },
@@ -145,18 +146,31 @@ async function installSyntheticIdentifiers(page) {
     return
   }
 
-  await page.evaluate(measurementId => {
+  await page.evaluate(({ measurementId, msclkid }) => {
     const sessionId = String(Math.floor(Date.now() / 1000))
     const measurementSuffix = measurementId?.replace(/^G-/, '')
+    const marketingParams = {
+      utm: {
+        utm_source: 'microsoft',
+        utm_medium: 'cpc',
+        utm_campaign: 'codex_commerce_smoke'
+      },
+      additionalParams: { msclkid },
+      timestamp: Date.now()
+    }
 
     document.cookie = 'ute_ext_id=codex-commerce-smoke; path=/; max-age=3600; SameSite=Lax'
     document.cookie = `_fbp=fb.1.${Date.now()}.1234567890; path=/; max-age=3600; SameSite=Lax`
     document.cookie = '_ga=GA1.1.1111111111.2222222222; path=/; max-age=3600; SameSite=Lax'
+    document.cookie = `marketing_params=${encodeURIComponent(JSON.stringify(marketingParams))}; path=/; max-age=3600; SameSite=Lax`
 
     if (measurementSuffix) {
       document.cookie = `_ga_${measurementSuffix}=GS1.1.${sessionId}.1.1.${sessionId}.0.0.0; path=/; max-age=3600; SameSite=Lax`
     }
-  }, process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.GA_MEASUREMENT_ID || '')
+  }, {
+    measurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.GA_MEASUREMENT_ID || '',
+    msclkid: syntheticMicrosoftClickId
+  })
 }
 
 function hasExpectedEvent(payload, canonicalEventName) {
@@ -379,6 +393,65 @@ async function queryMicrosoftUetPurchaseStatus() {
   }
 }
 
+async function queryCheckoutAttributionSnapshot(eventId) {
+  const warehouseUrl = getWarehouseUrl()
+  if (!warehouseUrl) {
+    return {
+      skipped: true,
+      reason: 'No Supabase tracking warehouse URL is configured.',
+      rows: []
+    }
+  }
+
+  const sql = postgres(warehouseUrl, {
+    max: 1,
+    idle_timeout: 5,
+    connect_timeout: 10,
+    prepare: false
+  })
+
+  try {
+    for (let attempt = 1; attempt <= warehousePollAttempts; attempt += 1) {
+      const rows = await sql`
+        select
+          id,
+          event_id,
+          primary_storage_token,
+          cardinality(storage_tokens) as storage_token_count,
+          msclkid,
+          ga_client_id is not null as has_ga_client_id,
+          ga_session_id is not null as has_ga_session_id,
+          fbp is not null as has_fbp,
+          (user_data_quality->>'hasMicrosoftClickId')::boolean as has_microsoft_click_id
+        from marketing.checkout_attribution_snapshots
+        where event_id = ${eventId}
+        order by updated_at desc
+        limit 5
+      `
+
+      if (rows.length > 0) {
+        return {
+          skipped: false,
+          reason: null,
+          rows
+        }
+      }
+
+      if (attempt < warehousePollAttempts) {
+        await sleep(warehousePollIntervalMs)
+      }
+    }
+
+    return {
+      skipped: false,
+      reason: null,
+      rows: []
+    }
+  } finally {
+    await sql.end({ timeout: 5 })
+  }
+}
+
 async function readBrowserEvidence(page) {
   return page.evaluate(requiredEventsFromNode => {
     const dataLayer = Array.isArray(window.dataLayer) ? window.dataLayer : []
@@ -488,6 +561,39 @@ function assertWarehouseRows(payloads, warehouseResult) {
   return failures
 }
 
+function assertCheckoutAttributionSnapshot(snapshotResult) {
+  if (snapshotResult.skipped) {
+    return [`Checkout attribution snapshot verification skipped: ${snapshotResult.reason}`]
+  }
+
+  if (snapshotResult.rows.length === 0) {
+    return ['No checkout attribution snapshot found for begin_checkout event id.']
+  }
+
+  const failures = []
+  const row = snapshotResult.rows[0]
+
+  if (!row.primary_storage_token) {
+    failures.push('Checkout attribution snapshot has no primary storage token.')
+  }
+
+  if (!row.storage_token_count || Number(row.storage_token_count) < 1) {
+    failures.push('Checkout attribution snapshot has no storage lookup tokens.')
+  }
+
+  if (useSyntheticIdentifiers) {
+    if (row.msclkid !== syntheticMicrosoftClickId) {
+      failures.push('Checkout attribution snapshot did not persist the synthetic Microsoft msclkid.')
+    }
+
+    if (row.has_microsoft_click_id !== true) {
+      failures.push('Checkout attribution snapshot quality flags do not show Microsoft click id.')
+    }
+  }
+
+  return failures
+}
+
 function assertBrowserProviderEvidence(browserEvidence, networkEvidence, clarityConsentApplied) {
   const failures = []
   const dataLayerEvents = new Set(browserEvidence.dataLayerEvents.map(item => item.event))
@@ -569,7 +675,11 @@ async function runSmoke() {
 
   try {
     logStage('opening products page')
-    await page.goto(`${baseUrl}/produkter`, { waitUntil: 'domcontentloaded' })
+    const productsUrl =
+      useSyntheticIdentifiers ?
+        `${baseUrl}/produkter?utm_source=microsoft&utm_medium=cpc&utm_campaign=codex_commerce_smoke&msclkid=${syntheticMicrosoftClickId}`
+      : `${baseUrl}/produkter`
+    await page.goto(productsUrl, { waitUntil: 'domcontentloaded' })
     await page.waitForTimeout(3000)
     logStage('accepting consent')
     await grantTrackingConsent(page)
@@ -614,14 +724,23 @@ async function runSmoke() {
     const eventIds = requiredEvents.map(event => payloads[event.canonicalEventName].eventId)
     logStage('querying warehouse')
     const warehouseResult = await queryWarehouse(eventIds)
+    logStage('querying checkout attribution snapshot')
+    const checkoutAttributionSnapshot = await queryCheckoutAttributionSnapshot(beginCheckoutPayload.eventId)
     logStage('querying Microsoft UET CAPI purchase status')
     const microsoftUetPurchaseStatus = await queryMicrosoftUetPurchaseStatus()
     const browserEvidence = await readBrowserEvidence(page)
     const payloadFailures = assertPayloadQuality(payloads)
     const warehouseFailures = assertWarehouseRows(payloads, warehouseResult)
+    const checkoutAttributionFailures = assertCheckoutAttributionSnapshot(checkoutAttributionSnapshot)
     const browserProviderFailures = assertBrowserProviderEvidence(browserEvidence, networkEvidence, clarityConsentApplied)
     const microsoftUetPurchaseFailures = assertMicrosoftUetPurchaseStatus(microsoftUetPurchaseStatus)
-    const failures = [...payloadFailures, ...warehouseFailures, ...browserProviderFailures, ...microsoftUetPurchaseFailures]
+    const failures = [
+      ...payloadFailures,
+      ...warehouseFailures,
+      ...checkoutAttributionFailures,
+      ...browserProviderFailures,
+      ...microsoftUetPurchaseFailures
+    ]
     const summary = {
       baseUrl,
       eventIds: Object.fromEntries(
@@ -653,6 +772,20 @@ async function runSmoke() {
           hasGa4SessionId: row.has_ga4_session_id,
           hasFbp: row.has_fbp,
           hasProcessedAt: row.has_processed_at
+        }))
+      },
+      checkoutAttributionSnapshot: {
+        skipped: checkoutAttributionSnapshot.skipped,
+        reason: checkoutAttributionSnapshot.reason,
+        rows: checkoutAttributionSnapshot.rows.map(row => ({
+          eventId: row.event_id,
+          hasPrimaryStorageToken: !!row.primary_storage_token,
+          storageTokenCount: Number(row.storage_token_count || 0),
+          hasMicrosoftClickId: !!row.has_microsoft_click_id,
+          hasSyntheticMicrosoftClickId: row.msclkid === syntheticMicrosoftClickId,
+          hasGaClientId: row.has_ga_client_id,
+          hasGaSessionId: row.has_ga_session_id,
+          hasFbp: row.has_fbp
         }))
       },
       browserProviders: {

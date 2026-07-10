@@ -6,5 +6,7 @@ export type CaptureBody = {
   cartId?: string | null
   checkoutUrl: string
   eventId?: string
+  gaClientId?: string
+  gaSessionId?: string
   userData?: TrackingUserData | undefined
 }

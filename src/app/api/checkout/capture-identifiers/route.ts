@@ -7,6 +7,8 @@ import { redisSet } from '@/lib/redis/redisSet'
 import { logToAppLogs } from '@/lib/utils/logToAppLogs'
 import { processCapture } from '@/lib/tracking/capture/processCapture'
 import { hasRequestMarketingConsent } from '@/lib/tracking/consent/hasRequestMarketingConsent'
+import { syncCartMarketingAttributesSafely } from '@/lib/actions/perform/syncCartMarketingAttributes'
+import { persistCheckoutAttributionSnapshot } from '@/lib/tracking/warehouse/persistCheckoutAttributionSnapshot'
 
 export async function POST(req: NextRequest) {
   if (!hasRequestMarketingConsent(req)) {
@@ -19,13 +21,15 @@ export async function POST(req: NextRequest) {
     return validation.errorResponse
   }
 
-  const context = adaptRequestToCaptureContext(req)
+  const context = adaptRequestToCaptureContext(req, validation.body)
+  await syncCartMarketingAttributesSafely(validation.body.cartId)
   const result = await processCapture(
     validation.tokens,
     validation.body,
     context,
     {
       redisSet,
+      persistCheckoutAttributionSnapshot,
       logger: logToAppLogs
     }
   )

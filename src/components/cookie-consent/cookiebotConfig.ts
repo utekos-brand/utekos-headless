@@ -3,6 +3,10 @@ export const COOKIEBOT_DOMAIN_GROUP_ID =
 
 export const COOKIEBOT_SCRIPT_URL = 'https://consent.cookiebot.com/uc.js'
 export const COOKIEBOT_CONSENT_COOKIE_NAME = 'CookieConsent'
+export const COOKIEBOT_BLOCKING_MODE =
+  process.env.NEXT_PUBLIC_COOKIEBOT_BLOCKING_MODE === 'auto' ?
+    'auto'
+  : undefined
 
 const DEFAULT_TRACKING_SGTM_ORIGIN = 'https://cloud.server.utekos.no'
 

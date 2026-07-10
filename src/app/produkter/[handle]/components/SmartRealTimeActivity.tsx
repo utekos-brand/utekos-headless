@@ -7,23 +7,31 @@ import { getTimeOfDayMultiplier } from '../../(oversikt)/utils/getTimeOfDayMulti
 import { getDayOfWeekMultiplier } from '../../(oversikt)/utils/getDayOfWeekMultiplier'
 import type { SmartRealTimeActivityProps } from '@types'
 
+function getStableInitialViewerCount(baseViewers: number): number {
+  return Math.max(2, Math.round(baseViewers))
+}
+
+function getSmartViewerCount(baseViewers: number): number {
+  const smartBase = Math.round(
+    baseViewers *
+      getTimeOfDayMultiplier() *
+      getDayOfWeekMultiplier()
+  )
+
+  return Math.max(2, smartBase + getRandomIntInclusive(-1, 1))
+}
+
 export function SmartRealTimeActivity({
   baseViewers
 }: SmartRealTimeActivityProps) {
   const [currentViewerCount, setCurrentViewerCount] =
-    useState<number>(() => {
-      const smartBase = Math.round(
-        baseViewers *
-          getTimeOfDayMultiplier() *
-          getDayOfWeekMultiplier()
-      )
-      return Math.max(
-        2,
-        smartBase + getRandomIntInclusive(-1, 1)
-      )
-    })
+    useState<number>(() => getStableInitialViewerCount(baseViewers))
 
   useEffect(() => {
+    const initialRefreshId = window.setTimeout(() => {
+      setCurrentViewerCount(getSmartViewerCount(baseViewers))
+    }, 0)
+
     const intervalId = window.setInterval(
       () => {
         setCurrentViewerCount(prev =>
@@ -33,8 +41,11 @@ export function SmartRealTimeActivity({
       getRandomIntInclusive(8000, 22000)
     )
 
-    return () => window.clearInterval(intervalId)
-  }, [])
+    return () => {
+      window.clearTimeout(initialRefreshId)
+      window.clearInterval(intervalId)
+    }
+  }, [baseViewers])
 
   const [isEntering, setIsEntering] = useState<boolean>(false)
   const isFirstRenderRef = useRef<boolean>(true)

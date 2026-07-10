@@ -38,21 +38,7 @@ function shuffleUniqueWords(words: string[], avoidFirst?: string): string[] {
   return shuffled
 }
 
-function createInitialFlipWordState(
-  words: string[],
-  random: boolean
-): FlipWordState {
-  if (random) {
-    const [first = '', ...rest] = shuffleUniqueWords(words)
-    return {
-      currentIndex: 0,
-      currentWord: first,
-      isAnimating: false,
-      queue: rest,
-      wordKey: 0
-    }
-  }
-
+function createInitialFlipWordState(words: string[]): FlipWordState {
   return {
     currentIndex: 0,
     currentWord: words[0] ?? '',
@@ -120,7 +106,7 @@ export const FlipWords = ({
   random?: boolean
 }) => {
   const [wordState, setWordState] = useState(() =>
-    createInitialFlipWordState(words, random)
+    createInitialFlipWordState(words)
   )
 
   useEffect(() => {
