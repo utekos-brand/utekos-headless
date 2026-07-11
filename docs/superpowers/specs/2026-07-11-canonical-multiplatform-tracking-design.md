@@ -76,12 +76,13 @@ Google's official experimental `googleanalytics/google-analytics-mcp` server is 
 
 - `https://cloud.server.utekos.no/healthy`, the GTM loader, noscript endpoint, and Google tag destination were reported healthy on 2026-07-11.
 - This proves public infrastructure availability, not individual tag, trigger, variable, transformation, or consent correctness.
-- The current authenticated GTM workspace probe fails closed because its required read-only workspace configuration is incomplete.
-- Until the GTM API probe succeeds, the published web/server container contents and any additional Meta, Google, Microsoft, Pinterest, or other provider routes remain unknown runtime configuration.
+- Authenticated read-only access is now proven for Web GTM workspace `107` and Server GTM workspace `20`; both return HTTP 200 as `Default Workspace`.
+- `gtm_api_workspace_probe` and `mcp:commerce-tracking:doctor` are green.
+- This closes the workspace-access gate, but not the configuration-audit gate. Tags, triggers, variables, templates, transformations, consent settings, published-version drift, duplicate paths, and provider-route ownership still require explicit inventory.
 
 ### Bridge evidence
 
-The Utekos Codex Bridge bootstrap and status calls succeeded in read-only mode, but three repository-analysis calls ended in HTTP 504. The Bridge supplied no architecture result and is not used as evidence in this specification.
+The updated Utekos Codex Bridge asynchronous job model is externally verified from ChatGPT. Bootstrap and status succeeded, a bounded job progressed through `queued` to `completed`, and the result returned through short polling without a tunnel 504. One broader audit job still reached a separately classified upstream Codex timeout, so broad audits must remain decomposed into bounded read-only questions until that execution limit is proven otherwise. The completed Bridge review is used only to update the GTM access-versus-audit distinction in this specification.
 
 ## Considered architectures
 
@@ -268,7 +269,7 @@ Connect the official Analytics MCP in a dedicated read-only profile with propert
 
 ### GTM and sGTM
 
-Repair the read-only workspace probe and inventory:
+Use the proven read-only workspace access to inventory:
 
 - numeric account, web-container, and server-container paths;
 - published versions and workspace drift;
@@ -304,7 +305,7 @@ runtime status
 ### Phase 0: read-only architecture audit
 
 - Connect the official GA MCP alongside the Utekos probe.
-- Repair read-only GTM workspace access.
+- Use the now-working read-only GTM workspace probe to inspect both web and server workspaces.
 - Inventory web GTM, sGTM, provider destinations, and duplicate paths.
 - Record the provider matrix without publishing or sending test events.
 
