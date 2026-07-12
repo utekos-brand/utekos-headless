@@ -1,6 +1,4 @@
-import { Suspense } from 'react'
 import Link from 'next/link'
-import { KlarnaExpressPurchaseTracker } from './components/KlarnaExpressPurchaseTracker'
 
 type KjopFullfortPageProps = {
   searchParams: Promise<{ klarna_order_id?: string }>
@@ -19,10 +17,6 @@ export default async function KjopFullfortPage({
 
   return (
     <main className='mx-auto flex min-h-[50vh] max-w-2xl flex-col justify-center px-4 py-16'>
-      <Suspense fallback={null}>
-        <KlarnaExpressPurchaseTracker />
-      </Suspense>
-
       <h1 className='text-3xl font-semibold tracking-tight text-foreground'>
         Takk for kjøpet
       </h1>

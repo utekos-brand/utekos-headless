@@ -161,6 +161,7 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
             <AlertDialog>
               <AlertDialogTrigger
                 disabled={isDeleting}
+                data-track='CartRemoveItemOpen'
                 className={cn(
                   buttonVariants({
                     variant: 'ghost',

@@ -1,5 +1,5 @@
 // Path: src/hooks/useAnalytics.ts
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
 import type {
   MetaEventType,
@@ -15,9 +15,10 @@ export function useAnalytics() {
     const eventID =
       options.eventID || generateEventID().replace('evt_', 'track_')
 
-    void dispatchMetaTrackingEvent({
+    void dispatchTrackingEvent({
       eventName,
       eventId: eventID,
+      destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
       eventData: data
     })
   }

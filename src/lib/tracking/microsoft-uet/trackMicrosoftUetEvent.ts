@@ -24,11 +24,6 @@ type MicrosoftUetPageType =
   | 'purchase'
   | 'searchresults'
 
-type MicrosoftUetUserData = {
-  email?: string
-  phone?: string
-}
-
 export type TrackMicrosoftUetEventOptions = {
   eventName?: string | undefined
   category?: string | undefined
@@ -100,6 +95,8 @@ function getMicrosoftUetPageType(eventName: string): MicrosoftUetPageType {
   switch (canonicalEventName) {
     case 'add_to_cart':
     case 'begin_checkout':
+    case 'view_cart':
+    case 'remove_from_cart':
       return 'cart'
     case 'purchase':
       return 'purchase'
@@ -112,6 +109,7 @@ function getMicrosoftUetPageType(eventName: string): MicrosoftUetPageType {
     case 'page_view':
     case 'select_item':
     case 'generate_lead':
+    case 'refund':
     case 'custom':
       return 'other'
   }
@@ -120,29 +118,15 @@ function getMicrosoftUetPageType(eventName: string): MicrosoftUetPageType {
 function getMicrosoftUetEventAction(eventName: string): string {
   const canonicalEventName = mapToCanonicalEventName(eventName)
 
-  return canonicalEventName === 'custom' ? eventName : canonicalEventName
-}
-
-function getMicrosoftUetGoalCompatibilityEvents(eventName: string): Array<{
-  eventAction: string
-  pageType?: MicrosoftUetPageType
-}> {
-  const canonicalEventName = mapToCanonicalEventName(eventName)
-
   switch (canonicalEventName) {
     case 'begin_checkout':
-      return [{ eventAction: 'AutoEvent_begin_checkout' }]
+      return 'AutoEvent_begin_checkout'
     case 'purchase':
-      return [{ eventAction: 'PRODUCT_PURCHASE', pageType: 'PURCHASE' }]
-    case 'add_to_cart':
+      return 'PRODUCT_PURCHASE'
     case 'custom':
-    case 'generate_lead':
-    case 'page_view':
-    case 'search':
-    case 'select_item':
-    case 'view_item':
-    case 'view_item_list':
-      return []
+      return eventName
+    default:
+      return canonicalEventName
   }
 }
 
@@ -160,22 +144,6 @@ function getMicrosoftUetQueue(): MicrosoftUetQueue {
   const queue: MicrosoftUetQueueItem[] = []
   window.uetq = queue
   return queue
-}
-
-export function setMicrosoftUetUserData({
-  email,
-  phone
-}: MicrosoftUetUserData): void {
-  if (typeof window === 'undefined') return
-  if (!hasServiceConsent(COOKIEBOT_MICROSOFT_SERVICE_NAME)) return
-  if (!email && !phone) return
-
-  getMicrosoftUetQueue().push('set', {
-    pid: {
-      em: email ?? '',
-      ph: phone ?? ''
-    }
-  })
 }
 
 export function trackMicrosoftUetEvent({
@@ -233,39 +201,4 @@ export function dispatchMicrosoftUetBrowserEvent({
   } satisfies TrackMicrosoftUetEventOptions
 
   trackMicrosoftUetEvent(baseEvent)
-
-  for (const compatibilityEvent of getMicrosoftUetGoalCompatibilityEvents(eventName)) {
-    trackMicrosoftUetEvent({
-      ...baseEvent,
-      eventName: compatibilityEvent.eventAction,
-      pageType: compatibilityEvent.pageType ?? baseEvent.pageType
-    })
-  }
-}
-
-export function trackMicrosoftUetProductPurchase({
-  productId,
-  revenueValue,
-  currency,
-  eventId,
-  userData
-}: {
-  productId: string | string[]
-  revenueValue: number
-  currency: string
-  eventId?: string
-  userData?: MicrosoftUetUserData
-}): void {
-  if (userData) {
-    setMicrosoftUetUserData(userData)
-  }
-
-  trackMicrosoftUetEvent({
-    eventName: 'PRODUCT_PURCHASE',
-    productId,
-    pageType: 'PURCHASE',
-    revenueValue,
-    currency,
-    ...(eventId ? { eventId } : {})
-  })
 }

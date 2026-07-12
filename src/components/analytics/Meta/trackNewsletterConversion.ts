@@ -1,7 +1,7 @@
 // Path: src/components/analytics/MetaPixel/trackNewsletterConversion.ts
 'use client'
 
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
 
 export async function trackNewsletterConversion(
@@ -10,12 +10,10 @@ export async function trackNewsletterConversion(
 ) {
   const eventId = generateEventID()
 
-  await dispatchMetaTrackingEvent({
+  await dispatchTrackingEvent({
     eventName: 'Lead',
     eventId,
-    userData: {
-      email
-    },
+    destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
     eventData: {
       content_category: 'Newsletter',
       content_name:

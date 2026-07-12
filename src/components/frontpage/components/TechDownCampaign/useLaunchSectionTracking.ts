@@ -1,4 +1,4 @@
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
 import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { productName, currentPrice } from '@/api/constants'
@@ -28,9 +28,10 @@ export function useLaunchSectionTracking(variantId: string) {
       ...(session_id ? { session_id } : {})
     }
 
-    void dispatchMetaTrackingEvent({
+    void dispatchTrackingEvent({
       eventName: customEventName as MetaEventType,
       eventId: eventID,
+      destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
       eventSourceUrl: sourceUrl,
       eventData,
       ga4Data

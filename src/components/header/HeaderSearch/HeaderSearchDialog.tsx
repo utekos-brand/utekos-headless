@@ -13,11 +13,15 @@ import { useRouter } from 'next/navigation'
 import {
   Suspense,
   startTransition,
+  useRef,
+  useState,
   type Dispatch,
   type SetStateAction
 } from 'react'
 import { HeaderSearchFooter } from './HeaderSearchFooter'
 import { SearchResults } from './SearchResults'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
+import { generateEventID } from '@/components/analytics/Meta/generateEventID'
 
 type HeaderSearchDialogProps = {
   open: boolean
@@ -31,8 +35,27 @@ export function HeaderSearchDialog({
   className
 }: HeaderSearchDialogProps) {
   const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState('')
+  const lastSubmittedQuery = useRef<string | null>(null)
+
+  const trackSubmittedSearch = () => {
+    const query = searchQuery.trim()
+
+    if (!query || lastSubmittedQuery.current === query) {
+      return
+    }
+
+    lastSubmittedQuery.current = query
+    void dispatchTrackingEvent({
+      eventName: 'Search',
+      eventId: generateEventID(),
+      destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
+      eventData: { search_string: query }
+    })
+  }
 
   const handleNavigate = (path: string) => {
+    trackSubmittedSearch()
     setOpen(false)
     startTransition(() => {
       router.push(path as Route)
@@ -59,6 +82,13 @@ export function HeaderSearchDialog({
         <CommandInput
           placeholder='Søk på nettsiden..'
           autoFocus
+          value={searchQuery}
+          onValueChange={setSearchQuery}
+          onKeyDown={event => {
+            if (event.key === 'Enter') {
+              trackSubmittedSearch()
+            }
+          }}
         />
         <CommandList className='no-scrollbar min-h-80 scroll-pt-2 scroll-pb-1.5'>
           <Suspense
