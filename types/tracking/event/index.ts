@@ -42,6 +42,14 @@ export interface ProviderDispatchAttemptInput {
   skipped?: boolean | undefined
   skipReason?: string | undefined
   dispatchMode?: 'server_retry' | 'server_direct' | 'client_observed' | undefined
+  verification?: 'provider_confirmed' | 'transport_accepted' | undefined
+  payloadSummary?: Record<string, string | number | boolean | null> | undefined
+  consentBasis?: Record<string, boolean | string> | undefined
+  requestId?: string | undefined
+  httpStatus?: number | undefined
+  validationResult?: Record<string, string | number | boolean | null> | undefined
+  responseSemantics?: string | undefined
+  latencyMs?: number | undefined
 }
 
 export interface TrackingDependencies {

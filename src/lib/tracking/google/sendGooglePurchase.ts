@@ -20,6 +20,9 @@ export type GooglePurchaseDispatchResult =
       currency: string
       itemCount: number
       transport: 'direct_ga4'
+      httpStatus?: number | undefined
+      validationStatus?: number | undefined
+      validationMessageCount?: number | undefined
     }
   | {
       success: false
@@ -96,7 +99,10 @@ export async function sendGooglePurchase(
       value: res.payload.value,
       currency: res.payload.currency,
       itemCount: res.payload.itemCount,
-      transport: res.payload.transport
+      transport: res.payload.transport,
+      httpStatus: res.payload.diagnostics.directGa4.status,
+      validationStatus: res.payload.diagnostics.validation.status,
+      validationMessageCount: res.payload.diagnostics.validation.messageCount
     }
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : String(err)

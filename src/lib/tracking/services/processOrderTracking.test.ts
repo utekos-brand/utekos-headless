@@ -60,6 +60,17 @@ test('persists a full purchase payload and dispatches Google when GA client id e
     ga_client_id: '1234567890.987654321',
     ga_session_id: '1749895200',
     msclkid: 'dd4afcccb1c9a4cad9544dd7e5006',
+    consentProvenance: {
+      schemaVersion: 1,
+      source: 'cookiebot',
+      capturedAt: '2026-07-12T10:00:00.000Z',
+      services: {
+        googleAnalytics: true,
+        googleAds: true,
+        meta: true,
+        microsoftAdvertising: true
+      }
+    },
     ts: Date.now()
   }
   const persisted: Array<{ payload: unknown; providers: readonly string[] }> = []
@@ -78,7 +89,8 @@ test('persists a full purchase payload and dispatches Google when GA client id e
       return {
         success: true,
         events_received: 1,
-        fbtrace_id: 'meta-trace'
+        fbtrace_id: 'meta-trace',
+        httpStatus: 200
       }
     },
     sendGooglePurchase: async context => {
@@ -91,7 +103,10 @@ test('persists a full purchase payload and dispatches Google when GA client id e
         value: 5980,
         currency: 'NOK',
         itemCount: 1,
-        transport: 'direct_ga4'
+        transport: 'direct_ga4',
+        httpStatus: 204,
+        validationStatus: 200,
+        validationMessageCount: 0
       }
     },
     sendMicrosoftUetPurchase: async (payload, checkoutAttribution) => {
@@ -100,6 +115,7 @@ test('persists a full purchase payload and dispatches Google when GA client id e
         success: true,
         tagId: '97247724',
         status: 200,
+        requestId: 'microsoft-request',
         eventId: payload.eventId ?? 'missing',
         eventName: 'PRODUCT_PURCHASE',
         itemCount: 1,
@@ -128,6 +144,61 @@ test('persists a full purchase payload and dispatches Google when GA client id e
     { provider: 'google', success: true, skipped: false, dispatchMode: 'server_direct' },
     { provider: 'microsoft_uet', success: true, skipped: false, dispatchMode: 'server_direct' }
   ])
+  const metaAudit = providerAudits.find(item => item.provider === 'meta')
+  const googleAudit = providerAudits.find(item => item.provider === 'google')
+  const microsoftAudit = providerAudits.find(item => item.provider === 'microsoft_uet')
+
+  for (const audit of [metaAudit, googleAudit, microsoftAudit]) {
+    assert.ok(audit)
+    assert.deepEqual(audit.payloadSummary, {
+      transactionId: '123456789',
+      value: 5980,
+      currency: 'NOK',
+      itemCount: 1
+    })
+    assert.equal(audit.dispatchMode, 'server_direct')
+    assert.equal(typeof audit.latencyMs, 'number')
+    assert.ok((audit.latencyMs ?? -1) >= 0)
+    assert.ok(audit.responseSemantics)
+    assert.ok(audit.validationResult)
+    assert.doesNotMatch(JSON.stringify(audit), /kunde@example\.com|cart-token|checkout-token/)
+  }
+
+  assert.deepEqual(metaAudit?.consentBasis, {
+    source: 'cookiebot',
+    meta: true
+  })
+  assert.equal(metaAudit?.requestId, 'meta-trace')
+  assert.equal(metaAudit?.httpStatus, 200)
+  assert.deepEqual(metaAudit?.validationResult, {
+    eventsReceived: 1
+  })
+  assert.equal(metaAudit?.responseSemantics, 'meta_capi_provider_confirmed')
+
+  assert.equal(googleAudit?.requestId, 'ga-request')
+  assert.equal(googleAudit?.httpStatus, 204)
+  assert.deepEqual(googleAudit?.validationResult, {
+    status: 200,
+    messageCount: 0
+  })
+  assert.equal(
+    googleAudit?.responseSemantics,
+    'ga4_mp_http_2xx_transport_accepted_without_event_confirmation'
+  )
+
+  assert.deepEqual(microsoftAudit?.consentBasis, {
+    source: 'cookiebot',
+    microsoftAdvertising: true
+  })
+  assert.equal(microsoftAudit?.requestId, 'microsoft-request')
+  assert.equal(microsoftAudit?.httpStatus, 200)
+  assert.deepEqual(microsoftAudit?.validationResult, {
+    requestSchema: 'valid'
+  })
+  assert.equal(
+    microsoftAudit?.responseSemantics,
+    'microsoft_uet_http_2xx_transport_accepted'
+  )
   assert.deepEqual(persisted[0]?.providers, [])
   assert.equal((persisted[0]?.payload as { eventData?: { transaction_id?: string } }).eventData?.transaction_id, '123456789')
   assert.equal(
@@ -148,6 +219,54 @@ test('persists a full purchase payload and dispatches Google when GA client id e
     cartToken: 'present',
     checkoutToken: 'present'
   })
+})
+
+test('skips every provider when an existing attribution has no consent provenance', async () => {
+  const dispatches: string[] = []
+  const providerAudits: ProviderDispatchAttemptInput[] = []
+  const attribution: CheckoutAttribution = {
+    cartId: 'cart-token',
+    checkoutUrl: 'https://kasse.utekos.no/checkouts/checkout-token',
+    userData: { fbp: 'fb.1.test' },
+    ga_client_id: '123.456',
+    msclkid: 'microsoft-click',
+    ts: Date.now()
+  }
+
+  await processOrderTrackingWithDependencies(createOrder(), {
+    getRedisAttribution: async () => attribution,
+    persistAcceptedTrackingEvent: async () => {},
+    sendMetaPurchase: async () => {
+      dispatches.push('meta')
+      return { success: true, events_received: 1 }
+    },
+    sendGooglePurchase: async () => {
+      dispatches.push('google')
+      return { success: true, orderId: 1, requestId: 'request', transactionId: '1', value: 1, currency: 'NOK', itemCount: 1, transport: 'direct_ga4' }
+    },
+    sendMicrosoftUetPurchase: async () => {
+      dispatches.push('microsoft_uet')
+      return { success: true, tagId: 'tag', status: 200, eventId: 'event', eventName: 'PRODUCT_PURCHASE', itemCount: 1, value: 1, currency: 'NOK' }
+    },
+    recordProviderDispatchAttempt: async input => {
+      providerAudits.push(input)
+    },
+    logger: async () => {}
+  })
+
+  assert.deepEqual(dispatches, [])
+  assert.deepEqual(
+    providerAudits.map(attempt => ({
+      provider: attempt.provider,
+      skipped: attempt.skipped,
+      skipReason: attempt.skipReason
+    })),
+    [
+      { provider: 'meta', skipped: true, skipReason: 'missing_consent_provenance' },
+      { provider: 'google', skipped: true, skipReason: 'missing_consent_provenance' },
+      { provider: 'microsoft_uet', skipped: true, skipReason: 'missing_consent_provenance' }
+    ]
+  )
 })
 
 test('persists purchase payload and logs skip when GA client id is missing', async () => {
@@ -198,7 +317,7 @@ test('persists purchase payload and logs skip when GA client id is missing', asy
       provider: 'google',
       success: false,
       skipped: true,
-      skipReason: 'missing_client_id',
+      skipReason: 'missing_consent_provenance',
       dispatchMode: 'server_direct'
     },
     {
@@ -216,7 +335,7 @@ test('persists purchase payload and logs skip when GA client id is missing', asy
     metaOk: false,
     metaSkippedReason: 'missing_attribution',
     googleOk: false,
-    googleSkippedReason: 'missing_client_id',
+    googleSkippedReason: 'missing_consent_provenance',
     microsoftOk: false,
     microsoftSkippedReason: 'not_configured',
     ledgerOk: true,

@@ -75,6 +75,17 @@ test('builds a canonical Shopify purchase payload with GA4 ecommerce fields', ()
     userData: {},
     ga_client_id: '1234567890.987654321',
     ga_session_id: '1749895200',
+    consentProvenance: {
+      schemaVersion: 1,
+      source: 'cookiebot',
+      capturedAt: '2026-07-12T10:00:00.000Z',
+      services: {
+        googleAnalytics: true,
+        googleAds: false,
+        meta: true,
+        microsoftAdvertising: false
+      }
+    },
     ts: Date.now()
   }
 
@@ -136,6 +147,7 @@ test('builds purchase payload without optional coupon and shipping fields', () =
   assert.equal(payload.eventData?.coupon, undefined)
   assert.equal(payload.eventData?.shipping, undefined)
   assert.equal(payload.ga4Data, undefined)
+  assert.equal(payload.userData, undefined)
 })
 
 test('prefers the checkout external id over the Shopify customer id', () => {

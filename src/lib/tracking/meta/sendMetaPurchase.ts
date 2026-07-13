@@ -119,7 +119,8 @@ export async function sendMetaPurchase({ order, customer, redisData, contentIds 
     return {
       success: true,
       events_received: response.events_received,
-      fbtrace_id: response.fbtrace_id
+      fbtrace_id: response.fbtrace_id,
+      httpStatus: 200
     }
   } catch (error: unknown) {
     const err = error as MetaApiError
@@ -148,7 +149,8 @@ export async function sendMetaPurchase({ order, customer, redisData, contentIds 
     return {
       success: false,
       error: 'Meta CAPI request failed',
-      details: errorResponse.error || err.message
+      details: errorResponse.error || err.message,
+      ...(err.response?.status !== undefined ? { httpStatus: err.response.status } : {})
     }
   }
 }

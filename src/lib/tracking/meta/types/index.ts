@@ -1,5 +1,6 @@
 export type MetaApiError = Error & {
   response?: {
+    status?: number
     data?: {
       error?: {
         code?: number

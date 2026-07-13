@@ -1,12 +1,8 @@
 import { trackServerEvent } from '@/lib/tracking/google/trackingServerEvent'
 import type { TrackDispatchDiagnostics } from '@/lib/tracking/google/trackingServerEvent'
-import { normalizeUserData } from '@/lib/tracking/user-data/normalizeUserData'
 import type { OrderPaid } from 'types/commerce/order/OrderPaid'
 
 type PurchaseErrorDetails = Record<string, unknown>
-type ShopifyCustomerWithOrdersCount = NonNullable<OrderPaid['customer']> & {
-  orders_count?: number | null
-}
 
 export type AnalyticsItem = {
   item_id: string
@@ -59,55 +55,24 @@ export async function handlePurchaseEvent(
   order: OrderPaid,
   ids?: GoogleIds
 ): Promise<PurchaseTrackResult> {
-  const noteAttributes =
-    Array.isArray(order?.note_attributes) ? order.note_attributes : []
-
-  const getAttr = (name: string): string | undefined =>
-    noteAttributes.find((attribute) => attribute.name === name)?.value
-
-  const clientId = ids?.clientId || getAttr('_ga_client_id')
-  const sessionId = ids?.sessionId || getAttr('_ga_session_id')
+  const clientId = ids?.clientId
+  const sessionId = ids?.sessionId
 
   if (!clientId) {
     return {
       sent: false,
       reason: 'missing_client_id',
       details: {
-        hasRedisClientId: !!ids?.clientId,
-        hasNoteAttrClientId: !!getAttr('_ga_client_id')
+        hasAttributionClientId: !!ids?.clientId
       }
     }
   }
 
-  const transactionId =
-    order?.id?.toString()
-    || order?.name?.toString()
-    || order?.order_number?.toString()
+  const transactionId = order?.id?.toString()
 
   if (!transactionId) {
     return { sent: false, reason: 'missing_transaction_id' }
   }
-
-  const customer = (order.customer ?? null) as ShopifyCustomerWithOrdersCount | null
-  const billing = order.billing_address
-  const shipping = order.shipping_address
-
-  const email = order?.email || order?.contact_email || customer?.email
-  const phone =
-    billing?.phone || shipping?.phone || customer?.phone || order?.phone
-  const firstName = billing?.first_name ?? customer?.first_name
-  const lastName = billing?.last_name ?? customer?.last_name
-
-  const normalizedUser = normalizeUserData({
-    ...(email !== undefined ? { email } : {}),
-    ...(phone !== undefined ? { phone } : {}),
-    ...(firstName !== undefined ? { firstName } : {}),
-    ...(lastName !== undefined ? { lastName } : {}),
-    ...(billing?.city !== undefined ? { city: billing.city } : {}),
-    ...(billing?.province !== undefined ? { region: billing.province } : {}),
-    ...(billing?.zip !== undefined ? { postalCode: billing.zip } : {}),
-    ...(billing?.country_code !== undefined ? { country: billing.country_code } : {})
-  })
 
   const lineItems = Array.isArray(order?.line_items) ? order.line_items : []
   const items: AnalyticsItem[] = lineItems
@@ -144,47 +109,23 @@ export async function handlePurchaseEvent(
     order?.total_shipping_price_set?.shop_money?.amount ?? 0
   )
   const coupon = order?.discount_codes?.[0]?.code
-  const customerOrdersCount =
-    typeof customer?.orders_count === 'number' ? customer.orders_count : undefined
-
-  const customerType =
-    customerOrdersCount !== undefined
-      ? customerOrdersCount === 1
-        ? 'new'
-        : 'returning'
-      : undefined
-  const userAgent =
-    typeof order.client_details?.user_agent === 'string'
-      ? order.client_details.user_agent
-      : undefined
-
   const res = await trackServerEvent(
     {
       name: 'purchase',
       params: {
         transaction_id: transactionId,
+        event_id: `shopify_order_${transactionId}`,
         value: computedValue,
         currency,
         tax,
         shipping: shippingCost,
         ...(coupon ? { coupon } : {}),
-        ...(customerType ? { customer_type: customerType } : {}),
         items
       }
     },
     {
       clientId,
       sessionId,
-      userId: customer?.id?.toString(),
-      userData: normalizedUser,
-      userProperties: {
-        ...(customerType ? { customer_tier: customerType } : {}),
-        ...(customerOrdersCount !== undefined
-          ? { purchase_count: customerOrdersCount }
-          : {})
-      },
-      userAgent,
-      ipOverride: order.browser_ip ?? undefined,
       debugMode: process.env.GA_MP_DEBUG === '1'
     }
   )

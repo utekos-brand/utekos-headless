@@ -5,6 +5,7 @@ import { getTrackingWarehouse } from '@/lib/tracking/warehouse/getTrackingWareho
 import type { MetaEventPayload } from 'types/tracking/meta'
 import type { CheckoutAttribution } from 'types/tracking/user/CheckoutAttribution'
 import type postgres from 'postgres'
+import { NON_REQUEUEABLE_PROVIDER_DISPATCH_STATUSES } from '@/lib/tracking/warehouse/getProviderDispatchStatus'
 
 export async function enqueueMicrosoftUetRetryDispatch(
   payload: MetaEventPayload,
@@ -70,6 +71,6 @@ export async function enqueueMicrosoftUetRetryDispatch(
       processed_at = null,
       response = '{}'::jsonb,
       updated_at = now()
-    where ops.provider_dispatch_attempts.status not in ('succeeded', 'skipped_unqualified')
+    where ops.provider_dispatch_attempts.status not in ${sql(NON_REQUEUEABLE_PROVIDER_DISPATCH_STATUSES)}
   `
 }
