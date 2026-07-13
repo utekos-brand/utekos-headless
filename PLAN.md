@@ -2,24 +2,43 @@
 
 ## Status
 
-STATUS 2026-07-14: REN RELEASE-KANDIDAT ER BYGGET FRA
-`origin/main` PÅ `codex/reconcile-tracking-release`. FEM
-PRODUKSJONSMIGRASJONER ER GJENOPPRETTET SOM LOKALE, COMMITTEDE
-FILER UTEN SUPABASE-SKJEMAMUTASJON. 48 HISTORISKE GOOGLE
-`page_location`-DEAD-LETTERS ER KLASSIFISERT OG LUKKET UTEN
-REPLAY; PROVIDER-RAPPORTEN HAR 0 FAILED/DEAD-LETTERED, 0
-UNRESOLVED OG 0 ALERTS. SENTRAL GA4-SANITIZER, PURCHASE
-`external_id`-HERDING OG KLARNA EXPRESS CHECKOUT-INITIALISERING
-ER ISOLERT FRA POSTHOG-/PAKKEOPPGRADERINGEN. 67 TRACKINGTESTER,
-NEXT TYPEGEN, TYPESCRIPT, TARGETED ESLINT, SUPABASE DB LINT OG
-FULL NEXT.JS 16.2.9 TURBOPACK-BUILD ER GRØNNE. PREVIEW- OG
-PRODUKTSIDE-/KLARNA-SMOKE ER GRØNN PÅ READY PREVIEW OG LIVE
-PRODUKSJON. VERCEL PRODUKSJONSDEPLOY ER READY, OG ETTERKONTROLLEN
-HAR 0 RUNTIME-FEIL OG EN FORTSATT GRØNN PROVIDER-/DEAD-LETTER-GATE.
-PROVIDER WRITES OG GTM PUBLISH ER FORTSATT BLOKKERT UTEN SEPARAT
-EKSPLISITT GODKJENNING.
+STATUS 2026-07-14: `origin/main` ER ENESTE PRODUKSJONSKANON, OG
+LOKAL `main` PEKER IGJEN PÅ SAMME COMMIT `400d72485`. ALT
+TILSIKTET LOKALT ARBEID ER BEVART PÅ NAVNGITTE BRANCHES SOM ER
+BASERT DIREKTE PÅ `origin/main`: `codex/production-candidate-20260714`
+OG `codex/sgtm-remediation`. SEKS ELDRE AGENT-/PAGESPEED-BRANCHES
+FRA FØR REPOSITORY-MIGRERINGEN ER BEVART SOM LOKALE
+`archive/pre-migration/*`-REFERANSER. DEN ELDRE HYTTE-/SESONG-
+BRANCHEN ER BEVART SOM `archive/needs-reconciliation/*` FOR EGEN
+FRONTENDMODERNISERING OG BROWSER-VERIFIKASJON. ALLE TILHØRENDE
+WORKTREES ER FJERNET; BARE HOVEDWORKTREE-EN GJENSTÅR. INGEN PUSH, PR-MERGE,
+VERCEL-DEPLOY, PROVIDER-WRITE, GTM-PUBLISH ELLER SUPABASE-
+MUTASJON ER UTFØRT I DENNE GIT-AVSTEMMINGEN.
 
 ### Releaseavstemming 2026-07-14
+
+- Git-modellen er nå entydig: `origin/main` er produksjonskilden,
+  lokal `main` skal alltid være ren og identisk, og kandidatbranches
+  kan bare være foran fordi de inneholder arbeid som ennå ikke er
+  verifisert og merget.
+- Den tidligere `sync-and-deploy.mjs`-flyten er avviklet. Den kunne
+  stage hele arbeidsområdet, pushe GitHub og deretter starte en ekstra
+  direkte Vercel production deploy. `npm run repo:sync` er nå
+  fast-forward-only og utfører aldri commit, push eller deploy.
+- `codex/production-candidate-20260714` bevarer de 49 reelle lokale
+  forskjellene mot dagens `origin/main`, inkludert PostHog-/package-,
+  MCP-, Microsoft feed-, Klarna UI- og øvrige frontendendringer. De er
+  tilsiktede produksjonskandidater, men ikke samlet verifisert eller
+  produksjonsgodkjent.
+- `codex/sgtm-remediation` bevarer tracking-, receipt-, refund-, sGTM-
+  tooling- og Supabase-kandidatene i ni commits oppå samme
+  `origin/main`. Review-diff-artifacts er bevart separat i en navngitt
+  lokal stash og er ikke runtimekode.
+- Den eldre hytte-/sesong-branchen kunne ikke rebases mekanisk uten å
+  velge mellom gammel og aktiv UI i tre layout-/animatorfiler. Rebasen
+  ble abortert tapsfritt, den allerede anvendte trackingcommiten ble
+  identifisert som duplikat, og resten er arkivert til en separat,
+  browser-verifisert frontendavstemming.
 
 - Full build var ikke blokkert av MDX eller typed routes i den
   kanoniske builden. En stale `.next` Turbopack-filcache utløste
@@ -32,16 +51,20 @@ EKSPLISITT GODKJENNING.
   men filene lå ucommittet i en separat lokal worktree. Supabase
   og Git har uavhengig historikk; dette er årsaken til avviket.
 - PostHog `1.399.2`, øvrige dependency-endringer, `package.json`
-  og `pnpm-lock.yaml` er uttrykkelig ikke med i release-kandidaten.
-- Vercel-preview `dpl_2kJH2QCPpsaaxx5oDBKD9SuhUt6j` er `READY`.
-  Autentisert browser-smoke på TechDown-produktet er grønn ved
-  1440 px og 390 px: 0 konsollfeil, Klarna SDK lastet, og den
-  tilgjengelige «Pay with Klarna»-knappen er rendret og aktiv.
+  og `pnpm-lock.yaml` ligger nå bevart i den brede produksjonskandidaten,
+  men skal fortsatt verifiseres og releases som en bevisst delpakke.
+- Vercel-preview `dpl_2kJH2QCPpsaaxx5oDBKD9SuhUt6j` er `READY` og
+  beviste robust Klarna SDK-initialisering i den gamle
+  produktsideplasseringen. Den beviste ikke den tilsiktede UI-flyttingen
+  til produktkort.
 - Vercel production deployment `dpl_AdQDmSi5tRjfP5U5cPgFZAhdYrg2`
   fra `main` SHA `d5e3e789c55a736537a56ee90a9b7f0c6017cd59`
-  er `READY` og aliased til `utekos.no`/`www.utekos.no`. Samme
-  produktside-/Klarna-smoke er grønn live ved 1440 px og 390 px
-  med 0 konsollfeil. Vercel runtime-sjekk fant 0 feil, og provider-
+  er `READY` og ble aliased til `utekos.no`/`www.utekos.no`.
+  Produksjon har robust SDK-initialisering, men viser fortsatt den
+  gamle «Pay with Klarna»-plasseringen og mangler express-knappen på
+  produktkort. Den tidligere påstanden om at den tilsiktede UI-
+  endringen var live og hadde 0 konsollfeil var feil; en ny kontroll
+  fant også én Clarity `collect`-respons med HTTP 400. Provider-
   rapporten passerte etter deploy med 0 alerts.
 
 ## Telemetry- og plattformherding

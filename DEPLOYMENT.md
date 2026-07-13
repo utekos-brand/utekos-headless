@@ -27,13 +27,40 @@ known and completed in the correct order.
 - Treat row counts as evidence only when source, status, reason,
   unresolved/resolved state, and replay policy are visible.
 
+## Canonical Git And Vercel Release Model
+
+- `origin/main` is the only canonical production source reference.
+- Local `main` must be clean and point to the same commit as
+  `origin/main`. Do not develop or create commits directly on local
+  `main`.
+- Intentional work belongs on a named branch created from the latest
+  `origin/main`. A branch being ahead is expected; a local `main`
+  being ahead, behind after synchronization, dirty, or diverged is
+  not.
+- Linked worktrees are working directories, not additional production
+  references. Use them only for concurrent active tasks, base their
+  branches on current `origin/main`, and remove them when the task is
+  committed or archived.
+- `npm run repo:sync` is the only local main synchronization command.
+  It fetches and prunes `origin`, then performs a fast-forward only
+  when local `main` is clean and behind. It never stages, commits,
+  pushes, merges divergent history, or deploys.
+- `scripts/deploy/sync-and-deploy.mjs` is retired and exits fail-closed.
+  It must never be restored as a combined stage/commit/push/direct-
+  deploy command.
+- The standard Vercel path is GitHub-based: a pushed candidate branch
+  receives a preview, and an explicitly approved pull-request merge to
+  `main` creates production. Do not run a second direct Vercel
+  production deployment for the same release.
+
 ## Required Preflight
 
 Run these before deciding the release order:
 
 | Check | Command or source | Required conclusion |
 | --- | --- | --- |
-| Worktree scope | `git status --short` | Identify relevant files and ignore unrelated dirty files. |
+| Canonical refs | `npm run repo:sync`, then `git rev-parse main origin/main` | Both refs resolve to the same commit before a new candidate branch is created. |
+| Worktree scope | `git status --short` | Identify every intentional changed file and classify whether it is verified, pending verification, or a local artifact. |
 | Runtime diff | `git diff --name-only` | Identify whether app runtime, Supabase, env, MCP, GTM, scripts, or docs changed. |
 | Supabase history | `SUPABASE_NO_TELEMETRY=1 npx supabase migration list --linked` | Know exactly which local migrations are missing remote and which remote migrations are missing local. |
 | Supabase schema proof | `SUPABASE_NO_TELEMETRY=1 npx supabase db dump --linked --schema ops,marketing --file /tmp/utekos-linked-ops-marketing-schema.sql` | Confirm production has the columns, constraints, tables, and views the runtime will use. |
@@ -71,10 +98,18 @@ Run these before deciding the release order:
    migrations first.
 5. Verify Supabase production schema and migration history.
 6. Run local verification again after migration.
-7. Deploy to Vercel production.
-8. Inspect the Vercel deployment until it is ready or failed.
-9. Run post-deploy smoke checks for the changed surfaces.
-10. Update [PLAN.md](PLAN.md) with the final deployment and migration
+7. Push the named candidate branch only after explicit push approval;
+   inspect the Git-triggered Vercel preview.
+8. Run preview smoke checks for the changed surfaces and record the
+   result.
+9. Merge the pull request to `main` only after explicit production
+   approval. This GitHub merge is the production trigger.
+10. Inspect the Git-triggered Vercel production deployment until it is
+    ready or failed. Do not run a duplicate direct CLI deployment.
+11. Run post-deploy smoke checks for the changed surfaces.
+12. Run `npm run repo:sync` from the clean local `main` checkout and
+    verify `main` equals `origin/main`.
+13. Update [PLAN.md](PLAN.md) with the final deployment and migration
     status.
 
 ## Supabase Production Gate
@@ -153,16 +188,23 @@ TRACKING_SMOKE_BASE_URL=https://utekos.no npm run tracking:smoke
 Required sequence:
 
 1. Confirm project link with `.vercel/project.json` or `.vercel/repo.json`.
-2. Confirm Vercel auth with `vercel whoami`.
-3. Confirm the intended scope/team from the linked project file.
+2. Confirm the Vercel project is connected to
+   `utekos-brand/utekos-headless` and tracks `main` as its production
+   branch.
+3. Confirm Vercel inspection auth with `vercel whoami` when the CLI is
+   available, and confirm the intended scope/team from the linked
+   project file.
 4. Ensure required Supabase migrations and provider/env changes are done
    first.
 5. Run `pnpm exec tsc --noEmit` and relevant tests.
-6. Deploy with `vercel deploy --prod -y --archive=tgz` or the approved
-   project workflow.
-7. Inspect with `vercel inspect <deployment-url>`.
-8. If failed, fetch build logs and stop. Do not retry blindly.
-9. If ready, verify the production domain and relevant runtime surfaces.
+6. Push the named candidate branch only after explicit approval and
+   inspect its Git-triggered preview.
+7. Merge the approved pull request to `main`; do not run a direct
+   `vercel deploy --prod` for the same release.
+8. Inspect the Git-triggered production deployment with
+   `vercel inspect <deployment-url>` or the Vercel dashboard.
+9. If failed, fetch build logs and stop. Do not retry blindly.
+10. If ready, verify the production domain and relevant runtime surfaces.
 
 ## Tracking And Paid-Media Post-Deploy
 
