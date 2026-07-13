@@ -13,7 +13,8 @@ UNRESOLVED OG 0 ALERTS. SENTRAL GA4-SANITIZER, PURCHASE
 ER ISOLERT FRA POSTHOG-/PAKKEOPPGRADERINGEN. 67 TRACKINGTESTER,
 NEXT TYPEGEN, TYPESCRIPT, TARGETED ESLINT, SUPABASE DB LINT OG
 FULL NEXT.JS 16.2.9 TURBOPACK-BUILD ER GRØNNE. PREVIEW- OG
-PRODUKSJONSDEPLOY GJENSTÅR. PROVIDER WRITES OG GTM PUBLISH ER
+PRODUKTSIDE-/KLARNA-SMOKE ER GRØNN PÅ READY PREVIEW; KUN
+PRODUKSJONSDEPLOY OG ETTERKONTROLL GJENSTÅR. PROVIDER WRITES OG GTM PUBLISH ER
 FORTSATT BLOKKERT UTEN SEPARAT EKSPLISITT GODKJENNING.
 
 ### Releaseavstemming 2026-07-14
@@ -30,6 +31,10 @@ FORTSATT BLOKKERT UTEN SEPARAT EKSPLISITT GODKJENNING.
   og Git har uavhengig historikk; dette er årsaken til avviket.
 - PostHog `1.399.2`, øvrige dependency-endringer, `package.json`
   og `pnpm-lock.yaml` er uttrykkelig ikke med i release-kandidaten.
+- Vercel-preview `dpl_2kJH2QCPpsaaxx5oDBKD9SuhUt6j` er `READY`.
+  Autentisert browser-smoke på TechDown-produktet er grønn ved
+  1440 px og 390 px: 0 konsollfeil, Klarna SDK lastet, og den
+  tilgjengelige «Pay with Klarna»-knappen er rendret og aktiv.
 
 ## Telemetry- og plattformherding
 
