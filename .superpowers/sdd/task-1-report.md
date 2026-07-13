@@ -18,6 +18,8 @@ Status: DONE
 - RED: 8 focused regressions failed for the expected missing-policy/duplicate/ownership reasons.
 - GREEN: focused tests passed, 18/18.
 - Full tracking test suite passed, 88/88.
+- Second-review RED: both focused pageview regressions failed because raw `q` and `category` values reached the returned params and Google dataLayer payload.
+- Second-review GREEN: the helper and both outbound browser calls omit arbitrary query values; the focused suite passed 14/14 and the expanded tracking/route/smoke suite passed 107/107.
 
 ## Verification
 
@@ -41,6 +43,8 @@ Status: DONE
 - Reset search submission deduplication state on dialog close so the same legitimate query can be submitted after reopening.
 - Commerce smoke evidence now correlates every required event ID/name to Meta and requires exactly one matching Microsoft UET network event/action.
 - Review-focused tests passed 31/31; the expanded tracking/route/smoke suite passed 105/105; TypeScript, both smoke-script syntax checks, and `git diff --check` passed.
+- Second review removed query input from `getPageViewParams`. Google and Meta pageview owners still use the full route for navigation deduplication, but only pathname-derived, controlled values can enter pageview data. Regression coverage proves email, phone, and secret values in `q`/`category` do not appear in returned params, Google dataLayer events, or Meta Pixel calls.
+- Second-review focused tests passed 14/14; expanded tracking/route/smoke tests passed 107/107; focused ESLint, TypeScript, and `git diff --check` passed.
 
 ## Scope
 

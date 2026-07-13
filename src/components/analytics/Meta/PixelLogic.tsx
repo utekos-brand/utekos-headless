@@ -60,7 +60,7 @@ export function PixelLogic() {
           eventName: 'PageView',
           eventId,
           destinations: ['meta'],
-          eventData: getPageViewParams(pathname, searchParams),
+          eventData: getPageViewParams(pathname),
           userData: {
             external_id: externalId || undefined,
             fbc: fbc || undefined,
