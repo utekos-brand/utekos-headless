@@ -24,3 +24,23 @@ for (const event of [
     assert.equal(result.success, true)
   })
 }
+
+test('rejects browser refunds because Shopify webhook owns refund', () => {
+  const result = trackingEventPayloadSchema.safeParse({
+    schemaVersion: 1,
+    classification: 'essential',
+    source: 'browser',
+    occurredAt: '2026-07-13T10:00:00.000Z',
+    eventName: 'Refund',
+    canonicalEventName: 'refund',
+    eventId: 'browser-refund-forbidden',
+    actionSource: 'website',
+    eventData: {
+      transaction_id: '123',
+      value: 89.99,
+      currency: 'NOK'
+    }
+  })
+
+  assert.equal(result.success, false)
+})

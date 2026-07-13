@@ -4,10 +4,11 @@ import { buildRefundTrackingPayload } from './buildRefundTrackingPayload'
 import { shopifyRefundSchema } from './shopifyRefundSchema'
 
 test('uses the unique Shopify refund id and successful refund transaction amount', () => {
-  const payload = buildRefundTrackingPayload({
+  const refund = shopifyRefundSchema.parse({
     id: 456,
     order_id: 123,
     created_at: '2026-07-12T12:00:00.000Z',
+    admin_graphql_api_id: 'gid://shopify/Refund/999',
     refund_line_items: [{
       line_item_id: 789,
       quantity: 1,
@@ -19,7 +20,9 @@ test('uses the unique Shopify refund id and successful refund transaction amount
       { kind: 'refund', status: 'failure', amount: '100.00', currency: 'NOK' }
     ]
   })
+  const payload = buildRefundTrackingPayload(refund)
 
+  assert.ok(payload)
   assert.equal(payload.eventId, 'shopify_refund_456')
   assert.equal(payload.eventData?.transaction_id, '123')
   assert.equal(payload.eventData?.refund_id, '456')
@@ -46,4 +49,48 @@ test('rejects non-monetary and negative Shopify refund amounts', () => {
     ...base,
     transactions: [{ ...base.transactions[0], amount: '-1.00' }]
   }).success, false)
+  assert.equal(shopifyRefundSchema.safeParse({
+    ...base,
+    transactions: [{ ...base.transactions[0], amount: Number.POSITIVE_INFINITY }]
+  }).success, false)
+})
+
+test('accepts and normalizes the official refunds-create money shape', () => {
+  const officialPayload = shopifyRefundSchema.parse({
+    id: 890088186047892319,
+    order_id: 820982911946154508,
+    created_at: '2021-12-31T19:00:00-05:00',
+    admin_graphql_api_id: 'gid://shopify/Refund/890088186047892319',
+    refund_line_items: [{
+      id: 487817672276298627,
+      quantity: 1,
+      line_item_id: 487817672276298554,
+      location_id: null,
+      restock_type: 'no_restock',
+      subtotal: 89.99,
+      total_tax: 0.0
+    }]
+  })
+
+  assert.equal(officialPayload.refund_line_items[0]?.subtotal, 89.99)
+  assert.equal(officialPayload.refund_line_items[0]?.total_tax, 0)
+  assert.deepEqual(officialPayload.transactions, [])
+})
+
+test('normalizes transaction money and accepts nullable transaction currency', () => {
+  const payload = shopifyRefundSchema.parse({
+    id: '890088186047892319',
+    order_id: '820982911946154508',
+    created_at: '2021-12-31T19:00:00-05:00',
+    refund_line_items: [],
+    transactions: [{
+      kind: 'refund',
+      status: 'success',
+      amount: '89.99',
+      currency: null
+    }]
+  })
+
+  assert.equal(payload.transactions[0]?.amount, 89.99)
+  assert.equal(payload.transactions[0]?.currency, null)
 })

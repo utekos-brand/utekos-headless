@@ -58,6 +58,7 @@ create index if not exists tagging_observations_type_idx
 
 alter table ops.tagging_observations enable row level security;
 alter table ops.tagging_observations force row level security;
+grant usage on schema ops to service_role;
 revoke all on table ops.tagging_observations from public, anon, authenticated, service_role;
 grant select, insert on table ops.tagging_observations to service_role;
 

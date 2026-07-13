@@ -4,6 +4,7 @@ import { shopifyRefundSchema } from '@/lib/tracking/refunds/shopifyRefundSchema'
 import { persistAcceptedTrackingEvent } from '@/lib/tracking/warehouse/persistAcceptedTrackingEvent'
 import { recordProviderDispatchAttempt } from '@/lib/tracking/warehouse/recordProviderDispatchAttempt'
 import { processRefundWithDependencies } from '@/lib/tracking/refunds/processRefundWithDependencies'
+import { createRefundWebhookAcknowledgement } from '@/lib/tracking/refunds/createRefundWebhookAcknowledgement'
 
 export async function POST(request: Request) {
   const rawBody = await request.text()
@@ -25,10 +26,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid refund payload' }, { status: 400 })
   }
 
-  await processRefundWithDependencies(parsed.data, {
+  const result = await processRefundWithDependencies(parsed.data, {
     persistAcceptedTrackingEvent,
     recordProviderDispatchAttempt
   })
 
-  return new NextResponse(null, { status: 202 })
+  return createRefundWebhookAcknowledgement(result)
 }

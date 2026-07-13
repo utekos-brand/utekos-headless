@@ -23,11 +23,29 @@ type ProcessRefundDependencies = {
   recordProviderDispatchAttempt: (input: ProviderDispatchAttemptInput) => Promise<void>
 }
 
+export type ProcessRefundResult =
+  | {
+      outcome: 'processed'
+      eventId: string
+    }
+  | {
+      outcome: 'ignored'
+      reason: 'no_successful_refund_transaction'
+    }
+
 export async function processRefundWithDependencies(
   refund: ShopifyRefund,
   deps: ProcessRefundDependencies
-): Promise<void> {
+): Promise<ProcessRefundResult> {
   const payload = buildRefundTrackingPayload(refund)
+
+  if (!payload) {
+    return {
+      outcome: 'ignored',
+      reason: 'no_successful_refund_transaction'
+    }
+  }
+
   const transactionId = String(payload.eventData?.transaction_id ?? '')
   const refundId = String(payload.eventData?.refund_id ?? '')
   const value = Number(payload.eventData?.value ?? 0)
@@ -68,4 +86,9 @@ export async function processRefundWithDependencies(
     },
     responseSemantics: 'ledger_accepted_provider_skipped'
   })))
+
+  return {
+    outcome: 'processed',
+    eventId: payload.eventId
+  }
 }

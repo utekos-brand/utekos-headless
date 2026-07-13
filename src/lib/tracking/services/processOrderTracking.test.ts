@@ -89,8 +89,7 @@ test('persists a full purchase payload and dispatches Google when GA client id e
       return {
         success: true,
         events_received: 1,
-        fbtrace_id: 'meta-trace',
-        httpStatus: 200
+        fbtrace_id: 'meta-trace'
       }
     },
     sendGooglePurchase: async context => {
@@ -169,7 +168,7 @@ test('persists a full purchase payload and dispatches Google when GA client id e
     meta: true
   })
   assert.equal(metaAudit?.requestId, 'meta-trace')
-  assert.equal(metaAudit?.httpStatus, 200)
+  assert.equal(metaAudit?.httpStatus, undefined)
   assert.deepEqual(metaAudit?.validationResult, {
     eventsReceived: 1
   })

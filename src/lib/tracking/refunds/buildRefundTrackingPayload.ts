@@ -6,14 +6,21 @@ type RefundTrackingPayload = MetaEventPayload & {
   eventName: string
 }
 
-export function buildRefundTrackingPayload(refund: ShopifyRefund): RefundTrackingPayload {
+export function buildRefundTrackingPayload(
+  refund: ShopifyRefund
+): RefundTrackingPayload | null {
   const successfulTransactions = refund.transactions.filter(transaction =>
     transaction.kind.toLowerCase() === 'refund' && transaction.status.toLowerCase() === 'success'
   )
-  const value = successfulTransactions.reduce((total, transaction) => {
-    const amount = Number(transaction.amount)
-    return total + (Number.isFinite(amount) ? amount : 0)
-  }, 0)
+
+  if (successfulTransactions.length === 0) {
+    return null
+  }
+
+  const value = successfulTransactions.reduce(
+    (total, transaction) => total + transaction.amount,
+    0
+  )
   const currency = successfulTransactions.find(transaction => transaction.currency)?.currency
     ?? refund.currency
     ?? 'NOK'
@@ -23,7 +30,7 @@ export function buildRefundTrackingPayload(refund: ShopifyRefund): RefundTrackin
   const items = refund.refund_line_items.map(item => ({
     item_id: String(item.line_item_id),
     quantity: item.quantity,
-    price: item.quantity > 0 ? Number(item.subtotal) / item.quantity : 0
+    price: item.quantity > 0 ? item.subtotal / item.quantity : 0
   }))
 
   return {

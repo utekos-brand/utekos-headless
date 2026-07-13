@@ -13,7 +13,7 @@
 
 - RED observed for public `browser_dispatch` acceptance, missing tag discriminator requirements, over-broad migration grants, missing database shape constraints, missing refund processor, incomplete provider evidence, non-terminal accepted transport status and invalid refund money.
 - GREEN: focused Task 2 tests passed.
-- GREEN: full tracking suite passed: 104/104.
+- GREEN: full tracking suite passed: 109/109 after review remediation.
 - GREEN: `pnpm exec tsc --noEmit`.
 - GREEN: targeted ESLint.
 - GREEN: `git diff --check`.
@@ -28,3 +28,12 @@
 
 - The migration has not been applied and the new SQL has not been executed against a local Supabase stack because no local stack is running.
 - Vercel deploy, receipt secret configuration, Shopify webhook subscription and any live refund remain unperformed.
+
+## Review remediation
+
+- The Shopify schema now accepts official numeric or decimal-string money fields, nullable transaction currency and large numeric webhook IDs while normalizing validated money to finite non-negative numbers.
+- `refunds/create` without a successful refund transaction is acknowledged with HTTP 202 as `ignored/no_successful_refund_transaction`; it creates neither ledger nor provider rows.
+- The canonical refund identity remains Shopify's webhook `id`, independent of any GraphQL ID field.
+- The migration grants `service_role` schema usage without altering existing `ops` schema access, while the new table keeps its scoped revokes and append-only grants.
+- Meta CAPI success no longer fabricates an HTTP status that the SDK does not expose.
+- The browser tracking schema rejects `Refund`; Shopify `refunds/create` remains the sole refund owner.

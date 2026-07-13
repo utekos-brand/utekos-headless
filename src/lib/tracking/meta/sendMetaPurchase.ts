@@ -119,8 +119,7 @@ export async function sendMetaPurchase({ order, customer, redisData, contentIds 
     return {
       success: true,
       events_received: response.events_received,
-      fbtrace_id: response.fbtrace_id,
-      httpStatus: 200
+      fbtrace_id: response.fbtrace_id
     }
   } catch (error: unknown) {
     const err = error as MetaApiError

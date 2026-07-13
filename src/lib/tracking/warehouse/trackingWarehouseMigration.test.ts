@@ -14,6 +14,8 @@ test('keeps tagging observations append-only and service-role-only', async () =>
   assert.match(migration, /revoke all[^;]+from public, anon, authenticated, service_role/i)
   assert.match(migration, /grant select, insert[^;]+to service_role/i)
   assert.doesNotMatch(migration, /grant[^;]+(?:update|delete)[^;]+tagging_observations/i)
+  assert.match(migration, /grant usage on schema ops to service_role/i)
+  assert.doesNotMatch(migration, /revoke all on schema ops/i)
 })
 
 test('enforces observation-specific fields at the database boundary', async () => {
