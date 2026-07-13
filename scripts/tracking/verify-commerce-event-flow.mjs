@@ -241,6 +241,21 @@ async function queryWarehouse(eventIds) {
           (payload->'ga4Data' ? 'client_id') as has_ga4_client_id,
           (payload->'ga4Data' ? 'session_id') as has_ga4_session_id,
           (payload->'userData' ? 'fbp') as has_fbp,
+          exists (
+            select 1 from ops.tagging_observations observation
+            where observation.event_id = ops.provider_dispatch_attempts.event_id
+              and observation.observation_type = 'browser_dispatch'
+          ) as has_browser_dispatch,
+          exists (
+            select 1 from ops.tagging_observations observation
+            where observation.event_id = ops.provider_dispatch_attempts.event_id
+              and observation.observation_type = 'sgtm_ingress'
+          ) as has_sgtm_ingress,
+          exists (
+            select 1 from ops.tagging_observations observation
+            where observation.event_id = ops.provider_dispatch_attempts.event_id
+              and observation.observation_type = 'tag_execution'
+          ) as has_tag_execution,
           processed_at is not null as has_processed_at
         from ops.provider_dispatch_attempts
         where event_id = any(${eventIds})
@@ -276,6 +291,21 @@ async function queryWarehouse(eventIds) {
         (payload->'ga4Data' ? 'client_id') as has_ga4_client_id,
         (payload->'ga4Data' ? 'session_id') as has_ga4_session_id,
         (payload->'userData' ? 'fbp') as has_fbp,
+        exists (
+          select 1 from ops.tagging_observations observation
+          where observation.event_id = ops.provider_dispatch_attempts.event_id
+            and observation.observation_type = 'browser_dispatch'
+        ) as has_browser_dispatch,
+        exists (
+          select 1 from ops.tagging_observations observation
+          where observation.event_id = ops.provider_dispatch_attempts.event_id
+            and observation.observation_type = 'sgtm_ingress'
+        ) as has_sgtm_ingress,
+        exists (
+          select 1 from ops.tagging_observations observation
+          where observation.event_id = ops.provider_dispatch_attempts.event_id
+            and observation.observation_type = 'tag_execution'
+        ) as has_tag_execution,
         processed_at is not null as has_processed_at
       from ops.provider_dispatch_attempts
       where event_id = any(${eventIds})
@@ -506,6 +536,18 @@ function assertWarehouseRows(payloads, warehouseResult) {
       if (requireSucceeded && row.status !== 'succeeded') {
         failures.push(`${provider} row for ${expected.canonicalEventName} is ${row.status}, not succeeded.`)
       }
+
+      if (!row.has_browser_dispatch) {
+        failures.push(`Missing browser_dispatch observation for ${expected.canonicalEventName}.`)
+      }
+
+      if (!row.has_sgtm_ingress || !row.has_tag_execution) {
+        failures.push(`Missing sGTM ingress/tag execution receipt for ${expected.canonicalEventName}.`)
+      }
+    }
+
+    if (rowsByKey.has(`${payload.eventId}:google`)) {
+      failures.push(`Unexpected Google server_retry row for browser ${expected.canonicalEventName}.`)
     }
   }
 

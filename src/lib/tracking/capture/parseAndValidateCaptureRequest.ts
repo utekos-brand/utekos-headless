@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server'
 import { getStorageKeys } from '@/lib/utils/getStorageKey'
 import type { NextRequest } from 'next/server'
 import type { CaptureBody } from 'types/tracking/meta'
+import { captureBodySchema } from '@/lib/tracking/capture/captureBodySchema'
 
 type ValidationResult =
   | { success: true; body: CaptureBody; token: string; tokens: string[] }
@@ -12,9 +13,9 @@ type ValidationResult =
 export async function parseAndValidateCaptureRequest(
   req: NextRequest
 ): Promise<ValidationResult> {
-  let body: CaptureBody
+  let input: unknown
   try {
-    body = (await req.json()) as CaptureBody
+    input = await req.json()
   } catch {
     return {
       success: false,
@@ -24,6 +25,18 @@ export async function parseAndValidateCaptureRequest(
       )
     }
   }
+
+  const parsedBody = captureBodySchema.safeParse(input)
+  if (!parsedBody.success) {
+    return {
+      success: false,
+      errorResponse: NextResponse.json(
+        { error: 'Invalid checkout capture payload' },
+        { status: 400 }
+      )
+    }
+  }
+  const body = parsedBody.data as CaptureBody
 
   const tokens = getStorageKeys(body)
   if (tokens.length === 0) {
