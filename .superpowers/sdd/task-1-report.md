@@ -33,6 +33,15 @@ Status: DONE
 - The live commerce smoke was not executed because its default target is production and it deliberately emits live consent-qualified commerce events. The deterministic smoke path and fail-closed assertions were verified statically and by syntax/type/test gates.
 - No production deploy, GTM publish, provider mutation, Supabase mutation, or real purchase was performed.
 
+## Review remediation
+
+- Added committed schema and route regression coverage for `view_cart`, `remove_from_cart`, and `search`.
+- Replaced the generic checkout marketing gate with a fail-closed provider-specific gate over validated, versioned Cookiebot consent provenance. Statistics-only Google Analytics consent now captures only GA identifiers; advertising identifiers remain service-gated.
+- Replaced raw search text with a deterministic `site_search` / `submitted` signal and centrally strips query strings and fragments from browser event source URLs.
+- Reset search submission deduplication state on dialog close so the same legitimate query can be submitted after reopening.
+- Commerce smoke evidence now correlates every required event ID/name to Meta and requires exactly one matching Microsoft UET network event/action.
+- Review-focused tests passed 31/31; the expanded tracking/route/smoke suite passed 105/105; TypeScript, both smoke-script syntax checks, and `git diff --check` passed.
+
 ## Scope
 
 - No Supabase, GTM, GCP, or Vercel files were changed or staged for Task 1.

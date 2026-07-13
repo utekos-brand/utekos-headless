@@ -22,6 +22,7 @@ import { HeaderSearchFooter } from './HeaderSearchFooter'
 import { SearchResults } from './SearchResults'
 import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
+import { buildSafeSearchEventData } from '@/lib/tracking/search/buildSafeSearchEventData'
 
 type HeaderSearchDialogProps = {
   open: boolean
@@ -50,13 +51,22 @@ export function HeaderSearchDialog({
       eventName: 'Search',
       eventId: generateEventID(),
       destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
-      eventData: { search_string: query }
+      eventData: buildSafeSearchEventData()
     })
+  }
+
+  const handleOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      lastSubmittedQuery.current = null
+      setSearchQuery('')
+    }
+
+    setOpen(isOpen)
   }
 
   const handleNavigate = (path: string) => {
     trackSubmittedSearch()
-    setOpen(false)
+    handleOpenChange(false)
     startTransition(() => {
       router.push(path as Route)
     })
@@ -66,7 +76,7 @@ export function HeaderSearchDialog({
     <CommandDialog
       data-nosnippet
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={handleOpenChange}
       showCloseButton={false}
       className={cn(
         'mx-auto! h-[50vh] max-w-3xl rounded-xl p-2 pb-11 shadow-2xl md:max-w-4xl lg:max-w-5xl',

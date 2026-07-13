@@ -68,6 +68,17 @@ const consentServiceByDestination: Record<BrowserTrackingDestination, string> = 
   posthog: COOKIEBOT_POSTHOG_SERVICE_NAME
 }
 
+function sanitizeEventSourceUrl(value: string | undefined): string | undefined {
+  if (!value) return undefined
+
+  try {
+    const url = new URL(value)
+    return `${url.origin}${url.pathname}`
+  } catch {
+    return undefined
+  }
+}
+
 async function sendTrackingLedger(payload: MetaEventPayload): Promise<void> {
   const body = JSON.stringify(payload)
 
@@ -147,7 +158,7 @@ export async function dispatchTrackingEventWithDependencies(
     canonicalEventName: mapToCanonicalEventName(input.eventName),
     eventName: input.eventName,
     eventId: input.eventId,
-    eventSourceUrl: input.eventSourceUrl ?? deps.getLocation(),
+    eventSourceUrl: sanitizeEventSourceUrl(input.eventSourceUrl ?? deps.getLocation()),
     eventTime,
     actionSource: 'website',
     userData: enabledDestinations.has('meta') ? deps.getMetaUserData(input.userData) : undefined,

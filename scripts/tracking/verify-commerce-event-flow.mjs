@@ -3,6 +3,10 @@
 import dotenv from 'dotenv'
 import postgres from 'postgres'
 import { chromium } from 'playwright'
+import {
+  assertCorrelatedProviderEvidence,
+  networkEvidenceFromUrl
+} from './commerce-smoke-evidence.mjs'
 
 dotenv.config({ path: '.env.local', quiet: true })
 dotenv.config({ path: '.env.mcp.local', override: false, quiet: true })
@@ -27,54 +31,6 @@ const requiredEvents = [
 
 const requiredProviders = ['meta']
 const requiredDataLayerEvents = requiredEvents.map(event => event.canonicalEventName)
-function networkEvidenceFromUrl(url) {
-  try {
-    const parsedUrl = new URL(url)
-    const host = parsedUrl.hostname
-    const path = parsedUrl.pathname
-
-    if (host === 'www.facebook.com' && path === '/tr/') {
-      return {
-        provider: 'meta',
-        event: parsedUrl.searchParams.get('ev'),
-        host,
-        path
-      }
-    }
-
-    if (host === 'bat.bing.com') {
-      return {
-        provider: 'microsoft_uet',
-        event: parsedUrl.searchParams.get('evt') || parsedUrl.searchParams.get('en'),
-        host,
-        path
-      }
-    }
-
-    if (host.includes('clarity.ms') || host.includes('clarity.microsoft.com')) {
-      return {
-        provider: 'clarity',
-        event: null,
-        host,
-        path
-      }
-    }
-
-    if (host === 'portal.utekos.no' || host.includes('posthog.com')) {
-      return {
-        provider: 'posthog',
-        event: null,
-        host,
-        path
-      }
-    }
-  } catch {
-    return null
-  }
-
-  return null
-}
-
 function logStage(stage) {
   console.error(`[commerce-smoke] ${stage}`)
 }
@@ -589,7 +545,12 @@ function assertCheckoutAttributionSnapshot(snapshotResult) {
   return failures
 }
 
-function assertBrowserProviderEvidence(browserEvidence, networkEvidence, clarityConsentApplied) {
+function assertBrowserProviderEvidence(
+  payloads,
+  browserEvidence,
+  networkEvidence,
+  clarityConsentApplied
+) {
   const failures = []
   const dataLayerEvents = new Set(browserEvidence.dataLayerEvents.map(item => item.event))
 
@@ -599,13 +560,7 @@ function assertBrowserProviderEvidence(browserEvidence, networkEvidence, clarity
     }
   }
 
-  if (networkEvidence.meta.length === 0) {
-    failures.push('Missing Meta Pixel browser evidence after consent.')
-  }
-
-  if (networkEvidence.microsoft_uet.length === 0) {
-    failures.push('Missing Microsoft UET browser evidence after consent.')
-  }
+  failures.push(...assertCorrelatedProviderEvidence(payloads, networkEvidence, requiredEvents))
 
   if (!clarityConsentApplied) {
     failures.push('Microsoft Clarity Consent API V2 was not available/applied for ad_Storage and analytics_Storage.')
@@ -754,7 +709,12 @@ async function runSmoke() {
     const payloadFailures = assertPayloadQuality(payloads)
     const warehouseFailures = assertWarehouseRows(payloads, warehouseResult)
     const checkoutAttributionFailures = assertCheckoutAttributionSnapshot(checkoutAttributionSnapshot)
-    const browserProviderFailures = assertBrowserProviderEvidence(browserEvidence, networkEvidence, clarityConsentApplied)
+    const browserProviderFailures = assertBrowserProviderEvidence(
+      payloads,
+      browserEvidence,
+      networkEvidence,
+      clarityConsentApplied
+    )
     const microsoftUetPurchaseFailures = assertMicrosoftUetPurchaseStatus(microsoftUetPurchaseStatus)
     const failures = [
       ...payloadFailures,

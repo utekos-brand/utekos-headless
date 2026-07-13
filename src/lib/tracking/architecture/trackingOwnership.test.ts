@@ -67,7 +67,13 @@ test('commerce smoke requires provider evidence and deterministic funnel events'
   assert.match(source, /canonicalEventName: 'view_cart'/)
   assert.match(source, /canonicalEventName: 'remove_from_cart'/)
   assert.match(source, /canonicalEventName: 'search'/)
-  assert.match(source, /Missing Meta Pixel browser evidence/)
-  assert.match(source, /Missing Microsoft UET browser evidence/)
+  assert.match(source, /assertCorrelatedProviderEvidence/)
   assert.doesNotMatch(source, /Meta Pixel and Microsoft UET browser evidence is best-effort/i)
+})
+
+test('search submission state resets whenever the dialog closes', async () => {
+  const source = await read('src/components/header/HeaderSearch/HeaderSearchDialog.tsx')
+
+  assert.match(source, /lastSubmittedQuery\.current = null/)
+  assert.match(source, /onOpenChange=\{handleOpenChange\}/)
 })

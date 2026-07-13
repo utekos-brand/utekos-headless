@@ -8,10 +8,12 @@ import { findGaSessionCookie } from '@/lib/tracking/google/findGaSessionCookie'
 import { parseMarketingParamsCookie } from '@/lib/tracking/google/parseMarketingParamsCookie'
 import { GA_MEASUREMENT_ID } from '@/api/constants/monitoring'
 import type { CaptureContext } from 'types/tracking/capture/CaptureContext'
+import type { ConsentProvenance } from 'types/tracking/user/ConsentProvenance'
 
 export function adaptRequestToCaptureContext(
   req: NextRequest,
-  body?: { gaClientId?: string; gaSessionId?: string }
+  body: { gaClientId?: string; gaSessionId?: string } | undefined,
+  consentProvenance: ConsentProvenance
 ): CaptureContext {
   const cookieStore = req.cookies
   const gaCookie = cookieStore.get('_ga')?.value
@@ -43,6 +45,7 @@ export function adaptRequestToCaptureContext(
       gaSessionId: body?.gaSessionId || gaSessionIdFromCookie
     },
     clientIp: getClientIp(req) ?? '',
-    userAgent: req.headers.get('user-agent') ?? ''
+    userAgent: req.headers.get('user-agent') ?? '',
+    consentProvenance
   }
 }

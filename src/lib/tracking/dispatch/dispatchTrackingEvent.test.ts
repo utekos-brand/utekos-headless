@@ -58,3 +58,28 @@ test('requires an explicit destination before dispatching a browser integration'
 
   assert.deepEqual(calls, ['google', 'microsoft_uet', 'posthog', 'ledger'])
 })
+
+test('strips query parameters and fragments from the central browser payload', async () => {
+  await dispatchTrackingEventWithDependencies(
+    {
+      eventName: 'Search',
+      eventId: 'evt-search',
+      destinations: ['google'],
+      eventSourceUrl: 'https://utekos.no/produkter?email=kunde@example.com&token=secret#phone-99999999'
+    },
+    {
+      hasConsent: () => true,
+      resolveGa4Data: async () => ({ client_id: '123.456' }),
+      pushGoogle: () => {},
+      sendMeta: () => {},
+      sendMicrosoft: () => {},
+      capturePostHog: () => {},
+      sendLedger: async payload => {
+        assert.equal(payload.eventSourceUrl, 'https://utekos.no/produkter')
+      },
+      getMetaUserData: () => ({}),
+      now: () => 1_700_000_000_000,
+      getLocation: () => undefined
+    }
+  )
+})

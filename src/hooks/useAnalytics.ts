@@ -1,14 +1,14 @@
 // Path: src/hooks/useAnalytics.ts
-import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
+import {
+  dispatchTrackingEvent,
+  type BrowserTrackingEventName
+} from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
-import type {
-  MetaEventType,
-  TrackEventOptions
-} from 'types/tracking/meta/event'
+import type { TrackEventOptions } from 'types/tracking/meta/event'
 
 export function useAnalytics() {
   const trackEvent = (
-    eventName: MetaEventType,
+    eventName: BrowserTrackingEventName,
     data: Record<string, unknown> = {},
     options: TrackEventOptions = {}
   ) => {
