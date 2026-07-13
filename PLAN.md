@@ -2,18 +2,34 @@
 
 ## Status
 
-STATUS: SGTM ER FLYTTET TIL NYTT GOOGLE CLOUD-PROSJEKT;
-PRODUKSJONSDOMENET ER VERIFISERT GRØNT; TELEMETRY- OG
-PLATTFORMHERDING ER IMPLEMENTERT I READ-ONLY/FAIL-CLOSED MODUS;
-SUPABASE PRODUCTION-MUTASJON FOR TELEMETRY-HERDING, SHOPIFY-
-HISTORIKK OG CHECKOUT-ATTRIBUTION SNAPSHOT ER UTFØRT OG
-VERIFISERT; VERCEL PRODUCTION DEPLOY
-`utekos-headless-55g9vsbve-utekos-marketing-group.vercel.app`
-ER READY FOR TARGET `production`; COMMERCIAL INTELLIGENCE-PLANEN
-ER OPPRETTET; PROVIDER DEAD-LETTER-REGISTERET BLE GJENÅPNET
-2026-07-10 AV 48 GOOGLE `page_location`-FEIL, MED LOKAL RETTING
-VERIFISERT MEN IKKE PRODUKSJONSDEPLOYET; PROVIDER WRITES OG GTM PUBLISH ER
-FORTSATT BLOKKERT UTEN SEPARAT EKSPLISITT GODKJENNING
+STATUS 2026-07-14: REN RELEASE-KANDIDAT ER BYGGET FRA
+`origin/main` PÅ `codex/reconcile-tracking-release`. FEM
+PRODUKSJONSMIGRASJONER ER GJENOPPRETTET SOM LOKALE, COMMITTEDE
+FILER UTEN SUPABASE-SKJEMAMUTASJON. 48 HISTORISKE GOOGLE
+`page_location`-DEAD-LETTERS ER KLASSIFISERT OG LUKKET UTEN
+REPLAY; PROVIDER-RAPPORTEN HAR 0 FAILED/DEAD-LETTERED, 0
+UNRESOLVED OG 0 ALERTS. SENTRAL GA4-SANITIZER, PURCHASE
+`external_id`-HERDING OG KLARNA EXPRESS CHECKOUT-INITIALISERING
+ER ISOLERT FRA POSTHOG-/PAKKEOPPGRADERINGEN. 67 TRACKINGTESTER,
+NEXT TYPEGEN, TYPESCRIPT, TARGETED ESLINT, SUPABASE DB LINT OG
+FULL NEXT.JS 16.2.9 TURBOPACK-BUILD ER GRØNNE. PREVIEW- OG
+PRODUKSJONSDEPLOY GJENSTÅR. PROVIDER WRITES OG GTM PUBLISH ER
+FORTSATT BLOKKERT UTEN SEPARAT EKSPLISITT GODKJENNING.
+
+### Releaseavstemming 2026-07-14
+
+- Full build var ikke blokkert av MDX eller typed routes i den
+  kanoniske builden. En stale `.next` Turbopack-filcache utløste
+  lokal worker-`ENOENT`; cachen er regenerert, og både den aktive
+  worktree-en og den rene releasen bygger alle ruter grønt.
+- MDX-/typed-route-feilene kom fra en separat `--webpack`/
+  `--debug-build-paths`-diagnose med ufullstendige genererte
+  rutetyper. `next typegen` etterfulgt av `tsc --noEmit` er grønn.
+- De fire omtalte migrasjonene var allerede registrert i Supabase,
+  men filene lå ucommittet i en separat lokal worktree. Supabase
+  og Git har uavhengig historikk; dette er årsaken til avviket.
+- PostHog `1.399.2`, øvrige dependency-endringer, `package.json`
+  og `pnpm-lock.yaml` er uttrykkelig ikke med i release-kandidaten.
 
 ## Telemetry- og plattformherding
 
