@@ -17,3 +17,22 @@ test('keeps only directive and hosts from a CSP report', () => {
     disposition: 'report'
   })
 })
+
+test('never reflects invalid attacker strings containing personal data or secrets', () => {
+  const report = parseCspReport({
+    'csp-report': {
+      'effective-directive': 'connect-src\nemail@example.com',
+      'blocked-uri': 'email@example.com phone +4712345678 token=super-secret',
+      'document-uri': 'javascript:email@example.com',
+      disposition: 'report\nsecret=hidden'
+    }
+  })
+
+  assert.deepEqual(report, {
+    directive: 'unknown',
+    blockedHost: 'invalid-uri',
+    documentHost: 'non-http-scheme',
+    disposition: 'report'
+  })
+  assert.doesNotMatch(JSON.stringify(report), /example|4712345678|super-secret|hidden/)
+})

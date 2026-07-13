@@ -9,6 +9,23 @@ export function isExplicitNotFound(error) {
   return /\bNOT_FOUND\b/.test(message) && !/\bPERMISSION_DENIED\b/.test(message)
 }
 
+export function decideSecretInitialization({ secretExists, versions }) {
+  if (!secretExists) return 'create-secret-and-first-version'
+  if (!Array.isArray(versions) || versions.length === 0) return 'add-first-version'
+  if (versions[0]?.state !== 'ENABLED') {
+    throw new Error('The latest sGTM secret version is not enabled; refusing automatic rotation or replacement')
+  }
+  return 'reuse-latest'
+}
+
+export function assertApprovedVercelLink(expected, actual) {
+  if (actual?.projectId !== expected.projectId
+    || actual?.orgId !== expected.orgId
+    || actual?.projectName !== expected.projectName) {
+    throw new Error('Vercel link does not match the approved project and team')
+  }
+}
+
 function equal(left, right) {
   return JSON.stringify(stable(left)) === JSON.stringify(stable(right))
 }
@@ -26,7 +43,7 @@ function hasSecretMount(service, config) {
   const directory = config.mountPath.slice(0, config.mountPath.lastIndexOf('/'))
   const filename = config.mountPath.slice(config.mountPath.lastIndexOf('/') + 1)
   const volume = (spec.volumes || []).find(item => item.secret?.secretName === config.name
-    && (item.secret.items || []).some(secretItem => secretItem.path === filename))
+    && (item.secret.items || []).some(secretItem => secretItem.key === 'latest' && secretItem.path === filename))
   if (!volume) return false
   return (spec.containers?.[0]?.volumeMounts || []).some(mount => mount.name === volume.name && mount.mountPath === directory)
 }
@@ -72,6 +89,14 @@ export function verifySgtmHardeningState(config, state) {
   const hasSecretAccess = (state.secretIamPolicy?.bindings || []).some(binding =>
     binding.role === 'roles/secretmanager.secretAccessor' && (binding.members || []).includes(member))
   if (!hasSecretAccess) failures.push('service account lacks secret accessor IAM on the sGTM secret')
+  if (!state.secretResource?.name?.endsWith(`/secrets/${config.secret.name}`)) {
+    failures.push('sGTM Secret Manager resource is missing')
+  }
+  if (!state.secretVersion?.name?.includes(`/secrets/${config.secret.name}/versions/`)
+    || state.secretVersion?.state !== 'ENABLED') {
+    failures.push('sGTM secret lacks an enabled latest version')
+  }
+  if (state.secretMaterialValid !== true) failures.push('sGTM latest secret material is invalid')
 
   const uptime = (state.uptimeChecks || []).find(check => check.displayName === config.uptime.displayName)
   const uptimeHost = uptime?.monitoredResource?.labels?.host
@@ -88,7 +113,8 @@ export function verifySgtmHardeningState(config, state) {
   if (!channel) failures.push('approved notification channel is missing or disabled')
 
   for (const metric of config.loggingMetrics || []) {
-    const actual = (state.loggingMetrics || []).find(item => item.name?.endsWith(`/metrics/${metric.name}`))
+    const actual = (state.loggingMetrics || []).find(item => item.name === metric.name
+      || item.name?.endsWith(`/metrics/${metric.name}`))
     if (!actual || actual.filter !== metric.filter || actual.metricDescriptor?.metricKind !== metric.metricKind) {
       failures.push(`logging metric ${metric.name} filter or kind drifted`)
     }
@@ -113,6 +139,9 @@ export function verifySgtmHardeningState(config, state) {
   const expectedThresholds = [...config.budget.thresholdRules].sort()
   if (!budget || (config.budget.useLastPeriodAmount && !budget.amount?.lastPeriodAmount)
     || !equal(thresholds, expectedThresholds)) failures.push('budget thresholds or amount basis drifted')
+  if (!equal(budget?.budgetFilter?.projects || [], config.budget.filter.projects)) {
+    failures.push('budget project filter drifted')
+  }
   if (channel?.name && !(budget?.notificationsRule?.monitoringNotificationChannels || []).includes(channel.name)) {
     failures.push('budget lacks the approved notification channel')
   }

@@ -6,7 +6,11 @@ import fs from 'node:fs'
 import { promisify } from 'node:util'
 import process from 'node:process'
 
-import { isExplicitNotFound } from './lib/sgtm-hardening.mjs'
+import {
+  assertApprovedVercelLink,
+  decideSecretInitialization,
+  isExplicitNotFound
+} from './lib/sgtm-hardening.mjs'
 
 const execFileAsync = promisify(execFile)
 const config = JSON.parse(fs.readFileSync(process.env.SGTM_HARDENING_CONFIG || 'config/gcp/sgtm-production-hardening.json', 'utf8'))
@@ -17,9 +21,9 @@ function commandPlan() {
   return {
     mode: 'dry-run',
     phases: [
-      { phase: 'vercel-preview', confirmation: 'I_APPROVE_VERCEL_PREVIEW_SECRET', action: 'create/reuse key and set Preview only' },
+      { phase: 'receipt-secret-preview', confirmation: 'I_APPROVE_RECEIPT_SECRET_AND_VERCEL_PREVIEW', action: 'create or initialize the Secret Manager receipt key when needed, then set Vercel Preview' },
       { phase: 'vercel-production', confirmation: 'I_APPROVE_VERCEL_PRODUCTION_SECRET', action: 'reuse exact key and set Production only' },
-      { phase: 'cloud-secret', confirmation: 'I_APPROVE_SGTM_CLOUD_SECRET_MUTATION', action: 'identity, IAM, file mount and SGTM_CREDENTIALS' },
+      { phase: 'cloud-secret', confirmation: 'I_APPROVE_SGTM_CLOUD_SECRET_MUTATION', action: 'mount the existing enabled secret through identity, IAM and SGTM_CREDENTIALS' },
       { phase: 'budget-api', confirmation: 'I_APPROVE_BUDGET_API_ENABLE', action: 'enable billingbudgets.googleapis.com only' },
       { phase: 'operations', confirmation: 'I_APPROVE_SGTM_OPERATIONS_MUTATION', action: 'capacity, uptime, metrics, alerts and budget' }
     ],
@@ -61,28 +65,48 @@ async function readExistingSecret() {
   }
 }
 
-async function createOrReadSecretForPreview() {
+async function listSecretVersions() {
   try {
-    await run(['gcloud', 'secrets', 'describe', config.secret.name, projectArg])
-    return readExistingSecret()
-  } catch (error) {
-    if (!isExplicitNotFound(error)) throw new Error('Secret preflight failed; refusing to create or rotate a key')
+    const { stdout } = await run([
+      'gcloud', 'secrets', 'versions', 'list', config.secret.name, projectArg,
+      '--sort-by=~createTime', '--format=json'
+    ])
+    const versions = JSON.parse(stdout || '[]')
+    if (!Array.isArray(versions)) throw new Error('unexpected version-list response')
+    return versions
+  } catch {
+    throw new Error('Existing sGTM secret versions could not be listed; refusing to initialize or rotate a key')
   }
+}
 
+async function addFirstSecretVersion() {
   const encoded = crypto.randomBytes(32).toString('base64')
   const document = JSON.stringify({ keys: { [config.secret.keyId]: encoded } })
-  await run(['gcloud', 'secrets', 'create', config.secret.name, projectArg, '--replication-policy=automatic'])
   await runWithInput('gcloud', ['secrets', 'versions', 'add', config.secret.name, projectArg, '--data-file=-'], document)
   return encoded
 }
 
+async function createOrReadSecretForPreview() {
+  let secretExists = true
+  try {
+    await run(['gcloud', 'secrets', 'describe', config.secret.name, projectArg])
+  } catch (error) {
+    if (!isExplicitNotFound(error)) throw new Error('Secret preflight failed; refusing to create or rotate a key')
+    secretExists = false
+  }
+
+  const versions = secretExists ? await listSecretVersions() : []
+  const action = decideSecretInitialization({ secretExists, versions })
+  if (action === 'reuse-latest') return readExistingSecret()
+  if (action === 'create-secret-and-first-version') {
+    await run(['gcloud', 'secrets', 'create', config.secret.name, projectArg, '--replication-policy=automatic'])
+  }
+  return addFirstSecretVersion()
+}
+
 function assertVercelLink() {
   const link = JSON.parse(fs.readFileSync('.vercel/project.json', 'utf8'))
-  if (link.projectId !== config.vercel.projectId
-    || link.orgId !== config.vercel.orgId
-    || link.projectName !== config.vercel.projectName) {
-    throw new Error('Vercel link does not match the approved project and team')
-  }
+  assertApprovedVercelLink(config.vercel, link)
 }
 
 async function syncVercelSecret(target, encoded) {
@@ -99,8 +123,8 @@ function requireConfirmation(expected) {
   }
 }
 
-async function applyVercelPreview() {
-  requireConfirmation('I_APPROVE_VERCEL_PREVIEW_SECRET')
+async function applyReceiptSecretPreview() {
+  requireConfirmation('I_APPROVE_RECEIPT_SECRET_AND_VERCEL_PREVIEW')
   assertVercelLink()
   const encoded = await createOrReadSecretForPreview()
   await syncVercelSecret('preview', encoded)
@@ -194,6 +218,7 @@ function assertNoNamedDrift({ uptimes, channels, metrics, policies, budgets, add
   if (budget) {
     const thresholds = (budget.thresholdRules || []).map(rule => Number(rule.thresholdPercent)).sort()
     if (!budget.amount?.lastPeriodAmount || !equal(thresholds, [...config.budget.thresholdRules].sort())
+      || !equal(budget.budgetFilter?.projects || [], config.budget.filter.projects)
       || (channel?.name && !(budget.notificationsRule?.monitoringNotificationChannels || []).includes(channel.name))) {
       throw new Error('Same-name budget drifted; reconcile it explicitly before mutation')
     }
@@ -263,6 +288,7 @@ async function applyOperations() {
       'gcloud', 'billing', 'budgets', 'create', `--billing-account=${config.budget.billingAccount}`,
       projectArg,
       `--display-name=${config.budget.displayName}`, '--last-period-amount',
+      `--filter-projects=${config.budget.filter.projects.join(',')}`,
       ...config.budget.thresholdRules.map(percent => `--threshold-rule=percent=${percent}`),
       `--notifications-rule-monitoring-notification-channels=${channel.name}`, '--quiet'
     ])
@@ -272,8 +298,8 @@ async function applyOperations() {
 
 if (phase === 'plan') {
   console.log(JSON.stringify(commandPlan(), null, 2))
-} else if (phase === 'vercel-preview') {
-  await applyVercelPreview()
+} else if (phase === 'receipt-secret-preview') {
+  await applyReceiptSecretPreview()
 } else if (phase === 'vercel-production') {
   await applyVercelProduction()
 } else if (phase === 'cloud-secret') {
@@ -283,5 +309,5 @@ if (phase === 'plan') {
 } else if (phase === 'operations') {
   await applyOperations()
 } else {
-  throw new Error('SGTM_HARDENING_PHASE must be plan, vercel-preview, vercel-production, cloud-secret, budget-api or operations')
+  throw new Error('SGTM_HARDENING_PHASE must be plan, receipt-secret-preview, vercel-production, cloud-secret, budget-api or operations')
 }

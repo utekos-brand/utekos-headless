@@ -34,6 +34,24 @@ async function vercelEnv(target) {
   }
 }
 
+async function validateLatestSecretMaterial() {
+  try {
+    const { stdout } = await execFileAsync('gcloud', [
+      'secrets', 'versions', 'access', 'latest', `--secret=${config.secret.name}`,
+      `--project=${config.projectId}`
+    ], { maxBuffer: 1024 * 1024, timeout: 15_000 })
+    const parsed = JSON.parse(stdout)
+    const encoded = parsed?.keys?.[config.secret.keyId]
+    if (typeof encoded !== 'string') throw new Error('missing key')
+    const bytes = Buffer.from(encoded, 'base64')
+    if (bytes.length < 32 || bytes.toString('base64') !== encoded) throw new Error('invalid key')
+    return true
+  } catch {
+    readErrors.push('Secret Manager latest material: validation failed without exposing secret output')
+    return false
+  }
+}
+
 const projectArg = `--project=${config.projectId}`
 let vercelLink = {}
 try {
@@ -41,8 +59,11 @@ try {
 } catch {
   vercelLink = {}
 }
-const [service, secretIamPolicy, uptimeChecks, notificationChannels, alertPolicies, loggingMetrics, budgets, vercelPreviewEnv, vercelProductionEnv] = await Promise.all([
+const [service, secretResource, secretVersion, secretMaterialValid, secretIamPolicy, uptimeChecks, notificationChannels, alertPolicies, loggingMetrics, budgets, vercelPreviewEnv, vercelProductionEnv] = await Promise.all([
   gcloud(['run', 'services', 'describe', config.service, projectArg, `--region=${config.region}`, '--format=json'], {}, 'Cloud Run service'),
+  gcloud(['secrets', 'describe', config.secret.name, projectArg, '--format=json'], {}, 'Secret Manager resource'),
+  gcloud(['secrets', 'versions', 'describe', 'latest', `--secret=${config.secret.name}`, projectArg, '--format=json'], {}, 'Secret Manager latest version'),
+  validateLatestSecretMaterial(),
   gcloud(['secrets', 'get-iam-policy', config.secret.name, projectArg, '--format=json'], {}, 'Secret Manager IAM'),
   gcloud(['monitoring', 'uptime', 'list-configs', projectArg, '--format=json']),
   gcloud(['beta', 'monitoring', 'channels', 'list', projectArg, '--format=json']),
@@ -55,6 +76,9 @@ const [service, secretIamPolicy, uptimeChecks, notificationChannels, alertPolici
 
 const result = verifySgtmHardeningState(config, {
   service,
+  secretResource,
+  secretVersion,
+  secretMaterialValid,
   secretIamPolicy,
   uptimeChecks,
   notificationChannels,

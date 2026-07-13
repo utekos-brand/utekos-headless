@@ -1,4 +1,4 @@
-+___INFO___
+___INFO___
 
 {
   "type": "TAG",
@@ -68,7 +68,6 @@ ___TEMPLATE_PARAMETERS___
 ___SANDBOXED_JS_FOR_SERVER___
 
 const addEventCallback = require('addEventCallback');
-const generateRandom = require('generateRandom');
 const getClientName = require('getClientName');
 const getContainerVersion = require('getContainerVersion');
 const getEventData = require('getEventData');
@@ -103,10 +102,8 @@ const sendReceipt = (receipt) => {
 
 addEventCallback((containerId, eventMetadata) => {
   const observedAt = getTimestampMillis();
-  const nonce = generateRandom(100000000, 999999999);
-
   sendReceipt({
-    idempotencyKey: eventId + ':sgtm_ingress:' + observedAt + ':' + nonce,
+    idempotencyKey: eventId + ':sgtm_ingress',
     eventId: eventId,
     eventName: eventName,
     observationType: 'sgtm_ingress',
@@ -124,7 +121,7 @@ addEventCallback((containerId, eventMetadata) => {
     }
 
     sendReceipt({
-      idempotencyKey: eventId + ':tag_execution:' + tag.id + ':' + observedAt,
+      idempotencyKey: eventId + ':tag_execution:' + tag.id,
       eventId: eventId,
       eventName: eventName,
       observationType: 'tag_execution',

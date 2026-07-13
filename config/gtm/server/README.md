@@ -32,6 +32,9 @@ The `SGTM_CREDENTIALS` file must use Google's documented shape:
 The Vercel Production secret `SGTM_RECEIPT_HMAC_KEY_BASE64` must contain the
 same base64 value as `keys.receipt-key`. The receipt route decodes that value
 before verification, matching the key bytes used by sGTM's `hmacSha256` API.
+The ingress idempotency key is exactly `eventId:sgtm_ingress`; tag execution is
+exactly `eventId:tag_execution:tagId`. Timestamps remain observation data and
+must never change those keys.
 
 Import, tag creation, Quick Preview and publish remain GTM provider mutations
 and require the explicit release approval in `DEPLOYMENT.md`. Import the `.tpl`

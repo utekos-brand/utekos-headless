@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import fs from 'node:fs'
 import test from 'node:test'
 
 import {
@@ -18,6 +19,15 @@ const target = {
     { changeStatus: 'added', kind: 'variable', name: 'DLV - event_id' }
   ]
 }
+
+test('documents a JSON-only evidence capture command and the current guard contract', () => {
+  const desired = JSON.parse(fs.readFileSync('config/gtm/sgtm-remediation-desired.json', 'utf8'))
+  assert.match(desired.publishGuard.evidenceCommand, /npm run --silent tracking:gtm-quick-preview:capture/)
+  assert.equal(
+    desired.publishGuard.guardCommand,
+    'GTM_PUBLISH_CONFIRM=I_APPROVE_GTM_PUBLISH GTM_QUICK_PREVIEW_EVIDENCE=/tmp/utekos-gtm-quick-preview.json npm run tracking:gtm-publish-guard'
+  )
+})
 
 const status = {
   workspaceChange: [
@@ -93,4 +103,37 @@ test('rejects stale, handwritten, drifted or compiler-error evidence', () => {
     now: Date.parse('2026-07-13T10:10:00.000Z'),
     currentEvidence: { ...evidence, compilerError: true }
   }), /compiler/)
+})
+
+test('resource digests sort only top-level entity arrays and preserve nested parameter order', () => {
+  const first = buildQuickPreviewEvidence({
+    generatedAt: '2026-07-13T10:00:00.000Z', target,
+    workspaceFingerprint: 'workspace-fingerprint',
+    live: { containerVersionId: '108', fingerprint: 'live-fingerprint' }, status,
+    preview: { ...preview, containerVersion: { tag: [
+      { tagId: '2', name: 'B', parameter: [{ key: 'first' }, { key: 'second' }] },
+      { tagId: '1', name: 'A' }
+    ] } }
+  })
+  const topLevelReordered = buildQuickPreviewEvidence({
+    generatedAt: '2026-07-13T10:00:00.000Z', target,
+    workspaceFingerprint: 'workspace-fingerprint',
+    live: { containerVersionId: '108', fingerprint: 'live-fingerprint' }, status,
+    preview: { ...preview, containerVersion: { tag: [
+      { tagId: '1', name: 'A' },
+      { tagId: '2', name: 'B', parameter: [{ key: 'first' }, { key: 'second' }] }
+    ] } }
+  })
+  const nestedReordered = buildQuickPreviewEvidence({
+    generatedAt: '2026-07-13T10:00:00.000Z', target,
+    workspaceFingerprint: 'workspace-fingerprint',
+    live: { containerVersionId: '108', fingerprint: 'live-fingerprint' }, status,
+    preview: { ...preview, containerVersion: { tag: [
+      { tagId: '1', name: 'A' },
+      { tagId: '2', name: 'B', parameter: [{ key: 'second' }, { key: 'first' }] }
+    ] } }
+  })
+
+  assert.equal(first.resourceDigest, topLevelReordered.resourceDigest)
+  assert.notEqual(first.resourceDigest, nestedReordered.resourceDigest)
 })

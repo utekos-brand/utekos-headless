@@ -3,7 +3,7 @@ const SGTM_ORIGIN = 'https://cloud.server.utekos.no'
 export function buildReportOnlyCsp(): string {
   return [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://consent.cookiebot.com https://consentcdn.cookiebot.com https://connect.facebook.net https://bat.bing.com https://www.clarity.ms https://scripts.clarity.ms",
+    `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${SGTM_ORIGIN} https://consent.cookiebot.com https://consentcdn.cookiebot.com https://connect.facebook.net https://bat.bing.com https://www.clarity.ms https://scripts.clarity.ms`,
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self' data:",
     'object-src \'none\'',

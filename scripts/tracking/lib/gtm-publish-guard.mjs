@@ -32,22 +32,31 @@ function digest(value) {
   return crypto.createHash('sha256').update(stableJson(value)).digest('hex')
 }
 
+function sortedTopLevelEntities(kind, entities) {
+  return [...entities].sort((left, right) => {
+    const leftKey = stableJson({ id: entityId(kind, left) || '', name: left.name || '', type: left.type || '' })
+    const rightKey = stableJson({ id: entityId(kind, right) || '', name: right.name || '', type: right.type || '' })
+    return leftKey.localeCompare(rightKey) || stableJson(left).localeCompare(stableJson(right))
+  })
+}
+
 function previewResources(containerVersion = {}) {
   const resources = {}
   for (const kind of ENTITY_KINDS) {
-    if (containerVersion[kind]) resources[kind] = containerVersion[kind]
+    if (containerVersion[kind]) resources[kind] = sortedTopLevelEntities(kind, containerVersion[kind])
   }
   return resources
 }
 
 function normalizedPreviewResponse(preview) {
+  const containerVersion = { ...preview.containerVersion, fingerprint: undefined }
+  for (const kind of ENTITY_KINDS) {
+    if (containerVersion[kind]) containerVersion[kind] = sortedTopLevelEntities(kind, containerVersion[kind])
+  }
   return {
     compilerError: preview.compilerError === true,
     syncStatus: preview.syncStatus || {},
-    containerVersion: {
-      ...preview.containerVersion,
-      fingerprint: undefined
-    }
+    containerVersion
   }
 }
 

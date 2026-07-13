@@ -34,7 +34,7 @@
   "publishGuard": {
     "baseline": "web live 108 / server live 23",
     "workspaces": "web 113 / server 26",
-    "evidenceCommand": "npm run tracking:gtm-quick-preview:capture > /tmp/utekos-gtm-quick-preview.json",
+    "evidenceCommand": "npm run --silent tracking:gtm-quick-preview:capture > /tmp/utekos-gtm-quick-preview.json",
     "guardCommand": "GTM_PUBLISH_CONFIRM=I_APPROVE_GTM_PUBLISH GTM_QUICK_PREVIEW_EVIDENCE=/tmp/utekos-gtm-quick-preview.json npm run tracking:gtm-publish-guard",
     "note": "The guard re-runs the official Quick Preview API and rejects any unexpected workspace change, compiler/sync error, stale evidence, live drift, dirty git worktree or client 6 drift."
   }

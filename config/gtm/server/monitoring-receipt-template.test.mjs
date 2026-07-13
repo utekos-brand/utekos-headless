@@ -24,4 +24,7 @@ test('exports a complete server template with minimal monitoring permissions', (
   assert.match(template, /"publicId": "send_http"/)
   assert.match(template, /"publicId": "use_custom_private_keys"/)
   assert.doesNotMatch(template, /page_location|client_id|user_data|email|phone|address/)
+  assert.match(template, /idempotencyKey: eventId \+ ':sgtm_ingress'/)
+  assert.match(template, /idempotencyKey: eventId \+ ':tag_execution:' \+ tag\.id/)
+  assert.doesNotMatch(template, /generateRandom|observedAt \+ ':' \+ nonce|tag\.id \+ ':' \+ observedAt/)
 })

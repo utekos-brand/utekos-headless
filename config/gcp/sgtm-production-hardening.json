@@ -43,9 +43,14 @@
       "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"gtm-server\" AND httpRequest.status=400 AND httpRequest.requestUrl=~\"/g/collect([?]|$)\""
     },
     {
+      "name": "sgtm_collect_total_count",
+      "metricKind": "DELTA",
+      "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"gtm-server\" AND httpRequest.requestUrl=~\"/g/collect([?]|$)\""
+    },
+    {
       "name": "sgtm_raw_upd_count",
       "metricKind": "DELTA",
-      "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"gtm-server\" AND (textPayload=~\"ep[.]user_data[.](email|phone|address)\" OR jsonPayload.message=~\"ep[.]user_data[.](email|phone|address)\")"
+      "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"gtm-server\" AND (httpRequest.requestUrl=~\"ep[.]user_data[.](email|phone|address)\" OR textPayload=~\"ep[.]user_data[.](email|phone|address)\" OR jsonPayload.message=~\"ep[.]user_data[.](email|phone|address)\" OR jsonPayload.eventData=~\"ep[.]user_data[.](email|phone|address)\" OR jsonPayload.event_data=~\"ep[.]user_data[.](email|phone|address)\")"
     }
   ],
   "requiredAlertPolicies": [
@@ -85,7 +90,7 @@
         "displayName": "Collect 400 ratio above 2 percent",
         "conditionThreshold": {
           "filter": "metric.type=\"logging.googleapis.com/user/sgtm_collect_400_count\" AND resource.type=\"cloud_run_revision\"",
-          "denominatorFilter": "metric.type=\"run.googleapis.com/request_count\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"gtm-server\"",
+          "denominatorFilter": "metric.type=\"logging.googleapis.com/user/sgtm_collect_total_count\" AND resource.type=\"cloud_run_revision\"",
           "comparison": "COMPARISON_GT",
           "thresholdValue": 0.02,
           "duration": "300s",
@@ -167,6 +172,9 @@
   "budget": {
     "displayName": "Utekos sGTM production budget",
     "billingAccount": "012640-E91F1E-A107B9",
+    "filter": {
+      "projects": ["projects/741353863697"]
+    },
     "useLastPeriodAmount": true,
     "thresholdRules": [0.8, 1]
   }

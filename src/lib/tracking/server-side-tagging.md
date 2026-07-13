@@ -1,6 +1,6 @@
 # Utekos server-side tagging
 
-## Remediation status 2026-07-12
+## Remediation status 2026-07-13
 
 Local branch `codex/sgtm-remediation` locks browser Google transport to
 dataLayer → web-GTM → `cloud.server.utekos.no` → server-GTM. Direct
@@ -207,10 +207,10 @@ Ads API og erstatter ikke UET tag ApiToken på `capi.uet.microsoft.com`.
 Standard GTM-script er direkte sGTM-loader:
 `https://cloud.server.utekos.no/gtm.js?id=GTM-5TWMJQFP`.
 
-En tidligere resilient GTM-loader fortsatte å servere webcontainer-versjon `98` etter at
-versjon `99` var publisert. `NEXT_PUBLIC_GTM_RESILIENT_SCRIPT_URL` skal derfor være unset. En resilient
-override kan bare aktiveres etter at en ny URL er generert og verifisert mot gjeldende publiserte
-webcontainer-versjon.
+En tidligere resilient GTM-loader fortsatte å servere en utdatert
+webcontainer etter publisering. `NEXT_PUBLIC_GTM_RESILIENT_SCRIPT_URL` skal
+derfor være unset. En resilient override kan bare aktiveres etter at en ny URL
+er generert og verifisert mot gjeldende publiserte webcontainer.
 
 Aktiver `GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm` først etter vellykket GTM Web + sGTM Preview på `utekos.no`.
 
@@ -228,24 +228,25 @@ Lokal smoke: sett `NEXT_PUBLIC_ENABLE_GTM_IN_DEV=1` (ikke i produksjon uten beho
 ### GTM Server container
 
 - [x] sGTM endepunkter verifisert på `cloud.server.utekos.no`
-- [x] Fjern duplisert GA4-client og feilkonfigurert server-tag
-- [x] Aktiver gtag/dependency-serving i kanonisk GA4-client og map `G-FCES3L0M9M`
-- [x] Publiser server-versjon `17`
+- [x] Release 1 er privacy-safe publisert som server live `23`
+- [x] Global PII-exclude-transformasjon er aktiv
+- [x] Purchase-triggeren er avgrenset til Measurement Protocol GA4-clienten
+- [x] Dependency-serving-client `6` er uendret, type `gtm_client`, fingerprint `1783840862217`
 - [x] Verifiser at `GT-MKRLF5WK`, `GT-P3JGLNDZ` og `AW-18180376403` serveres med HTTP 200
 - [x] Ikke opprett native Google Ads conversion-tags: aktive primærkonverteringer er GA4-importer
+- [ ] Release 2-mutasjoner bygges i server-workspace `26`; workspace var tomt i
+  read-only snapshot 2026-07-13 og skal Quick Preview-verifiseres mot live `23`
 
 ### GTM Web container `GTM-5TWMJQFP`
 
-- [x] Klargjør workspace `102`: fjern GTM-eid CMP, dupliserte Google-tags og ungated Clarity/UET
-- [x] Begrens GA4-eventtaggen til eksplisitte forretningshendelser
-- [x] Sett `GT-MKRLF5WK` som kanonisk Google-tag med `server_container_url=https://cloud.server.utekos.no`
-- [x] Publiser web-versjon `99`
-- [x] Verifiser direkte sGTM-script inneholder webcontainer-versjon `99`
-- [ ] **2026-07-07:** Workspace `106` oppdaterer trigger `122` (`Canonical GA4 business events`) til
-  `^(page_view|view_item_list|select_item|view_item|add_to_cart|begin_checkout|purchase|search|generate_lead)$`.
-  Live publisert versjon er fortsatt `102` med gammel regex uten `select_item`/`view_item_list` til OAuth
-  reauth gir `tagmanager.edit.containerversions` + `tagmanager.publish`. Kjør
-  `npm run tracking:gtm-publish-commerce` etter `gtm-mcp-auth`.
+- [x] Release 1 er privacy-safe publisert som web live `108`
+- [x] `purchase` er fjernet fra trigger `122`; Shopify `orders-paid` er eneste purchase-eier
+- [x] `GT-MKRLF5WK` er kanonisk Google-tag med
+  `server_container_url=https://cloud.server.utekos.no`
+- [ ] Release 2-mutasjoner bygges i web-workspace `113`; workspace var tomt i
+  read-only snapshot 2026-07-13 og skal Quick Preview-verifiseres mot live `108`
+- [ ] Release 2 beholder `purchase` ute, setter `send_page_view=false`, mapper
+  `event_id`, fjerner Cookiebot/UET-tagene og consent-gater Clarity
 
 GTM API-pekere for web-container `GTM-5TWMJQFP`:
 
@@ -253,23 +254,41 @@ GTM API-pekere for web-container `GTM-5TWMJQFP`:
 | --- | --- |
 | Account ID | `6295468138` (`Utekos Marketing Group \| Tracking`) |
 | Container ID | `220236256` |
-| Workspace ID | `106` (`Default Workspace`) |
+| Release 2 workspace ID | `113` |
+| Privacy-safe live version | `108` |
 | Trigger ID | `122` (`Canonical GA4 business events`) |
 | GA4 event tag ID | `118` (`Google Analytics GA4-hendelse`, `__gaawe`) |
 | Canonical Google tag ID | `109` (`GT-MKRLF5WK`) |
 
 Servicekontonøkkelen er rotert og GA4 property `489598217`, Realtime API, Data API og Admin API er verifisert
 med HTTP 200. GTM OAuth-tokenet har nødvendige scopes for Quick Preview, container-versjoner og publisering.
-Rollback-versjoner er web `98` og server `15`.
+Release 2 sin serverpekere er workspace `26` mot privacy-safe live `23`.
+Rollback kan bare gå til privacy-safe web `108` / server `23`, eller en senere
+verifisert privacy-safe versjon. Web `107`, server `22` og eldre versjoner er
+ikke gyldige rollbackmål fordi de kan gjeninnføre UPD- eller purchase-risiko.
+
+Gjeldende publish guard er generell og erstatter den gamle commerce-trigger-
+scriptflyten:
+
+```bash
+npm run --silent tracking:gtm-quick-preview:capture > /tmp/utekos-gtm-quick-preview.json
+GTM_PUBLISH_CONFIRM=I_APPROVE_GTM_PUBLISH GTM_QUICK_PREVIEW_EVIDENCE=/tmp/utekos-gtm-quick-preview.json npm run tracking:gtm-publish-guard
+```
+
+Guard-en skal feile lukket frem til workspace `113/26` inneholder nøyaktig det
+godkjente endringssettet, git-worktree er ren og client `6` fortsatt matcher.
 
 ## Produksjonskontroll
 
 - Verifiser på **https://utekos.no** (ikke googletagmanager.com): Tag Assistant Connected + GTM Preview
 - Standardstatus, godta, avslå og tilbaketrekking i Tag Assistant
 - `CookieConsent`, Cookiebot-events og sGTM Preview
-- Microsoft UET browser: `add_to_cart` og `purchase` skal gi 204-respons mot `ti=97247724` med `event_id`,
-  `gv`, `gc`, `prodid`, `pagetype` og `msclkid` når Microsoft-samtykke foreligger.
-- Microsoft UET CAPI: `sendMicrosoftUetPurchase` skal ikke returnere
+- Microsoft UET browser: bare samtykkekvalifiserte ikke-purchase-events, som
+  `add_to_cart` og `begin_checkout`, kan gi nettleserrespons mot `ti=97247724`
+  med `event_id`, commerce-parametre og `msclkid`. Browseren eier aldri
+  `purchase`.
+- Microsoft UET CAPI purchase fra Shopify-webhooken:
+  `sendMicrosoftUetPurchase` skal ikke returnere
   `missing_capi_token` når minst ett UET CAPI-env er satt i Vercel
   Production (`MICROSOFT_UET_CAPI_ACCESS_TOKEN` eller aliasene i
   [DEPLOYMENT.md](../../../DEPLOYMENT.md)). `MICROSOFT_ADS_ACCESS_TOKEN`

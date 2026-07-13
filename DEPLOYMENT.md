@@ -201,8 +201,8 @@ npm run mcp:build
 npm run mcp:doctor
 npm run mcp:commerce-tracking:doctor
 npm run tracking:sgtm-loaders:verify
-npm run tracking:gtm-quick-preview:capture > /tmp/utekos-gtm-quick-preview.json
-npm run tracking:gtm-publish-guard
+npm run --silent tracking:gtm-quick-preview:capture > /tmp/utekos-gtm-quick-preview.json
+GTM_PUBLISH_CONFIRM=I_APPROVE_GTM_PUBLISH GTM_QUICK_PREVIEW_EVIDENCE=/tmp/utekos-gtm-quick-preview.json npm run tracking:gtm-publish-guard
 npm run tracking:sgtm-hardening:plan
 npm run tracking:sgtm-hardening:verify
 SUPABASE_NO_TELEMETRY=1 npx supabase migration list --linked
@@ -236,11 +236,22 @@ store evidence outside the repository.
 
 The apply tool is dry-run by default. Its mutating phases are deliberately
 separate and each requires the exact confirmation printed by
-`tracking:sgtm-hardening:plan`: Preview env, Production env, Cloud secret
-mount/identity, Budget API enablement, then operational capacity/monitoring.
-Failure to read an existing key never authorizes creation of a replacement
-version. Same-name monitoring drift fails closed and must be reconciled
-explicitly.
+`tracking:sgtm-hardening:plan`: `receipt-secret-preview` may create the Secret
+Manager resource or add its first version and then configures Preview;
+`vercel-production` reuses that version; `cloud-secret` only mounts the existing
+enabled secret through the runtime identity; Budget API enablement and
+operational capacity/monitoring remain separate. An existing enabled version is
+always reused. An existing secret with zero versions can receive its first
+version only under the `receipt-secret-preview` confirmation. Access, parsing,
+disabled-version or ambiguous-not-found errors fail closed and never authorize
+automatic replacement or rotation. Same-name monitoring drift fails closed and
+must be reconciled explicitly.
+
+Vercel does not expose a protected environment value through its list API, so
+the read-only hardening verifier can prove presence/type/target but cannot prove
+cross-surface key equality. Equality between the mounted Secret Manager key and
+Vercel is proven by the signed Preview receipt smoke before GTM publication;
+signature failure blocks the release.
 
 ### Release 1: privacy containment
 
@@ -263,14 +274,19 @@ gate:
 
 1. Apply `20260712120000_add_tagging_observations_and_verified_dispatch_status.sql`
    to the canonical Supabase project, then lint and dump the schemas again.
-2. Run the separately approved `vercel-preview` hardening phase. It creates or
-   reuses the Secret Manager key and sets `SGTM_RECEIPT_HMAC_KEY_BASE64` in
-   Vercel Preview only; deploy and test Preview without unapproved events.
+2. Run the separately approved `receipt-secret-preview` hardening phase with
+   `SGTM_HARDENING_APPLY=I_APPROVE_RECEIPT_SECRET_AND_VERCEL_PREVIEW`. It
+   creates the Secret Manager resource or its first version only when absent,
+   otherwise reuses the enabled latest key, and sets
+   `SGTM_RECEIPT_HMAC_KEY_BASE64` in Vercel Preview only. Deploy and test Preview
+   without unapproved events.
 3. Run the separately approved `vercel-production` phase to reuse that exact
    key in Production only, then deploy Vercel Production and wait for `READY`.
-4. Create the dedicated Cloud Run service identity, mount the Secret Manager
-   key file and set `SGTM_CREDENTIALS`. Prove the receipt endpoint from Preview
-   before a monitoring tag can be published.
+4. Run the separately approved `cloud-secret` phase. It must find an existing,
+   enabled, valid secret version; it creates only the dedicated Cloud Run
+   service identity/IAM binding, mounts the key file at the exact configured
+   path using version `latest`, and sets `SGTM_CREDENTIALS`. Prove the receipt
+   endpoint from Preview before a monitoring tag can be published.
 5. Quick Preview and publish the web container first, then the server container,
    only after runtime compatibility and the secret mount are proven.
 6. Set Cloud Run service-level min/max instances to `3/10`, preserve concurrency
