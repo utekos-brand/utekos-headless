@@ -1,9 +1,10 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import { KlarnaExpressCheckoutButton } from '@/components/klarna/components/KlarnaExpressCheckoutButton'
 import { buildKlarnaExpressOrderPayloadFromProductLine } from '@/components/klarna/utils/buildKlarnaExpressOrderPayload'
+import type { KlarnaExpressOrderPayload } from '@/components/klarna/schemas/klarnaExpressOrderSchema'
 import type { ShopifyProduct } from 'types/product/ShopifyProduct'
 import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
 
@@ -24,21 +25,19 @@ export function KlarnaProductExpressCheckout({
     string | null
   >(null)
 
-  const orderPayload = useMemo(() => {
-    if (!selectedVariant?.availableForSale || quantity < 1) {
-      return null
-    }
+  let orderPayload: KlarnaExpressOrderPayload | null = null
 
+  if (selectedVariant?.availableForSale && quantity >= 1) {
     try {
-      return buildKlarnaExpressOrderPayloadFromProductLine({
+      orderPayload = buildKlarnaExpressOrderPayloadFromProductLine({
         product,
         variant: selectedVariant,
         quantity
       })
     } catch {
-      return null
+      orderPayload = null
     }
-  }, [product, quantity, selectedVariant])
+  }
 
   if (!orderPayload || !selectedVariant?.availableForSale) {
     return null

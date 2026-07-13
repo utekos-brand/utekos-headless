@@ -54,113 +54,106 @@ export function KlarnaExpressCheckoutButton({
   const containerId = `klarna-express-checkout-${containerSuffix}`
   const payloadRef = useRef(orderPayload)
   const cartIdRef = useRef(shopifyCartId)
+  const hasInitializedRef = useRef(false)
 
   useEffect(() => {
     payloadRef.current = orderPayload
     cartIdRef.current = shopifyCartId
   }, [orderPayload, shopifyCartId])
 
-  useEffect(() => {
-    if (!KLARNA_CLIENT_ID || disabled) {
+  const initKlarna = () => {
+    if (hasInitializedRef.current || disabled) {
       return
     }
 
-    const initKlarna = () => {
-      if (!window.Klarna?.Payments?.Buttons) {
-        onError?.('Klarna Payments SDK is not available')
-        return
-      }
+    if (!KLARNA_CLIENT_ID) {
+      return
+    }
 
-      window.Klarna.Payments.Buttons.init({
-        client_id: KLARNA_CLIENT_ID
-      }).load(
-        {
-          container: `#${containerId}`,
-          theme: 'default',
-          shape: 'default',
-          locale: 'no-NO',
-          on_click: (
-            authorize: KlarnaExpressCheckoutAuthorize
-          ) => {
-            onAuthorizing?.()
+    if (!window.Klarna?.Payments?.Buttons) {
+      onError?.('Klarna Payments SDK is not available')
+      return
+    }
 
-            authorize(
-              {
-                auto_finalize: true,
-                collect_shipping_address: true
-              },
-              payloadRef.current,
-              async (
-                result: KlarnaExpressCheckoutAuthorizationResult
-              ) => {
-                if (
-                  !result.approved ||
-                  !result.authorization_token
-                ) {
-                  onError?.(
-                    'Klarna authorization was not approved'
-                  )
-                  return
-                }
+    hasInitializedRef.current = true
 
-                const parsedAddress =
-                  parseCollectedShippingAddress(result)
+    window.Klarna.Payments.Buttons.init({
+      client_id: KLARNA_CLIENT_ID
+    }).load(
+      {
+        container: `#${containerId}`,
+        theme: 'default',
+        shape: 'default',
+        locale: 'no-NO',
+        on_click: (
+          authorize: KlarnaExpressCheckoutAuthorize
+        ) => {
+          onAuthorizing?.()
 
-                if (!parsedAddress.success) {
-                  onError?.(
-                    'Klarna did not return a valid shipping address'
-                  )
-                  return
-                }
-
-	                try {
-	                  const completion =
-	                    await completeKlarnaExpressCheckout({
-	                      authorizationToken:
-	                        result.authorization_token,
-	                      orderPayload: payloadRef.current,
-	                      collectedShippingAddress:
-	                        parsedAddress.data,
-	                      ...(cartIdRef.current ?
-	                        { shopifyCartId: cartIdRef.current }
-	                      : {})
-	                    })
-
-                  window.location.assign(completion.redirect_url)
-                } catch (error) {
-                  const message =
-                    error instanceof Error ?
-                      error.message
-                    : 'Klarna express checkout failed'
-
-                  onError?.(message)
-                }
+          authorize(
+            {
+              auto_finalize: true,
+              collect_shipping_address: true
+            },
+            payloadRef.current,
+            async (
+              result: KlarnaExpressCheckoutAuthorizationResult
+            ) => {
+              if (
+                !result.approved ||
+                !result.authorization_token
+              ) {
+                onError?.(
+                  'Klarna authorization was not approved'
+                )
+                return
               }
-            )
-          }
-        },
-        loadResult => {
-          if (loadResult.show_form === false) {
-            onError?.(
-              'Klarna express button is not available for this order'
-            )
-          }
+
+              const parsedAddress =
+                parseCollectedShippingAddress(result)
+
+              if (!parsedAddress.success) {
+                onError?.(
+                  'Klarna did not return a valid shipping address'
+                )
+                return
+              }
+
+              try {
+                const completion =
+                  await completeKlarnaExpressCheckout({
+                    authorizationToken:
+                      result.authorization_token,
+                    orderPayload: payloadRef.current,
+                    collectedShippingAddress:
+                      parsedAddress.data,
+                    ...(cartIdRef.current ?
+                      { shopifyCartId: cartIdRef.current }
+                    : {})
+                  })
+
+                window.location.assign(completion.redirect_url)
+              } catch (error) {
+                const message =
+                  error instanceof Error ?
+                    error.message
+                  : 'Klarna express checkout failed'
+
+                onError?.(message)
+              }
+            }
+          )
         }
-      )
-    }
-
-    window.klarnaAsyncCallback = initKlarna
-
-    if (window.Klarna?.Payments?.Buttons) {
-      initKlarna()
-    }
-
-    return () => {
-      if (window.klarnaAsyncCallback === initKlarna) {
-        delete window.klarnaAsyncCallback
+      },
+      loadResult => {
+        if (loadResult.show_form === false) {
+          onError?.(
+            'Klarna express button is not available for this order'
+          )
+        }
       }
-    }
-  }, [containerId, disabled, onAuthorizing, onError])
+    )
+  }
 
   if (!KLARNA_CLIENT_ID) {
     return null
@@ -173,6 +166,11 @@ export function KlarnaExpressCheckoutButton({
         id={`klarna-express-checkout-sdk-${containerSuffix}`}
         src={KLARNA_CDN_API_URL}
         strategy='afterInteractive'
+        onLoad={initKlarna}
+        onReady={initKlarna}
+        onError={() => {
+          onError?.('Klarna Payments SDK could not be loaded')
+        }}
       />
     </div>
   )
