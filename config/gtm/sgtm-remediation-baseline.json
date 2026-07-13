@@ -1,0 +1,48 @@
+{
+  "capturedAt": "2026-07-13T00:00:00.000Z",
+  "web": {
+    "accountId": "6295468138",
+    "containerId": "220236256",
+    "workspaceId": "113",
+    "liveVersion": "108",
+    "liveFingerprint": "1783898169256",
+    "expectedChanges": [
+      { "changeStatus": "updated", "kind": "tag", "id": "109", "name": "Canonical Google tag - GT-MKRLF5WK" },
+      { "changeStatus": "updated", "kind": "tag", "id": "118", "name": "Google Analytics GA4-hendelse" },
+      { "changeStatus": "deleted", "kind": "tag", "id": "126", "name": "Cookiebot CMP" },
+      { "changeStatus": "updated", "kind": "tag", "id": "127", "name": "Microsoft Clarity - Official" },
+      { "changeStatus": "deleted", "kind": "tag", "id": "130", "name": "Base Tag(UET 97247724)" },
+      { "changeStatus": "deleted", "kind": "tag", "id": "131", "name": "Google Analytics GA4-hendelse(Microsoft UET)" },
+      { "changeStatus": "updated", "kind": "trigger", "id": "122", "name": "Canonical GA4 business events" },
+      { "changeStatus": "added", "kind": "variable", "name": "DLV - event_id" }
+    ]
+  },
+  "server": {
+    "accountId": "6333110851",
+    "containerId": "248521914",
+    "workspaceId": "26",
+    "liveVersion": "23",
+    "liveFingerprint": "1783898186968",
+    "loaderClient": {
+      "clientId": "6",
+      "type": "gtm_client",
+      "fingerprint": "1783840862217"
+    },
+    "expectedChanges": [
+      { "changeStatus": "updated", "kind": "tag", "id": "4", "name": "GA4" },
+      { "changeStatus": "deleted", "kind": "tag", "id": "11", "name": "Google Analytics GA4" },
+      { "changeStatus": "deleted", "kind": "tag", "id": "22", "name": "GA4 - MP Purchase" },
+      { "changeStatus": "deleted", "kind": "client", "id": "7", "name": "Measurement Protocol GA4" },
+      { "changeStatus": "deleted", "kind": "client", "id": "34", "name": "Cookiebot consent signals client" },
+      { "changeStatus": "deleted", "kind": "trigger", "id": "10", "name": "Measurement Protocol Client Trigger" },
+      { "changeStatus": "deleted", "kind": "trigger", "id": "12", "name": "All Measurement Protocol Events Except Purchase" },
+      { "changeStatus": "deleted", "kind": "trigger", "id": "13", "name": "Page View" },
+      { "changeStatus": "deleted", "kind": "trigger", "id": "16", "name": "Add To Cart Event" },
+      { "changeStatus": "deleted", "kind": "trigger", "id": "19", "name": "DebugSessionStart" },
+      { "changeStatus": "deleted", "kind": "trigger", "id": "21", "name": "Purchase Event Trigger" },
+      { "changeStatus": "added", "kind": "transformation", "name": "P1 - Allow GA4 event data" },
+      { "changeStatus": "added", "kind": "customTemplate", "name": "Utekos sGTM monitoring receipt" },
+      { "changeStatus": "added", "kind": "tag", "name": "Utekos sGTM monitoring receipt" }
+    ]
+  }
+}

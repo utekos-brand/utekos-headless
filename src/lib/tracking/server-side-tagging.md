@@ -1,5 +1,39 @@
 # Utekos server-side tagging
 
+## Remediation status 2026-07-12
+
+Local branch `codex/sgtm-remediation` locks browser Google transport to
+dataLayer → web-GTM → `cloud.server.utekos.no` → server-GTM. Direct
+Measurement Protocol is reserved for consent-qualified Shopify server
+events; there is no automatic browser MP fallback.
+
+The production acceptance set is `/healthy`, canonical `/gtm.js`,
+`/ns.html` and canonical `/gtag/js`. `uc-consent-signals.js` is not
+evidence that a tracking event was accepted or that a provider tag ran.
+That evidence comes from the additive `ops.tagging_observations` model:
+
+- `browser_dispatch` from `/api/tracking-events`;
+- `sgtm_ingress` from the signed monitoring tag;
+- `tag_execution` from GTM Monitoring API metadata.
+
+Receipts contain no URL, IP, Google client ID, email, phone or raw event
+payload. `/api/tracking/receipts` requires a five-minute timestamp window,
+constant-time HMAC verification and a unique idempotency key. The sGTM
+HMAC key is addressed by ID in the `SGTM_CREDENTIALS` file; the matching
+Vercel secret is injected separately.
+
+This section describes implemented local state, not production state.
+GTM workspace changes/publish, the Supabase migration, Vercel deploy and
+Cloud Run capacity/secrets/alerts remain behind `DEPLOYMENT.md` approval
+gates.
+
+Release 2 publishes no monitoring tag before the Cloud Run key file is mounted.
+The general publish guard consumes only API-generated Quick Preview evidence,
+then repeats Quick Preview and checks the exact workspace change set, compiler/
+sync status, live fingerprints, workspace/resource digests, a clean git
+worktree and the immutable client `6` fingerprint. See the commands and
+separate mutation phases in `DEPLOYMENT.md`.
+
 ## Valgt arkitektur
 
 - Cookiebot CMP med domain group ID `f2145160-1ac5-4859-8385-36dc6327495f` er samtykkeplattformen.
@@ -121,9 +155,9 @@ oppdateres via
 Provider-dispatch opprettes bare når eventet har nødvendig
 kategori-samtykke:
 
-- `Google Analytics` for dataLayer/sGTM (browser) og GA4 Measurement
-  Protocol fallback for samtykkede browser business-events med
-  `ga4Data.client_id`. `PageView` holdes på sGTM for å unngå duplisering.
+- `Google Analytics` for dataLayer/sGTM i browser. Browser-events har ingen
+  automatisk Measurement Protocol-fallback; transportendring krever en egen,
+  koordinert og eksplisitt godkjenning.
 - `Facebook Pixel` for Meta Pixel og direkte Meta CAPI.
 - `Microsoft Advertising Remarketing` for Microsoft UET browser-events.
   Shopify purchase kan i tillegg Conversions API når UET tag ApiToken-env
@@ -242,8 +276,7 @@ Rollback-versjoner er web `98` og server `15`.
   alene er ikke tilstrekkelig.
 - Meta Pixel og direkte CAPI deler `event_id`
 - Meta sendes aldri via sGTM
-- Browser-`PageView` dupliseres ikke via Measurement Protocol når `GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm`.
-  Browser business-events som `select_item`, `add_to_cart`, `begin_checkout`, `view_item`,
-  `view_item_list`, `search` og `generate_lead` kan køes til GA4 Measurement Protocol når sGTM-eventtaggen
-  ikke kan bevises å sende dem.
+- Browser-`PageView` eller business-events dupliseres ikke via Measurement
+  Protocol når `GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm`. Uverifisert sGTM-leveranse
+  gir observasjonsavvik, ikke automatisk direkte browser-fallback.
 - Ukjente tjenester i Cookiebot-skanningen er klassifisert

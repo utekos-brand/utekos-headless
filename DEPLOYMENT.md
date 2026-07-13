@@ -1,6 +1,6 @@
 # Deployment And Migration Checklist
 
-Status date: 2026-07-07
+Status date: 2026-07-12
 
 This is the mandatory release checklist for Utekos Headless. Use it
 before every deploy, production mutation, provider change, GTM publish,
@@ -182,6 +182,125 @@ provider OK without provider-specific proof.
 | Microsoft Clarity | Advertising Dashboard/UET linkage readiness and Consent API V2 `ad_Storage`/`analytics_Storage`. |
 | PostHog | Consent-gated init, manual pageview/product events, no autocapture drift, masked replay only. |
 | Supabase | `marketing.event_ledger`, `ops.provider_dispatch_attempts`, `ops.provider_dispatch_health`, `ops.dead_letter_summary`. |
+
+## sGTM Remediation Release Gate
+
+This gate applies to the two-stage remediation described in
+[`PLAN.md`](PLAN.md) and
+[`src/lib/tracking/server-side-tagging.md`](src/lib/tracking/server-side-tagging.md).
+Approval from an earlier telemetry release does not authorize these provider,
+database, deployment, GTM, Shopify, or Cloud Run mutations.
+
+### Local preflight
+
+```bash
+node --import tsx --test src/lib/tracking/**/*.test.ts
+pnpm exec tsc --noEmit
+npm run build
+npm run mcp:build
+npm run mcp:doctor
+npm run mcp:commerce-tracking:doctor
+npm run tracking:sgtm-loaders:verify
+npm run tracking:gtm-quick-preview:capture > /tmp/utekos-gtm-quick-preview.json
+npm run tracking:gtm-publish-guard
+npm run tracking:sgtm-hardening:plan
+npm run tracking:sgtm-hardening:verify
+SUPABASE_NO_TELEMETRY=1 npx supabase migration list --linked
+SUPABASE_NO_TELEMETRY=1 npx supabase db push --linked --dry-run
+SUPABASE_NO_TELEMETRY=1 npx supabase db lint --linked --schema marketing,ops
+```
+
+The publish guard must fail closed until both `GTM_PUBLISH_CONFIRM` and fresh
+Quick Preview evidence are supplied. The hardening verifier must remain a
+read-only failure report until Cloud Run and Monitoring changes are explicitly
+approved.
+
+The Quick Preview file must be produced by the capture command. The guard
+repeats the official `workspaces.quick_preview` call and compares compiler and
+sync status, exact workspace changes, live fingerprints, resource digests,
+workspace fingerprints and client `6`. It also requires a clean git worktree;
+store evidence outside the repository.
+
+### Receipt key contract
+
+- Generate at least 32 random bytes and store their standard base64 encoding as
+  `keys.receipt-key` in the Secret Manager-backed JSON file mounted into the
+  tagging service.
+- Set `SGTM_CREDENTIALS` on the tagging service to the mounted file path.
+- Store that exact base64 value as the protected Vercel Preview/Production
+  secret `SGTM_RECEIPT_HMAC_KEY_BASE64`.
+- Never commit either the raw key, base64 value, credentials file, or generated
+  signature.
+- Rotate both surfaces together; smoke the receipt route before retiring the
+  previous key.
+
+The apply tool is dry-run by default. Its mutating phases are deliberately
+separate and each requires the exact confirmation printed by
+`tracking:sgtm-hardening:plan`: Preview env, Production env, Cloud secret
+mount/identity, Budget API enablement, then operational capacity/monitoring.
+Failure to read an existing key never authorizes creation of a replacement
+version. Same-name monitoring drift fails closed and must be reconciled
+explicitly.
+
+### Release 1: privacy containment
+
+Requires one explicit approval that names all of these actions:
+
+1. Disable Google user-provided-data capabilities and automatic DOM detection.
+2. Disable GA4 user-provided-data collection and enable email redaction.
+3. Create the server-container global PII exclude transformation, constrain the
+   purchase trigger to the intended MP client, and preserve client `6`.
+4. Remove browser `purchase` from the web-container commerce trigger.
+5. Run Quick Preview and publish both containers.
+
+Rollback may target only the latest privacy-safe version. It must never restore
+UPD collection or browser purchase ownership.
+
+### Release 2: runtime, warehouse, GTM, and operations
+
+Run in this order, with a separate explicit approval at every numbered mutation
+gate:
+
+1. Apply `20260712120000_add_tagging_observations_and_verified_dispatch_status.sql`
+   to the canonical Supabase project, then lint and dump the schemas again.
+2. Run the separately approved `vercel-preview` hardening phase. It creates or
+   reuses the Secret Manager key and sets `SGTM_RECEIPT_HMAC_KEY_BASE64` in
+   Vercel Preview only; deploy and test Preview without unapproved events.
+3. Run the separately approved `vercel-production` phase to reuse that exact
+   key in Production only, then deploy Vercel Production and wait for `READY`.
+4. Create the dedicated Cloud Run service identity, mount the Secret Manager
+   key file and set `SGTM_CREDENTIALS`. Prove the receipt endpoint from Preview
+   before a monitoring tag can be published.
+5. Quick Preview and publish the web container first, then the server container,
+   only after runtime compatibility and the secret mount are proven.
+6. Set Cloud Run service-level min/max instances to `3/10`, preserve concurrency
+   `80`, and create the approved uptime, exact alert policies and 80/100 budget.
+7. Create the Shopify `refunds/create` subscription or App Pixel only after the
+   corresponding Shopify mutation is explicitly approved.
+8. Run production smoke; a real order, refund, or live tracking event needs its
+   own concrete approval and test identifier.
+
+The live event smokes are intentionally not part of a default deploy command:
+
+```bash
+TRACKING_SMOKE_BASE_URL=https://utekos.no npm run tracking:smoke
+TRACKING_SMOKE_BASE_URL=https://utekos.no npm run tracking:commerce-smoke
+```
+
+### CSP enforcement gate
+
+Keep `Content-Security-Policy-Report-Only` for at least the 24-hour observation
+window. The policy has a same-origin, size-limited report endpoint that logs
+only directive and host names. Do not enforce until normal navigation,
+checkout, Cookiebot, Meta, Microsoft, Clarity, PostHog and sGTM show no
+unexplained critical violations. Enforcement is a separate production change;
+it must not add a nonce design that forces the entire storefront to dynamic
+rendering.
+
+Final sign-off requires the 24-hour observation window and matching control
+event evidence in GA4, Supabase, Cloud Run and GTM. GA4 BigQuery is a separate
+blocking sign-off item while `analytics_489598217` is absent; GA4-only evidence
+is explicitly interim and must not be represented as BigQuery proof.
 
 ## Microsoft Environment Gate (UET tag token vs Ads API OAuth)
 
