@@ -221,6 +221,11 @@ begin
 end;
 $$;
 
+revoke execute on function analytics.archive_event_ledger_batch(integer)
+  from public, anon, authenticated;
+grant execute on function analytics.archive_event_ledger_batch(integer)
+  to service_role;
+
 do $schedule_archive$
 begin
   if exists (select 1 from pg_extension where extname = 'pg_cron')

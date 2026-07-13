@@ -5,6 +5,7 @@ import type { OrderPaid } from 'types/commerce/order/OrderPaid'
 import type { ProviderDispatchAttemptInput } from 'types/tracking/event'
 import type { CheckoutAttribution } from 'types/tracking/user/CheckoutAttribution'
 import { processOrderTrackingWithDependencies } from './processOrderTrackingWithDependencies'
+import { sha256 } from '@/lib/tracking/hash/sha256'
 
 function createOrder(): OrderPaid {
   return {
@@ -129,6 +130,10 @@ test('persists a full purchase payload and dispatches Google when GA client id e
   ])
   assert.deepEqual(persisted[0]?.providers, [])
   assert.equal((persisted[0]?.payload as { eventData?: { transaction_id?: string } }).eventData?.transaction_id, '123456789')
+  assert.equal(
+    (persisted[0]?.payload as { userData?: { external_id?: string } }).userData?.external_id,
+    sha256('999')
+  )
   assert.deepEqual(result.details, {
     orderId: 123456789,
     metaOk: true,

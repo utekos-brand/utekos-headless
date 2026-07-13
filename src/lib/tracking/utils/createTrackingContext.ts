@@ -5,6 +5,7 @@ import type { TrackingContext } from 'types/tracking/user/TrackingContext'
 import type { EnrichedCustomerData } from 'types/tracking/user/EnrichedCustomerData'
 import type { OrderPaid } from 'types/commerce/order/OrderPaid'
 import type { CheckoutAttribution } from 'types/tracking/user/CheckoutAttribution'
+import { getOrderExternalId } from '@/lib/tracking/orders/getOrderExternalId'
 
 export function createTrackingContext(
   order: OrderPaid,
@@ -40,11 +41,7 @@ export function createTrackingContext(
             || order.billing_address?.phone
         )
       ) || undefined,
-    externalId:
-      redisData?.userData?.external_id
-      || safeString(order.customer?.id)
-      || safeString(order.user_id)
-      || undefined,
+    externalId: getOrderExternalId(order, redisData),
     firstName: safeString(addr?.first_name) || undefined,
     lastName: safeString(addr?.last_name) || undefined,
     city: safeString(addr?.city) || undefined,

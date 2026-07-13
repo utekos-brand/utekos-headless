@@ -1,4 +1,5 @@
 import 'server-only'
+import { sanitizeGA4EventParams } from '@/lib/tracking/google/sanitizeGA4EventParams'
 
 const GA_MEASUREMENT_ID =
   process.env.GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
@@ -92,6 +93,8 @@ export async function sendGA4Event(
     }
   }
 
+  const safeEventParams = sanitizeGA4EventParams(event.params)
+
   const payload: Record<string, unknown> = {
     client_id: event.clientId,
     ...(event.userId ? { user_id: event.userId } : {}),
@@ -103,7 +106,7 @@ export async function sendGA4Event(
       {
         name: event.name,
         params: {
-          ...event.params,
+          ...safeEventParams,
           ...(options.sessionId !== undefined ? { session_id: options.sessionId } : {}),
           engagement_time_msec: 1,
           ...(options.debugMode ? { debug_mode: 1 } : {})

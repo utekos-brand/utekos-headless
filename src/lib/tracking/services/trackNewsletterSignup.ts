@@ -1,6 +1,7 @@
 import { headers, cookies } from 'next/headers'
 import { v4 as uuidv4 } from 'uuid'
 import { trackServerEvent } from '@/lib/tracking/google/trackingServerEvent'
+import { sanitizeGA4PageLocation } from '@/lib/tracking/google/sanitizeGA4PageLocation'
 
 export async function trackNewsletterSignup(email: string) {
   const headersList = await headers()
@@ -16,12 +17,13 @@ export async function trackNewsletterSignup(email: string) {
   const clientId = gaCookie ? gaCookie.split('.').slice(2).join('.') : uuidv4()
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.replace('G-', '')
   const sessionId = measurementId ? cookieStore.get(`_ga_${measurementId}`)?.value?.split('.')[2] : undefined
+  const pageLocation = sanitizeGA4PageLocation(referer)
   await trackServerEvent(
     {
       name: 'generate_lead',
       params: {
         method: 'Newsletter',
-        page_location: referer
+        ...(pageLocation ? { page_location: pageLocation } : {})
       }
     },
     {

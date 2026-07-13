@@ -1,6 +1,8 @@
 import type { OrderPaid } from 'types/commerce/order/OrderPaid'
 import type { CheckoutAttribution } from 'types/tracking/user/CheckoutAttribution'
 import type { MetaContentItem, MetaEventPayload } from 'types/tracking/meta'
+import { getOrderExternalId } from '@/lib/tracking/orders/getOrderExternalId'
+import { normalizeAndHashMetaUserData } from '@/lib/tracking/meta/normalizeAndHashMetaUserData'
 
 type GA4OrderItem = {
   item_id?: string | undefined
@@ -148,6 +150,9 @@ export function buildOrderPurchaseTrackingPayload(
   const coupon = getOrderCoupon(order)
   const clientId = getGoogleClientId(order, attribution)
   const sessionId = getGoogleSessionId(order, attribution)
+  const externalId = normalizeAndHashMetaUserData({
+    external_id: getOrderExternalId(order, attribution)
+  }).external_id
 
   return {
     schemaVersion: 1,
@@ -160,7 +165,7 @@ export function buildOrderPurchaseTrackingPayload(
     eventSourceUrl: order.order_status_url ?? attribution?.checkoutUrl ?? undefined,
     eventTime,
     actionSource: 'website',
-    userData: undefined,
+    userData: externalId ? { external_id: externalId } : undefined,
     eventData: {
       transaction_id: transactionId,
       value: getOrderValue(order, items),

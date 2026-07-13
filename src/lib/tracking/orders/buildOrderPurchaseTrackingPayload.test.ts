@@ -4,6 +4,7 @@ import test from 'node:test'
 import type { OrderPaid } from 'types/commerce/order/OrderPaid'
 import type { CheckoutAttribution } from 'types/tracking/user/CheckoutAttribution'
 import { buildOrderPurchaseTrackingPayload } from './buildOrderPurchaseTrackingPayload'
+import { sha256 } from '@/lib/tracking/hash/sha256'
 
 function createOrder(): OrderPaid {
   return {
@@ -85,6 +86,7 @@ test('builds a canonical Shopify purchase payload with GA4 ecommerce fields', ()
   assert.equal(payload.eventName, 'Purchase')
   assert.equal(payload.eventId, 'shopify_order_123456789')
   assert.equal(payload.actionSource, 'website')
+  assert.equal(payload.userData?.external_id, sha256('999'))
   assert.equal(payload.ga4Data?.client_id, '1234567890.987654321')
   assert.equal(payload.ga4Data?.session_id, '1749895200')
   assert.deepEqual(payload.eventData, {
@@ -134,4 +136,25 @@ test('builds purchase payload without optional coupon and shipping fields', () =
   assert.equal(payload.eventData?.coupon, undefined)
   assert.equal(payload.eventData?.shipping, undefined)
   assert.equal(payload.ga4Data, undefined)
+})
+
+test('prefers the checkout external id over the Shopify customer id', () => {
+  const attribution: CheckoutAttribution = {
+    cartId: 'cart-token',
+    checkoutUrl: 'https://kasse.utekos.no/checkouts/checkout-token',
+    userData: {
+      external_id: 'user_checkout_123'
+    },
+    ts: Date.now()
+  }
+
+  const payload = buildOrderPurchaseTrackingPayload(
+    createOrder(),
+    attribution
+  )
+
+  assert.equal(
+    payload.userData?.external_id,
+    sha256('user_checkout_123')
+  )
 })
