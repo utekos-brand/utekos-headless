@@ -9,11 +9,11 @@ test('persists the authoritative refund and records honest provider skips withou
   const attempts: ProviderDispatchAttemptInput[] = []
 
   const refund = shopifyRefundSchema.parse({
-    id: 456,
-    order_id: 123,
+    id: '456',
+    order_id: '123',
     created_at: '2026-07-12T12:00:00.000Z',
     refund_line_items: [{
-      line_item_id: 789,
+      line_item_id: '789',
       quantity: 1,
       subtotal: '2990.00',
       total_tax: '598.00'
@@ -85,11 +85,11 @@ test('ignores a refund webhook without a successful money transaction', async ()
   const attempts: ProviderDispatchAttemptInput[] = []
 
   const result = await processRefundWithDependencies({
-    id: 456,
-    order_id: 123,
+    id: '456',
+    order_id: '123',
     created_at: '2026-07-12T12:00:00.000Z',
     refund_line_items: [{
-      line_item_id: 789,
+      line_item_id: '789',
       quantity: 1,
       subtotal: 2990,
       total_tax: 598

@@ -13,7 +13,7 @@
 
 - RED observed for public `browser_dispatch` acceptance, missing tag discriminator requirements, over-broad migration grants, missing database shape constraints, missing refund processor, incomplete provider evidence, non-terminal accepted transport status and invalid refund money.
 - GREEN: focused Task 2 tests passed.
-- GREEN: full tracking suite passed: 109/109 after review remediation.
+- GREEN: full tracking suite passed: 117/117 after lossless-ID remediation.
 - GREEN: `pnpm exec tsc --noEmit`.
 - GREEN: targeted ESLint.
 - GREEN: `git diff --check`.
@@ -37,3 +37,11 @@
 - The migration grants `service_role` schema usage without altering existing `ops` schema access, while the new table keeps its scoped revokes and append-only grants.
 - Meta CAPI success no longer fabricates an HTTP status that the SDK does not expose.
 - The browser tracking schema rejects `Refund`; Shopify `refunds/create` remains the sole refund owner.
+
+## Lossless Shopify ID remediation
+
+- Raw webhook JSON is parsed with direct dependency `json-bigint@1.0.0` in strict `storeAsString` mode before Zod validation.
+- Duplicate keys, `__proto__` and `constructor` handling are explicitly fail-closed.
+- Unsafe native numbers are rejected with `Number.isSafeInteger`; exact decimal ID strings are canonicalized without losing digits.
+- Regression coverage proves exact refund, order and line-item IDs from the official large-number shape while HMAC verification still uses the unchanged raw body.
+- `npm run build` completed successfully after adding the runtime parser dependency.

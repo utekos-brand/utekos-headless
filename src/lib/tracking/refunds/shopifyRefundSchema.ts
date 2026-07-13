@@ -1,8 +1,9 @@
 import { z } from 'zod'
 
+const decimalIdSchema = z.string().trim().min(1).max(128).regex(/^(?:0|[1-9]\d*)$/)
 const idSchema = z.union([
-  z.number().finite().nonnegative().refine(Number.isInteger),
-  z.string().trim().min(1).max(128)
+  z.number().finite().nonnegative().refine(Number.isSafeInteger).transform(value => String(value)),
+  decimalIdSchema
 ])
 const moneySchema = z.union([
   z.number().finite(),

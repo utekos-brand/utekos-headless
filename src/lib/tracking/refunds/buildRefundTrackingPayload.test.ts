@@ -53,18 +53,22 @@ test('rejects non-monetary and negative Shopify refund amounts', () => {
     ...base,
     transactions: [{ ...base.transactions[0], amount: Number.POSITIVE_INFINITY }]
   }).success, false)
+  assert.equal(shopifyRefundSchema.safeParse({
+    ...base,
+    id: Number.MAX_SAFE_INTEGER + 1
+  }).success, false)
 })
 
 test('accepts and normalizes the official refunds-create money shape', () => {
   const officialPayload = shopifyRefundSchema.parse({
-    id: 890088186047892319,
-    order_id: 820982911946154508,
+    id: '890088186047892319',
+    order_id: '820982911946154508',
     created_at: '2021-12-31T19:00:00-05:00',
     admin_graphql_api_id: 'gid://shopify/Refund/890088186047892319',
     refund_line_items: [{
       id: 487817672276298627,
       quantity: 1,
-      line_item_id: 487817672276298554,
+      line_item_id: '487817672276298554',
       location_id: null,
       restock_type: 'no_restock',
       subtotal: 89.99,
