@@ -70,7 +70,7 @@ export function SharedProductCarousel({
           return (
             <CarouselItem
               key={product.id}
-              className='basis-[82%] pl-3 sm:basis-1/2 md:pl-8 lg:basis-1/3'
+              className='basis-[72%] pl-3 sm:basis-1/2 md:pl-8 lg:basis-1/3'
             >
               <ProductCard
                 product={product}
@@ -91,13 +91,13 @@ export function SharedProductCarousel({
       <CarouselPrevious
         forceVisible
         className={cn(
-          'top-[34%] left-1.5 z-20 flex border-background dark:border-dark-background bg-foreground dark:bg-dark-foreground text-background dark:text-dark-background shadow-lg ring-1 ring-background/45 dark:ring-dark-background/45 backdrop-blur-sm hover:bg-foreground/90 dark:hover:bg-dark-foreground/90 disabled:opacity-70 md:hidden [&_svg]:size-5'
+          'dark:border-dark-background dark:bg-dark-foreground dark:text-dark-background dark:ring-dark-background/45 dark:hover:bg-dark-foreground/90 top-[34%] left-1.5 z-20 flex border-background bg-foreground text-background shadow-lg ring-1 ring-background/45 backdrop-blur-sm hover:bg-foreground/90 disabled:opacity-70 md:hidden [&_svg]:size-5'
         )}
       />
       <CarouselNext
         forceVisible
         className={cn(
-          'top-[34%] right-1.5 z-20 flex border-background dark:border-dark-background bg-foreground dark:bg-dark-foreground text-background dark:text-dark-background shadow-lg ring-1 ring-background/45 dark:ring-dark-background/45 backdrop-blur-sm hover:bg-foreground/90 dark:hover:bg-dark-foreground/90 disabled:opacity-70 md:hidden [&_svg]:size-5'
+          'dark:border-dark-background dark:bg-dark-foreground dark:text-dark-background dark:ring-dark-background/45 dark:hover:bg-dark-foreground/90 top-[34%] right-1.5 z-20 flex border-background bg-foreground text-background shadow-lg ring-1 ring-background/45 backdrop-blur-sm hover:bg-foreground/90 disabled:opacity-70 md:hidden [&_svg]:size-5'
         )}
       />
       <CarouselPrevious

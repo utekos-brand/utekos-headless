@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef } from 'react'
 
+import { cn } from '@/lib/utils/className'
 import { completeKlarnaExpressCheckout } from '@/components/klarna/utils/completeKlarnaExpressCheckout'
 import { loadKlarnaExpressCheckoutSdk } from '@/components/klarna/utils/loadKlarnaExpressCheckoutSdk'
 import { loadKlarnaPublicConfig } from '@/components/klarna/utils/loadKlarnaPublicConfig'
@@ -90,8 +91,8 @@ export function KlarnaExpressCheckoutButton({
           {
             container: `#${containerId}`,
             theme: 'default',
-            shape: 'default',
-            locale: 'no-NO',
+            shape: 'pill',
+            locale: 'nb-NO',
             on_click: (
               authorize: KlarnaExpressCheckoutAuthorize
             ) => {
@@ -181,8 +182,14 @@ export function KlarnaExpressCheckoutButton({
   }, [containerId, disabled])
 
   return (
-    <div className={className} aria-busy={disabled}>
-      <div id={containerId} />
+    <div
+      className={cn('flex w-full justify-center', className)}
+      aria-busy={disabled}
+    >
+      <div
+        id={containerId}
+        className='min-h-12 w-full overflow-hidden rounded-full ring-1 ring-card-foreground/50 ring-inset'
+      />
     </div>
   )
 }

@@ -82,7 +82,7 @@ export function ProductCard({
   const isAvailable = selectedVariant?.availableForSale ?? false
   const imageSizes =
     compactMobile ?
-      '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 82vw'
+      '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 72vw'
     : '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw'
 
   const trackProductSelect = () => {
@@ -97,7 +97,12 @@ export function ProductCard({
     void dispatchTrackingEvent({
       eventName: 'SelectItem',
       eventId: generateEventID(),
-      destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
+      destinations: [
+        'google',
+        'meta',
+        'microsoft_uet',
+        'posthog'
+      ],
       eventData: {
         value: Number.isFinite(price) ? price : undefined,
         currency: selectedVariant.price.currencyCode,
@@ -174,7 +179,7 @@ export function ProductCard({
           {product.handle === 'utekos-dun' ?
             <Badge
               variant='destructive'
-              className='bg-disabled  absolute top-2 right-2 z-10 border border-border px-2 py-0.5 text-[0.65rem] font-medium tracking-wide text-foreground uppercase'
+              className='bg-disabled absolute top-2 right-2 z-10 border border-border px-2 py-0.5 text-[0.65rem] font-medium tracking-wide text-foreground uppercase'
             >
               <InlineText>Utsolgt</InlineText>
             </Badge>
@@ -189,7 +194,7 @@ export function ProductCard({
               alt={altText}
               fill
               quality={100}
-              sizes='(min-width: 640px) 50vw, 82vw'
+              sizes='(min-width: 640px) 50vw, 72vw'
               className='object-cover transition-transform duration-300 group-hover:scale-[1.02]'
               fetchPriority={isPriority ? 'high' : 'low'}
               loading={isPriority ? 'eager' : 'lazy'}
@@ -197,7 +202,7 @@ export function ProductCard({
           </AspectRatio>
         </CardContent>
 
-        <div className='dark:border-dark-card-foreground/24 flex flex-col gap-1.5 border-t border-card-foreground/24 p-3'>
+        <div className='dark:border-dark-card-foreground/24 flex flex-col gap-1 border-t border-card-foreground/24 px-3 py-2.5'>
           <div className='flex items-start justify-between gap-2'>
             <H3 className='line-clamp-2 min-w-0 flex-1 pb-0 text-[0.82rem] leading-snug font-semibold text-balance text-card-foreground'>
               {product.title}
@@ -205,7 +210,7 @@ export function ProductCard({
             <BrandBadge
               backgroundColor='var(--background)'
               textColor='var(--foreground)'
-              className='shrink-0 border border-foreground/12 px-2 py-0.5 text-[0.65rem] font-medium tracking-wide dark:border-dark-foreground/12'
+              className='dark:border-dark-foreground/12 shrink-0 border border-foreground/12 px-2 py-0.5 text-[0.65rem] font-medium tracking-wide'
             >
               <InlineText>Unisex</InlineText>
             </BrandBadge>
@@ -237,7 +242,9 @@ export function ProductCard({
       {compactProductCardContent}
       {compactProductVariantSelector}
       <div
-        className={compactMobile ? 'hidden md:contents' : 'contents'}
+        className={
+          compactMobile ? 'hidden md:contents' : 'contents'
+        }
       >
         <CardContent className='relative p-0'>
           <Link
@@ -251,7 +258,7 @@ export function ProductCard({
               backgroundColor='var(--background)'
               textColor='var(--foreground)'
               className={cn(
-                'absolute top-4 left-4 z-10 border border-foreground/12 px-3 py-1 text-xs font-medium tracking-wide shadow-[0_12px_28px_-22px_rgba(32,28,54,0.58)] dark:border-dark-foreground/12',
+                'dark:border-dark-foreground/12 absolute top-4 left-4 z-10 border border-foreground/12 px-3 py-1 text-xs font-medium tracking-wide shadow-[0_12px_28px_-22px_rgba(32,28,54,0.58)]',
                 compactMobile &&
                   'top-2 left-2 px-2 py-0.5 text-[0.65rem] md:top-4 md:left-4 md:px-3 md:py-1 md:text-xs'
               )}
@@ -263,7 +270,7 @@ export function ProductCard({
               <Badge
                 variant='destructive'
                 className={cn(
-                  'bg-disabled  absolute top-4 right-4 z-10 border border-border px-3 py-1 text-xs font-medium tracking-wide text-foreground uppercase',
+                  'bg-disabled absolute top-4 right-4 z-10 border border-border px-3 py-1 text-xs font-medium tracking-wide text-foreground uppercase',
                   compactMobile &&
                     'top-2 right-2 px-2 py-0.5 text-[0.65rem] md:top-4 md:right-4 md:px-3 md:py-1 md:text-xs'
                 )}
@@ -300,26 +307,27 @@ export function ProductCard({
           onViewProduct={trackProductSelect}
           compactMobile={compactMobile}
         />
-
+      </div>
+      <div
+        className={cn(
+          'mt-auto flex w-full flex-col gap-3 p-6 pt-0',
+          compactMobile &&
+            'gap-2 p-2 pt-0 md:gap-3 md:p-6 md:pt-0'
+        )}
+      >
         <ProductCardFooter
           price={price}
-          productUrl={productUrl}
           isAvailable={isAvailable}
           isPending={isPending}
           onQuickBuy={handleQuickBuy}
-          onViewProduct={trackProductSelect}
           compactMobile={compactMobile}
         />
+        <KlarnaProductExpressCheckout
+          product={product}
+          selectedVariant={selectedVariant ?? null}
+          className='w-full'
+        />
       </div>
-      <KlarnaProductExpressCheckout
-        product={product}
-        selectedVariant={selectedVariant ?? null}
-        className={cn(
-          'w-full px-6 pb-6',
-          compactMobile &&
-            'dark:border-dark-card-foreground/24 border-t border-card-foreground/24 px-2 pt-2 pb-2 md:border-t-0 md:px-6 md:pt-0 md:pb-6'
-        )}
-      />
     </Card>
   )
 }

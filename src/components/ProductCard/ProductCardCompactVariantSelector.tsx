@@ -3,9 +3,7 @@ import type { ProductVariantSelectorProps } from '@types'
 type ProductCardCompactVariantSelectorProps = Pick<
   ProductVariantSelectorProps,
   'options' | 'selectedOptions' | 'onOptionChange'
-> & {
-  productTitle: string
-}
+> & { productTitle: string }
 
 export function ProductCardCompactVariantSelector({
   options,
@@ -13,11 +11,16 @@ export function ProductCardCompactVariantSelector({
   onOptionChange,
   productTitle
 }: ProductCardCompactVariantSelectorProps) {
-  const selectableOptions = options.filter(
-    option =>
-      option.name.toLowerCase() !== 'kjønn' &&
+  const selectableOptions = options.filter(option => {
+    const optionName = option.name.toLowerCase()
+
+    return (
+      optionName !== 'kjønn' &&
+      optionName !== 'farge' &&
+      optionName !== 'color' &&
       option.optionValues.length > 1
-  )
+    )
+  })
 
   if (selectableOptions.length === 0) {
     return null

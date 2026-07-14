@@ -29,11 +29,12 @@ export function KlarnaProductExpressCheckout({
 
   if (selectedVariant?.availableForSale && quantity >= 1) {
     try {
-      orderPayload = buildKlarnaExpressOrderPayloadFromProductLine({
-        product,
-        variant: selectedVariant,
-        quantity
-      })
+      orderPayload =
+        buildKlarnaExpressOrderPayloadFromProductLine({
+          product,
+          variant: selectedVariant,
+          quantity
+        })
     } catch {
       orderPayload = null
     }
@@ -55,7 +56,7 @@ export function KlarnaProductExpressCheckout({
       />
       {errorMessage ?
         <p
-          className='text-destructive dark:text-dark-destructive mt-2 text-sm'
+          className='dark:text-dark-destructive mt-2 text-sm text-destructive'
           role='alert'
           aria-live='polite'
         >

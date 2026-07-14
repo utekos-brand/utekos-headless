@@ -93,7 +93,7 @@ export function buildKlarnaExpressOrderPayloadFromCart(
   const payload = klarnaExpressOrderPayloadSchema.parse({
     purchase_country: 'NO',
     purchase_currency: currencyCode.toUpperCase(),
-    locale: 'no-NO',
+    locale: 'nb-NO',
     order_amount: Number(orderAmountMinor),
     order_lines: orderLines,
     merchant_reference1: options?.merchantReference1 ?? cart.id,
@@ -140,7 +140,7 @@ export function buildKlarnaExpressOrderPayloadFromProductLine({
   const payload = klarnaExpressOrderPayloadSchema.parse({
     purchase_country: 'NO',
     purchase_currency: currencyCode.toUpperCase(),
-    locale: 'no-NO',
+    locale: 'nb-NO',
     order_amount: orderLine.total_amount,
     order_lines: [orderLine],
     merchant_reference1: merchantReference1,

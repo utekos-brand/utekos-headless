@@ -2,7 +2,10 @@ import type { Route } from 'next'
 import type React from 'react'
 import type { ReactNode } from 'react'
 import type { LucideIcon } from 'lucide-react'
-import type { ShopifyProduct, ShopifyProductVariant } from 'types/product'
+import type {
+  ShopifyProduct,
+  ShopifyProductVariant
+} from 'types/product'
 import type { ProductListTrackingContext } from 'types/tracking/ProductListTrackingContext'
 import type { Image } from 'types/media/Image'
 import type { RootNode } from '@types'
@@ -22,7 +25,9 @@ export type AdditionalLine = {
 }
 
 export type TechDownLaunchOfferProps = {
-  onAdditionalLineChange: (line: AdditionalLine | undefined) => void
+  onAdditionalLineChange: (
+    line: AdditionalLine | undefined
+  ) => void
 }
 
 export type PriceActivityPanelProps = {
@@ -69,10 +74,7 @@ export type SizeSelectorProps = {
   onSelect: (_optionName: string, _value: string) => void
   productHandle: string // <-- LEGG TIL DENNE LINJEN
 }
-export type Dimension = {
-  value: number
-  unit: string
-} | null
+export type Dimension = { value: number; unit: string } | null
 
 export type ColorSelectorProps = {
   optionName: string
@@ -83,9 +85,7 @@ export type ColorSelectorProps = {
   onSelect: (optionName: string, value: string) => void
 }
 
-export type SmartRealTimeActivityProps = {
-  baseViewers: number
-}
+export type SmartRealTimeActivityProps = { baseViewers: number }
 export type Section = {
   id: string
   title: string
@@ -96,13 +96,9 @@ export type ProductDescriptionProps = {
   description: ProductDescriptionContent | undefined
 }
 
-export type ProductCarouselProps = {
-  products: ShopifyProduct[]
-}
+export type ProductCarouselProps = { products: ShopifyProduct[] }
 
-export type SizeLabelProps = {
-  className?: string
-}
+export type SizeLabelProps = { className?: string }
 
 export type ProductCardProps = {
   product: ShopifyProduct
@@ -110,24 +106,22 @@ export type ProductCardProps = {
   colorHexMap: Map<string, string>
   listTrackingContext?: ProductListTrackingContext
 }
-export type RichTextRendererProps = {
-  content: RootNode | null
-}
+export type RichTextRendererProps = { content: RootNode | null }
 
 export type ProductVariantSelectorProps = {
   options: ShopifyProduct['options']
   selectedOptions: Record<string, string>
-  onOptionChange: React.Dispatch<React.SetStateAction<Record<string, string>>>
+  onOptionChange: React.Dispatch<
+    React.SetStateAction<Record<string, string>>
+  >
   colorHexMap: Map<string, string>
 }
 
 export type ProductCardFooterProps = {
   price: string
-  productUrl: Route
   isAvailable: boolean
   isPending: boolean
   onQuickBuy: (e: React.MouseEvent) => void
-  onViewProduct?: () => void
 }
 
 export type ProductCardHeaderProps = {
@@ -135,7 +129,9 @@ export type ProductCardHeaderProps = {
   options: ShopifyProduct['options']
   colorHexMap: Map<string, string>
   selectedOptions: Record<string, string>
-  onOptionChange: React.Dispatch<React.SetStateAction<Record<string, string>>>
+  onOptionChange: React.Dispatch<
+    React.SetStateAction<Record<string, string>>
+  >
   productUrl: Route
   onViewProduct?: () => void
 }
@@ -144,6 +140,4 @@ export type SpecialOfferCrossSellProps = {
   currentProductHandle: string
 }
 
-export type GridCrossProps = {
-  className?: string
-}
+export type GridCrossProps = { className?: string }

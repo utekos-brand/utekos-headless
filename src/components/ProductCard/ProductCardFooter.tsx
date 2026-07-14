@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
 import type { ProductCardFooterProps } from '@types'
 import { cn } from '@/lib/utils/className'
-import Link from 'next/link'
 import type React from 'react'
 import { ProductCardSoldOut } from './ProductCardSoldOut'
 import { InlineText } from '@/components/typography/TypographyInlineText'
@@ -16,39 +15,28 @@ type ProductCardFooterViewProps = ProductCardFooterProps & {
 
 export function ProductCardFooter({
   price,
-  productUrl,
   isAvailable,
   isPending,
   onQuickBuy,
-  onViewProduct,
   compactMobile = false
 }: ProductCardFooterViewProps) {
   const handleQuickBuyClick = (e: React.MouseEvent) => {
     onQuickBuy(e)
   }
 
-  const productViewClickProps =
-    onViewProduct ? { onClick: onViewProduct } : {}
   const actionButtonClassName = cn(
-    'font-utekos-text-medium h-auto min-h-12 w-full rounded-full px-8 py-4 text-lg transition-transform duration-200 hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-offset-2',
+    'font-utekos-text-medium h-[50px] min-h-[50px] w-full rounded-full px-8 py-0 text-lg ring-1 ring-card-foreground/50 transition-transform duration-200 ring-inset hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-offset-2',
     compactMobile &&
-      'min-h-10 px-2 py-2 text-center text-[0.68rem] leading-tight whitespace-normal md:min-h-12 md:px-8 md:py-4 md:text-lg md:leading-[1.35] md:whitespace-nowrap'
+      'px-3 text-center text-sm leading-tight whitespace-normal md:px-8 md:text-lg md:leading-[1.35] md:whitespace-nowrap'
   )
-  const viewProductButtonClassName = cn(
-    actionButtonClassName,
-    'min-h-14 px-10 text-xl',
-    compactMobile &&
-      'min-h-11 px-3 text-sm md:min-h-14 md:px-10 md:text-xl'
-  )
-
   return (
-    <CardFooter
-      className={cn(
-        'mt-auto flex flex-col gap-4 p-6 pt-0',
-        compactMobile && 'gap-2 p-2 pt-0 md:gap-4 md:p-6 md:pt-0'
-      )}
-    >
-      <div className='flex w-full items-center justify-between'>
+    <CardFooter className='flex w-full flex-col gap-4 p-0'>
+      <div
+        className={cn(
+          'flex w-full items-center justify-between',
+          compactMobile && 'max-md:hidden'
+        )}
+      >
         <InlineText
           className={cn(
             'text-2xl font-bold text-card-foreground',
@@ -59,30 +47,7 @@ export function ProductCardFooter({
           {price}
         </InlineText>
       </div>
-      <div
-        className={cn(
-          'grid w-full grid-rows-2 gap-3',
-          compactMobile && 'gap-2 md:gap-3'
-        )}
-      >
-        <Button
-          asChild
-          variant='seeProduct'
-          className={cn(
-            viewProductButtonClassName,
-            'dark:focus-visible:outline-dark-foreground focus-visible:outline-foreground'
-          )}
-        >
-          <Link
-            href={productUrl}
-            data-track='ProductCardFooterViewMoreClick'
-            {...productViewClickProps}
-            aria-label='Se produkt'
-            className='min-w-0 flex-1'
-          >
-            <InlineText>Se produkt</InlineText>
-          </Link>
-        </Button>
+      <div className='grid w-full'>
         {isAvailable ?
           <Button
             type='button'
