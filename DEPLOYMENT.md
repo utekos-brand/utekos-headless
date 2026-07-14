@@ -1,6 +1,6 @@
 # Deployment And Migration Checklist
 
-Status date: 2026-07-07
+Status date: 2026-07-14
 
 This is the mandatory release checklist for Utekos Headless. Use it
 before every deploy, production mutation, provider change, GTM publish,
@@ -83,7 +83,7 @@ Run these before deciding the release order:
 | Vercel env vars | Pull/inspect env state and document changed keys. | Redeploy Vercel after env change. | Deployment inspect, runtime logs, route smoke. |
 | Dead-letter replay runtime | No Supabase migration required when only app cron/route changes. | Vercel after code merge. | `/api/cron/replay-dead-letter` returns `401` (not `404`); `npm run ops:provider-dispatch-report`. |
 | Microsoft UET CAPI env | Set UET tag ApiToken (Conversions API auth) in Vercel Production. | Redeploy after env change. | Purchase row not `missing_capi_token`; see Microsoft env gate. |
-| Shopify/Klarna/Sanity runtime | Confirm provider docs and required env. | Vercel. | Route/action smoke and provider response proof. |
+| Shopify/Klarna/Sanity runtime | Confirm provider docs, required env and provider-side allowed origins. | Vercel. | Route/action smoke, visible provider UI and provider response proof. |
 | Docs-only root docs | No migration. | No production deploy required unless the deploy is used to publish docs. | `git diff --check` and direct file inspection. |
 
 ## Production Release Order
@@ -205,6 +205,38 @@ Required sequence:
    `vercel inspect <deployment-url>` or the Vercel dashboard.
 9. If failed, fetch build logs and stop. Do not retry blindly.
 10. If ready, verify the production domain and relevant runtime surfaces.
+
+### Klarna Express Checkout gate (Preview + Production)
+
+Klarna Express Checkout is not verified by the presence of its SDK or
+an empty container. The release must prove that Klarna renders the
+actual button and accepts the configured origin.
+
+Required before preview sign-off:
+
+1. Verify that `NEXT_PUBLIC_KLARNA_CLIENT_ID` contains the intended
+   Klarna Client Identifier in both Vercel Preview and Production. Do
+   not print the value in logs or documentation.
+2. Verify in Klarna that the exact preview origin and
+   `https://utekos.no` are allowed for that Client Identifier.
+3. Keep a single Klarna SDK library load per document. Multiple product
+   cards may initialize separate containers through the shared loader.
+4. Run the Vercel build. `prebuild` must fail closed when the Client
+   Identifier is empty in a Vercel build.
+5. In the Git-triggered preview, verify desktop and mobile DOM,
+   screenshot, console and network. At least one eligible product must
+   show a visible «Pay with Klarna» button; an SDK request or empty
+   container alone is a failed gate.
+6. Exercise provider authorization only with an approved test flow and
+   confirm the expected completion/redirect response without creating
+   an unintended live order.
+
+Current status 2026-07-14: production fails the visible-button gate.
+`/produkter` has no product-card integration, while the product-detail
+container remains empty despite the SDK loading. The local candidate
+passes responsive rendering with a controlled SDK stub, but provider
+acceptance remains blocked until the environment and allowed origins
+are verified in a real preview.
 
 ## Tracking And Paid-Media Post-Deploy
 

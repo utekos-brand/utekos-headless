@@ -2,12 +2,16 @@
 
 ## Status
 
-STATUS 2026-07-14: `origin/main` ER ENESTE PRODUKSJONSKANON, OG
-LOKAL `main` PEKER IGJEN PÅ SAMME COMMIT `400d72485`. ALT
-TILSIKTET LOKALT ARBEID ER BEVART PÅ NAVNGITTE BRANCHES SOM ER
-BASERT DIREKTE PÅ `origin/main`: `codex/production-candidate-20260714`
-OG `codex/sgtm-remediation`. SEKS ELDRE AGENT-/PAGESPEED-BRANCHES
-FRA FØR REPOSITORY-MIGRERINGEN ER BEVART SOM LOKALE
+STATUS 2026-07-14: `origin/main` ER ENESTE PRODUKSJONSKANON.
+LOKAL `main`, `origin/HEAD` OG VERCEL-PRODUKSJON PEKER PÅ SAMME
+COMMIT `400d72485`. ALT TILSIKTET LOKALT ARBEID ER BEVART PÅ
+NAVNGITTE RELEASE- ELLER ARKIVBRANCHES. RELEASE-ENHETENE ER
+ISOLERT DIREKTE FRA `origin/main`: GIT-OPERASJONER, KLARNA-
+STOREFRONT, MICROSOFT MERCHANT, POSTHOG SDK OG S/GTM/SUPABASE.
+DE ER IKKE ALTERNATIVE PRODUKSJONSFASITER; DE SKAL VERIFISERES OG
+MERGES TIL DEN ENE KANONISKE LINJEN I GODKJENT REKKEFØLGE. SEKS
+ELDRE AGENT-/PAGESPEED-BRANCHES FRA FØR REPOSITORY-MIGRERINGEN ER
+BEVART SOM LOKALE
 `archive/pre-migration/*`-REFERANSER. DEN ELDRE HYTTE-/SESONG-
 BRANCHEN ER BEVART SOM `archive/needs-reconciliation/*` FOR EGEN
 FRONTENDMODERNISERING OG BROWSER-VERIFIKASJON. ALLE TILHØRENDE
@@ -21,19 +25,50 @@ MUTASJON ER UTFØRT I DENNE GIT-AVSTEMMINGEN.
   lokal `main` skal alltid være ren og identisk, og kandidatbranches
   kan bare være foran fordi de inneholder arbeid som ennå ikke er
   verifisert og merget.
+- Ulike branch-SHA-er er nødvendig for pågående arbeid og er ikke
+  Git-drift. Drift betyr her at lokal `main`, `origin/main`, Vercels
+  production branch eller deploymentens Git-kilde er uenige. De fire
+  er nå enige. En releasebranch inneholder tilsiktet arbeid med en
+  gjenstående releaseport, aldri «tilfeldige endringer».
+- `origin/codex/reconcile-tracking-release` peker på nøyaktig samme
+  commit som `origin/main` og har 0 unike commits. Den er redundant;
+  sletting vil bare fjerne branchnavnet og påvirker ikke kode,
+  produksjon eller historikk. Remote-sletting krever eksplisitt
+  godkjenning.
 - Den tidligere `sync-and-deploy.mjs`-flyten er avviklet. Den kunne
   stage hele arbeidsområdet, pushe GitHub og deretter starte en ekstra
   direkte Vercel production deploy. `npm run repo:sync` er nå
   fast-forward-only og utfører aldri commit, push eller deploy.
-- `codex/production-candidate-20260714` bevarer de 49 reelle lokale
+- `codex/release-git-operations` er første release: 8 filer som gjør
+  `repo:sync` fast-forward-only, pensjonerer kombinert sync/deploy og
+  dokumenterer GitHub-merge til `main` som eneste production-trigger.
+  Teststatus: 5/5 grønn; den pensjonerte kommandoen avslutter med exit 1.
+- `codex/release-klarna-product-cards` er 9 filer og 2 commits. Den
+  flytter Express Checkout fra produktdetalj til produktkort, deler én
+  idempotent SDK-loader og feiler Vercel-build lukket ved tom Client
+  Identifier. Typecheck og build 95/95 er grønne; kontrollert browser-
+  smoke viste 3 knapper, 1 SDK-last og 0 sidefeil på 390 og 1440 px.
+  Reell provider-preview krever verifisert Client Identifier og origins.
+- `codex/release-microsoft-merchant-feed` er 7 filer og 1 commit.
+  Feedtester 3/3, lint, TypeScript og build 96/96 er grønne; request-
+  time-dynamikk hindrer den tidligere prerender-hengen.
+- `codex/release-posthog-sdk` er bare `package.json` og
+  `pnpm-lock.yaml`. PostHog 1.399.2, helpertester 3/3, TypeScript,
+  commerce doctor og build 95/95 er grønne. Ingen Google-/MCP-
+  dependencies eller runtimekonfigurasjon er blandet inn.
+- `codex/production-candidate-20260714` bevarer de 58 reelle lokale
   forskjellene mot dagens `origin/main`, inkludert PostHog-/package-,
   MCP-, Microsoft feed-, Klarna UI- og øvrige frontendendringer. De er
-  tilsiktede produksjonskandidater, men ikke samlet verifisert eller
-  produksjonsgodkjent.
+  tilsiktede produksjonskandidater. Branchen er nå tapsfri kilde for
+  gjenstående MCP-/frontendarbeid, ikke en release som skal deployeres
+  samlet.
 - `codex/sgtm-remediation` bevarer tracking-, receipt-, refund-, sGTM-
-  tooling- og Supabase-kandidatene i ni commits oppå samme
+  tooling- og Supabase-kandidatene i ti commits oppå samme
   `origin/main`. Review-diff-artifacts er bevart separat i en navngitt
-  lokal stash og er ikke runtimekode.
+  lokal stash og er ikke runtimekode. Kode, tester, TypeScript, build,
+  Supabase lint og read-only providerstatus er grønne. Migrasjonen
+  `20260712120000` må eksplisitt godkjennes og kjøres før runtime-
+  previewen kan signeres av.
 - Den eldre hytte-/sesong-branchen kunne ikke rebases mekanisk uten å
   velge mellom gammel og aktiv UI i tre layout-/animatorfiler. Rebasen
   ble abortert tapsfritt, den allerede anvendte trackingcommiten ble
@@ -50,22 +85,21 @@ MUTASJON ER UTFØRT I DENNE GIT-AVSTEMMINGEN.
 - De fire omtalte migrasjonene var allerede registrert i Supabase,
   men filene lå ucommittet i en separat lokal worktree. Supabase
   og Git har uavhengig historikk; dette er årsaken til avviket.
-- PostHog `1.399.2`, øvrige dependency-endringer, `package.json`
-  og `pnpm-lock.yaml` ligger nå bevart i den brede produksjonskandidaten,
-  men skal fortsatt verifiseres og releases som en bevisst delpakke.
+- PostHog `1.399.2` er isolert og verifisert i
+  `codex/release-posthog-sdk`. Den brede kandidatens øvrige Google-/
+  MCP-dependencies forblir separat og skal ikke følge PostHog-releasen.
 - Vercel-preview `dpl_2kJH2QCPpsaaxx5oDBKD9SuhUt6j` er `READY` og
   beviste robust Klarna SDK-initialisering i den gamle
   produktsideplasseringen. Den beviste ikke den tilsiktede UI-flyttingen
   til produktkort.
-- Vercel production deployment `dpl_AdQDmSi5tRjfP5U5cPgFZAhdYrg2`
-  fra `main` SHA `d5e3e789c55a736537a56ee90a9b7f0c6017cd59`
+- Vercel production deployment `dpl_BL1dJauLSVXy5KNNhPd4FjRXGwmT`
+  fra `main` SHA `400d7248557cf2cdfd9825106b0859a3aa18c4c3`
   er `READY` og ble aliased til `utekos.no`/`www.utekos.no`.
-  Produksjon har robust SDK-initialisering, men viser fortsatt den
-  gamle «Pay with Klarna»-plasseringen og mangler express-knappen på
-  produktkort. Den tidligere påstanden om at den tilsiktede UI-
-  endringen var live og hadde 0 konsollfeil var feil; en ny kontroll
-  fant også én Clarity `collect`-respons med HTTP 400. Provider-
-  rapporten passerte etter deploy med 0 alerts.
+  Live `/produkter` har ingen Klarna SDK eller express-knapper på
+  produktkortene. Live produktdetalj laster SDK-en, men Klarna-
+  containeren er tom og ingen knapp er synlig. Den tidligere påstanden
+  om at Klarna-knappen var rendret og aktiv var feil. Provider-
+  rapporten passerte med 0 alerts.
 
 ## Telemetry- og plattformherding
 
