@@ -95,22 +95,22 @@ MUTASJON ER UTFØRT I DENNE GIT-AVSTEMMINGEN.
   frossen install passerer uten dette supply-chain-unntaket, så det
   skal ikke svekke policyen i produksjon. Branchen er kun et tapsfritt
   arkiv og skal ikke deployeres samlet.
-- En midlertidig lokal integrasjonsaudit kombinerte Git-operasjoner,
-  Microsoft Merchant, PostHog, Klarna, storefront-tilgjengelighet,
-  MCP-/driftsverktøy og kildehygiene med 0 mergekonflikter. Frossen
-  install uten supply-chain-bypass, route-typegenerering, 14/14
-  målrettede tester, MCP build med 52 servere, MCP/commerce doctor,
-  lint av alle endrede kodefiler, TypeScript og en Vercel-lignende
-  build med 96/96 ruter var grønne. Auditreferansen ble fjernet etter
-  at resultatene var dokumentert; den var aldri en ny produksjonsfasit
-  og ble ikke pushet eller deployet.
+- En midlertidig lokal integrasjonsaudit kombinerte alle syv
+  storefront-/plattformreleaser og `codex/sgtm-remediation`. To
+  dokumentkonflikter ble løst eksplisitt; runtimefilene hadde ingen
+  konflikt. Frossen install uten supply-chain-bypass, 111 endrede
+  tester, MCP build med 52 servere, MCP/commerce doctor, lint av alle
+  endrede kodefiler, TypeScript og en Vercel-lignende build med 99/99
+  statiske sider var grønne. Auditreferansen er midlertidig og er ikke
+  pushet eller deployet.
 - `codex/sgtm-remediation` bevarer tracking-, receipt-, refund-, sGTM-
-  tooling- og Supabase-kandidatene i ti commits oppå samme
+  tooling- og Supabase-kandidatene i tretten commits oppå samme
   `origin/main`. Review-diff-artifacts er bevart separat i en navngitt
   lokal stash og er ikke runtimekode. Kode, tester, TypeScript, build,
   Supabase lint og read-only providerstatus er grønne. Migrasjonen
-  `20260712120000` må eksplisitt godkjennes og kjøres før runtime-
-  previewen kan signeres av.
+  `20260712120000`, receipt-secret/Vercel-env, Cloud Run-hardening og
+  GTM-publisering må eksplisitt godkjennes og verifiseres før runtime-
+  releasen kan signeres av.
 - Den eldre hytte-/sesong-branchen kunne ikke rebases mekanisk uten å
   velge mellom gammel og aktiv UI i tre layout-/animatorfiler. Rebasen
   ble abortert tapsfritt, den allerede anvendte trackingcommiten ble

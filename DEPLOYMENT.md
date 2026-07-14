@@ -71,6 +71,28 @@ Klarna provider preview gate, production environment verification,
 Supabase migration ordering for the separate sGTM release, or explicit
 approval for push, merge and production deployment.
 
+### Full sGTM integration audit 2026-07-14
+
+The seven storefront/platform releases and `codex/sgtm-remediation` were
+also merged into one temporary branch from `origin/main`. Two documentation
+conflicts were resolved explicitly; runtime files had no conflicts. Frozen
+install without a supply-chain bypass, 111 changed tests, changed-code ESLint,
+TypeScript, MCP build with 52 servers, MCP/commerce doctors and a Vercel-like
+production build with 99/99 static pages passed.
+
+Supabase linked lint passed and the dry-run contains exactly
+`20260712120000_add_tagging_observations_and_verified_dispatch_status.sql`.
+The provider report passed with 0 active failures, 0 unresolved dead letters
+and 0 alerts, and seven public sGTM/GTM loader endpoints passed. The release is
+still no-go: the migration is unapplied; receipt-secret and protected Vercel
+env are absent; Cloud Run is `0/5` instead of `3/10`; the dedicated identity,
+secret mount, uptime, metrics, alerts and budget controls are incomplete; and
+the GTM publish is unapproved. Local GTM browser smoke also proved duplicate
+Cookiebot loading until the planned deletion of web tag `126` is published.
+
+No Supabase migration, Vercel env change, Cloud Run change, GTM publish,
+provider write, push or deploy was performed by this audit.
+
 ### Remaining candidate classification 2026-07-14
 
 - `codex/release-mcp-operations` contains only MCP configuration,
