@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { useState } from 'react'
+import { Check } from 'lucide-react'
+import { useRef, useState } from 'react'
 
 import { safeJsonParse } from '@/lib/utils/safeJsonParse'
 
@@ -14,13 +15,20 @@ export function SizeSelector({
   productHandle
 }: SizeSelectorProps) {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+  const optionButtonRefs = useRef<Array<HTMLButtonElement | null>>(
+    []
+  )
 
   const handlesToHideGuide = ['utekos-buff', 'utekos-stapper']
 
   return (
     <div className='space-y-3'>
-      <div className='grid grid-cols-3 gap-2 md:flex md:flex-col md:gap-3'>
-        {values.map(sizeValue => {
+      <div
+        role='radiogroup'
+        aria-label={optionName}
+        className='grid grid-cols-3 gap-2 md:flex md:flex-col md:gap-3'
+      >
+        {values.map((sizeValue, index) => {
           const representativeVariant = variants.find(v =>
             v.selectedOptions.some(
               opt =>
@@ -59,13 +67,60 @@ export function SizeSelector({
             <button
               key={sizeValue}
               type='button'
+              ref={element => {
+                optionButtonRefs.current[index] = element
+              }}
               onClick={() => onSelect(optionName, sizeValue)}
+              onKeyDown={event => {
+                let nextIndex: number | undefined
+
+                if (
+                  event.key === 'ArrowRight' ||
+                  event.key === 'ArrowDown'
+                ) {
+                  nextIndex = (index + 1) % values.length
+                } else if (
+                  event.key === 'ArrowLeft' ||
+                  event.key === 'ArrowUp'
+                ) {
+                  nextIndex =
+                    (index - 1 + values.length) % values.length
+                } else if (event.key === 'Home') {
+                  nextIndex = 0
+                } else if (event.key === 'End') {
+                  nextIndex = values.length - 1
+                }
+
+                if (nextIndex === undefined) {
+                  return
+                }
+
+                const nextValue = values[nextIndex]
+
+                if (!nextValue) {
+                  return
+                }
+
+                event.preventDefault()
+                onSelect(optionName, nextValue)
+                optionButtonRefs.current[nextIndex]?.focus()
+              }}
               role='radio'
               aria-checked={isSelected}
+              tabIndex={isSelected ? 0 : -1}
               data-selected={isSelected}
-              className='dark:border-dark-card-foreground/24 dark:hover:border-dark-card-foreground/45 dark:focus-visible:ring-dark-card-foreground/45 data-[selected=true]:border-jungle data-[selected=true]:bg-coral-green data-[selected=true]:text-jungle data-[selected=true]:ring-jungle/55 flex min-h-12 cursor-pointer items-center justify-center rounded-2xl border border-card-foreground/24 bg-card px-3 py-3 text-center text-sm text-card-foreground transition-all duration-200 ease-in-out hover:border-card-foreground/45 focus-visible:ring-2 focus-visible:ring-card-foreground/45 focus-visible:outline-none data-[selected=true]:shadow-[0_12px_28px_-22px_color-mix(in_oklch,var(--jungle)_70%,transparent)] data-[selected=true]:ring-2 md:w-full md:justify-between md:p-4 md:text-left md:text-base'
+              className='dark:border-dark-card-foreground/24 dark:hover:border-dark-card-foreground/45 dark:focus-visible:ring-dark-card-foreground/45 data-[selected=true]:border-foreground data-[selected=true]:bg-background data-[selected=true]:text-foreground data-[selected=true]:ring-foreground/55 flex min-h-12 cursor-pointer items-center justify-center rounded-2xl border border-card-foreground/24 bg-card px-3 py-3 text-center text-sm text-card-foreground transition-all duration-200 ease-in-out hover:border-card-foreground/45 focus-visible:ring-2 focus-visible:ring-card-foreground/45 focus-visible:outline-none data-[selected=true]:shadow-[0_14px_32px_-24px_color-mix(in_oklch,var(--foreground)_72%,transparent)] data-[selected=true]:ring-2 md:w-full md:justify-between md:p-4 md:text-left md:text-base'
             >
-              <span className='font-sans'>{sizeValue}</span>
+              <span className='inline-flex items-center gap-2 font-sans'>
+                {sizeValue}
+                {isSelected ?
+                  <Check
+                    className='size-4 shrink-0'
+                    strokeWidth={2.5}
+                    aria-hidden='true'
+                  />
+                : null}
+              </span>
               <div className='/72 hidden text-right text-xs text-card-foreground/72 md:block'>
                 {length && (
                   <div>
