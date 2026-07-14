@@ -3,39 +3,147 @@
 ## Status
 
 STATUS 2026-07-14: `origin/main` ER ENESTE PRODUKSJONSKANON.
-LOKAL `main`, `origin/HEAD` OG VERCEL-PRODUKSJON PEKER PÅ COMMIT
-`400d72485`. `codex/sgtm-remediation` ER EN LOKAL, TILSIKTET
-RELEASEKANDIDAT, IKKE EN ALTERNATIV PRODUKSJONSREFERANSE. FULL
-INTEGRASJON MOT DE ØVRIGE RELEASEKANDIDATENE PASSERER 111 ENDREDE
-TESTER, ESLINT, TYPESCRIPT, MCP-DOCTORER OG NEXT.JS-BUILD MED
-99/99 STATISKE SIDER. PROVIDER-RAPPORTEN HAR 0 AKTIVE FEIL,
-0 ULØSTE DEAD LETTERS OG 0 ALERTS. SUPABASE-DRY-RUN VISER NØYAKTIG
-MIGRASJON `20260712120000`, MEN DEN ER IKKE KJØRT. RECEIPT-SECRET,
-VERCEL-ENV, CLOUD RUN-HERDING, GTM-PUBLISERING OG PRODUKSJONSDEPLOY
-ER FORTSATT BLOKKERT TIL HVER KONKRETE MUTASJON ER GODKJENT OG
-VERIFISERT.
+LOKAL `main`, `origin/HEAD` OG VERCEL-PRODUKSJON PEKER PÅ SAMME
+COMMIT `400d72485`. ALT TILSIKTET LOKALT ARBEID ER BEVART PÅ
+NAVNGITTE RELEASE- ELLER ARKIVBRANCHES. RELEASE-ENHETENE ER
+ISOLERT FRA `origin/main`: GIT-OPERASJONER, KLARNA-STOREFRONT,
+MICROSOFT MERCHANT, POSTHOG SDK, STOREFRONT-TILGJENGELIGHET,
+MCP-/DRIFTSVERKTØY OG KILDEHYGIENE. S/GTM/SUPABASE ER STABLET
+ETTER DEN KANONISKE GIT-RELEASEN FOR Å FJERNE KJENTE
+DOKUMENT-/PACKAGE-MERGEKONFLIKTER UTEN Å BLANDE INN POSTHOG.
+DE ER IKKE ALTERNATIVE PRODUKSJONSFASITER; DE SKAL VERIFISERES OG
+MERGES TIL DEN ENE KANONISKE LINJEN I GODKJENT REKKEFØLGE. SEKS
+ELDRE AGENT-/PAGESPEED-BRANCHES FRA FØR REPOSITORY-MIGRERINGEN ER
+BEVART SOM LOKALE
+`archive/pre-migration/*`-REFERANSER. DEN ELDRE HYTTE-/SESONG-
+BRANCHEN ER BEVART SOM `archive/needs-reconciliation/*` FOR EGEN
+FRONTENDMODERNISERING OG BROWSER-VERIFIKASJON. ALLE TILHØRENDE
+WORKTREES ER FJERNET; BARE HOVEDWORKTREE-EN GJENSTÅR. INGEN PUSH, PR-MERGE,
+VERCEL-DEPLOY, PROVIDER-WRITE, GTM-PUBLISH ELLER SUPABASE-
+MUTASJON ER UTFØRT I DENNE GIT-AVSTEMMINGEN.
 
 ### Releaseavstemming 2026-07-14
 
-- Full build er ikke blokkert av MDX eller typed routes. Den tidligere
-  worker-`ENOENT` kom fra stale `.next`-cache; `next typegen`,
-  `tsc --noEmit` og produksjonsbygget er grønne.
+- Git-modellen er nå entydig: `origin/main` er produksjonskilden,
+  lokal `main` skal alltid være ren og identisk, og kandidatbranches
+  kan bare være foran fordi de inneholder arbeid som ennå ikke er
+  verifisert og merget.
+- Ulike branch-SHA-er er nødvendig for pågående arbeid og er ikke
+  Git-drift. Drift betyr her at lokal `main`, `origin/main`, Vercels
+  production branch eller deploymentens Git-kilde er uenige. De fire
+  er nå enige. En releasebranch inneholder tilsiktet arbeid med en
+  gjenstående releaseport, aldri «tilfeldige endringer».
+- `origin/codex/reconcile-tracking-release` peker på nøyaktig samme
+  commit som `origin/main` og har 0 unike commits. Den er redundant;
+  sletting vil bare fjerne branchnavnet og påvirker ikke kode,
+  produksjon eller historikk. Remote-sletting krever eksplisitt
+  godkjenning.
+- Den tidligere `sync-and-deploy.mjs`-flyten er avviklet. Den kunne
+  stage hele arbeidsområdet, pushe GitHub og deretter starte en ekstra
+  direkte Vercel production deploy. `npm run repo:sync` er nå
+  fast-forward-only og utfører aldri commit, push eller deploy.
+- `codex/release-git-operations` er første release: 8 filer som gjør
+  `repo:sync` fast-forward-only, pensjonerer kombinert sync/deploy og
+  dokumenterer GitHub-merge til `main` som eneste production-trigger.
+  Teststatus: 5/5 grønn; den pensjonerte kommandoen avslutter med exit 1.
+- `codex/release-klarna-product-cards` er 9 filer og 2 commits. Den
+  flytter Express Checkout fra produktdetalj til produktkort, deler én
+  idempotent SDK-loader og feiler Vercel-build lukket ved tom Client
+  Identifier. Typecheck og build 95/95 er grønne; kontrollert browser-
+  smoke viste 3 knapper, 1 SDK-last og 0 sidefeil på 390 og 1440 px.
+  Reell provider-preview krever verifisert Client Identifier og origins.
+- `codex/release-microsoft-merchant-feed` er 7 filer og 1 commit.
+  Feedtester 3/3, lint, TypeScript og build 96/96 er grønne; request-
+  time-dynamikk hindrer den tidligere prerender-hengen.
+- `codex/release-posthog-sdk` er bare `package.json` og
+  `pnpm-lock.yaml`. PostHog 1.399.2, helpertester 3/3, TypeScript,
+  commerce doctor og build 95/95 er grønne. Ingen Google-/MCP-
+  dependencies eller runtimekonfigurasjon er blandet inn.
+- `codex/release-storefront-accessibility` er 9 filer og 1 commit.
+  Den gjør størrelsevelgeren tastaturnavigerbar med roving tabindex og
+  synlig valgt-markør, retter modal-/popover-kontrast og lagrekkefølge,
+  gir ikonbasert fjerning et tilgjengelig navn og gjør handlekurv-
+  fjerning optimistisk med rollback. TypeScript, målrettet lint og build
+  95/95 er grønne. Browser-smoke på 390 og 1440 px beviste tastaturfokus,
+  mobil-/desktop-layout, 17,1:1 mørk og 18,0:1 lys modal-kontrast,
+  dialog inne i åpen handlekurv og både avbryt- og bekreftflyten uten
+  applikasjonsfeil. Cookiebot viser det forventede localhost-varselet.
+- `codex/release-mcp-operations` er en separat MCP-/driftsrelease uten
+  PostHog-, Klarna-, Microsoft-feed- eller storefront-kode og uten de
+  20+ ubrukte Google-pakkene fra den brede kandidaten. Den inkluderer
+  de tidligere ignorerte, men nødvendige runtimefilene og kun tomme
+  env-maler. Frossen install, endret-kode-lint, TypeScript og build
+  95/95 er grønne. MCP build genererte 52 servere; basisdoctor,
+  commerce doctor med 28/28 tools, Shopify read-only, Codex bridge,
+  offisiell Google Analytics MCP 0.6.0 med 9/9 tools og live rapport,
+  privat Analytics-proxy og syv sGTM-loaderendepunkter er grønne.
+  Samlet ChatGPT-profildoctor er ikke totalgrønn fordi den eldre
+  Insight-surface feiler og Docker Desktop ikke kjører; de nye
+  profilene passerer separat.
+- `codex/release-source-hygiene` har bare to ikke-runtimeendringer:
+  fjerner en duplisert filsti-kommentar og retter `;;` til `;` i den
+  allerede anvendte migrasjonen `20260711190423`. Linked migration
+  list bekrefter samme versjon lokalt og remote. Linked Supabase lint
+  for prosjektets applikasjonsskjemaer er grønn, og ingen Supabase-
+  mutasjon er utført. En separat `extensions.index_advisor`-feil finnes
+  fortsatt hvis Supabase sitt interne `extensions`-skjema lintes.
+- `codex/production-candidate-20260714` bevarer de 58 reelle lokale
+  forskjellene mot dagens `origin/main`, inkludert PostHog-/package-,
+  MCP-, Microsoft feed-, Klarna UI- og øvrige frontendendringer. De er
+  tilsiktede produksjonskandidater. Alle 58 filstier er nå klassifisert
+  i egne releaser eller som eksplisitt avvist. Den eneste avviste
+  endringen er `minimumReleaseAgeExclude` for `posthog-js@1.399.2`:
+  frossen install passerer uten dette supply-chain-unntaket, så det
+  skal ikke svekke policyen i produksjon. Branchen er kun et tapsfritt
+  arkiv og skal ikke deployeres samlet.
+- En midlertidig lokal integrasjonsaudit kombinerte alle syv
+  storefront-/plattformreleaser og `codex/sgtm-remediation`. To
+  dokumentkonflikter ble løst eksplisitt; runtimefilene hadde ingen
+  konflikt. Frossen install uten supply-chain-bypass, 111 endrede
+  tester, MCP build med 52 servere, MCP/commerce doctor, lint av alle
+  endrede kodefiler, TypeScript og en Vercel-lignende build med 99/99
+  statiske sider var grønne. Auditreferansen ble fjernet etter at
+  resultatet var dokumentert; den ble ikke pushet eller deployet.
+- `codex/sgtm-remediation` bevarer tracking-, receipt-, refund-, sGTM-
+  tooling- og Supabase-kandidatene stablet etter
+  `codex/release-git-operations`. PostHog er fortsatt separat.
+  Review-diff-artifacts er bevart separat i en navngitt lokal stash og
+  er ikke runtimekode. Kode, tester, TypeScript, build, Supabase lint og
+  read-only providerstatus er grønne. Migrasjonen
+  `20260712120000`, receipt-secret/Vercel-env, Cloud Run-hardening og
+  GTM-publisering må eksplisitt godkjennes og verifiseres før runtime-
+  releasen kan signeres av.
+- Den eldre hytte-/sesong-branchen kunne ikke rebases mekanisk uten å
+  velge mellom gammel og aktiv UI i tre layout-/animatorfiler. Rebasen
+  ble abortert tapsfritt, den allerede anvendte trackingcommiten ble
+  identifisert som duplikat, og resten er arkivert til en separat,
+  browser-verifisert frontendavstemming.
+
+- Full build var ikke blokkert av MDX eller typed routes i den
+  kanoniske builden. En stale `.next` Turbopack-filcache utløste
+  lokal worker-`ENOENT`; cachen er regenerert, og både den aktive
+  worktree-en og den rene releasen bygger alle ruter grønt.
+- MDX-/typed-route-feilene kom fra en separat `--webpack`/
+  `--debug-build-paths`-diagnose med ufullstendige genererte
+  rutetyper. `next typegen` etterfulgt av `tsc --noEmit` er grønn.
 - De fire omtalte migrasjonene var allerede registrert i Supabase,
-  mens de lokale SQL-filene lå ucommittet i en separat worktree.
-  Supabase og Git har uavhengig historikk; filene er nå bevart på
-  navngitte branches.
-- PostHog `1.399.2` og package-/lockfile-endringene er isolert på
-  `codex/release-posthog-sdk` og inngår ikke i sGTM-releasen.
-- Preview `dpl_2kJH2QCPpsaaxx5oDBKD9SuhUt6j` beviste Klarna-knapp i
-  den gamle produktsideplasseringen, ikke flyttingen til produktkort.
-- Produksjon `dpl_BL1dJauLSVXy5KNNhPd4FjRXGwmT` kjører commit
-  `400d72485`. Live `/produkter` har ingen Klarna-knapper, og
-  produktdetaljens Klarna-container er tom. Den tidligere påstanden
-  om synlig og aktiv produksjonsknapp var feil.
-- sGTM-koden er lokalt grønn, men hele releasen er no-go før den ene
-  Supabase-migrasjonen, receipt-secret/Vercel-env, Cloud Run `3/10`
-  hardening og koordinert GTM-publisering er fullført. Lokal GTM-smoke
-  viser dobbel Cookiebot-loader frem til web-tag `126` slettes.
+  men filene lå ucommittet i en separat lokal worktree. Supabase
+  og Git har uavhengig historikk; dette er årsaken til avviket.
+- PostHog `1.399.2` er isolert og verifisert i
+  `codex/release-posthog-sdk`. Den brede kandidatens øvrige Google-/
+  MCP-dependencies forblir separat og skal ikke følge PostHog-releasen.
+- Vercel-preview `dpl_2kJH2QCPpsaaxx5oDBKD9SuhUt6j` er `READY` og
+  beviste robust Klarna SDK-initialisering i den gamle
+  produktsideplasseringen. Den beviste ikke den tilsiktede UI-flyttingen
+  til produktkort.
+- Vercel production deployment `dpl_BL1dJauLSVXy5KNNhPd4FjRXGwmT`
+  fra `main` SHA `400d7248557cf2cdfd9825106b0859a3aa18c4c3`
+  er `READY` og ble aliased til `utekos.no`/`www.utekos.no`.
+  Live `/produkter` har ingen Klarna SDK eller express-knapper på
+  produktkortene. Live produktdetalj laster SDK-en, men Klarna-
+  containeren er tom og ingen knapp er synlig. Den tidligere påstanden
+  om at Klarna-knappen var rendret og aktiv var feil. Provider-
+  rapporten passerte med 0 alerts.
 
 ## Telemetry- og plattformherding
 

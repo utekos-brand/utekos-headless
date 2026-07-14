@@ -183,7 +183,6 @@ mcp.json
 *.env.local
 src/api/lib/cloud-credentials/
 supabase/md.md
-ç
 
 # Keep local agent/editor/documentation payloads out of GitHub/Vercel source.
 .agent/skills/
@@ -200,8 +199,6 @@ docs/
 /.env.docker.example
 .env.local.incomplete.backup
 /.env.local.incomplete.backup
-.env.mcp.example
-/.env.mcp.example
 .env.tunnel.example
 /.env.tunnel.example
 
