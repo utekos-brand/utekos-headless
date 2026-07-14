@@ -298,6 +298,38 @@ variable targeting both Preview and Production without exposing its value.
 Provider acceptance remains blocked until Klarna allowed origins and the
 visible button are verified in the Git-triggered preview.
 
+### Klarna Express Checkout gate (Preview + Production)
+
+Klarna Express Checkout is not verified by the presence of its SDK or
+an empty container. The release must prove that Klarna renders the
+actual button and accepts the configured origin.
+
+Required before preview sign-off:
+
+1. Verify that `NEXT_PUBLIC_KLARNA_CLIENT_ID` contains the intended
+   Klarna Client Identifier in both Vercel Preview and Production. Do
+   not print the value in logs or documentation.
+2. Verify in Klarna that the exact preview origin and
+   `https://utekos.no` are allowed for that Client Identifier.
+3. Keep a single Klarna SDK library load per document. Multiple product
+   cards may initialize separate containers through the shared loader.
+4. Run the Vercel build. `prebuild` must fail closed when the Client
+   Identifier is empty in a Vercel build.
+5. In the Git-triggered preview, verify desktop and mobile DOM,
+   screenshot, console and network. At least one eligible product must
+   show a visible «Pay with Klarna» button; an SDK request or empty
+   container alone is a failed gate.
+6. Exercise provider authorization only with an approved test flow and
+   confirm the expected completion/redirect response without creating
+   an unintended live order.
+
+Current status 2026-07-14: production fails the visible-button gate.
+`/produkter` has no product-card integration, while the product-detail
+container remains empty despite the SDK loading. The local candidate
+passes responsive rendering with a controlled SDK stub, but provider
+acceptance remains blocked until the environment and allowed origins
+are verified in a real preview.
+
 ## Tracking And Paid-Media Post-Deploy
 
 Run only the checks that match the changed surface, but never mark a
