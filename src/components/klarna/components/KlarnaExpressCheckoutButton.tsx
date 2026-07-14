@@ -4,6 +4,7 @@ import { useEffect, useId, useRef } from 'react'
 
 import { completeKlarnaExpressCheckout } from '@/components/klarna/utils/completeKlarnaExpressCheckout'
 import { loadKlarnaExpressCheckoutSdk } from '@/components/klarna/utils/loadKlarnaExpressCheckoutSdk'
+import { loadKlarnaPublicConfig } from '@/components/klarna/utils/loadKlarnaPublicConfig'
 import {
   klarnaCollectedShippingAddressSchema,
   type KlarnaExpressOrderPayload
@@ -22,8 +23,6 @@ type KlarnaExpressCheckoutButtonProps = {
   onError?: (message: string) => void
   onAuthorizing?: () => void
 }
-
-const KLARNA_CLIENT_ID = process.env.NEXT_PUBLIC_KLARNA_CLIENT_ID
 
 function parseCollectedShippingAddress(
   result: KlarnaExpressCheckoutAuthorizationResult
@@ -65,14 +64,16 @@ export function KlarnaExpressCheckoutButton({
   }, [onAuthorizing, onError, orderPayload, shopifyCartId])
 
   useEffect(() => {
-    if (!KLARNA_CLIENT_ID || disabled) {
+    if (disabled) {
       return
     }
 
     let isActive = true
 
-    void loadKlarnaExpressCheckoutSdk()
-      .then(() => {
+    void loadKlarnaPublicConfig()
+      .then(async config => {
+        await loadKlarnaExpressCheckoutSdk()
+
         if (
           !isActive ||
           hasInitializedRef.current ||
@@ -84,7 +85,7 @@ export function KlarnaExpressCheckoutButton({
         hasInitializedRef.current = true
 
         window.Klarna.Payments.Buttons.init({
-          client_id: KLARNA_CLIENT_ID
+          client_id: config.client_id
         }).load(
           {
             container: `#${containerId}`,
@@ -178,10 +179,6 @@ export function KlarnaExpressCheckoutButton({
       isActive = false
     }
   }, [containerId, disabled])
-
-  if (!KLARNA_CLIENT_ID) {
-    return null
-  }
 
   return (
     <div className={className} aria-busy={disabled}>
