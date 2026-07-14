@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { CartMutationContext } from '@/lib/context/CartMutationContext'
 import { cartStore } from '@/lib/state/cartStore'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { formatPrice } from '@/lib/utils/formatPrice'
 import { cn } from '@/lib/utils/className'
@@ -92,9 +92,10 @@ export function ProductCard({
       cleanShopifyId(selectedVariant.id) || selectedVariant.id
     const price = Number(selectedVariant.price.amount)
 
-    void dispatchMetaTrackingEvent({
+    void dispatchTrackingEvent({
       eventName: 'SelectItem',
       eventId: generateEventID(),
+      destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
       eventData: {
         value: Number.isFinite(price) ? price : undefined,
         currency: selectedVariant.price.currencyCode,

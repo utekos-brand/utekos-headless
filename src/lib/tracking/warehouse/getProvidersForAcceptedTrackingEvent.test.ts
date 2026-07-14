@@ -25,7 +25,7 @@ function createPayload(
   }
 }
 
-test('queues both Meta and Google for consented critical commerce events', () => {
+test('never queues Google server retry rows for browser events', () => {
   for (const [canonicalEventName, eventName] of [
     ['select_item', 'SelectItem'],
     ['add_to_cart', 'AddToCart'],
@@ -36,12 +36,12 @@ test('queues both Meta and Google for consented critical commerce events', () =>
         createPayload(canonicalEventName, eventName),
         { meta: true, google: true }
       ),
-      ['meta', 'google']
+      ['meta']
     )
   }
 })
 
-test('keeps Meta dispatch when Google fallback cannot be queued', () => {
+test('keeps Meta dispatch independent of GA4 browser identifiers', () => {
   assert.deepEqual(
     getProvidersForAcceptedTrackingEvent(
       {

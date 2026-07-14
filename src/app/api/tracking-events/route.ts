@@ -11,18 +11,22 @@ import { setMetaParamBuilderCookies } from '@/lib/tracking/meta/param-builder/se
 import { persistAcceptedTrackingEvent } from '@/lib/tracking/warehouse/persistAcceptedTrackingEvent'
 import { getRequestConsentState } from '@/lib/tracking/consent/getRequestConsentState'
 import { getProvidersForAcceptedTrackingEvent } from '@/lib/tracking/warehouse/getProvidersForAcceptedTrackingEvent'
+import { persistTaggingObservation } from '@/lib/tracking/warehouse/persistTaggingObservation'
 import {
   COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME,
   COOKIEBOT_META_SERVICE_NAME,
-  COOKIEBOT_MICROSOFT_SERVICE_NAME
+  COOKIEBOT_MICROSOFT_SERVICE_NAME,
+  COOKIEBOT_POSTHOG_SERVICE_NAME
 } from '@/components/cookie-consent/cookiebotConfig'
+import { hasBrowserTrackingConsent } from '@/lib/tracking/consent/hasBrowserTrackingConsent'
 
 export async function POST(request: NextRequest) {
   const consent = getRequestConsentState(request)
   const providerConsent = {
     meta: consent.services[COOKIEBOT_META_SERVICE_NAME] === true,
     google: consent.services[COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME] === true,
-    microsoft: consent.services[COOKIEBOT_MICROSOFT_SERVICE_NAME] === true
+    microsoft: consent.services[COOKIEBOT_MICROSOFT_SERVICE_NAME] === true,
+    posthog: consent.services[COOKIEBOT_POSTHOG_SERVICE_NAME] === true
   }
 
   const validation = await parseAndValidateEventPayload(request)
@@ -31,7 +35,7 @@ export async function POST(request: NextRequest) {
     return validation.errorResponse
   }
 
-  if (!providerConsent.meta && !providerConsent.google && !providerConsent.microsoft) {
+  if (!hasBrowserTrackingConsent(providerConsent)) {
     return createAcceptedTrackingResponse(validation.payload)
   }
 
@@ -53,13 +57,27 @@ export async function POST(request: NextRequest) {
         userData: undefined
       }
   const providers = getProvidersForAcceptedTrackingEvent(payload, providerConsent)
+  const observationEventId = payload.eventId
+  const observationEventName = payload.canonicalEventName ?? payload.eventName
+  const observationOccurredAt = payload.occurredAt
 
   after(async () => {
     try {
-      await persistAcceptedTrackingEvent(payload, {
-        ...consent,
-        source: 'cookiebot'
-      }, providers)
+      await Promise.all([
+        persistAcceptedTrackingEvent(payload, {
+          ...consent,
+          source: 'cookiebot'
+        }, providers),
+        observationEventId && observationEventName && observationOccurredAt ?
+          persistTaggingObservation({
+            idempotencyKey: `browser_dispatch:${observationEventId}`,
+            eventId: observationEventId,
+            eventName: observationEventName,
+            observationType: 'browser_dispatch',
+            observedAt: observationOccurredAt
+          })
+        : Promise.resolve(false)
+      ])
     } catch (error) {
       await logToAppLogs(
         'ERROR',

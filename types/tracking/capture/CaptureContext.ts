@@ -1,5 +1,7 @@
 // Path: types/tracking/capture/CaptureContext.ts
 
+import type { ConsentProvenance } from 'types/tracking/user/ConsentProvenance'
+
 export type CaptureContext = {
   cookies: {
     fbp?: string | undefined
@@ -18,4 +20,5 @@ export type CaptureContext = {
   }
   clientIp: string
   userAgent: string
+  consentProvenance: ConsentProvenance
 }

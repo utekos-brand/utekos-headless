@@ -9,10 +9,10 @@ import { useOptimisticCartUpdate } from '@/hooks/useOptimisticCartUpdate'
 import { getCartIdFromCookie } from '@/lib/actions/getCartIdFromCookie'
 import { trackAddToCart } from '@/lib/tracking/client/trackAddToCart'
 import { resolveClientGA4Data } from '@/lib/tracking/google/getClientGA4Data'
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { getClientMetaUserData } from '@/lib/tracking/meta/utils/getClientMetaUserData'
-import { hasCategoryConsent } from '@/lib/tracking/consent/hasCategoryConsent'
 import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
+import { shouldCaptureCheckoutIdentifiers } from '@/lib/tracking/consent/hasBrowserTrackingConsent'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
 import {
   COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME,
@@ -27,7 +27,7 @@ import type { UsePurchaseLogicProps } from 'types/product/PageProps'
 import type { ShopifyProduct, ShopifyProductVariant } from 'types/product'
 import type { Cart } from 'types/cart'
 import type { OptimisticItemInput } from '@/hooks/useOptimisticCartUpdate'
-import type { CaptureBody, MetaUserData } from 'types/tracking/meta'
+import type { CaptureBody } from 'types/tracking/meta'
 
 type ConfiguredSelectionCartResult = {
   cart: Cart | null
@@ -245,10 +245,10 @@ export function usePurchaseLogic({ products }: UsePurchaseLogicProps) {
       const productId = cleanShopifyId(selectedVariant.id) || selectedVariant.id
       const value = (Number.parseFloat(selectedVariant.price.amount) || 0) * quantity
       const currency = selectedVariant.price.currencyCode
-      const userData: MetaUserData | undefined =
+      const userData =
         hasServiceConsent(COOKIEBOT_META_SERVICE_NAME) ? getClientMetaUserData() : undefined
 
-      if (hasCategoryConsent('marketing')) {
+      if (shouldCaptureCheckoutIdentifiers(hasServiceConsent)) {
         const ga4Data =
           hasServiceConsent(COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME) ?
             await resolveClientGA4Data()
@@ -270,9 +270,10 @@ export function usePurchaseLogic({ products }: UsePurchaseLogicProps) {
         }).catch(error => console.error('Capture identifiers failed', error))
       }
 
-      void dispatchMetaTrackingEvent({
+      void dispatchTrackingEvent({
         eventName: 'InitiateCheckout',
         eventId: eventID,
+        destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
         eventData: {
           value,
           currency,

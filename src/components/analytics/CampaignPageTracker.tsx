@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { runAfterPageSettles } from '@/lib/browser/runAfterPageSettles'
 
 export function CampaignPageTracker() {
@@ -25,9 +25,10 @@ export function CampaignPageTracker() {
     }
 
     return runAfterPageSettles(() => {
-      void dispatchMetaTrackingEvent({
+      void dispatchTrackingEvent({
         eventName,
         eventId,
+        destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
         eventData: customData
       })
     })

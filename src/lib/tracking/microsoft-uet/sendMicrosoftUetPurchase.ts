@@ -17,6 +17,7 @@ export type MicrosoftUetPurchaseDispatchResult =
       success: true
       tagId: string
       status: number
+      requestId?: string | undefined
       eventId: string
       eventName: 'PRODUCT_PURCHASE'
       itemCount: number
@@ -28,6 +29,8 @@ export type MicrosoftUetPurchaseDispatchResult =
       skipped: true
       reason: 'missing_capi_token' | 'missing_attribution' | 'missing_msclkid'
       tagId?: string | undefined
+      status?: number | undefined
+      requestId?: string | undefined
     }
   | {
       success: false
@@ -35,6 +38,7 @@ export type MicrosoftUetPurchaseDispatchResult =
       reason: 'invalid_payload' | 'microsoft_uet_error' | 'network_error'
       tagId: string
       status?: number | undefined
+      requestId?: string | undefined
       error: string
       details?: unknown
     }
@@ -68,11 +72,13 @@ async function postMicrosoftUetPurchaseRequest(
   | {
       ok: true
       status: number
+      requestId?: string | undefined
       event: ReturnType<typeof buildMicrosoftUetPurchaseEvent>
     }
   | {
       ok: false
       status?: number | undefined
+      requestId?: string | undefined
       error: string
       details?: unknown
       reason: 'invalid_payload' | 'microsoft_uet_error' | 'network_error'
@@ -94,12 +100,16 @@ async function postMicrosoftUetPurchaseRequest(
       body: JSON.stringify(requestBody)
     })
     const responseText = await response.text()
+    const requestId = response.headers.get('x-ms-request-id')
+      ?? response.headers.get('request-id')
+      ?? undefined
 
     if (!response.ok) {
       return {
         ok: false,
         reason: 'microsoft_uet_error',
         status: response.status,
+        requestId,
         error: responseText || response.statusText,
         details: getResponseBody(responseText)
       }
@@ -108,6 +118,7 @@ async function postMicrosoftUetPurchaseRequest(
     return {
       ok: true,
       status: response.status,
+      requestId,
       event
     }
   } catch (error) {
@@ -176,6 +187,7 @@ export async function sendMicrosoftUetPurchase(
         reason: response.reason,
         tagId: config.tagId,
         status: response.status,
+        requestId: response.requestId,
         error: response.error,
         details: response.details
       }
@@ -185,6 +197,7 @@ export async function sendMicrosoftUetPurchase(
       success: true,
       tagId: config.tagId,
       status: response.status,
+      requestId: response.requestId,
       eventId: response.event.eventId,
       eventName: response.event.eventName,
       itemCount: response.event.customData.items?.length ?? response.event.customData.itemIds?.length ?? 0,

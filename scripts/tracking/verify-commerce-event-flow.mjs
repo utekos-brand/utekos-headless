@@ -3,6 +3,10 @@
 import dotenv from 'dotenv'
 import postgres from 'postgres'
 import { chromium } from 'playwright'
+import {
+  assertCorrelatedProviderEvidence,
+  networkEvidenceFromUrl
+} from './commerce-smoke-evidence.mjs'
 
 dotenv.config({ path: '.env.local', quiet: true })
 dotenv.config({ path: '.env.mcp.local', override: false, quiet: true })
@@ -18,60 +22,15 @@ const syntheticMicrosoftClickId = 'dd4afcccb1c9a4cad9544dd7e5006'
 
 const requiredEvents = [
   { canonicalEventName: 'select_item', eventName: 'SelectItem' },
+  { canonicalEventName: 'search', eventName: 'Search' },
   { canonicalEventName: 'add_to_cart', eventName: 'AddToCart' },
+  { canonicalEventName: 'view_cart', eventName: 'ViewCart' },
+  { canonicalEventName: 'remove_from_cart', eventName: 'RemoveFromCart' },
   { canonicalEventName: 'begin_checkout', eventName: 'InitiateCheckout' }
 ]
 
-const requiredProviders = ['google', 'meta']
-const requiredDataLayerEvents = ['select_item', 'add_to_cart', 'begin_checkout']
-function networkEvidenceFromUrl(url) {
-  try {
-    const parsedUrl = new URL(url)
-    const host = parsedUrl.hostname
-    const path = parsedUrl.pathname
-
-    if (host === 'www.facebook.com' && path === '/tr/') {
-      return {
-        provider: 'meta',
-        event: parsedUrl.searchParams.get('ev'),
-        host,
-        path
-      }
-    }
-
-    if (host === 'bat.bing.com') {
-      return {
-        provider: 'microsoft_uet',
-        event: parsedUrl.searchParams.get('evt') || parsedUrl.searchParams.get('en'),
-        host,
-        path
-      }
-    }
-
-    if (host.includes('clarity.ms') || host.includes('clarity.microsoft.com')) {
-      return {
-        provider: 'clarity',
-        event: null,
-        host,
-        path
-      }
-    }
-
-    if (host === 'portal.utekos.no' || host.includes('posthog.com')) {
-      return {
-        provider: 'posthog',
-        event: null,
-        host,
-        path
-      }
-    }
-  } catch {
-    return null
-  }
-
-  return null
-}
-
+const requiredProviders = ['meta']
+const requiredDataLayerEvents = requiredEvents.map(event => event.canonicalEventName)
 function logStage(stage) {
   console.error(`[commerce-smoke] ${stage}`)
 }
@@ -108,7 +67,7 @@ function parseTrackingRequest(request) {
 
 async function grantTrackingConsent(page) {
   await page.evaluate(() => {
-    const consentCookie = "{necessary:true,preferences:true,statistics:true,marketing:true,method:'explicit'}"
+    const consentCookie = '{"necessary":true,"preferences":true,"statistics":true,"marketing":true,"method":"explicit"}'
     document.cookie = `CookieConsent=${encodeURIComponent(consentCookie)}; path=/; max-age=31536000; SameSite=Lax`
     window.Cookiebot = {
       ...(window.Cookiebot || {}),
@@ -192,6 +151,21 @@ async function waitForTrackedPayload(trackedPayloads, canonicalEventName) {
   throw new Error(`Timed out waiting for ${canonicalEventName} /api/tracking-events payload.`)
 }
 
+async function waitForTrackedPayloadCount(trackedPayloads, canonicalEventName, expectedCount) {
+  const startedAt = Date.now()
+
+  while (Date.now() - startedAt < eventTimeoutMs) {
+    const payloads = trackedPayloads.filter(candidate => hasExpectedEvent(candidate, canonicalEventName))
+    if (payloads.length >= expectedCount) {
+      return payloads
+    }
+
+    await sleep(250)
+  }
+
+  throw new Error(`Timed out waiting for ${expectedCount} ${canonicalEventName} /api/tracking-events payloads.`)
+}
+
 async function clickFirstVisible(locator, label) {
   const startedAt = Date.now()
 
@@ -240,29 +214,6 @@ async function waitForProductSelectTarget(page) {
   throw new Error('No visible product select target found after lazy-load scroll.')
 }
 
-async function clickFirstVisibleSelector(page, selectors, label) {
-  const startedAt = Date.now()
-
-  while (Date.now() - startedAt < eventTimeoutMs) {
-    for (const selector of selectors) {
-      const locator = page.locator(selector)
-      const count = await locator.count()
-
-      for (let index = 0; index < count; index += 1) {
-        const candidate = locator.nth(index)
-        if (await candidate.isVisible().catch(() => false)) {
-          await candidate.click({ timeout: eventTimeoutMs, noWaitAfter: true })
-          return selector
-        }
-      }
-    }
-
-    await sleep(250)
-  }
-
-  throw new Error(`No visible ${label} target found.`)
-}
-
 async function queryWarehouse(eventIds) {
   const warehouseUrl = getWarehouseUrl()
   if (!warehouseUrl) {
@@ -290,6 +241,21 @@ async function queryWarehouse(eventIds) {
           (payload->'ga4Data' ? 'client_id') as has_ga4_client_id,
           (payload->'ga4Data' ? 'session_id') as has_ga4_session_id,
           (payload->'userData' ? 'fbp') as has_fbp,
+          exists (
+            select 1 from ops.tagging_observations observation
+            where observation.event_id = ops.provider_dispatch_attempts.event_id
+              and observation.observation_type = 'browser_dispatch'
+          ) as has_browser_dispatch,
+          exists (
+            select 1 from ops.tagging_observations observation
+            where observation.event_id = ops.provider_dispatch_attempts.event_id
+              and observation.observation_type = 'sgtm_ingress'
+          ) as has_sgtm_ingress,
+          exists (
+            select 1 from ops.tagging_observations observation
+            where observation.event_id = ops.provider_dispatch_attempts.event_id
+              and observation.observation_type = 'tag_execution'
+          ) as has_tag_execution,
           processed_at is not null as has_processed_at
         from ops.provider_dispatch_attempts
         where event_id = any(${eventIds})
@@ -325,6 +291,21 @@ async function queryWarehouse(eventIds) {
         (payload->'ga4Data' ? 'client_id') as has_ga4_client_id,
         (payload->'ga4Data' ? 'session_id') as has_ga4_session_id,
         (payload->'userData' ? 'fbp') as has_fbp,
+        exists (
+          select 1 from ops.tagging_observations observation
+          where observation.event_id = ops.provider_dispatch_attempts.event_id
+            and observation.observation_type = 'browser_dispatch'
+        ) as has_browser_dispatch,
+        exists (
+          select 1 from ops.tagging_observations observation
+          where observation.event_id = ops.provider_dispatch_attempts.event_id
+            and observation.observation_type = 'sgtm_ingress'
+        ) as has_sgtm_ingress,
+        exists (
+          select 1 from ops.tagging_observations observation
+          where observation.event_id = ops.provider_dispatch_attempts.event_id
+            and observation.observation_type = 'tag_execution'
+        ) as has_tag_execution,
         processed_at is not null as has_processed_at
       from ops.provider_dispatch_attempts
       where event_id = any(${eventIds})
@@ -555,6 +536,18 @@ function assertWarehouseRows(payloads, warehouseResult) {
       if (requireSucceeded && row.status !== 'succeeded') {
         failures.push(`${provider} row for ${expected.canonicalEventName} is ${row.status}, not succeeded.`)
       }
+
+      if (!row.has_browser_dispatch) {
+        failures.push(`Missing browser_dispatch observation for ${expected.canonicalEventName}.`)
+      }
+
+      if (!row.has_sgtm_ingress || !row.has_tag_execution) {
+        failures.push(`Missing sGTM ingress/tag execution receipt for ${expected.canonicalEventName}.`)
+      }
+    }
+
+    if (rowsByKey.has(`${payload.eventId}:google`)) {
+      failures.push(`Unexpected Google server_retry row for browser ${expected.canonicalEventName}.`)
     }
   }
 
@@ -594,7 +587,12 @@ function assertCheckoutAttributionSnapshot(snapshotResult) {
   return failures
 }
 
-function assertBrowserProviderEvidence(browserEvidence, networkEvidence, clarityConsentApplied) {
+function assertBrowserProviderEvidence(
+  payloads,
+  browserEvidence,
+  networkEvidence,
+  clarityConsentApplied
+) {
   const failures = []
   const dataLayerEvents = new Set(browserEvidence.dataLayerEvents.map(item => item.event))
 
@@ -604,14 +602,7 @@ function assertBrowserProviderEvidence(browserEvidence, networkEvidence, clarity
     }
   }
 
-  // Meta Pixel and Microsoft UET browser evidence is best-effort:
-  // - Some canonical commerce events are intentionally dispatched server-side
-  //   only to prevent duplicates (e.g. `AddToCart`).
-  // - The smoke script's `uetq` queue evidence relies on queue item shape that
-  //   differs from how we push arguments into `window.uetq`.
-  //
-  // Canonical provider correctness is verified via Supabase warehouse rows
-  // (see `assertWarehouseRows`) and not via fragile browser network probes.
+  failures.push(...assertCorrelatedProviderEvidence(payloads, networkEvidence, requiredEvents))
 
   if (!clarityConsentApplied) {
     failures.push('Microsoft Clarity Consent API V2 was not available/applied for ad_Storage and analytics_Storage.')
@@ -683,6 +674,8 @@ async function runSmoke() {
     await page.waitForTimeout(3000)
     logStage('accepting consent')
     await grantTrackingConsent(page)
+    networkEvidence.meta.length = 0
+    networkEvidence.microsoft_uet.length = 0
     const clarityConsentApplied = await page.evaluate(() => {
       if (typeof window.clarity !== 'function') return false
 
@@ -706,10 +699,33 @@ async function runSmoke() {
 
     logStage('waiting for product page')
     await page.waitForURL(/\/produkter\/[^/]+/, { timeout: eventTimeoutMs })
+
+    logStage('submitting header search')
+    await page.getByRole('button', { name: /Åpne søk/ }).click({ timeout: eventTimeoutMs })
+    const searchInput = page.getByPlaceholder('Søk på nettsiden..')
+    await searchInput.fill('utekos')
+    await searchInput.press('Enter')
+    const searchPayload = await waitForTrackedPayload(trackedPayloads, 'search')
+    await page.keyboard.press('Escape')
+
     logStage('clicking add-to-cart')
     await clickFirstVisible(page.locator('[data-track="ModalAddToCart"]'), 'add-to-cart')
     logStage('waiting for add_to_cart payload')
     const addToCartPayload = await waitForTrackedPayload(trackedPayloads, 'add_to_cart')
+
+    logStage('waiting for view_cart payload')
+    const viewCartPayload = await waitForTrackedPayload(trackedPayloads, 'view_cart')
+
+    logStage('removing cart line after confirmation')
+    await clickFirstVisible(page.locator('[data-track="CartRemoveItemOpen"]'), 'remove-item dialog trigger')
+    await clickFirstVisible(page.locator('[data-track="CartRemoveItem"]'), 'confirmed remove-item')
+    const removeFromCartPayload = await waitForTrackedPayload(trackedPayloads, 'remove_from_cart')
+    await page.keyboard.press('Escape')
+
+    logStage('re-adding product after remove-from-cart verification')
+    await clickFirstVisible(page.locator('[data-track="ModalAddToCart"]'), 'add-to-cart')
+    await waitForTrackedPayloadCount(trackedPayloads, 'add_to_cart', 2)
+    await waitForTrackedPayloadCount(trackedPayloads, 'view_cart', 2)
 
     logStage('clicking checkout')
     await clickFirstVisible(page.locator('[data-track="CheckoutButtonClick"]'), 'checkout')
@@ -718,7 +734,10 @@ async function runSmoke() {
 
     const payloads = {
       select_item: selectItemPayload,
+      search: searchPayload,
       add_to_cart: addToCartPayload,
+      view_cart: viewCartPayload,
+      remove_from_cart: removeFromCartPayload,
       begin_checkout: beginCheckoutPayload
     }
     const eventIds = requiredEvents.map(event => payloads[event.canonicalEventName].eventId)
@@ -732,7 +751,12 @@ async function runSmoke() {
     const payloadFailures = assertPayloadQuality(payloads)
     const warehouseFailures = assertWarehouseRows(payloads, warehouseResult)
     const checkoutAttributionFailures = assertCheckoutAttributionSnapshot(checkoutAttributionSnapshot)
-    const browserProviderFailures = assertBrowserProviderEvidence(browserEvidence, networkEvidence, clarityConsentApplied)
+    const browserProviderFailures = assertBrowserProviderEvidence(
+      payloads,
+      browserEvidence,
+      networkEvidence,
+      clarityConsentApplied
+    )
     const microsoftUetPurchaseFailures = assertMicrosoftUetPurchaseStatus(microsoftUetPurchaseStatus)
     const failures = [
       ...payloadFailures,

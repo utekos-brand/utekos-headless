@@ -27,7 +27,7 @@ import {
  * - Observerer seksjons-visninger og scroll-dybde som consent-gatede
  *   custom-events, slik at vi får rike interaksjonsdata uten å påvirke render.
  *
- * Consent håndteres nedstrøms: `useAnalytics` → `dispatchMetaTrackingEvent`
+ * Consent håndteres nedstrøms: `useAnalytics` → `dispatchTrackingEvent`
  * sjekker `hasMarketingConsent()`, og attribution-ruten sjekker request-consent.
  */
 export function LandingTracking() {

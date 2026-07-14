@@ -33,7 +33,7 @@ export function GoogleAnalyticsPageTracker() {
       pushGoogleDataLayerEvent(
         'PageView',
         generateEventID().replace('evt_', 'ga_'),
-        getPageViewParams(pathname, searchParams)
+        getPageViewParams(pathname)
       )
     })
   }, [hasGoogleAnalyticsConsent, pathname, searchParams])

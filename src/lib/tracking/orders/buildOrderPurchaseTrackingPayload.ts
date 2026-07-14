@@ -129,11 +129,15 @@ function getOrderValue(order: OrderPaid, items: GA4OrderItem[]): number {
 }
 
 function getGoogleClientId(order: OrderPaid, attribution: CheckoutAttribution | null): string | undefined {
-  return attribution?.ga_client_id ?? getNoteAttribute(order, '_ga_client_id')
+  return attribution?.consentProvenance?.services.googleAnalytics === true ?
+      attribution.ga_client_id ?? getNoteAttribute(order, '_ga_client_id')
+    : undefined
 }
 
 function getGoogleSessionId(order: OrderPaid, attribution: CheckoutAttribution | null): string | undefined {
-  return attribution?.ga_session_id ?? getNoteAttribute(order, '_ga_session_id')
+  return attribution?.consentProvenance?.services.googleAnalytics === true ?
+      attribution.ga_session_id ?? getNoteAttribute(order, '_ga_session_id')
+    : undefined
 }
 
 export function buildOrderPurchaseTrackingPayload(
@@ -150,9 +154,12 @@ export function buildOrderPurchaseTrackingPayload(
   const coupon = getOrderCoupon(order)
   const clientId = getGoogleClientId(order, attribution)
   const sessionId = getGoogleSessionId(order, attribution)
-  const externalId = normalizeAndHashMetaUserData({
-    external_id: getOrderExternalId(order, attribution)
-  }).external_id
+  const externalId =
+    attribution?.consentProvenance?.services.meta === true ?
+      normalizeAndHashMetaUserData({
+        external_id: getOrderExternalId(order, attribution)
+      }).external_id
+    : undefined
 
   return {
     schemaVersion: 1,

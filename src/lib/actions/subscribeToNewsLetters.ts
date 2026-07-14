@@ -3,7 +3,6 @@
 import { z } from 'zod'
 import { logToAppLogs } from '@/lib/utils/logToAppLogs'
 import { syncSubscriberToShopify } from '@/lib/shopify/syncSubscriberToShopify'
-import { trackNewsletterSignup } from '@/lib/tracking/services/trackNewsletterSignup'
 import { sendWelcomeEmail } from '@/lib/email/sendWelcomeEmail'
 
 export type ActionState = {
@@ -32,8 +31,7 @@ export async function subscribeToNewsletter(
   try {
     const results = await Promise.allSettled([
       sendWelcomeEmail(email), // 0: E-post
-      syncSubscriberToShopify(email), // 1: Shopify
-      trackNewsletterSignup(email) // 2: Tracking
+      syncSubscriberToShopify(email) // 1: Shopify
     ])
 
     const emailResult = results[0]
@@ -52,14 +50,14 @@ export async function subscribeToNewsletter(
     }
 
     await logToAppLogs('INFO', 'Newsletter Subscription Flow Completed', {
-      email
+      emailPresent: true
     })
 
     return {
       status: 'success',
       message: 'Takk! Velkomstmail er på vei til din innboks.'
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Critical Newsletter Error:', error)
 
     return {

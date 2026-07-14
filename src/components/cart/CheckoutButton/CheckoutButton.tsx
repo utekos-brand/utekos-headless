@@ -4,20 +4,19 @@
 import { track } from '@vercel/analytics'
 import * as React from 'react'
 import { cn } from '@/lib/utils/className'
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { resolveClientGA4Data } from '@/lib/tracking/google/getClientGA4Data'
 import { getClientMetaUserData } from '@/lib/tracking/meta/utils/getClientMetaUserData'
 import { Button } from '@/components/ui/button'
 import type {
-  CaptureBody,
-  MetaUserData
+  CaptureBody
 } from 'types/tracking/meta'
 import { getCheckoutAriaLabel } from './getCheckoutAriaLabel'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
 import { getCookie } from '@/components/analytics/Meta/getCookie'
 import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
-import { hasCategoryConsent } from '@/lib/tracking/consent/hasCategoryConsent'
 import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
+import { shouldCaptureCheckoutIdentifiers } from '@/lib/tracking/consent/hasBrowserTrackingConsent'
 import {
   COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME,
   COOKIEBOT_META_SERVICE_NAME,
@@ -87,7 +86,7 @@ export const CheckoutButton = ({
       const rawEventID = generateEventID()
       const eventID = rawEventID.replace('evt_', 'ic_')
       const value = Number.parseFloat(subtotalAmount || '0') || 0
-      const userData: MetaUserData | undefined =
+      const userData =
         hasServiceConsent(COOKIEBOT_META_SERVICE_NAME) ?
           getClientMetaUserData()
         : undefined
@@ -117,7 +116,7 @@ export const CheckoutButton = ({
         }).catch(() => {})
       }
 
-      if (hasCategoryConsent('marketing')) {
+      if (shouldCaptureCheckoutIdentifiers(hasServiceConsent)) {
         const ga4Data =
           hasServiceConsent(COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME) ?
             await resolveClientGA4Data()
@@ -141,9 +140,10 @@ export const CheckoutButton = ({
         )
       }
 
-      await dispatchMetaTrackingEvent({
+      await dispatchTrackingEvent({
         eventName: 'InitiateCheckout',
         eventId: eventID,
+        destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
         eventData: {
           value,
           currency,

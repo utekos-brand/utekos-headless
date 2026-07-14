@@ -71,13 +71,6 @@ declare global {
           push: (...items: Array<string | Record<string, unknown>>) => number | void
         }
 
-    uet_report_conversion?: (
-      productId: string | string[],
-      revenueValue: number,
-      currency?: string,
-      eventId?: string
-    ) => void
-
     klarnaAsyncCallback?: () => void
 
     Klarna?: {

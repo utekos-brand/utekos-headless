@@ -1,6 +1,6 @@
 # Deployment And Migration Checklist
 
-Status date: 2026-07-07
+Status date: 2026-07-14
 
 This is the mandatory release checklist for Utekos Headless. Use it
 before every deploy, production mutation, provider change, GTM publish,
@@ -27,13 +27,98 @@ known and completed in the correct order.
 - Treat row counts as evidence only when source, status, reason,
   unresolved/resolved state, and replay policy are visible.
 
+## Canonical Git And Vercel Release Model
+
+- `origin/main` is the only canonical production source reference.
+- Local `main` must be clean and point to the same commit as
+  `origin/main`. Do not develop or create commits directly on local
+  `main`.
+- Intentional work belongs on a named branch created from the latest
+  `origin/main`. A branch being ahead is expected; a local `main`
+  being ahead, behind after synchronization, dirty, or diverged is
+  not.
+- Linked worktrees are working directories, not additional production
+  references. Use them only for concurrent active tasks, base their
+  branches on current `origin/main`, and remove them when the task is
+  committed or archived.
+- `npm run repo:sync` is the only local main synchronization command.
+  It fetches and prunes `origin`, then performs a fast-forward only
+  when local `main` is clean and behind. It never stages, commits,
+  pushes, merges divergent history, or deploys.
+- `scripts/deploy/sync-and-deploy.mjs` is retired and exits fail-closed.
+  It must never be restored as a combined stage/commit/push/direct-
+  deploy command.
+- The standard Vercel path is GitHub-based: a pushed candidate branch
+  receives a preview, and an explicitly approved pull-request merge to
+  `main` creates production. Do not run a second direct Vercel
+  production deployment for the same release.
+
+### Local integration audit 2026-07-14
+
+The isolated Git operations, Microsoft Merchant, PostHog SDK, Klarna
+product-card, storefront accessibility, MCP operations and source
+hygiene releases were merged into a temporary local audit branch from
+the current `origin/main`. There were no merge conflicts. Frozen
+install without a minimum-release-age bypass, Next route type
+generation, 14/14 targeted tests, MCP generation with 52 servers,
+MCP/commerce doctors, ESLint for every changed code file, TypeScript
+and a Vercel-like production build with 96/96 routes passed. The
+temporary audit ref was removed after recording the result. It was not
+pushed, deployed or treated as an alternative production reference.
+
+This audit proves code-level compatibility. It does not replace the
+Klarna provider preview gate, production environment verification,
+Supabase migration ordering for the separate sGTM release, or explicit
+approval for push, merge and production deployment.
+
+### Full sGTM integration audit 2026-07-14
+
+The seven storefront/platform releases and `codex/sgtm-remediation` were
+also merged into one temporary branch from `origin/main`. Two documentation
+conflicts were resolved explicitly; runtime files had no conflicts. Frozen
+install without a supply-chain bypass, 111 changed tests, changed-code ESLint,
+TypeScript, MCP build with 52 servers, MCP/commerce doctors and a Vercel-like
+production build with 99/99 static pages passed.
+
+Supabase linked lint passed and the dry-run contains exactly
+`20260712120000_add_tagging_observations_and_verified_dispatch_status.sql`.
+The provider report passed with 0 active failures, 0 unresolved dead letters
+and 0 alerts, and seven public sGTM/GTM loader endpoints passed. The release is
+still no-go: the migration is unapplied; receipt-secret and protected Vercel
+env are absent; Cloud Run is `0/5` instead of `3/10`; the dedicated identity,
+secret mount, uptime, metrics, alerts and budget controls are incomplete; and
+the GTM publish is unapproved. Local GTM browser smoke also proved duplicate
+Cookiebot loading until the planned deletion of web tag `126` is published.
+
+No Supabase migration, Vercel env change, Cloud Run change, GTM publish,
+provider write, push or deploy was performed by this audit.
+
+### Remaining candidate classification 2026-07-14
+
+- `codex/release-mcp-operations` contains only MCP configuration,
+  operational servers, safe placeholder templates and their runbooks.
+  It deliberately excludes the broad candidate's unused Google package
+  expansion. The official Google Analytics MCP runtime is pinned at
+  0.6.0 and verified against the current
+  [Google Analytics MCP setup](https://developers.google.com/analytics/devguides/MCP).
+- `codex/release-source-hygiene` contains a comment removal and the
+  single-semicolon correction in migration `20260711190423`. That
+  migration version already exists locally and remotely, so this branch
+  must not trigger a schema push. Linked application-schema lint passes.
+- The `posthog-js@1.399.2` minimum-release-age exclusion from the broad
+  candidate was rejected. Frozen install now succeeds without bypassing
+  the repository's supply-chain age policy.
+- Every path from `codex/production-candidate-20260714` is therefore
+  classified. The branch remains an archive, not a deploy unit.
+
 ## Required Preflight
 
 Run these before deciding the release order:
 
 | Check | Command or source | Required conclusion |
 | --- | --- | --- |
-| Worktree scope | `git status --short` | Identify relevant files and ignore unrelated dirty files. |
+| Canonical refs | `npm run repo:sync`, then `git rev-parse main origin/main` | Both refs resolve to the same commit before a new candidate branch is created. |
+| Worktree scope | `git status --short` | Identify every intentional changed file and classify whether it is verified, pending verification, or a local artifact. |
 | Runtime diff | `git diff --name-only` | Identify whether app runtime, Supabase, env, MCP, GTM, scripts, or docs changed. |
 | Supabase history | `SUPABASE_NO_TELEMETRY=1 npx supabase migration list --linked` | Know exactly which local migrations are missing remote and which remote migrations are missing local. |
 | Supabase schema proof | `SUPABASE_NO_TELEMETRY=1 npx supabase db dump --linked --schema ops,marketing --file /tmp/utekos-linked-ops-marketing-schema.sql` | Confirm production has the columns, constraints, tables, and views the runtime will use. |
@@ -56,7 +141,7 @@ Run these before deciding the release order:
 | Vercel env vars | Pull/inspect env state and document changed keys. | Redeploy Vercel after env change. | Deployment inspect, runtime logs, route smoke. |
 | Dead-letter replay runtime | No Supabase migration required when only app cron/route changes. | Vercel after code merge. | `/api/cron/replay-dead-letter` returns `401` (not `404`); `npm run ops:provider-dispatch-report`. |
 | Microsoft UET CAPI env | Set UET tag ApiToken (Conversions API auth) in Vercel Production. | Redeploy after env change. | Purchase row not `missing_capi_token`; see Microsoft env gate. |
-| Shopify/Klarna/Sanity runtime | Confirm provider docs and required env. | Vercel. | Route/action smoke and provider response proof. |
+| Shopify/Klarna/Sanity runtime | Confirm provider docs, required env and provider-side allowed origins. | Vercel. | Route/action smoke, visible provider UI and provider response proof. |
 | Docs-only root docs | No migration. | No production deploy required unless the deploy is used to publish docs. | `git diff --check` and direct file inspection. |
 
 ## Production Release Order
@@ -71,10 +156,18 @@ Run these before deciding the release order:
    migrations first.
 5. Verify Supabase production schema and migration history.
 6. Run local verification again after migration.
-7. Deploy to Vercel production.
-8. Inspect the Vercel deployment until it is ready or failed.
-9. Run post-deploy smoke checks for the changed surfaces.
-10. Update [PLAN.md](PLAN.md) with the final deployment and migration
+7. Push the named candidate branch only after explicit push approval;
+   inspect the Git-triggered Vercel preview.
+8. Run preview smoke checks for the changed surfaces and record the
+   result.
+9. Merge the pull request to `main` only after explicit production
+   approval. This GitHub merge is the production trigger.
+10. Inspect the Git-triggered Vercel production deployment until it is
+    ready or failed. Do not run a duplicate direct CLI deployment.
+11. Run post-deploy smoke checks for the changed surfaces.
+12. Run `npm run repo:sync` from the clean local `main` checkout and
+    verify `main` equals `origin/main`.
+13. Update [PLAN.md](PLAN.md) with the final deployment and migration
     status.
 
 ## Supabase Production Gate
@@ -153,16 +246,57 @@ TRACKING_SMOKE_BASE_URL=https://utekos.no npm run tracking:smoke
 Required sequence:
 
 1. Confirm project link with `.vercel/project.json` or `.vercel/repo.json`.
-2. Confirm Vercel auth with `vercel whoami`.
-3. Confirm the intended scope/team from the linked project file.
+2. Confirm the Vercel project is connected to
+   `utekos-brand/utekos-headless` and tracks `main` as its production
+   branch.
+3. Confirm Vercel inspection auth with `vercel whoami` when the CLI is
+   available, and confirm the intended scope/team from the linked
+   project file.
 4. Ensure required Supabase migrations and provider/env changes are done
    first.
 5. Run `pnpm exec tsc --noEmit` and relevant tests.
-6. Deploy with `vercel deploy --prod -y --archive=tgz` or the approved
-   project workflow.
-7. Inspect with `vercel inspect <deployment-url>`.
-8. If failed, fetch build logs and stop. Do not retry blindly.
-9. If ready, verify the production domain and relevant runtime surfaces.
+6. Push the named candidate branch only after explicit approval and
+   inspect its Git-triggered preview.
+7. Merge the approved pull request to `main`; do not run a direct
+   `vercel deploy --prod` for the same release.
+8. Inspect the Git-triggered production deployment with
+   `vercel inspect <deployment-url>` or the Vercel dashboard.
+9. If failed, fetch build logs and stop. Do not retry blindly.
+10. If ready, verify the production domain and relevant runtime surfaces.
+
+### Klarna Express Checkout gate (Preview + Production)
+
+Klarna Express Checkout is not verified by the presence of its SDK or
+an empty container. The release must prove that Klarna renders the
+actual button and accepts the configured origin.
+
+Required before preview sign-off:
+
+1. Verify that `NEXT_PUBLIC_KLARNA_CLIENT_ID` contains the intended
+   Klarna Client Identifier in both Vercel Preview and Production. Do
+   not print the value in logs or documentation.
+2. Verify in Klarna that the exact preview origin and
+   `https://utekos.no` are allowed for that Client Identifier.
+3. Keep a single Klarna SDK library load per document. Multiple product
+   cards may initialize separate containers through the shared loader.
+4. Run the Vercel build. `prebuild` must fail closed when the Client
+   Identifier is empty in a Vercel build.
+5. In the Git-triggered preview, verify desktop and mobile DOM,
+   screenshot, console and network. At least one eligible product must
+   show a visible «Pay with Klarna» button; an SDK request or empty
+   container alone is a failed gate.
+6. Exercise provider authorization only with an approved test flow and
+   confirm the expected completion/redirect response without creating
+   an unintended live order.
+
+Current status 2026-07-14: production fails the visible-button gate.
+`/produkter` has no product-card integration, while the product-detail
+container remains empty despite the SDK loading. The local candidate
+passes responsive rendering with a controlled SDK stub. Read-only Vercel
+CLI confirms that `NEXT_PUBLIC_KLARNA_CLIENT_ID` exists as a sensitive
+variable targeting both Preview and Production without exposing its value.
+Provider acceptance remains blocked until Klarna allowed origins and the
+visible button are verified in the Git-triggered preview.
 
 ## Tracking And Paid-Media Post-Deploy
 
@@ -182,6 +316,167 @@ provider OK without provider-specific proof.
 | Microsoft Clarity | Advertising Dashboard/UET linkage readiness and Consent API V2 `ad_Storage`/`analytics_Storage`. |
 | PostHog | Consent-gated init, manual pageview/product events, no autocapture drift, masked replay only. |
 | Supabase | `marketing.event_ledger`, `ops.provider_dispatch_attempts`, `ops.provider_dispatch_health`, `ops.dead_letter_summary`. |
+
+## sGTM Remediation Release Gate
+
+This gate applies to the two-stage remediation described in
+[`PLAN.md`](PLAN.md) and
+[`src/lib/tracking/server-side-tagging.md`](src/lib/tracking/server-side-tagging.md).
+Approval from an earlier telemetry release does not authorize these provider,
+database, deployment, GTM, Shopify, or Cloud Run mutations.
+
+### Current preflight status 2026-07-14
+
+- The full local integration with the storefront/platform releases passed
+  frozen install, 111 changed tests, changed-code ESLint, TypeScript, MCP build
+  and doctors, and a Vercel-like production build with 99/99 static pages.
+- Supabase linked history and lint are green. The dry-run contains exactly
+  `20260712120000_add_tagging_observations_and_verified_dispatch_status.sql`;
+  it has not been applied.
+- The provider-dispatch report is green with 0 active failures, 0 unresolved
+  dead letters and 0 alerts. Seven public sGTM/GTM loader endpoints are green.
+- The hardening verifier remains deliberately red: the receipt secret and
+  protected Vercel receipt env are absent, Cloud Run is still `0/5` instead of
+  `3/10`, the dedicated service identity/mount is absent, and required uptime,
+  logging metrics, alert policies and budget configuration are missing or
+  drifted.
+- Browser smoke with local GTM enabled proves duplicate Cookiebot loading while
+  the live GTM configuration still contains web tag `126`. The app owns the
+  single CMP loader; the coordinated GTM release must delete tag `126` before
+  consent sign-off.
+- A fresh Quick Preview capture is still required immediately before publish.
+  The latest refresh attempt was blocked by DNS resolution for
+  `tagmanager.googleapis.com`; no GTM resource was changed.
+
+No Supabase migration, Vercel env change, Cloud Run change, GTM publish,
+provider write or production deploy was performed by this preflight.
+
+### Local preflight
+
+```bash
+node --import tsx --test src/lib/tracking/**/*.test.ts
+pnpm exec tsc --noEmit
+npm run build
+npm run mcp:build
+npm run mcp:doctor
+npm run mcp:commerce-tracking:doctor
+npm run tracking:sgtm-loaders:verify
+npm run --silent tracking:gtm-quick-preview:capture > /tmp/utekos-gtm-quick-preview.json
+GTM_PUBLISH_CONFIRM=I_APPROVE_GTM_PUBLISH GTM_QUICK_PREVIEW_EVIDENCE=/tmp/utekos-gtm-quick-preview.json npm run tracking:gtm-publish-guard
+npm run tracking:sgtm-hardening:plan
+npm run tracking:sgtm-hardening:verify
+SUPABASE_NO_TELEMETRY=1 npx supabase migration list --linked
+SUPABASE_NO_TELEMETRY=1 npx supabase db push --linked --dry-run
+SUPABASE_NO_TELEMETRY=1 npx supabase db lint --linked --schema marketing,ops
+```
+
+The publish guard must fail closed until both `GTM_PUBLISH_CONFIRM` and fresh
+Quick Preview evidence are supplied. The hardening verifier must remain a
+read-only failure report until Cloud Run and Monitoring changes are explicitly
+approved.
+
+The Quick Preview file must be produced by the capture command. The guard
+repeats the official `workspaces.quick_preview` call and compares compiler and
+sync status, exact workspace changes, live fingerprints, resource digests,
+workspace fingerprints and client `6`. It also requires a clean git worktree;
+store evidence outside the repository.
+
+### Receipt key contract
+
+- Generate at least 32 random bytes and store their standard base64 encoding as
+  `keys.receipt-key` in the Secret Manager-backed JSON file mounted into the
+  tagging service.
+- Set `SGTM_CREDENTIALS` on the tagging service to the mounted file path.
+- Store that exact base64 value as the protected Vercel Preview/Production
+  secret `SGTM_RECEIPT_HMAC_KEY_BASE64`.
+- Never commit either the raw key, base64 value, credentials file, or generated
+  signature.
+- Rotate both surfaces together; smoke the receipt route before retiring the
+  previous key.
+
+The apply tool is dry-run by default. Its mutating phases are deliberately
+separate and each requires the exact confirmation printed by
+`tracking:sgtm-hardening:plan`: `receipt-secret-preview` may create the Secret
+Manager resource or add its first version and then configures Preview;
+`vercel-production` reuses that version; `cloud-secret` only mounts the existing
+enabled secret through the runtime identity; Budget API enablement and
+operational capacity/monitoring remain separate. An existing enabled version is
+always reused. An existing secret with zero versions can receive its first
+version only under the `receipt-secret-preview` confirmation. Access, parsing,
+disabled-version or ambiguous-not-found errors fail closed and never authorize
+automatic replacement or rotation. Same-name monitoring drift fails closed and
+must be reconciled explicitly.
+
+Vercel does not expose a protected environment value through its list API, so
+the read-only hardening verifier can prove presence/type/target but cannot prove
+cross-surface key equality. Equality between the mounted Secret Manager key and
+Vercel is proven by the signed Preview receipt smoke before GTM publication;
+signature failure blocks the release.
+
+### Release 1: privacy containment
+
+Requires one explicit approval that names all of these actions:
+
+1. Disable Google user-provided-data capabilities and automatic DOM detection.
+2. Disable GA4 user-provided-data collection and enable email redaction.
+3. Create the server-container global PII exclude transformation, constrain the
+   purchase trigger to the intended MP client, and preserve client `6`.
+4. Remove browser `purchase` from the web-container commerce trigger.
+5. Run Quick Preview and publish both containers.
+
+Rollback may target only the latest privacy-safe version. It must never restore
+UPD collection or browser purchase ownership.
+
+### Release 2: runtime, warehouse, GTM, and operations
+
+Run in this order, with a separate explicit approval at every numbered mutation
+gate:
+
+1. Apply `20260712120000_add_tagging_observations_and_verified_dispatch_status.sql`
+   to the canonical Supabase project, then lint and dump the schemas again.
+2. Run the separately approved `receipt-secret-preview` hardening phase with
+   `SGTM_HARDENING_APPLY=I_APPROVE_RECEIPT_SECRET_AND_VERCEL_PREVIEW`. It
+   creates the Secret Manager resource or its first version only when absent,
+   otherwise reuses the enabled latest key, and sets
+   `SGTM_RECEIPT_HMAC_KEY_BASE64` in Vercel Preview only. Deploy and test Preview
+   without unapproved events.
+3. Run the separately approved `vercel-production` phase to reuse that exact
+   key in Production only, then deploy Vercel Production and wait for `READY`.
+4. Run the separately approved `cloud-secret` phase. It must find an existing,
+   enabled, valid secret version; it creates only the dedicated Cloud Run
+   service identity/IAM binding, mounts the key file at the exact configured
+   path using version `latest`, and sets `SGTM_CREDENTIALS`. Prove the receipt
+   endpoint from Preview before a monitoring tag can be published.
+5. Quick Preview and publish the web container first, then the server container,
+   only after runtime compatibility and the secret mount are proven.
+6. Set Cloud Run service-level min/max instances to `3/10`, preserve concurrency
+   `80`, and create the approved uptime, exact alert policies and 80/100 budget.
+7. Create the Shopify `refunds/create` subscription or App Pixel only after the
+   corresponding Shopify mutation is explicitly approved.
+8. Run production smoke; a real order, refund, or live tracking event needs its
+   own concrete approval and test identifier.
+
+The live event smokes are intentionally not part of a default deploy command:
+
+```bash
+TRACKING_SMOKE_BASE_URL=https://utekos.no npm run tracking:smoke
+TRACKING_SMOKE_BASE_URL=https://utekos.no npm run tracking:commerce-smoke
+```
+
+### CSP enforcement gate
+
+Keep `Content-Security-Policy-Report-Only` for at least the 24-hour observation
+window. The policy has a same-origin, size-limited report endpoint that logs
+only directive and host names. Do not enforce until normal navigation,
+checkout, Cookiebot, Meta, Microsoft, Clarity, PostHog and sGTM show no
+unexplained critical violations. Enforcement is a separate production change;
+it must not add a nonce design that forces the entire storefront to dynamic
+rendering.
+
+Final sign-off requires the 24-hour observation window and matching control
+event evidence in GA4, Supabase, Cloud Run and GTM. GA4 BigQuery is a separate
+blocking sign-off item while `analytics_489598217` is absent; GA4-only evidence
+is explicitly interim and must not be represented as BigQuery proof.
 
 ## Microsoft Environment Gate (UET tag token vs Ads API OAuth)
 
