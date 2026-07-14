@@ -5,12 +5,13 @@ import { variantSwatchButtonClassName } from '@/components/ProductCard/ProductCo
 import type { ProductVariantSelectorProps } from '@types'
 import { cn } from '@/lib/utils/className'
 import { InlineText } from '@/components/typography/TypographyInlineText'
+import { Check } from 'lucide-react'
 
 type ProductVariantSelectorViewProps =
   ProductVariantSelectorProps & { compactMobile?: boolean }
 
 const sizeOptionClassName =
-  'btn-variant-option inline-flex hover:cursor-pointer min-h-9 items-center justify-center rounded-lg px-3 py-1.5 text-sm leading-none font-medium whitespace-nowrap transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-border dark:focus-visible:ring-dark-border focus-visible:ring-offset-2 focus-visible:ring-offset-primary dark:focus-visible:ring-offset-dark-primary focus-visible:outline-none'
+  'btn-variant-option inline-flex hover:cursor-pointer min-h-9 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm leading-none font-medium whitespace-nowrap transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-border dark:focus-visible:ring-dark-border focus-visible:ring-offset-2 focus-visible:ring-offset-primary dark:focus-visible:ring-offset-dark-primary focus-visible:outline-none'
 
 const selectedSizeOptionClassName =
   'border-primary dark:border-dark-primary bg-background dark:bg-dark-background text-foreground '
@@ -123,6 +124,14 @@ export function ProductVariantSelector({
                     )}
                   >
                     <InlineText>{value.name}</InlineText>
+                    {selectedOptions[option.name] ===
+                    value.name ?
+                      <Check
+                        className='size-3.5 shrink-0'
+                        strokeWidth={2.5}
+                        aria-hidden='true'
+                      />
+                    : null}
                   </button>
                 ))
               }

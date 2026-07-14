@@ -51,7 +51,7 @@ export function TestimonialConstellation() {
             >
               <div
                 className='flex gap-0.5 drop-shadow-sm'
-                style={{ color: 'var(--accent)' }}
+                style={{ color: 'var(--review-star)' }}
               >
                 {[...Array(5)].map((_, i) =>
                   i < 4 ?

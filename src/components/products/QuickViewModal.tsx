@@ -78,7 +78,7 @@ export function QuickViewModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className='max-h-screen overflow-y-auto bg-[#0d3333t] sm:max-w-4xl md:max-h-[70vh]'>
+      <DialogContent className='max-h-[calc(100svh-2rem)] overflow-y-auto bg-popover text-popover-foreground shadow-2xl sm:max-w-4xl md:max-h-[70vh]'>
         {isLoading || !productData || !selectedVariant ?
           <div className='p-6'>
             <DialogTitle className='sr-only'>
@@ -90,14 +90,14 @@ export function QuickViewModal({
             <QuickViewModalSkeleton />
           </div>
         : <>
-            <DialogHeader className='space-y-3 py-2'>
-              <DialogTitle className='text-3xl font-bold'>
+            <DialogHeader className='space-y-3 py-2 pr-10'>
+              <DialogTitle className='text-3xl font-bold text-popover-foreground'>
                 {productData.title}
               </DialogTitle>
               {productData.description && (
                 <DialogDescription
                   render={
-                    <p className='max-w-2xl text-base leading-relaxed text-foreground' />
+                    <p className='max-w-2xl text-base leading-relaxed text-popover-foreground/80' />
                   }
                 >
                   {productData.description}
@@ -128,10 +128,10 @@ export function QuickViewModal({
 
               <div className='flex flex-col gap-8'>
                 <div className='space-y-2'>
-                  <p className='text-sm tracking-wide text-foreground uppercase'>
+                  <p className='text-sm tracking-wide text-popover-foreground/75 uppercase'>
                     Pris
                   </p>
-                  <div className='text-3xl font-bold'>
+                  <div className='text-3xl font-bold text-popover-foreground'>
                     <Price
                       amount={selectedVariant.price.amount}
                       currencyCode={
