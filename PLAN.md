@@ -104,7 +104,7 @@ MUTASJON ER UTFØRT I DENNE GIT-AVSTEMMINGEN.
   statiske sider var grønne. Auditreferansen ble fjernet etter at
   resultatet var dokumentert; den ble ikke pushet eller deployet.
 - `codex/sgtm-remediation` bevarer tracking-, receipt-, refund-, sGTM-
-  tooling- og Supabase-kandidatene i tretten commits oppå samme
+  tooling- og Supabase-kandidatene i en navngitt commitserie oppå samme
   `origin/main`. Review-diff-artifacts er bevart separat i en navngitt
   lokal stash og er ikke runtimekode. Kode, tester, TypeScript, build,
   Supabase lint og read-only providerstatus er grønne. Migrasjonen
