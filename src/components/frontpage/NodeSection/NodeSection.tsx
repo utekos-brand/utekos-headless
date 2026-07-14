@@ -26,7 +26,10 @@ export async function NodeSection() {
 
       <div className='grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-stretch lg:gap-8'>
         <div
-          className={cn(nodeSectionClassName, 'flex flex-col')}
+          className={cn(
+            nodeSectionClassName,
+            'flex flex-col lg:justify-center'
+          )}
         >
           <div
             className='dark:via-border pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-border to-transparent'

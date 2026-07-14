@@ -67,7 +67,7 @@ const cardMotion = {
 } satisfies Variants
 
 const cardSizeClasses =
-  'absolute aspect-[1.2/1] w-[84%] @2xs/stack:aspect-[1.62/1] sm:w-[76%] sm:aspect-[2/1] lg:w-[74%]'
+  'absolute aspect-[1.2/1] w-[84%] @2xs/stack:aspect-[1.62/1] sm:w-[76%] sm:aspect-[2/1]! lg:w-[74%]'
 
 const cardBaseClasses =
   '@container/card overflow-hidden rounded-xl border p-[clamp(0.875rem,4.5cqi,1.5rem)] text-[clamp(0.82rem,3.45cqi,1rem)] shadow-2xl shadow-black/16 will-change-transform'

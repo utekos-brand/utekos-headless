@@ -22,13 +22,13 @@ export function ComfyrobeImageSection({
     <div
       ref={ref}
       className={cn(
-        'will-animate-fade-in-scale relative min-w-0',
+        'will-animate-fade-in-scale relative h-full min-w-0',
         isInView && 'is-in-view'
       )}
     >
-      <Carousel className='w-full overflow-hidden rounded-2xl'>
-        <CarouselContent>
-          <CarouselItem>
+      <Carousel className='h-full w-full overflow-hidden rounded-2xl'>
+        <CarouselContent className='h-full'>
+          <CarouselItem className='h-full'>
             <ComfyrobeProductImage image={image} />
           </CarouselItem>
         </CarouselContent>

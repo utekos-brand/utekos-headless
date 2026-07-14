@@ -12,9 +12,9 @@ interface StoryNodeViewProps {
 }
 
 const sharedStoryCardStyles = {
-  card: 'border-card-foreground/16 bg-[oklch(0.2956_0.0618_48.42)] text-card-foreground',
+  card: 'border-card-foreground/16 bg-card text-card-foreground',
   iconWrap:
-    'border-card-foreground/22 bg-[oklch(0.3565_0.0546_194.98)] text-card-foreground'
+    'border-card-foreground/30 bg-card-foreground text-card'
 } as const
 
 const toneStyles = {

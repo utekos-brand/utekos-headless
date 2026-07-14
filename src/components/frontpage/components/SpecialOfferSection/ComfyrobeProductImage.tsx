@@ -8,13 +8,16 @@ type ComfyrobeProductImageProps = {
 
 export function ComfyrobeProductImage({ image }: ComfyrobeProductImageProps) {
   return (
-    <AspectRatio ratio={1 / 1} className='bg-transparent'>
+    <AspectRatio
+      ratio={1 / 1}
+      className='bg-transparent lg:h-full lg:aspect-auto!'
+    >
       <Image
         src={image.image.url}
         alt={image.image.altText || 'Comfyrobe™ - Vanntett og vindtett robe'}
         height={image.image.height}
         width={image.image.width}
-        className='object-cover brightness-90 aspect-square transition-transform duration-500 hover:scale-105'
+        className='size-full object-cover brightness-90 transition-transform duration-500 hover:scale-105'
         sizes='(max-width: 1024px) 80vw, 40vw'
         quality={95}
         priority
