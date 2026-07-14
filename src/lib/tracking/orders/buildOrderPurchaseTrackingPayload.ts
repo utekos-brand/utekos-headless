@@ -154,9 +154,12 @@ export function buildOrderPurchaseTrackingPayload(
   const coupon = getOrderCoupon(order)
   const clientId = getGoogleClientId(order, attribution)
   const sessionId = getGoogleSessionId(order, attribution)
-  const externalId = normalizeAndHashMetaUserData({
-    external_id: getOrderExternalId(order, attribution)
-  }).external_id
+  const externalId =
+    attribution?.consentProvenance?.services.meta === true ?
+      normalizeAndHashMetaUserData({
+        external_id: getOrderExternalId(order, attribution)
+      }).external_id
+    : undefined
 
   return {
     schemaVersion: 1,

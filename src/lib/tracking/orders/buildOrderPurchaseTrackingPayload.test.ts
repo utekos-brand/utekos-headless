@@ -157,6 +157,17 @@ test('prefers the checkout external id over the Shopify customer id', () => {
     userData: {
       external_id: 'user_checkout_123'
     },
+    consentProvenance: {
+      schemaVersion: 1,
+      source: 'cookiebot',
+      capturedAt: '2026-07-12T10:00:00.000Z',
+      services: {
+        googleAnalytics: false,
+        googleAds: false,
+        meta: true,
+        microsoftAdvertising: false
+      }
+    },
     ts: Date.now()
   }
 
@@ -169,4 +180,33 @@ test('prefers the checkout external id over the Shopify customer id', () => {
     payload.userData?.external_id,
     sha256('user_checkout_123')
   )
+})
+
+test('omits external id without documented Meta consent', () => {
+  const attribution: CheckoutAttribution = {
+    cartId: 'cart-token',
+    checkoutUrl: 'https://kasse.utekos.no/checkouts/checkout-token',
+    userData: {
+      external_id: 'user_checkout_123'
+    },
+    consentProvenance: {
+      schemaVersion: 1,
+      source: 'cookiebot',
+      capturedAt: '2026-07-12T10:00:00.000Z',
+      services: {
+        googleAnalytics: true,
+        googleAds: false,
+        meta: false,
+        microsoftAdvertising: false
+      }
+    },
+    ts: Date.now()
+  }
+
+  const payload = buildOrderPurchaseTrackingPayload(
+    createOrder(),
+    attribution
+  )
+
+  assert.equal(payload.userData, undefined)
 })
