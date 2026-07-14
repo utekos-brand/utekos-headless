@@ -101,6 +101,26 @@ Produksjonsdomenet peker nå til ny Cloud Run domain mapping og er verifisert gr
 
 Etter DNS-cutover er Google sitt helsesjekkendepunkt `/healthy`.
 
+## Loader-hendelse og permanent klientinvariant (2026-07-12)
+
+Server-container-versjon `20` erstattet ved en feil den innebygde klienten `Google Tag Manager Web
+Container` (`type=gtm_client`, klient-ID `6`) med Cookiebot sin custom-template-klient. Dermed fantes ingen
+klient som kunne kreve `gtm.js`, `ns.html` eller `gtag/js`; Cloud Run og domenet var friske, men returnerte
+HTTP 400 for loaderne. Feilen ble videreført i versjon `21`.
+
+Produksjonsrettingen er server-container-versjon `22`:
+
+- Klient `6` er igjen den innebygde `gtm_client` og tillater `GTM-5TWMJQFP`, `GT-MKRLF5WK`,
+  `GT-P3JGLNDZ` og `AW-18180376403`.
+- Cookiebot consent signals er en separat custom-template-klient (`cvt_248521914_23`, klient-ID `34`).
+- Disse klientene skal aldri overskrive eller erstatte hverandre.
+- Før og etter enhver server-container-publisering må `npm run tracking:sgtm-loaders:verify` være grønn.
+- `npm run mcp:commerce-tracking:doctor` skal feile dersom noen av de fire kanoniske sGTM-endepunktene
+  ikke svarer HTTP 200; en strukturert feilrespons regnes ikke lenger som en vellykket legekontroll.
+
+Versjon `22` ble verifisert over tre runder mot både `cloud.server.utekos.no` og direkte Cloud Run-URL:
+`/healthy`, `uc-consent-signals.js`, `gtm.js`, `ns.html` og alle tre `gtag/js`-loaderne svarte HTTP 200.
+
 ## Verifiserte endepunkter for produksjonsdomene (før DNS-cutover, 2026-06-15)
 
 | Endepunkt                                                                   | Forventet     | Status |

@@ -460,3 +460,10 @@ Current MCP expectations:
   belong in ignored local env files or approved secret stores. If a
   token-like value has been exposed in chat, docs, generated config,
   or tracked files, remove it locally and rotate it at the provider.
+
+## Google Cloud Platform
+
+Read and follow the
+[Utekos Well-Architected Framework](.agent/utekos-well-architechted-framework.md)
+and use the Google Developer documentation MCP for current provider
+documentation before changing Google Cloud integrations.
