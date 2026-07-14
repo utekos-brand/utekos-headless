@@ -1,5 +1,3 @@
-// Path: src/lib/tracking/capture/adaptRequestToCaptureContext.ts
-
 import { type NextRequest } from 'next/server'
 import { getClientIp } from '@/lib/tracking/user-data/getClientIp'
 import { parseGaClientId } from '@/lib/tracking/google/parseGaClientId'
