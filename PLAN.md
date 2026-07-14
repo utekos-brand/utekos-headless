@@ -7,7 +7,8 @@ LOKAL `main`, `origin/HEAD` OG VERCEL-PRODUKSJON PEKER PÅ SAMME
 COMMIT `400d72485`. ALT TILSIKTET LOKALT ARBEID ER BEVART PÅ
 NAVNGITTE RELEASE- ELLER ARKIVBRANCHES. RELEASE-ENHETENE ER
 ISOLERT DIREKTE FRA `origin/main`: GIT-OPERASJONER, KLARNA-
-STOREFRONT, MICROSOFT MERCHANT, POSTHOG SDK OG S/GTM/SUPABASE.
+STOREFRONT, MICROSOFT MERCHANT, POSTHOG SDK, STOREFRONT-
+TILGJENGELIGHET OG S/GTM/SUPABASE.
 DE ER IKKE ALTERNATIVE PRODUKSJONSFASITER; DE SKAL VERIFISERES OG
 MERGES TIL DEN ENE KANONISKE LINJEN I GODKJENT REKKEFØLGE. SEKS
 ELDRE AGENT-/PAGESPEED-BRANCHES FRA FØR REPOSITORY-MIGRERINGEN ER
@@ -56,12 +57,29 @@ MUTASJON ER UTFØRT I DENNE GIT-AVSTEMMINGEN.
   `pnpm-lock.yaml`. PostHog 1.399.2, helpertester 3/3, TypeScript,
   commerce doctor og build 95/95 er grønne. Ingen Google-/MCP-
   dependencies eller runtimekonfigurasjon er blandet inn.
+- `codex/release-storefront-accessibility` er 9 filer og 1 commit.
+  Den gjør størrelsevelgeren tastaturnavigerbar med roving tabindex og
+  synlig valgt-markør, retter modal-/popover-kontrast og lagrekkefølge,
+  gir ikonbasert fjerning et tilgjengelig navn og gjør handlekurv-
+  fjerning optimistisk med rollback. TypeScript, målrettet lint og build
+  95/95 er grønne. Browser-smoke på 390 og 1440 px beviste tastaturfokus,
+  mobil-/desktop-layout, 17,1:1 mørk og 18,0:1 lys modal-kontrast,
+  dialog inne i åpen handlekurv og både avbryt- og bekreftflyten uten
+  applikasjonsfeil. Cookiebot viser det forventede localhost-varselet.
 - `codex/production-candidate-20260714` bevarer de 58 reelle lokale
   forskjellene mot dagens `origin/main`, inkludert PostHog-/package-,
   MCP-, Microsoft feed-, Klarna UI- og øvrige frontendendringer. De er
-  tilsiktede produksjonskandidater. Branchen er nå tapsfri kilde for
-  gjenstående MCP-/frontendarbeid, ikke en release som skal deployeres
-  samlet.
+  tilsiktede produksjonskandidater. De ferdig verifiserte Git-, Klarna-,
+  Microsoft-, PostHog- og storefront-delene er nå trukket ut i egne
+  releaser. Branchen er tapsfri kilde for gjenstående MCP-/drifts- og
+  dokumentasjonsavstemming, ikke en release som skal deployeres samlet.
+- En midlertidig lokal integrasjonsaudit kombinerte Git-operasjoner,
+  Microsoft Merchant, PostHog, Klarna og storefront-tilgjengelighet med
+  0 mergekonflikter. Frossen install, route-typegenerering, 14/14
+  målrettede tester, lint av alle endrede kodefiler, TypeScript og en
+  Vercel-lignende build med 96/96 ruter var grønne. Auditreferansen ble
+  fjernet etter at resultatene var dokumentert; den var aldri en ny
+  produksjonsfasit og ble ikke pushet eller deployet.
 - `codex/sgtm-remediation` bevarer tracking-, receipt-, refund-, sGTM-
   tooling- og Supabase-kandidatene i ti commits oppå samme
   `origin/main`. Review-diff-artifacts er bevart separat i en navngitt

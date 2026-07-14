@@ -53,6 +53,22 @@ known and completed in the correct order.
   `main` creates production. Do not run a second direct Vercel
   production deployment for the same release.
 
+### Local integration audit 2026-07-14
+
+The isolated Git operations, Microsoft Merchant, PostHog SDK, Klarna
+product-card and storefront accessibility releases were merged into a
+temporary local audit branch from the current `origin/main`. There were
+no merge conflicts. Frozen install, Next route type generation, 14/14
+targeted tests, ESLint for every changed code file, TypeScript and a
+Vercel-like production build with 96/96 routes passed. The temporary
+audit ref was removed after recording the result. It was not pushed,
+deployed or treated as an alternative production reference.
+
+This audit proves code-level compatibility. It does not replace the
+Klarna provider preview gate, production environment verification,
+Supabase migration ordering for the separate sGTM release, or explicit
+approval for push, merge and production deployment.
+
 ## Required Preflight
 
 Run these before deciding the release order:
