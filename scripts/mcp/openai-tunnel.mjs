@@ -10,10 +10,14 @@ import dotenv from 'dotenv'
 
 const root = process.cwd()
 const argv = process.argv.slice(2)
-const command = argv.find(arg => !arg.startsWith('--')) ?? 'check'
+const command =
+  argv.find(arg => !arg.startsWith('--')) ?? 'check'
 const envPath = path.join(root, '.env.tunnel.local')
 const examplePath = path.join(root, '.env.tunnel.example')
-const chatgptProfilesPath = path.join(root, 'config/mcp/chatgpt-profiles.json')
+const chatgptProfilesPath = path.join(
+  root,
+  'config/mcp/chatgpt-profiles.json'
+)
 
 function flagValue(name) {
   const index = argv.indexOf(name)
@@ -28,7 +32,9 @@ function readEnvFile(filePath) {
 
 function readChatgptProfiles() {
   if (!fs.existsSync(chatgptProfilesPath)) return []
-  const config = JSON.parse(fs.readFileSync(chatgptProfilesPath, 'utf8'))
+  const config = JSON.parse(
+    fs.readFileSync(chatgptProfilesPath, 'utf8')
+  )
   return config.profiles ?? []
 }
 
@@ -37,13 +43,20 @@ function normalizeTarget(value) {
 }
 
 function resolveTarget(env) {
-  const target = flagValue('--target') ?? env.OPENAI_TUNNEL_TARGET ?? ''
+  const target =
+    flagValue('--target') ?? env.OPENAI_TUNNEL_TARGET ?? ''
   if (!target) return null
 
-  const profile = readChatgptProfiles().find(item => item.tunnelTarget === target || item.id === target)
+  const profile = readChatgptProfiles().find(
+    item => item.tunnelTarget === target || item.id === target
+  )
   if (!profile) {
     console.error(`Unknown tunnel target: ${target}`)
-    console.error(`Available targets: ${readChatgptProfiles().map(item => item.tunnelTarget).join(', ')}`)
+    console.error(
+      `Available targets: ${readChatgptProfiles()
+        .map(item => item.tunnelTarget)
+        .join(', ')}`
+    )
     process.exit(1)
   }
 
@@ -54,19 +67,38 @@ function applyTargetEnv(env, target) {
   if (!target) return
 
   const suffix = normalizeTarget(target.tunnelTarget)
-  for (const key of ['CONTROL_PLANE_TUNNEL_ID', 'CONTROL_PLANE_API_KEY', 'MCP_GATEWAY_AUTH_TOKEN']) {
+  for (const key of [
+    'CONTROL_PLANE_TUNNEL_ID',
+    'CONTROL_PLANE_API_KEY',
+    'CONTROL_PLANE_EXTRA_HEADERS',
+    'MCP_GATEWAY_AUTH_TOKEN'
+  ]) {
     const targetKey = `${key}_${suffix}`
     if (hasValue(env, targetKey)) env[key] = env[targetKey]
   }
 
   env.OPENAI_TUNNEL_TARGET = target.tunnelTarget
-  env.OPENAI_TUNNEL_PROFILE = env[`OPENAI_TUNNEL_PROFILE_${suffix}`] || target.tunnelProfile
-  env.DOCKER_MCP_PROFILE = env[`DOCKER_MCP_PROFILE_${suffix}`] || target.id
-  env.OPENAI_TUNNEL_MCP_PORT = env[`OPENAI_TUNNEL_MCP_PORT_${suffix}`] || target.mcpPort || '8812'
-  env.OPENAI_TUNNEL_HEALTH_ADDR = env[`OPENAI_TUNNEL_HEALTH_ADDR_${suffix}`] || target.healthAddr || '127.0.0.1:8080'
-  const configuredCommand = target.mcpCommand?.replaceAll('${repoRoot}', root)
+  env.OPENAI_TUNNEL_PROFILE =
+    env[`OPENAI_TUNNEL_PROFILE_${suffix}`] ||
+    target.tunnelProfile
+  env.DOCKER_MCP_PROFILE =
+    env[`DOCKER_MCP_PROFILE_${suffix}`] || target.id
+  env.OPENAI_TUNNEL_MCP_PORT =
+    env[`OPENAI_TUNNEL_MCP_PORT_${suffix}`] ||
+    target.mcpPort ||
+    '8812'
+  env.OPENAI_TUNNEL_HEALTH_ADDR =
+    env[`OPENAI_TUNNEL_HEALTH_ADDR_${suffix}`] ||
+    target.healthAddr ||
+    '127.0.0.1:8080'
+  const configuredCommand = target.mcpCommand?.replaceAll(
+    '${repoRoot}',
+    root
+  )
   env.OPENAI_TUNNEL_MCP_COMMAND =
-    env[`OPENAI_TUNNEL_MCP_COMMAND_${suffix}`] || configuredCommand || `docker mcp gateway run --profile ${target.id}`
+    env[`OPENAI_TUNNEL_MCP_COMMAND_${suffix}`] ||
+    configuredCommand ||
+    `docker mcp gateway run --profile ${target.id}`
 }
 
 function loadTunnelEnv() {
@@ -96,8 +128,24 @@ function run(commandName, args, options = {}) {
   })
 }
 
+function commandPath(commandName) {
+  if (commandName !== 'tunnel-client') return commandName
+
+  const localBin = path.join(
+    process.env.HOME ?? '',
+    '.local/bin/tunnel-client'
+  )
+  if (localBin && fs.existsSync(localBin)) return localBin
+
+  return commandName
+}
+
+function tunnelClient() {
+  return commandPath('tunnel-client')
+}
+
 function spawnForeground(commandName, args, env) {
-  const child = spawn(commandName, args, {
+  const child = spawn(commandPath(commandName), args, {
     cwd: root,
     stdio: 'inherit',
     env
@@ -119,7 +167,12 @@ function spawnForeground(commandName, args, env) {
 }
 
 function firstLine(value) {
-  return (value ?? '').split('\n').find(line => line.trim() !== '')?.trim() ?? ''
+  return (
+    (value ?? '')
+      .split('\n')
+      .find(line => line.trim() !== '')
+      ?.trim() ?? ''
+  )
 }
 
 function hasValue(env, key) {
@@ -130,21 +183,33 @@ function required(env, keys) {
   const missing = keys.filter(key => !hasValue(env, key))
   if (missing.length === 0) return
 
-  console.error(`Missing required tunnel env: ${missing.join(', ')}`)
-  console.error('Fill .env.tunnel.local, then rerun this command.')
+  console.error(
+    `Missing required tunnel env: ${missing.join(', ')}`
+  )
+  console.error(
+    'Fill .env.tunnel.local, then rerun this command.'
+  )
   process.exit(1)
 }
 
 function tunnelEnv(env) {
-  return {
-    ...process.env,
-    ...env
-  }
+  const localBin = path.join(process.env.HOME ?? '', '.local/bin')
+  const currentPath = env.PATH ?? process.env.PATH ?? ''
+  const pathEntries = currentPath.split(path.delimiter)
+  const PATH =
+    localBin && !pathEntries.includes(localBin) ?
+      `${localBin}${path.delimiter}${currentPath}`
+    : currentPath
+
+  return { ...process.env, ...env, PATH }
 }
 
 function tunnelProcessPaths(env) {
   const dir = path.join(root, '.agent-artifacts', 'tunnel')
-  const safeProfile = env.OPENAI_TUNNEL_PROFILE.replaceAll(/[^A-Za-z0-9_.-]/g, '_')
+  const safeProfile = env.OPENAI_TUNNEL_PROFILE.replaceAll(
+    /[^A-Za-z0-9_.-]/g,
+    '_'
+  )
   return {
     dir,
     pidPath: path.join(dir, `${safeProfile}.pid`),
@@ -163,7 +228,12 @@ function processIsAlive(pid) {
 
 function matchingTunnelProcesses(env) {
   const port = env.OPENAI_TUNNEL_HEALTH_ADDR.split(':').at(-1)
-  const lsof = run('lsof', ['-nP', `-iTCP:${port}`, '-sTCP:LISTEN', '-t'])
+  const lsof = run('lsof', [
+    '-nP',
+    `-iTCP:${port}`,
+    '-sTCP:LISTEN',
+    '-t'
+  ])
   const pids = lsof.stdout
     .split('\n')
     .map(line => line.trim())
@@ -173,7 +243,10 @@ function matchingTunnelProcesses(env) {
   for (const pid of pids) {
     const ps = run('ps', ['-p', pid, '-o', 'command='])
     const commandLine = ps.stdout.trim()
-    if (commandLine.includes('tunnel-client run') && commandLine.includes(env.OPENAI_TUNNEL_PROFILE)) {
+    if (
+      commandLine.includes('tunnel-client run') &&
+      commandLine.includes(env.OPENAI_TUNNEL_PROFILE)
+    ) {
       matches.push({ pid, commandLine })
     }
   }
@@ -190,32 +263,47 @@ function bootstrapEnv() {
   const token = `utekos-${randomBytes(32).toString('hex')}`
   const content = fs
     .readFileSync(examplePath, 'utf8')
-    .replace('MCP_GATEWAY_AUTH_TOKEN=\n', `MCP_GATEWAY_AUTH_TOKEN=${token}\n`)
+    .replace(
+      'MCP_GATEWAY_AUTH_TOKEN=\n',
+      `MCP_GATEWAY_AUTH_TOKEN=${token}\n`
+    )
 
   fs.writeFileSync(envPath, content, 'utf8')
   console.log('Created .env.tunnel.local')
-  console.log('Fill CONTROL_PLANE_TUNNEL_ID and CONTROL_PLANE_API_KEY from OpenAI Platform UI.')
+  console.log(
+    'Fill CONTROL_PLANE_TUNNEL_ID and CONTROL_PLANE_API_KEY from OpenAI Platform UI.'
+  )
 }
 
 function check() {
   const env = loadTunnelEnv()
   const checks = []
-  const tunnelClient = run('tunnel-client', ['--version'])
+  const tunnelClientCheck = run(tunnelClient(), ['--version'])
 
   checks.push({
     name: 'tunnel-client',
-    ok: tunnelClient.status === 0,
-    message: tunnelClient.status === 0 ? firstLine(tunnelClient.stdout) : 'not installed or not on PATH'
+    ok: tunnelClientCheck.status === 0,
+    message:
+      tunnelClientCheck.status === 0 ?
+        firstLine(tunnelClientCheck.stdout)
+      : 'not installed or not on PATH'
   })
 
   const docker = run('docker', ['mcp', 'version'])
   checks.push({
     name: 'docker-mcp',
     ok: docker.status === 0,
-    message: docker.status === 0 ? firstLine(docker.stdout) : 'docker mcp unavailable'
+    message:
+      docker.status === 0 ?
+        firstLine(docker.stdout)
+      : 'docker mcp unavailable'
   })
 
-  for (const key of ['CONTROL_PLANE_TUNNEL_ID', 'CONTROL_PLANE_API_KEY', 'MCP_GATEWAY_AUTH_TOKEN']) {
+  for (const key of [
+    'CONTROL_PLANE_TUNNEL_ID',
+    'CONTROL_PLANE_API_KEY',
+    'MCP_GATEWAY_AUTH_TOKEN'
+  ]) {
     checks.push({
       name: `env:${key}`,
       ok: hasValue(env, key),
@@ -226,14 +314,21 @@ function check() {
   checks.push({
     name: 'tunnel:target',
     ok: true,
-    message: env.OPENAI_TUNNEL_TARGET ? `${env.OPENAI_TUNNEL_TARGET} -> ${env.DOCKER_MCP_PROFILE}` : `legacy -> ${env.DOCKER_MCP_PROFILE}`
+    message:
+      env.OPENAI_TUNNEL_TARGET ?
+        `${env.OPENAI_TUNNEL_TARGET} -> ${env.DOCKER_MCP_PROFILE}`
+      : `legacy -> ${env.DOCKER_MCP_PROFILE}`
   })
 
   for (const check of checks) {
-    console.log(`${check.ok ? 'OK' : 'WARN'} ${check.name}: ${check.message}`)
+    console.log(
+      `${check.ok ? 'OK' : 'WARN'} ${check.name}: ${check.message}`
+    )
   }
 
-  const hardFailures = checks.filter(check => !check.ok && !check.name.startsWith('env:'))
+  const hardFailures = checks.filter(
+    check => !check.ok && !check.name.startsWith('env:')
+  )
   if (hardFailures.length > 0) process.exit(1)
 }
 
@@ -242,7 +337,7 @@ function initProfile() {
   required(env, ['CONTROL_PLANE_TUNNEL_ID'])
 
   const result = run(
-    'tunnel-client',
+    tunnelClient(),
     [
       'init',
       '--sample',
@@ -269,16 +364,25 @@ function initProfile() {
 
 function doctor() {
   const env = loadTunnelEnv()
-  required(env, ['CONTROL_PLANE_TUNNEL_ID', 'CONTROL_PLANE_API_KEY', 'MCP_GATEWAY_AUTH_TOKEN'])
+  required(env, [
+    'CONTROL_PLANE_TUNNEL_ID',
+    'CONTROL_PLANE_API_KEY',
+    'MCP_GATEWAY_AUTH_TOKEN'
+  ])
 
   const result = run(
-    'tunnel-client',
-    ['doctor', '--profile', env.OPENAI_TUNNEL_PROFILE, '--explain'],
+    tunnelClient(),
+    [
+      'doctor',
+      '--profile',
+      env.OPENAI_TUNNEL_PROFILE,
+      '--explain'
+    ],
     { env: tunnelEnv(env) }
   )
 
-  process.stdout.write(result.stdout)
-  process.stderr.write(result.stderr)
+  process.stdout.write(result.stdout ?? '')
+  process.stderr.write(result.stderr ?? '')
   process.exit(result.status ?? 0)
 }
 
@@ -310,7 +414,9 @@ function stopTunnel() {
   const matches = matchingTunnelProcesses(env)
 
   if (matches.length === 0) {
-    console.log(`No tunnel listener found on ${env.OPENAI_TUNNEL_HEALTH_ADDR}`)
+    console.log(
+      `No tunnel listener found on ${env.OPENAI_TUNNEL_HEALTH_ADDR}`
+    )
     if (fs.existsSync(pidPath)) fs.rmSync(pidPath)
     return
   }
@@ -325,7 +431,9 @@ function stopTunnel() {
   if (fs.existsSync(pidPath)) fs.rmSync(pidPath)
 
   if (stopped === 0) {
-    console.log(`No matching tunnel-client process found for ${profile}`)
+    console.log(
+      `No matching tunnel-client process found for ${profile}`
+    )
   }
 }
 
@@ -334,8 +442,10 @@ function statusTunnel() {
   const { pidPath, logPath } = tunnelProcessPaths(env)
   const matches = matchingTunnelProcesses(env)
   const pid =
-    matches[0]?.pid
-    ?? (fs.existsSync(pidPath) ? fs.readFileSync(pidPath, 'utf8').trim() : '')
+    matches[0]?.pid ??
+    (fs.existsSync(pidPath) ?
+      fs.readFileSync(pidPath, 'utf8').trim()
+    : '')
   const pidAlive = pid ? processIsAlive(Number(pid)) : false
   const healthUrl = `http://${env.OPENAI_TUNNEL_HEALTH_ADDR}/healthz`
   const readyUrl = `http://${env.OPENAI_TUNNEL_HEALTH_ADDR}/readyz`
@@ -350,20 +460,31 @@ function statusTunnel() {
   console.log(`pid=${pid || '-'}`)
   console.log(`pid_alive=${pidAlive}`)
   console.log(`listener_matches=${matches.length}`)
-  console.log(`healthz=${health.status === 0 ? 'ok' : 'unavailable'}`)
-  console.log(`readyz=${ready.status === 0 ? 'ok' : 'unavailable'}`)
+  console.log(
+    `healthz=${health.status === 0 ? 'ok' : 'unavailable'}`
+  )
+  console.log(
+    `readyz=${ready.status === 0 ? 'ok' : 'unavailable'}`
+  )
   console.log(`log=${logPath}`)
 
-  if (matches.length === 0 || health.status !== 0) process.exit(1)
+  if (matches.length === 0 || health.status !== 0)
+    process.exit(1)
 }
 
 function startTunnel() {
   const env = loadTunnelEnv()
-  required(env, ['CONTROL_PLANE_TUNNEL_ID', 'CONTROL_PLANE_API_KEY', 'MCP_GATEWAY_AUTH_TOKEN'])
+  required(env, [
+    'CONTROL_PLANE_TUNNEL_ID',
+    'CONTROL_PLANE_API_KEY',
+    'MCP_GATEWAY_AUTH_TOKEN'
+  ])
 
   const existing = matchingTunnelProcesses(env)
   if (existing.length > 0) {
-    console.log(`Tunnel already running for ${env.OPENAI_TUNNEL_PROFILE} pid ${existing.map(item => item.pid).join(', ')}`)
+    console.log(
+      `Tunnel already running for ${env.OPENAI_TUNNEL_PROFILE} pid ${existing.map(item => item.pid).join(', ')}`
+    )
     statusTunnel()
     return
   }
@@ -372,22 +493,30 @@ function startTunnel() {
   fs.mkdirSync(dir, { recursive: true })
   const out = fs.openSync(logPath, 'a')
   const err = fs.openSync(logPath, 'a')
-  const child = spawn('tunnel-client', ['run', '--profile', env.OPENAI_TUNNEL_PROFILE], {
-    cwd: root,
-    detached: true,
-    stdio: ['ignore', out, err],
-    env: tunnelEnv(env)
-  })
+  const child = spawn(
+    tunnelClient(),
+    ['run', '--profile', env.OPENAI_TUNNEL_PROFILE],
+    {
+      cwd: root,
+      detached: true,
+      stdio: ['ignore', out, err],
+      env: tunnelEnv(env)
+    }
+  )
   child.unref()
   fs.closeSync(out)
   fs.closeSync(err)
   fs.writeFileSync(pidPath, String(child.pid), 'utf8')
-  console.log(`Started ${env.OPENAI_TUNNEL_PROFILE} pid ${child.pid}`)
+  console.log(
+    `Started ${env.OPENAI_TUNNEL_PROFILE} pid ${child.pid}`
+  )
   console.log(`Log: ${logPath}`)
 
   const sleep = run('sleep', ['2'])
   if (sleep.status !== 0) {
-    console.log('Sleep command unavailable; skipping startup wait.')
+    console.log(
+      'Sleep command unavailable; skipping startup wait.'
+    )
   }
 
   statusTunnel()
@@ -395,7 +524,11 @@ function startTunnel() {
 
 function runTunnel() {
   const env = loadTunnelEnv()
-  required(env, ['CONTROL_PLANE_TUNNEL_ID', 'CONTROL_PLANE_API_KEY', 'MCP_GATEWAY_AUTH_TOKEN'])
+  required(env, [
+    'CONTROL_PLANE_TUNNEL_ID',
+    'CONTROL_PLANE_API_KEY',
+    'MCP_GATEWAY_AUTH_TOKEN'
+  ])
 
   spawnForeground(
     'tunnel-client',
@@ -406,12 +539,16 @@ function runTunnel() {
 
 function listTargets() {
   for (const profile of readChatgptProfiles()) {
-    console.log(`${profile.tunnelTarget}: ${profile.id} (${profile.tunnelProfile})`)
+    console.log(
+      `${profile.tunnelTarget}: ${profile.id} (${profile.tunnelProfile})`
+    )
   }
 }
 
 function usage() {
-  console.log('Usage: node scripts/mcp/openai-tunnel.mjs <bootstrap-env|check|init|doctor|gateway|run|start|status|stop|list-targets> [--target insight|browser|live-ops|commerce-tracking]')
+  console.log(
+    'Usage: node scripts/mcp/openai-tunnel.mjs <bootstrap-env|check|init|doctor|gateway|run|start|status|stop|list-targets> [--target insight|browser|shadcn|live-ops|commerce-tracking|shopify-readonly|codex-bridge|google-analytics]'
+  )
 }
 
 switch (command) {

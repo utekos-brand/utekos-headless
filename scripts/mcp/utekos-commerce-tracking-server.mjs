@@ -123,8 +123,8 @@ const providerDefinitions = [
   {
     id: 'google_tag_manager',
     label: 'Google Tag Manager',
-    env: ['GTM_CLIENT_ID', 'GTM_CLIENT_SECRET', 'GTM_PROJECT_ID', 'GTM_ACCESS_TOKEN', 'GOOGLE_TAG_MANAGER_ACCESS_TOKEN', 'GTM_SERVICE_ACCOUT', 'GTM_SERVICE_ACCOUNT', 'GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON', 'GTM_ACCOUNT_ID', 'GTM_CONTAINER_ID', 'GTM_WORKSPACE_ID', 'NEXT_PUBLIC_GOOGLE_GTM_ID'],
-    credentialFiles: ['GTM_SERVICE_ACCOUT', 'GTM_SERVICE_ACCOUNT', 'GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON']
+    env: ['GTM_CLIENT_ID', 'GTM_CLIENT_SECRET', 'GTM_PROJECT_ID', 'GTM_ACCESS_TOKEN', 'GOOGLE_TAG_MANAGER_ACCESS_TOKEN', 'GTM_SERVICE_ACCOUT', 'GTM_SERVICE_ACCOUNT', 'GTM_SERVICE_ACCOUNT_JSON_PATH', 'GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON', 'GTM_ACCOUNT_ID', 'GTM_CONTAINER_ID', 'GTM_WORKSPACE_ID', 'GTM_WEB_ACCOUNT_ID', 'GTM_WEB_CONTAINER_ID', 'GTM_WEB_WORKSPACE_ID', 'GTM_SERVER_ACCOUNT_ID', 'GTM_SERVER_CONTAINER_ID', 'GTM_SERVER_WORKSPACE_ID', 'NEXT_PUBLIC_GOOGLE_GTM_ID'],
+    credentialFiles: ['GTM_SERVICE_ACCOUT', 'GTM_SERVICE_ACCOUNT', 'GTM_SERVICE_ACCOUNT_JSON_PATH', 'GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON']
   },
   {
     id: 'meta',
@@ -1642,10 +1642,10 @@ server.registerTool(
         status: 'implemented_config_missing',
         evidenceTool: 'gtm_api_workspace_probe',
         evidenceSummary: 'Tool is implemented, but the latest probe fails closed because OAuth access token and numeric GTM account/container ids are missing.',
-        envRequirements: ['GTM_ACCESS_TOKEN|GOOGLE_TAG_MANAGER_ACCESS_TOKEN|GTM_SERVICE_ACCOUT|GTM_SERVICE_ACCOUNT|GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON', 'GTM_ACCOUNT_ID', 'GTM_CONTAINER_ID|NEXT_PUBLIC_GOOGLE_GTM_ID', 'GTM_WORKSPACE_ID'],
+        envRequirements: ['GTM_ACCESS_TOKEN|GOOGLE_TAG_MANAGER_ACCESS_TOKEN|GTM_SERVICE_ACCOUT|GTM_SERVICE_ACCOUNT|GTM_SERVICE_ACCOUNT_JSON_PATH|GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON', 'GTM_ACCOUNT_ID|GTM_WEB_ACCOUNT_ID', 'GTM_CONTAINER_ID|GTM_WEB_CONTAINER_ID|NEXT_PUBLIC_GOOGLE_GTM_ID', 'GTM_WORKSPACE_ID|GTM_WEB_WORKSPACE_ID'],
         externalActions: [
           'Complete GTM OAuth or provide a short-lived access token with read scope.',
-          'Set numeric GTM account id and container id; public GTM container id alone is not enough for GTM API v2.',
+          'Set numeric GTM web account id and container id; public GTM container id alone is not enough for GTM API v2.',
           'Use this read tool only for workspace metadata; preview/publish remains explicit and outside the default profile.'
         ],
         verificationCommand: 'npm run mcp:commerce-tracking:doctor',
@@ -2597,6 +2597,7 @@ async function googleTagManagerAccessToken() {
     [
       'GTM_SERVICE_ACCOUT',
       'GTM_SERVICE_ACCOUNT',
+      'GTM_SERVICE_ACCOUNT_JSON_PATH',
       'GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON',
       'GOOGLE_APPLICATION_CREDENTIALS'
     ],
@@ -3430,7 +3431,7 @@ server.registerTool(
               makeError(
                 'GTM_SGTM_ENDPOINT_STATUS_FAILED',
                 'One or more public sGTM/GTM endpoints failed.',
-                'Verify sGTM publication, DNS, Cookiebot consent, and canonical GTM/Google tag IDs.',
+                'Verify that the live server container still has a built-in gtm_client with the required allowedContainerIds. Cookiebot consent signals must remain a separate custom client. Then verify publication, DNS, and canonical IDs.',
                 'google_tag_manager'
               )
             ],
@@ -4005,10 +4006,10 @@ server.registerTool(
   },
   async () => {
     const startedAt = nowIso()
-    const accountId = secretEnvValue('GTM_ACCOUNT_ID')
-    const configuredContainerId = secretEnvValue('GTM_CONTAINER_ID')
-    const workspaceId = secretEnvValue('GTM_WORKSPACE_ID')
-    const publicContainerId = secretEnvValue('NEXT_PUBLIC_GOOGLE_GTM_ID') || 'GTM-5TWMJQFP'
+    const accountId = secretEnvValue('GTM_WEB_ACCOUNT_ID') || secretEnvValue('GTM_ACCOUNT_ID')
+    const configuredContainerId = secretEnvValue('GTM_WEB_CONTAINER_ID') || secretEnvValue('GTM_CONTAINER_ID')
+    const workspaceId = secretEnvValue('GTM_WEB_WORKSPACE_ID') || secretEnvValue('GTM_WORKSPACE_ID')
+    const publicContainerId = secretEnvValue('GTM_WEB_PUBLIC_CONTAINER_ID') || secretEnvValue('NEXT_PUBLIC_GOOGLE_GTM_ID') || 'GTM-5TWMJQFP'
     const baseData = {
       account_id: accountId || null,
       container_id: configuredContainerId || null,
@@ -4025,8 +4026,8 @@ server.registerTool(
           errors: [
             makeError(
               'GTM_API_CONFIG_MISSING',
-              'GTM_ACCOUNT_ID is required for authenticated GTM API reads.',
-              'Set numeric GTM account id, then rerun this tool.',
+              'GTM_WEB_ACCOUNT_ID or GTM_ACCOUNT_ID is required for authenticated GTM API reads.',
+              'Set numeric GTM web account id, then rerun this tool.',
               'google_tag_manager'
             )
           ],
@@ -4048,7 +4049,7 @@ server.registerTool(
       token = await googleTagManagerAccessToken()
       if (!token) throw new Error('Missing GTM OAuth token or service-account credentials.')
       containerId = await resolveGtmContainerId({ token, accountId, configuredContainerId, publicContainerId })
-      if (!containerId) throw new Error('GTM_CONTAINER_ID is missing and no matching container was found for the public GTM id.')
+      if (!containerId) throw new Error('GTM_WEB_CONTAINER_ID or GTM_CONTAINER_ID is missing and no matching container was found for the public GTM id.')
 
       const url = new URL(`https://www.googleapis.com/tagmanager/v2/accounts/${encodeURIComponent(accountId)}/containers/${encodeURIComponent(containerId)}/workspaces`)
       response = await readJsonEndpoint(url.toString(), {
@@ -4065,7 +4066,7 @@ server.registerTool(
             makeError(
               'GTM_API_CONFIG_MISSING',
               error instanceof Error ? error.message : 'GTM API authentication failed.',
-              'Provide GTM_SERVICE_ACCOUT/GTM_SERVICE_ACCOUNT/GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON or GTM_ACCESS_TOKEN, plus GTM_ACCOUNT_ID and either numeric GTM_CONTAINER_ID or public NEXT_PUBLIC_GOOGLE_GTM_ID.',
+              'Provide GTM_SERVICE_ACCOUT/GTM_SERVICE_ACCOUNT/GTM_SERVICE_ACCOUNT_JSON_PATH/GOOGLE_TAG_MANAGER_SERVICE_ACCOUNT_JSON or GTM_ACCESS_TOKEN, plus GTM_WEB_ACCOUNT_ID and either numeric GTM_WEB_CONTAINER_ID or public NEXT_PUBLIC_GOOGLE_GTM_ID.',
               'google_tag_manager'
             )
           ],

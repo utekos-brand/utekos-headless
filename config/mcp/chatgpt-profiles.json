@@ -37,8 +37,14 @@
         "playwright"
       ],
       "config": {
-        "filesystem.paths": ["${repoRoot}/docs", "${repoRoot}/reference", "${repoRoot}/types"],
-        "git.paths": ["${repoRoot}"],
+        "filesystem.paths": [
+          "${repoRoot}/docs",
+          "${repoRoot}/reference",
+          "${repoRoot}/types"
+        ],
+        "git.paths": [
+          "${repoRoot}"
+        ],
         "ast-grep.path": "${repoRoot}"
       },
       "toolAllowlist": [
@@ -141,7 +147,12 @@
         "browser_devtools_metrics",
         "browser_close"
       ],
-      "servers": ["next-devtools-mcp", "playwright", "fetch", "firecrawl"],
+      "servers": [
+        "next-devtools-mcp",
+        "playwright",
+        "fetch",
+        "firecrawl"
+      ],
       "toolAllowlist": [
         "nextjs_docs",
         "nextjs_runtime",
@@ -223,7 +234,10 @@
         "shadcn_registry_get_add_command",
         "shadcn_registry_get_audit_checklist"
       ],
-      "servers": ["shadcn", "utekos-shadcn-context"],
+      "servers": [
+        "shadcn",
+        "utekos-shadcn-context"
+      ],
       "config": {
         "filesystem.paths": [
           "${repoRoot}/scripts/shadcn/academy",
@@ -284,11 +298,22 @@
         "firecrawl"
       ],
       "config": {
-        "filesystem.paths": ["${repoRoot}"],
-        "git.paths": ["${repoRoot}"],
+        "filesystem.paths": [
+          "${repoRoot}"
+        ],
+        "git.paths": [
+          "${repoRoot}"
+        ],
         "ast-grep.path": "${repoRoot}"
       },
-      "expectedTools": ["write_file", "git_status", "git_add", "git_commit", "push_files", "nextjs_runtime"],
+      "expectedTools": [
+        "write_file",
+        "git_status",
+        "git_add",
+        "git_commit",
+        "push_files",
+        "nextjs_runtime"
+      ],
       "forbiddenTools": [
         "mcp-add",
         "mcp-remove",
@@ -337,6 +362,12 @@
         "gtm_sgtm_endpoint_status_probe",
         "meta_dataset_quality_probe",
         "microsoft_uet_endpoint_status_probe",
+        "microsoft_ads_auth_readiness_probe",
+        "microsoft_ads_account_access_probe",
+        "microsoft_ads_campaign_status_probe",
+        "microsoft_ads_ad_insight_probe",
+        "microsoft_shopping_content_status_probe",
+        "microsoft_clarity_ads_status_probe",
         "gtm_api_workspace_probe",
         "tracking_architecture_inventory",
         "tracking_event_contract",
@@ -368,7 +399,11 @@
         "firecrawl_scrape",
         "firecrawl_search"
       ],
-      "expectedTools": ["nextjs_runtime", "browser_snapshot", "firecrawl_search"],
+      "expectedTools": [
+        "nextjs_runtime",
+        "browser_snapshot",
+        "firecrawl_search"
+      ],
       "forbiddenTools": [
         "browser_drop",
         "browser_file_upload",
@@ -382,7 +417,144 @@
         "code-mode"
       ],
       "knownGaps": [
-        "Live provider reads are available through 22 canonical read-only tools, including schema-bound provider probes for Shopify Admin, Shopify Storefront, GA4 Data API, Merchant API, Google Ads REST/GAQL account access, campaign performance, conversion actions, search terms, PostHog Projects API, PostHog Query API, Sentry Issues API, Vercel Deployments API, public sGTM/GTM endpoints, Meta Dataset Quality API, public Microsoft UET endpoints, and authenticated GTM API workspaces. provider_access_remediation_report gives ChatGPT an explicit provider-by-provider fix list without secret values. Current provider success still depends on credentials, IAM scopes, developer tokens, project ids, provider API access, and the active local env. Public sGTM/GTM endpoints and public Microsoft UET endpoints verify live in isolated worktrees; Shopify, Google Ads, GA4, Merchant, PostHog, Sentry, Vercel, Meta, and authenticated GTM API may fail closed with structured credential/scope/config errors until the same env and credential paths are present."
+        "Live provider reads are available through 28 canonical read-only tools, including schema-bound provider probes for Shopify Admin, Shopify Storefront, GA4 Data API, Merchant API, Google Ads REST/GAQL account access, campaign performance, conversion actions, search terms, PostHog Projects API, PostHog Query API, Sentry Issues API, Vercel Deployments API, public sGTM/GTM endpoints, Meta Dataset Quality API, public Microsoft UET endpoints, Microsoft Advertising auth/account/campaign/Ad Insight status, Microsoft Shopping Content status, Microsoft Clarity Ads readiness, and authenticated GTM API workspaces. provider_access_remediation_report gives ChatGPT an explicit provider-by-provider fix list without secret values. Current provider success still depends on credentials, IAM scopes, developer tokens, project ids, provider API access, and the active local env. Public sGTM/GTM endpoints and public Microsoft UET endpoints verify live in isolated worktrees; Shopify, Google Ads, GA4, Merchant, PostHog, Sentry, Vercel, Meta, Microsoft Ads, Microsoft Shopping, Microsoft Clarity, and authenticated GTM API may fail closed with structured credential/scope/config errors until the same env and credential paths are present."
+      ]
+    },
+    {
+      "id": "utekos_chatgpt_shopify_readonly",
+      "name": "Utekos Shopify Read Only",
+      "mode": "live-read-protected-data",
+      "requiresExplicitUserSelection": true,
+      "tunnelTarget": "shopify-readonly",
+      "tunnelProfile": "utekos-chatgpt-shopify-readonly",
+      "mcpCommand": "node ${repoRoot}/scripts/mcp/utekos-shopify-readonly-server.mjs",
+      "mcpSurface": "utekos-shopify-readonly",
+      "healthAddr": "127.0.0.1:8086",
+      "mcpPort": "8817",
+      "canonicalTools": [
+        "shopify_readonly_bootstrap",
+        "shopify_access_scope_status",
+        "shopify_orders_query",
+        "shopify_customers_query"
+      ],
+      "servers": [],
+      "toolAllowlist": [],
+      "expectedTools": [
+        "shopify_readonly_bootstrap",
+        "shopify_access_scope_status",
+        "shopify_orders_query",
+        "shopify_customers_query"
+      ],
+      "forbiddenTools": [
+        "mcp-add",
+        "mcp-remove",
+        "mcp-config-set",
+        "mcp-create-profile",
+        "mcp-activate-profile",
+        "mcp-exec",
+        "code-mode"
+      ],
+      "knownGaps": [
+        "Live reads remain deliberately credential-gated until a dedicated Shopify Dev Dashboard app is configured with SHOPIFY_CHATGPT_* client credentials and the approved read_orders, read_all_orders, and read_customers scopes. No fallback to the existing broad Shopify Admin token is permitted."
+      ]
+    },
+    {
+      "id": "utekos_chatgpt_codex_bridge",
+      "name": "Utekos Codex Bridge",
+      "mode": "controlled-agent-bridge",
+      "requiresExplicitUserSelection": true,
+      "tunnelTarget": "codex-bridge",
+      "tunnelProfile": "utekos-chatgpt-codex-bridge",
+      "mcpCommand": "node ${repoRoot}/scripts/mcp/utekos-codex-bridge-server.mjs",
+      "mcpSurface": "utekos-codex-controlled-agent-bridge",
+      "healthAddr": "127.0.0.1:8087",
+      "mcpPort": "8818",
+      "canonicalTools": [
+        "codex_bridge_bootstrap",
+        "ask_utekos_codex",
+        "implement_utekos_change",
+        "continue_utekos_codex",
+        "get_utekos_codex_result",
+        "codex_bridge_status"
+      ],
+      "servers": [],
+      "toolAllowlist": [],
+      "expectedTools": [
+        "codex_bridge_bootstrap",
+        "ask_utekos_codex",
+        "implement_utekos_change",
+        "continue_utekos_codex",
+        "get_utekos_codex_result",
+        "codex_bridge_status"
+      ],
+      "forbiddenTools": [
+        "codex",
+        "codex-reply",
+        "write_file",
+        "edit_file",
+        "git_add",
+        "git_commit",
+        "mcp-add",
+        "mcp-remove",
+        "mcp-config-set",
+        "mcp-create-profile",
+        "mcp-activate-profile",
+        "mcp-exec",
+        "code-mode"
+      ],
+      "knownGaps": [
+        "This private app starts dedicated Codex MCP threads; it does not send messages into the currently focused Codex Desktop task. Long-running analysis and implementation use asynchronous jobs plus get_utekos_codex_result polling so ChatGPT calls stay below the tunnel deadline. Explicit implementation is limited to a dedicated codex/... branch and .worktrees/ checkout. Commit, push, merge, deploy, GTM publish, schema mutation, provider mutation, secret access, and other external writes remain unavailable. Internal Codex jobs have a fixed 15-minute total timeout and use GPT-5.6 Sol with high reasoning, high verbosity, a 1,050,000-token context window, and automatic compaction at 900,000 tokens."
+      ]
+    },
+    {
+      "id": "utekos_chatgpt_google_analytics",
+      "name": "Utekos Google Analytics",
+      "mode": "live-read-analytics",
+      "requiresExplicitUserSelection": true,
+      "tunnelTarget": "google-analytics",
+      "tunnelProfile": "utekos-chatgpt-google-analytics",
+      "mcpCommand": "node ${repoRoot}/scripts/mcp/utekos-google-analytics-server.mjs",
+      "mcpSurface": "utekos-google-analytics-readonly",
+      "healthAddr": "127.0.0.1:8088",
+      "mcpPort": "8819",
+      "canonicalTools": [
+        "get_account_summaries",
+        "get_property_details",
+        "list_google_ads_links",
+        "list_property_annotations",
+        "get_custom_dimensions_and_metrics",
+        "run_report",
+        "run_realtime_report",
+        "run_funnel_report",
+        "run_conversions_report"
+      ],
+      "servers": [],
+      "toolAllowlist": [],
+      "expectedTools": [
+        "get_account_summaries",
+        "get_property_details",
+        "list_google_ads_links",
+        "list_property_annotations",
+        "get_custom_dimensions_and_metrics",
+        "run_report",
+        "run_realtime_report",
+        "run_funnel_report",
+        "run_conversions_report"
+      ],
+      "forbiddenTools": [
+        "create_property",
+        "update_property",
+        "delete_property",
+        "mcp-add",
+        "mcp-remove",
+        "mcp-config-set",
+        "mcp-create-profile",
+        "mcp-activate-profile",
+        "mcp-exec",
+        "code-mode"
+      ],
+      "knownGaps": [
+        "Google labels the official Google Analytics MCP server experimental. The local proxy preserves the exact nine-tool read-only surface and adds the output schemas, structured content, and tool annotations required for a private ChatGPT developer-mode app; it does not add Analytics write capabilities."
       ]
     }
   ]
