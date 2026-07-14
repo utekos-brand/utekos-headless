@@ -73,7 +73,7 @@ export async function ComfyrobeSection() {
             }}
           />
         </div>
-        <div className='relative grid min-w-0 grid-cols-1 items-center gap-12 rounded-2xl lg:grid-cols-2'>
+        <div className='relative grid min-w-0 grid-cols-1 items-stretch gap-12 rounded-2xl lg:grid-cols-2'>
           <ComfyrobeImageSection image={comfyrobeImage} />
 
           <ComfyrobeContentColumn variantId={comfyrobeId} />

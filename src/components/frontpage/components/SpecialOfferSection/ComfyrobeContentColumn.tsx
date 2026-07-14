@@ -75,7 +75,7 @@ export function ComfyrobeContentColumn({
       <div
         ref={badgeRef}
         className={cn(
-          'will-animate-fade-in-up mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3',
+          'will-animate-fade-in-up mb-3 inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 xl:mb-4 xl:px-5 xl:py-3',
           badgeInView && 'is-in-view'
         )}
         style={
@@ -100,7 +100,7 @@ export function ComfyrobeContentColumn({
       >
         <H2
           ID='comfyrobe-heading'
-          className='pb-0 text-3xl text-balance sm:text-4xl'
+          className='pb-0 text-3xl! text-balance sm:text-4xl!'
         >
           Tøff mot været, komfortabel for deg
         </H2>
@@ -116,7 +116,7 @@ export function ComfyrobeContentColumn({
           { '--transition-delay': '0.5s' } as React.CSSProperties
         }
       >
-        <P className='mt-4 text-xl tracking-normal text-card-foreground not-first:mt-0 sm:text-lg'>
+        <P className='mt-3 text-base! tracking-normal text-card-foreground not-first:mt-0 sm:text-lg! lg:text-base! xl:mt-4 xl:text-lg!'>
           Comfyrobe™ kombinerer funksjon, tidløst design og
           kompromissløs komfort. Vanntett og vindtett ytterstoff
           med pustende membran holder deg tørr, mens det tykke
@@ -124,7 +124,7 @@ export function ComfyrobeContentColumn({
         </P>
       </div>
 
-      <ul className='mt-8 space-y-3'>
+      <ul className='mt-6 space-y-2 xl:mt-8 xl:space-y-3'>
         {benefits.map((benefit, idx) => (
           <BenefitCard
             key={benefit.label}
@@ -148,7 +148,7 @@ export function ComfyrobeContentColumn({
           asChild
           variant='default'
           size='lg'
-          className='group font-utekos-text-medium mt-8 w-full rounded-3xl! px-8! py-6! shadow-[0_18px_40px_-28px_color-mix(in_oklch,var(--primary)_55%,transparent)] transition-all duration-300 hover:scale-105! sm:w-auto'
+          className='group font-utekos-text-medium mt-6 w-full rounded-3xl! px-8! py-6! shadow-[0_18px_40px_-28px_color-mix(in_oklch,var(--primary)_55%,transparent)] transition-all duration-300 hover:scale-105! sm:w-auto xl:mt-8'
         >
           <Link
             href='/produkter/comfyrobe'
