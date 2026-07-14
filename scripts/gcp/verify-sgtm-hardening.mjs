@@ -53,7 +53,7 @@ async function validateLatestSecretMaterial() {
 }
 
 const projectArg = `--project=${config.projectId}`
-let vercelLink = {}
+let vercelLink
 try {
   vercelLink = JSON.parse(fs.readFileSync('.vercel/project.json', 'utf8'))
 } catch {
