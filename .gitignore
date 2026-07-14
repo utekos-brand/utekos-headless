@@ -169,6 +169,17 @@ scripts/mcp/*
 !/scripts/mcp/doctor-chatgpt-profiles.mjs
 !/scripts/mcp/utekos-css-insight-server.mjs
 !/scripts/mcp/doctor-utekos-css-insight-server.mjs
+!/scripts/mcp/run-server.mjs
+!/scripts/mcp/utekos-shopify-readonly-server.mjs
+!/scripts/mcp/doctor-utekos-shopify-readonly-server.mjs
+!/scripts/mcp/configure-shopify-readonly-credentials.mjs
+!/scripts/mcp/utekos-codex-bridge-server.mjs
+!/scripts/mcp/doctor-utekos-codex-bridge-server.mjs
+!/scripts/mcp/accept-chatgpt-codex-bridge.mjs
+!/scripts/mcp/doctor-google-analytics-mcp.mjs
+!/scripts/mcp/utekos-google-analytics-server.mjs
+!/scripts/mcp/doctor-utekos-google-analytics-server.mjs
+!/scripts/mcp/login-google-ads-adc.mjs
 !/.env.mcp.example
 !/.env.tunnel.example
 .agents/
@@ -183,7 +194,6 @@ mcp.json
 *.env.local
 src/api/lib/cloud-credentials/
 supabase/md.md
-ç
 
 # Keep local agent/editor/documentation payloads out of GitHub/Vercel source.
 .agent/skills/
@@ -200,10 +210,6 @@ docs/
 /.env.docker.example
 .env.local.incomplete.backup
 /.env.local.incomplete.backup
-.env.mcp.example
-/.env.mcp.example
-.env.tunnel.example
-/.env.tunnel.example
 
 # accidental local SDK / tooling trees
 merchant-api-samples/

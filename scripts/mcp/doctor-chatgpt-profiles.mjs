@@ -145,15 +145,15 @@ function checkCanonicalSurface(checks, profile) {
         '--input-type=module',
         '-e',
         [
-          "import { Client, StdioClientTransport } from '@modelcontextprotocol/client';",
-          "const transport = new StdioClientTransport({ command: process.execPath, args: ['scripts/mcp/utekos-commerce-tracking-server.mjs'], cwd: process.cwd() });",
-          "const client = new Client({ name: 'chatgpt-profile-commerce-catalog-check', version: '1.0.0' });",
-          "(async () => {",
-          "  await client.connect(transport);",
-          "  const result = await client.callTool({ name: 'commerce_tracking_bootstrap', arguments: {} });",
-          "  console.log(JSON.stringify(result.structuredContent?.data?.canonical_tools ?? []));",
-          "  await client.close();",
-          "})().catch(async error => { try { await client.close(); } catch {} console.error(error instanceof Error ? error.message : String(error)); process.exit(1); });"
+          'import { Client, StdioClientTransport } from \'@modelcontextprotocol/client\';',
+          'const transport = new StdioClientTransport({ command: process.execPath, args: [\'scripts/mcp/utekos-commerce-tracking-server.mjs\'], cwd: process.cwd() });',
+          'const client = new Client({ name: \'chatgpt-profile-commerce-catalog-check\', version: \'1.0.0\' });',
+          '(async () => {',
+          '  await client.connect(transport);',
+          '  const result = await client.callTool({ name: \'commerce_tracking_bootstrap\', arguments: {} });',
+          '  console.log(JSON.stringify(result.structuredContent?.data?.canonical_tools ?? []));',
+          '  await client.close();',
+          '})().catch(async error => { try { await client.close(); } catch {} console.error(error instanceof Error ? error.message : String(error)); process.exit(1); });'
         ].join('')
       ],
       { timeout: 120000 }

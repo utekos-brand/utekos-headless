@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
 import process from 'node:process'
 import { spawnSync } from 'node:child_process'
 
@@ -36,6 +39,24 @@ function parseTextJson(result) {
 }
 
 function installedVersion() {
+  const metadataPath = path.join(
+    os.homedir(),
+    '.local',
+    'pipx',
+    'venvs',
+    'analytics-mcp',
+    'pipx_metadata.json'
+  )
+  if (fs.existsSync(metadataPath)) {
+    try {
+      const metadata = JSON.parse(
+        fs.readFileSync(metadataPath, 'utf8')
+      )
+      const version = metadata.main_package?.package_version
+      if (typeof version === 'string') return version
+    } catch {}
+  }
+
   const result = spawnSync(
     'pipx',
     ['runpip', 'analytics-mcp', 'show', 'analytics-mcp'],

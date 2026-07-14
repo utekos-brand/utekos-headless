@@ -129,7 +129,8 @@ function readEnvValues(relativePath) {
     if (!match) continue
     const raw = match[2].trim()
     const value =
-      (raw.startsWith('"') && raw.endsWith('"')) || (raw.startsWith("'") && raw.endsWith("'"))
+      (raw.startsWith('"') && raw.endsWith('"')) ||
+      (raw.startsWith('\u0027') && raw.endsWith('\u0027'))
         ? raw.slice(1, -1)
         : raw
     values.set(match[1], value)

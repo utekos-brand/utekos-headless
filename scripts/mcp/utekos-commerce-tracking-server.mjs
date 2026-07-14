@@ -6,7 +6,7 @@ import process from 'node:process'
 import { randomUUID } from 'node:crypto'
 
 import { BetaAnalyticsDataClient } from '@google-analytics/data'
-import { GoogleAuth, OAuth2Client } from 'google-auth-library'
+import { GoogleAuth } from 'google-auth-library'
 import { McpServer, StdioServerTransport } from '@modelcontextprotocol/server'
 import { z } from 'zod/v4'
 
@@ -320,7 +320,8 @@ function readEnvValues(relativePath) {
     if (!match) continue
     const rawValue = match[2].trim()
     const value =
-      (rawValue.startsWith('"') && rawValue.endsWith('"')) || (rawValue.startsWith("'") && rawValue.endsWith("'")) ?
+      (rawValue.startsWith('"') && rawValue.endsWith('"')) ||
+      (rawValue.startsWith('\u0027') && rawValue.endsWith('\u0027')) ?
         rawValue.slice(1, -1)
       : rawValue
     values.set(match[1], value)
@@ -2570,10 +2571,6 @@ function microsoftAdsMissingRequirements(options = {}) {
   return missing
 }
 
-function microsoftAdsAuthReady(options = {}) {
-  return microsoftAdsMissingRequirements(options).length === 0
-}
-
 function microsoftAdsEndpoint(service) {
   const environment = microsoftAdsEnvironment()
   const sandboxPrefix = environment === 'sandbox' ? '.sandbox' : ''
@@ -2720,7 +2717,7 @@ function escapeXml(value) {
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
-    .replaceAll("'", '&apos;')
+    .replaceAll('\u0027', '&apos;')
 }
 
 async function readTextEndpoint(url, options) {
@@ -4042,11 +4039,10 @@ server.registerTool(
       )
     }
 
-    let token = ''
-    let containerId = configuredContainerId
+    let containerId
     let response
     try {
-      token = await googleTagManagerAccessToken()
+      const token = await googleTagManagerAccessToken()
       if (!token) throw new Error('Missing GTM OAuth token or service-account credentials.')
       containerId = await resolveGtmContainerId({ token, accountId, configuredContainerId, publicContainerId })
       if (!containerId) throw new Error('GTM_WEB_CONTAINER_ID or GTM_CONTAINER_ID is missing and no matching container was found for the public GTM id.')
