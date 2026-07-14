@@ -8,7 +8,8 @@ COMMIT `400d72485`. ALT TILSIKTET LOKALT ARBEID ER BEVART PÅ
 NAVNGITTE RELEASE- ELLER ARKIVBRANCHES. RELEASE-ENHETENE ER
 ISOLERT DIREKTE FRA `origin/main`: GIT-OPERASJONER, KLARNA-
 STOREFRONT, MICROSOFT MERCHANT, POSTHOG SDK, STOREFRONT-
-TILGJENGELIGHET OG S/GTM/SUPABASE.
+TILGJENGELIGHET, MCP-/DRIFTSVERKTØY, KILDEHYGIENE OG
+S/GTM/SUPABASE.
 DE ER IKKE ALTERNATIVE PRODUKSJONSFASITER; DE SKAL VERIFISERES OG
 MERGES TIL DEN ENE KANONISKE LINJEN I GODKJENT REKKEFØLGE. SEKS
 ELDRE AGENT-/PAGESPEED-BRANCHES FRA FØR REPOSITORY-MIGRERINGEN ER
@@ -66,13 +67,34 @@ MUTASJON ER UTFØRT I DENNE GIT-AVSTEMMINGEN.
   mobil-/desktop-layout, 17,1:1 mørk og 18,0:1 lys modal-kontrast,
   dialog inne i åpen handlekurv og både avbryt- og bekreftflyten uten
   applikasjonsfeil. Cookiebot viser det forventede localhost-varselet.
+- `codex/release-mcp-operations` er en separat MCP-/driftsrelease uten
+  PostHog-, Klarna-, Microsoft-feed- eller storefront-kode og uten de
+  20+ ubrukte Google-pakkene fra den brede kandidaten. Den inkluderer
+  de tidligere ignorerte, men nødvendige runtimefilene og kun tomme
+  env-maler. Frossen install, endret-kode-lint, TypeScript og build
+  95/95 er grønne. MCP build genererte 52 servere; basisdoctor,
+  commerce doctor med 28/28 tools, Shopify read-only, Codex bridge,
+  offisiell Google Analytics MCP 0.6.0 med 9/9 tools og live rapport,
+  privat Analytics-proxy og syv sGTM-loaderendepunkter er grønne.
+  Samlet ChatGPT-profildoctor er ikke totalgrønn fordi den eldre
+  Insight-surface feiler og Docker Desktop ikke kjører; de nye
+  profilene passerer separat.
+- `codex/release-source-hygiene` har bare to ikke-runtimeendringer:
+  fjerner en duplisert filsti-kommentar og retter `;;` til `;` i den
+  allerede anvendte migrasjonen `20260711190423`. Linked migration
+  list bekrefter samme versjon lokalt og remote. Linked Supabase lint
+  for prosjektets applikasjonsskjemaer er grønn, og ingen Supabase-
+  mutasjon er utført. En separat `extensions.index_advisor`-feil finnes
+  fortsatt hvis Supabase sitt interne `extensions`-skjema lintes.
 - `codex/production-candidate-20260714` bevarer de 58 reelle lokale
   forskjellene mot dagens `origin/main`, inkludert PostHog-/package-,
   MCP-, Microsoft feed-, Klarna UI- og øvrige frontendendringer. De er
-  tilsiktede produksjonskandidater. De ferdig verifiserte Git-, Klarna-,
-  Microsoft-, PostHog- og storefront-delene er nå trukket ut i egne
-  releaser. Branchen er tapsfri kilde for gjenstående MCP-/drifts- og
-  dokumentasjonsavstemming, ikke en release som skal deployeres samlet.
+  tilsiktede produksjonskandidater. Alle 58 filstier er nå klassifisert
+  i egne releaser eller som eksplisitt avvist. Den eneste avviste
+  endringen er `minimumReleaseAgeExclude` for `posthog-js@1.399.2`:
+  frossen install passerer uten dette supply-chain-unntaket, så det
+  skal ikke svekke policyen i produksjon. Branchen er kun et tapsfritt
+  arkiv og skal ikke deployeres samlet.
 - En midlertidig lokal integrasjonsaudit kombinerte Git-operasjoner,
   Microsoft Merchant, PostHog, Klarna og storefront-tilgjengelighet med
   0 mergekonflikter. Frossen install, route-typegenerering, 14/14

@@ -69,6 +69,24 @@ Klarna provider preview gate, production environment verification,
 Supabase migration ordering for the separate sGTM release, or explicit
 approval for push, merge and production deployment.
 
+### Remaining candidate classification 2026-07-14
+
+- `codex/release-mcp-operations` contains only MCP configuration,
+  operational servers, safe placeholder templates and their runbooks.
+  It deliberately excludes the broad candidate's unused Google package
+  expansion. The official Google Analytics MCP runtime is pinned at
+  0.6.0 and verified against the current
+  [Google Analytics MCP setup](https://developers.google.com/analytics/devguides/MCP).
+- `codex/release-source-hygiene` contains a comment removal and the
+  single-semicolon correction in migration `20260711190423`. That
+  migration version already exists locally and remotely, so this branch
+  must not trigger a schema push. Linked application-schema lint passes.
+- The `posthog-js@1.399.2` minimum-release-age exclusion from the broad
+  candidate was rejected. Frozen install now succeeds without bypassing
+  the repository's supply-chain age policy.
+- Every path from `codex/production-candidate-20260714` is therefore
+  classified. The branch remains an archive, not a deploy unit.
+
 ## Required Preflight
 
 Run these before deciding the release order:
