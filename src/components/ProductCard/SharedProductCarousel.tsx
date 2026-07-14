@@ -70,7 +70,7 @@ export function SharedProductCarousel({
           return (
             <CarouselItem
               key={product.id}
-              className='basis-[38%] pl-3 md:basis-1/2 md:pl-8 lg:basis-1/3'
+              className='basis-[82%] pl-3 sm:basis-1/2 md:pl-8 lg:basis-1/3'
             >
               <ProductCard
                 product={product}

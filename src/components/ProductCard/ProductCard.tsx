@@ -82,7 +82,7 @@ export function ProductCard({
   const isAvailable = selectedVariant?.availableForSale ?? false
   const imageSizes =
     compactMobile ?
-      '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 38vw'
+      '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 82vw'
     : '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw'
 
   const trackProductSelect = () => {
@@ -189,7 +189,7 @@ export function ProductCard({
               alt={altText}
               fill
               quality={100}
-              sizes='38vw'
+              sizes='(min-width: 640px) 50vw, 82vw'
               className='object-cover transition-transform duration-300 group-hover:scale-[1.02]'
               fetchPriority={isPriority ? 'high' : 'low'}
               loading={isPriority ? 'eager' : 'lazy'}

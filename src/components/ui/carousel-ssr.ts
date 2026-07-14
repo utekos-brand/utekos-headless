@@ -54,13 +54,13 @@ export const CAROUSEL_SSR = {
     }
   }),
 
-  /** Product carousel: `basis-[38%]` → `md:basis-1/2` → `lg:basis-1/3` */
+  /** Product carousel: `basis-[82%]` → `sm:basis-1/2` → `lg:basis-1/3` */
   mobilePeekHalvesAndThirds: (
     slideCount: number
   ): SsrOptionsType => ({
-    slideSizes: fillSlideSizes(slideCount, 38),
+    slideSizes: fillSlideSizes(slideCount, 82),
     breakpoints: {
-      '(min-width: 768px)': {
+      '(min-width: 640px)': {
         slideSizes: fillSlideSizes(slideCount, 50)
       },
       '(min-width: 1024px)': {
