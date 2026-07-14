@@ -56,13 +56,15 @@ known and completed in the correct order.
 ### Local integration audit 2026-07-14
 
 The isolated Git operations, Microsoft Merchant, PostHog SDK, Klarna
-product-card and storefront accessibility releases were merged into a
-temporary local audit branch from the current `origin/main`. There were
-no merge conflicts. Frozen install, Next route type generation, 14/14
-targeted tests, ESLint for every changed code file, TypeScript and a
-Vercel-like production build with 96/96 routes passed. The temporary
-audit ref was removed after recording the result. It was not pushed,
-deployed or treated as an alternative production reference.
+product-card, storefront accessibility, MCP operations and source
+hygiene releases were merged into a temporary local audit branch from
+the current `origin/main`. There were no merge conflicts. Frozen
+install without a minimum-release-age bypass, Next route type
+generation, 14/14 targeted tests, MCP generation with 52 servers,
+MCP/commerce doctors, ESLint for every changed code file, TypeScript
+and a Vercel-like production build with 96/96 routes passed. The
+temporary audit ref was removed after recording the result. It was not
+pushed, deployed or treated as an alternative production reference.
 
 This audit proves code-level compatibility. It does not replace the
 Klarna provider preview gate, production environment verification,

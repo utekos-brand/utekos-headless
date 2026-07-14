@@ -96,12 +96,14 @@ MUTASJON ER UTFØRT I DENNE GIT-AVSTEMMINGEN.
   skal ikke svekke policyen i produksjon. Branchen er kun et tapsfritt
   arkiv og skal ikke deployeres samlet.
 - En midlertidig lokal integrasjonsaudit kombinerte Git-operasjoner,
-  Microsoft Merchant, PostHog, Klarna og storefront-tilgjengelighet med
-  0 mergekonflikter. Frossen install, route-typegenerering, 14/14
-  målrettede tester, lint av alle endrede kodefiler, TypeScript og en
-  Vercel-lignende build med 96/96 ruter var grønne. Auditreferansen ble
-  fjernet etter at resultatene var dokumentert; den var aldri en ny
-  produksjonsfasit og ble ikke pushet eller deployet.
+  Microsoft Merchant, PostHog, Klarna, storefront-tilgjengelighet,
+  MCP-/driftsverktøy og kildehygiene med 0 mergekonflikter. Frossen
+  install uten supply-chain-bypass, route-typegenerering, 14/14
+  målrettede tester, MCP build med 52 servere, MCP/commerce doctor,
+  lint av alle endrede kodefiler, TypeScript og en Vercel-lignende
+  build med 96/96 ruter var grønne. Auditreferansen ble fjernet etter
+  at resultatene var dokumentert; den var aldri en ny produksjonsfasit
+  og ble ikke pushet eller deployet.
 - `codex/sgtm-remediation` bevarer tracking-, receipt-, refund-, sGTM-
   tooling- og Supabase-kandidatene i ti commits oppå samme
   `origin/main`. Review-diff-artifacts er bevart separat i en navngitt
