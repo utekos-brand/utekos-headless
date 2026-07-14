@@ -19,20 +19,15 @@ interface BenefitCardProps {
   delay: number
 }
 
-const toneStyles: Record<
-  BenefitTone,
-  {
-    icon: string
-  }
-> = {
+const toneStyles: Record<BenefitTone, { icon: string }> = {
   water: {
     icon: 'border-card-foreground/28 bg-secondary text-sidebar-foreground'
   },
   mauve: {
-   icon: 'border-card-foreground/28 bg-secondary text-sidebar-foreground'
+    icon: 'border-card-foreground/28 bg-secondary text-sidebar-foreground'
   },
   overcast: {
-   icon: 'border-card-foreground/28 bg-secondary text-sidebar-foreground'
+    icon: 'border-card-foreground/28 bg-secondary text-sidebar-foreground'
   }
 }
 
@@ -45,15 +40,13 @@ export function BenefitCard({
   return (
     <li
       className={cn(
-        'animate-fade-in-on-scroll group font-sans-normal relative overflow-hidden rounded-lg border border-border bg-background p-4 text-foreground shadow-sm transition-all duration-300 hover:translate-x-1 dark:border-dark-border'
+        'animate-fade-in-on-scroll group font-sans-normal dark:border-dark-border relative overflow-hidden rounded-lg border border-border bg-background p-4 text-foreground shadow-sm transition-all duration-300 hover:translate-x-1'
       )}
       style={
-        {
-          '--animation-delay': `${delay}s`
-        } as CSSProperties
+        { '--animation-delay': `${delay}s` } as CSSProperties
       }
     >
-      <div className='relative z-10 flex items-center gap-3'>
+      <div className='relative z-10 flex min-w-0 items-center gap-3'>
         {/*
           Chip pairs invert the featured surface: light and dark mode
           both exceed 10.9:1 for text and 3:1 for the chip boundary.
@@ -66,7 +59,7 @@ export function BenefitCard({
         >
           <Check className='size-5' />
         </div>
-        <div className='flex-1 text-sm'>
+        <div className='min-w-0 flex-1 text-sm'>
           <InlineText
             as='strong'
             className='font-semibold text-foreground'

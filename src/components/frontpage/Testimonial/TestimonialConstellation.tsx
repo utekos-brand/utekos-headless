@@ -29,7 +29,7 @@ export function TestimonialConstellation() {
         id='testimonial-constellation'
         className='relative mx-auto w-full overflow-hidden text-foreground'
       >
-        <div className='relative z-10 mx-auto px-4 text-left sm:px-6 lg:px-8'>
+        <div className='relative z-10 text-left'>
           <motion.div
             className='mx-auto mb-20 text-left'
             initial='hidden'
@@ -95,7 +95,7 @@ export function TestimonialConstellation() {
                 className='mb-6 pb-0 text-left text-3xl leading-[1.05] font-bold text-foreground md:text-5xl lg:text-6xl'
               >
                 Hva sier andre{' '}
-                <InlineText className='font-sans text-primary dark:text-secondary'>
+                <InlineText className='font-sans text-primary dark:text-ceramic'>
                   livsnytere?
                 </InlineText>
               </H2>

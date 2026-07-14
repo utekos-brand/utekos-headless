@@ -52,7 +52,7 @@ export const PageSection = forwardRef<
     <Component
       ref={ref}
       className={cn(
-        'size-full',
+        'size-full border-t border-t-foreground/30',
         pageSectionBackgroundClassName[background],
         className
       )}
@@ -60,7 +60,7 @@ export const PageSection = forwardRef<
     >
       <div
         className={cn(
-          'relative mx-auto w-full max-w-screen items-center border-t border-t-foreground/30 px-4 py-8 sm:px-6 sm:py-12 md:px-42 md:py-16 lg:py-24',
+          'relative mx-auto w-full max-w-7xl items-center px-4 py-8 sm:px-6 sm:py-12 md:py-16 lg:px-8 lg:py-24',
           contentClassName
         )}
       >
