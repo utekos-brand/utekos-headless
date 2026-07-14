@@ -7,7 +7,6 @@ import { AddToCart } from '@/components/cart/AddToCart'
 import { GalleryColumn } from '@/components/jsx/GalleryColumn'
 import { getKlarnaMinorUnitAmount } from '@/components/klarna/utils/getKlarnaMinorUnitAmount'
 import { KlarnaCreditPromotionAutoSize } from '@/components/klarna/components/KlarnaCreditPromotionAutoSize'
-import { KlarnaProductExpressCheckout } from '@/components/klarna/components/KlarnaProductExpressCheckout'
 import { KlarnaOnSiteMessagingScript } from '@/components/klarna/components/KlarnaOnSiteMessagingScript'
 import { OptionsColumn } from '@/components/jsx/OptionsColumn'
 import { ProductPageGrid } from '@/components/jsx/ProductPageGrid'
@@ -290,11 +289,6 @@ export function ProductPageView({
                       {...(additionalLine && { additionalLine })}
                     />
                   </Activity>
-                  <KlarnaProductExpressCheckout
-                    product={productData}
-                    selectedVariant={selectedVariant}
-                    className='w-full'
-                  />
                 </div>
 
                 <ProductDescription

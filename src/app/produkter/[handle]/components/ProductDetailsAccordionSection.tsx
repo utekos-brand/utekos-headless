@@ -1,6 +1,6 @@
 'use client'
 
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { sendGAEvent } from '@next/third-parties/google'
 import {
   AccordionItem,
@@ -36,9 +36,10 @@ export function ProductDetailsAccordionSection({
       accordion_section: id
     }
 
-    void dispatchMetaTrackingEvent({
+    void dispatchTrackingEvent({
       eventName: 'InteractWithAccordion',
       eventId: eventID,
+      destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
       eventData: pixelEventData
     })
   }

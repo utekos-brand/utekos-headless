@@ -12,16 +12,20 @@ import {
 } from '@/components/ui/alert-dialog'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Button, buttonVariants } from '@/components/ui/button'
+import { useCartId } from '@/hooks/useCartId'
 import { useCartLine } from '@/hooks/useCartLine'
 import { CartMutationContext } from '@/lib/context/CartMutationContext'
 import { cartStore } from '@/lib/state/cartStore'
+import { createMutationPromise } from '@/lib/utils/createMutationPromise'
 import { cn } from '@/lib/utils/className'
 import { formatNOK } from '@/lib/utils/formatters/formatNOK'
+import { useQueryClient } from '@tanstack/react-query'
 import { Minus, Plus, Trash2 } from 'lucide-react'
 import type { Route } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import type { Cart } from 'types/cart'
 import { AlertDialogTitle } from './AlertDialogen'
 import { Activity } from 'react'
 
@@ -31,18 +35,14 @@ interface CartLineItemProps {
 
 export const CartLineItem = ({ lineId }: CartLineItemProps) => {
   const line = useCartLine(lineId)
+  const cartId = useCartId()
   const cartActor = CartMutationContext.useActorRef()
-  const [localQuantity, setLocalQuantity] = useState(
-    line?.quantity ?? 1
-  )
+  const queryClient = useQueryClient()
+  const [quantityOverride, setQuantityOverride] = useState<
+    number | null
+  >(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
-
-  useEffect(() => {
-    if (line && !isDeleting) {
-      setLocalQuantity(line.quantity)
-    }
-  }, [line, isDeleting])
 
   useEffect(() => {
     return () => {
@@ -56,8 +56,10 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
     return null
   }
 
+  const localQuantity = quantityOverride ?? line.quantity
+
   const handleUpdateQuantity = (newQuantity: number) => {
-    setLocalQuantity(newQuantity)
+    setQuantityOverride(newQuantity)
 
     if (updateTimerRef.current) {
       clearTimeout(updateTimerRef.current)
@@ -79,13 +81,65 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
     }
   }
 
-  const handleRemoveLine = () => {
+  const handleRemoveLine = async () => {
+    if (updateTimerRef.current) {
+      clearTimeout(updateTimerRef.current)
+      updateTimerRef.current = null
+    }
+
     setIsDeleting(true)
-    setLocalQuantity(0)
-    cartActor.send({
+    setQuantityOverride(0)
+
+    const queryKey = ['cart', cartId] as const
+    let previousCart: Cart | null | undefined
+
+    if (cartId) {
+      await queryClient.cancelQueries({ queryKey })
+      previousCart = queryClient.getQueryData<Cart | null>(queryKey)
+
+      queryClient.setQueryData<Cart | null>(queryKey, oldCart => {
+        if (!oldCart) return oldCart ?? null
+
+        const removedLine = oldCart.lines.find(
+          cartLine => cartLine.id === line.id
+        )
+        const removedQuantity = removedLine?.quantity ?? line.quantity
+
+        return {
+          ...oldCart,
+          totalQuantity: Math.max(
+            0,
+            oldCart.totalQuantity - removedQuantity
+          ),
+          lines: oldCart.lines.filter(cartLine => cartLine.id !== line.id)
+        }
+      })
+    }
+
+    const snapshot = await createMutationPromise({
       type: 'REMOVE_LINE',
       input: { lineId: line.id }
-    })
+    }, cartActor)
+
+    const result = snapshot.context.lastResult
+
+    if (!result?.success) {
+      if (cartId && previousCart) {
+        queryClient.setQueryData(queryKey, previousCart)
+      }
+
+      setIsDeleting(false)
+      setQuantityOverride(null)
+      return
+    }
+
+    if (result.cart?.id) {
+      queryClient.setQueryData(['cart', result.cart.id], result.cart)
+    }
+
+    if (cartId) {
+      await queryClient.invalidateQueries({ queryKey })
+    }
   }
 
   const productTitle: string =
@@ -160,7 +214,9 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
           <div className='absolute top-0 -right-2 md:right-0'>
             <AlertDialog>
               <AlertDialogTrigger
+                aria-label={`Fjern ${productTitle} fra handlekurven`}
                 disabled={isDeleting}
+                data-track='CartRemoveItemOpen'
                 className={cn(
                   buttonVariants({
                     variant: 'ghost',

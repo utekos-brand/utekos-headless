@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { runAfterPageSettles } from '@/lib/browser/runAfterPageSettles'
 import type { MetaEventType } from 'types/tracking/meta/event'
@@ -81,9 +81,10 @@ export function ProductListTracking({
     eventFired.current = eventKey
 
     return runAfterPageSettles(() => {
-      void dispatchMetaTrackingEvent({
+      void dispatchTrackingEvent({
         eventName,
         eventId: generateEventID(),
+        destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
         eventData: buildProductListEventData({
           products,
           itemListId,

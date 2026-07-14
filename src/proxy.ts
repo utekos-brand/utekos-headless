@@ -15,6 +15,7 @@ import { formatCookieHeader } from './lib/tracking/proxy/formatCookieHeader'
 import { hashEmail } from './lib/tracking/hash/hashEmail'
 import { formatFbcCookie } from './lib/tracking/proxy/formatFbcCookie'
 import { hasRequestMarketingConsent } from '@/lib/tracking/consent/hasRequestMarketingConsent'
+import { buildReportOnlyCsp } from '@/lib/security/buildReportOnlyCsp'
 
 const allowedReferrers = new Set(['nbocc.no', 'bergenhordaland.nbocc.no'])
 
@@ -41,14 +42,19 @@ function isAllowedNboccReferrer(request: NextRequest) {
 }
 
 function continueDocumentRequest(): NextResponse {
-  return NextResponse.next()
+  return withReportOnlyCsp(NextResponse.next())
+}
+
+function withReportOnlyCsp<T extends NextResponse>(response: T): T {
+  response.headers.set('Content-Security-Policy-Report-Only', buildReportOnlyCsp())
+  return response
 }
 
 export async function proxy(request: NextRequest) {
   const context = createMiddlewareContext(request)
 
   if (context.isBlockedAgent) {
-    return new NextResponse(null, { status: 403, statusText: 'Forbidden' })
+    return withReportOnlyCsp(new NextResponse(null, { status: 403, statusText: 'Forbidden' }))
   }
 
   if (context.pathname === '/' && isAllowedNboccReferrer(request)) {
@@ -56,7 +62,7 @@ export async function proxy(request: NextRequest) {
 
     redirectUrl.search = request.nextUrl.search
 
-    return NextResponse.redirect(redirectUrl, 307)
+    return withReportOnlyCsp(NextResponse.redirect(redirectUrl, 307))
   }
 
   if (MAGASINET_UPGRADE_ENABLED && context.pathname.startsWith('/magasinet')) {
@@ -68,7 +74,7 @@ export async function proxy(request: NextRequest) {
     }
 
     const upgradeUrl = new URL(MAGASINET_UPGRADE_PATH, request.url)
-    return NextResponse.redirect(upgradeUrl)
+    return withReportOnlyCsp(NextResponse.redirect(upgradeUrl))
   }
 
   if (!context.isTargetRoute) {
@@ -79,13 +85,15 @@ export async function proxy(request: NextRequest) {
     return continueDocumentRequest()
   }
 
-  return runProxyPipeline(request, context, {
+  const response = await runProxyPipeline(request, context, {
     detectInteractions: detectAdInteractions,
     planActions: planMiddlewareActions,
     applyCookies: applyResponseCookies,
     dispatchLogs: dispatchAnalyticsLogs,
     legacyHandler: async (req, res) => handleMarketingParams(req, res)
   })
+
+  return withReportOnlyCsp(response)
 }
 
 export const config = {

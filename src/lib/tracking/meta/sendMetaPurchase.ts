@@ -148,7 +148,8 @@ export async function sendMetaPurchase({ order, customer, redisData, contentIds 
     return {
       success: false,
       error: 'Meta CAPI request failed',
-      details: errorResponse.error || err.message
+      details: errorResponse.error || err.message,
+      ...(err.response?.status !== undefined ? { httpStatus: err.response.status } : {})
     }
   }
 }

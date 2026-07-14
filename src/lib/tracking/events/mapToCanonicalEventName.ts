@@ -7,8 +7,11 @@ const canonicalEventNames = {
   ViewItemList: 'view_item_list',
   SelectItem: 'select_item',
   AddToCart: 'add_to_cart',
+  ViewCart: 'view_cart',
+  RemoveFromCart: 'remove_from_cart',
   InitiateCheckout: 'begin_checkout',
   Purchase: 'purchase',
+  Refund: 'refund',
   Search: 'search',
   Lead: 'generate_lead'
 } as const satisfies Record<string, NonNullable<MetaEventPayload['canonicalEventName']>>

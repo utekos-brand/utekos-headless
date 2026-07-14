@@ -126,7 +126,17 @@ async function main() {
     check(checks, 'call:vercel_deployment_status_probe', Boolean(vercel.structuredContent?.tool === 'vercel_deployment_status_probe'), vercel.structuredContent?.ok === true ? 'live query ok' : 'structured credential/scope failure')
 
     const gtm = await client.callTool({ name: 'gtm_sgtm_endpoint_status_probe', arguments: {} })
-    check(checks, 'call:gtm_sgtm_endpoint_status_probe', Boolean(gtm.structuredContent?.tool === 'gtm_sgtm_endpoint_status_probe'), gtm.structuredContent?.ok === true ? 'live query ok' : 'structured endpoint failure')
+    const gtmEndpoints = gtm.structuredContent?.data?.endpoints ?? []
+    const failedGtmEndpoints = gtmEndpoints.filter(endpoint => endpoint.ok !== true || endpoint.status !== 200)
+    check(
+      checks,
+      'call:gtm_sgtm_endpoint_status_probe',
+      gtm.structuredContent?.tool === 'gtm_sgtm_endpoint_status_probe'
+        && gtm.structuredContent?.ok === true
+        && gtmEndpoints.length === 4
+        && failedGtmEndpoints.length === 0,
+      failedGtmEndpoints.length === 0 ? `${gtmEndpoints.length} production endpoints healthy` : `${failedGtmEndpoints.length} production endpoint failure(s)`
+    )
 
     const meta = await client.callTool({ name: 'meta_dataset_quality_probe', arguments: {} })
     check(checks, 'call:meta_dataset_quality_probe', Boolean(meta.structuredContent?.tool === 'meta_dataset_quality_probe'), meta.structuredContent?.ok === true ? 'live query ok' : 'structured credential/scope failure')

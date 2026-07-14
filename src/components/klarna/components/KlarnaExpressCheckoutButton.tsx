@@ -1,10 +1,9 @@
 'use client'
 
 import { useEffect, useId, useRef } from 'react'
-import Script from 'next/script'
 
-import { KLARNA_CDN_API_URL } from '@/components/klarna/utils/klarnaCdnApiUrl'
 import { completeKlarnaExpressCheckout } from '@/components/klarna/utils/completeKlarnaExpressCheckout'
+import { loadKlarnaExpressCheckoutSdk } from '@/components/klarna/utils/loadKlarnaExpressCheckoutSdk'
 import {
   klarnaCollectedShippingAddressSchema,
   type KlarnaExpressOrderPayload
@@ -54,106 +53,131 @@ export function KlarnaExpressCheckoutButton({
   const containerId = `klarna-express-checkout-${containerSuffix}`
   const payloadRef = useRef(orderPayload)
   const cartIdRef = useRef(shopifyCartId)
+  const onErrorRef = useRef(onError)
+  const onAuthorizingRef = useRef(onAuthorizing)
   const hasInitializedRef = useRef(false)
 
   useEffect(() => {
     payloadRef.current = orderPayload
     cartIdRef.current = shopifyCartId
-  }, [orderPayload, shopifyCartId])
+    onErrorRef.current = onError
+    onAuthorizingRef.current = onAuthorizing
+  }, [onAuthorizing, onError, orderPayload, shopifyCartId])
 
-  const initKlarna = () => {
-    if (hasInitializedRef.current || disabled) {
+  useEffect(() => {
+    if (!KLARNA_CLIENT_ID || disabled) {
       return
     }
 
-    if (!KLARNA_CLIENT_ID) {
-      return
-    }
+    let isActive = true
 
-    if (!window.Klarna?.Payments?.Buttons) {
-      onError?.('Klarna Payments SDK is not available')
-      return
-    }
+    void loadKlarnaExpressCheckoutSdk()
+      .then(() => {
+        if (
+          !isActive ||
+          hasInitializedRef.current ||
+          !window.Klarna?.Payments?.Buttons
+        ) {
+          return
+        }
 
-    hasInitializedRef.current = true
+        hasInitializedRef.current = true
 
-    window.Klarna.Payments.Buttons.init({
-      client_id: KLARNA_CLIENT_ID
-    }).load(
-      {
-        container: `#${containerId}`,
-        theme: 'default',
-        shape: 'default',
-        locale: 'no-NO',
-        on_click: (
-          authorize: KlarnaExpressCheckoutAuthorize
-        ) => {
-          onAuthorizing?.()
-
-          authorize(
-            {
-              auto_finalize: true,
-              collect_shipping_address: true
-            },
-            payloadRef.current,
-            async (
-              result: KlarnaExpressCheckoutAuthorizationResult
+        window.Klarna.Payments.Buttons.init({
+          client_id: KLARNA_CLIENT_ID
+        }).load(
+          {
+            container: `#${containerId}`,
+            theme: 'default',
+            shape: 'default',
+            locale: 'no-NO',
+            on_click: (
+              authorize: KlarnaExpressCheckoutAuthorize
             ) => {
-              if (
-                !result.approved ||
-                !result.authorization_token
-              ) {
-                onError?.(
-                  'Klarna authorization was not approved'
-                )
-                return
-              }
+              onAuthorizingRef.current?.()
 
-              const parsedAddress =
-                parseCollectedShippingAddress(result)
+              authorize(
+                {
+                  auto_finalize: true,
+                  collect_shipping_address: true
+                },
+                payloadRef.current,
+                async (
+                  result: KlarnaExpressCheckoutAuthorizationResult
+                ) => {
+                  if (
+                    !result.approved ||
+                    !result.authorization_token
+                  ) {
+                    onErrorRef.current?.(
+                      'Klarna authorization was not approved'
+                    )
+                    return
+                  }
 
-              if (!parsedAddress.success) {
-                onError?.(
-                  'Klarna did not return a valid shipping address'
-                )
-                return
-              }
+                  const parsedAddress =
+                    parseCollectedShippingAddress(result)
 
-              try {
-                const completion =
-                  await completeKlarnaExpressCheckout({
-                    authorizationToken:
-                      result.authorization_token,
-                    orderPayload: payloadRef.current,
-                    collectedShippingAddress:
-                      parsedAddress.data,
-                    ...(cartIdRef.current ?
-                      { shopifyCartId: cartIdRef.current }
-                    : {})
-                  })
+                  if (!parsedAddress.success) {
+                    onErrorRef.current?.(
+                      'Klarna did not return a valid shipping address'
+                    )
+                    return
+                  }
 
-                window.location.assign(completion.redirect_url)
-              } catch (error) {
-                const message =
-                  error instanceof Error ?
-                    error.message
-                  : 'Klarna express checkout failed'
+                  try {
+                    const completion =
+                      await completeKlarnaExpressCheckout({
+                        authorizationToken:
+                          result.authorization_token,
+                        orderPayload: payloadRef.current,
+                        collectedShippingAddress:
+                          parsedAddress.data,
+                        ...(cartIdRef.current ?
+                          { shopifyCartId: cartIdRef.current }
+                        : {})
+                      })
 
-                onError?.(message)
-              }
+                    window.location.assign(
+                      completion.redirect_url
+                    )
+                  } catch (error) {
+                    const message =
+                      error instanceof Error ?
+                        error.message
+                      : 'Klarna express checkout failed'
+
+                    onErrorRef.current?.(message)
+                  }
+                }
+              )
             }
-          )
+          },
+          loadResult => {
+            if (loadResult.show_form === false) {
+              onErrorRef.current?.(
+                'Klarna express button is not available for this order'
+              )
+            }
+          }
+        )
+      })
+      .catch(error => {
+        if (!isActive) {
+          return
         }
-      },
-      loadResult => {
-        if (loadResult.show_form === false) {
-          onError?.(
-            'Klarna express button is not available for this order'
-          )
-        }
-      }
-    )
-  }
+
+        onErrorRef.current?.(
+          error instanceof Error ?
+            error.message
+          : 'Klarna Payments SDK could not be loaded'
+        )
+      })
+
+    return () => {
+      isActive = false
+    }
+  }, [containerId, disabled])
 
   if (!KLARNA_CLIENT_ID) {
     return null
@@ -162,16 +186,6 @@ export function KlarnaExpressCheckoutButton({
   return (
     <div className={className} aria-busy={disabled}>
       <div id={containerId} />
-      <Script
-        id={`klarna-express-checkout-sdk-${containerSuffix}`}
-        src={KLARNA_CDN_API_URL}
-        strategy='afterInteractive'
-        onLoad={initKlarna}
-        onReady={initKlarna}
-        onError={() => {
-          onError?.('Klarna Payments SDK could not be loaded')
-        }}
-      />
     </div>
   )
 }

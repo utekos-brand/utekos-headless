@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { CartMutationContext } from '@/lib/context/CartMutationContext'
 import { cartStore } from '@/lib/state/cartStore'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { formatPrice } from '@/lib/utils/formatPrice'
 import { cn } from '@/lib/utils/className'
@@ -25,6 +25,8 @@ import { ProductCardFooter } from './ProductCardFooter'
 import { ProductCardHeader } from './ProductCardHeader'
 import { H3 } from '@/components/typography/TypographyH3'
 import { InlineText } from '@/components/typography/TypographyInlineText'
+import { KlarnaProductExpressCheckout } from '@/components/klarna/components/KlarnaProductExpressCheckout'
+import { ProductCardCompactVariantSelector } from './ProductCardCompactVariantSelector'
 
 interface ExtendedProductCardProps extends ProductCardProps {
   isPriority?: boolean
@@ -92,9 +94,10 @@ export function ProductCard({
       cleanShopifyId(selectedVariant.id) || selectedVariant.id
     const price = Number(selectedVariant.price.amount)
 
-    void dispatchMetaTrackingEvent({
+    void dispatchTrackingEvent({
       eventName: 'SelectItem',
       eventId: generateEventID(),
+      destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
       eventData: {
         value: Number.isFinite(price) ? price : undefined,
         currency: selectedVariant.price.currencyCode,
@@ -158,78 +161,83 @@ export function ProductCard({
     }
   }, [lastError])
 
-  const compactProductCard =
+  const compactProductCardContent =
     compactMobile ?
-      <Card
-        className={cn(
-          'group   flex h-full flex-col gap-0 overflow-hidden border border-border bg-card p-0 text-card-foreground shadow-[0_18px_56px_-42px_rgba(8,10,24,0.85)] md:hidden',
-          cardClassName
-        )}
+      <Link
+        href={productUrl}
+        data-track='ProductCardViewMoreClick'
+        onClick={trackProductSelect}
+        aria-label={`Se produkt ${product.title}`}
+        className='dark:focus-visible:outline-dark-card-foreground flex w-full flex-1 flex-col focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground md:hidden'
       >
-        <Link
-          href={productUrl}
-          data-track='ProductCardViewMoreClick'
-          onClick={trackProductSelect}
-          aria-label={`Se produkt ${product.title}`}
-          className='dark:focus-visible:outline-dark-card-foreground flex h-full w-full flex-col focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
-        >
-          <CardContent className='relative p-0'>
-            {product.handle === 'utekos-dun' ?
-              <Badge
-                variant='destructive'
-                className='bg-disabled  absolute top-2 right-2 z-10 border border-border px-2 py-0.5 text-[0.65rem] font-medium tracking-wide text-foreground uppercase'
-              >
-                <InlineText>Utsolgt</InlineText>
-              </Badge>
-            : null}
-
-            <AspectRatio
-              ratio={1 / 1}
-              className='w-full overflow-hidden'
+        <CardContent className='relative p-0'>
+          {product.handle === 'utekos-dun' ?
+            <Badge
+              variant='destructive'
+              className='bg-disabled  absolute top-2 right-2 z-10 border border-border px-2 py-0.5 text-[0.65rem] font-medium tracking-wide text-foreground uppercase'
             >
-              <Image
-                src={imageUrl}
-                alt={altText}
-                fill
-                quality={100}
-                sizes='38vw'
-                className='object-cover transition-transform duration-300 group-hover:scale-[1.02]'
-                fetchPriority={isPriority ? 'high' : 'low'}
-                loading={isPriority ? 'eager' : 'lazy'}
-              />
-            </AspectRatio>
-          </CardContent>
+              <InlineText>Utsolgt</InlineText>
+            </Badge>
+          : null}
 
-          <div className='dark:border-dark-card-foreground/24 flex flex-col gap-1.5 border-t border-card-foreground/24 p-3'>
-            <div className='flex items-start justify-between gap-2'>
-              <H3 className='line-clamp-2 min-w-0 flex-1 pb-0 text-[0.82rem] leading-snug font-semibold text-balance text-card-foreground'>
-                {product.title}
-              </H3>
-              <BrandBadge
-                backgroundColor='var(--background)'
-                textColor='var(--foreground)'
-                className='shrink-0 border border-foreground/12 px-2 py-0.5 text-[0.65rem] font-medium tracking-wide dark:border-dark-foreground/12'
-              >
-                <InlineText>Unisex</InlineText>
-              </BrandBadge>
-            </div>
-            <InlineText className='text-sm leading-none font-bold text-card-foreground'>
-              {price}
-            </InlineText>
+          <AspectRatio
+            ratio={1 / 1}
+            className='w-full overflow-hidden'
+          >
+            <Image
+              src={imageUrl}
+              alt={altText}
+              fill
+              quality={100}
+              sizes='38vw'
+              className='object-cover transition-transform duration-300 group-hover:scale-[1.02]'
+              fetchPriority={isPriority ? 'high' : 'low'}
+              loading={isPriority ? 'eager' : 'lazy'}
+            />
+          </AspectRatio>
+        </CardContent>
+
+        <div className='dark:border-dark-card-foreground/24 flex flex-col gap-1.5 border-t border-card-foreground/24 p-3'>
+          <div className='flex items-start justify-between gap-2'>
+            <H3 className='line-clamp-2 min-w-0 flex-1 pb-0 text-[0.82rem] leading-snug font-semibold text-balance text-card-foreground'>
+              {product.title}
+            </H3>
+            <BrandBadge
+              backgroundColor='var(--background)'
+              textColor='var(--foreground)'
+              className='shrink-0 border border-foreground/12 px-2 py-0.5 text-[0.65rem] font-medium tracking-wide dark:border-dark-foreground/12'
+            >
+              <InlineText>Unisex</InlineText>
+            </BrandBadge>
           </div>
-        </Link>
-      </Card>
+          <InlineText className='text-sm leading-none font-bold text-card-foreground'>
+            {price}
+          </InlineText>
+        </div>
+      </Link>
+    : null
+
+  const compactProductVariantSelector =
+    compactMobile ?
+      <ProductCardCompactVariantSelector
+        options={product.options}
+        selectedOptions={selectedOptions}
+        onOptionChange={setSelectedOptions}
+        productTitle={product.title}
+      />
     : null
 
   return (
-    <>
-      {compactProductCard}
-      <Card
-        className={cn(
-          'group   flex h-full flex-col gap-0 overflow-hidden border border-border bg-card p-0 text-card-foreground shadow-[0_18px_56px_-42px_rgba(8,10,24,0.85)]',
-          cardClassName,
-          compactMobile && 'hidden md:flex'
-        )}
+    <Card
+      className={cn(
+        'group flex h-full flex-col gap-0 overflow-hidden border border-border bg-card p-0 text-card-foreground shadow-[0_18px_56px_-42px_rgba(8,10,24,0.85)]',
+        cardClassName
+      )}
+    >
+      {compactProductCardContent}
+      {compactProductVariantSelector}
+      <div
+        className={compactMobile ? 'hidden md:contents' : 'contents'}
       >
         <CardContent className='relative p-0'>
           <Link
@@ -302,7 +310,16 @@ export function ProductCard({
           onViewProduct={trackProductSelect}
           compactMobile={compactMobile}
         />
-      </Card>
-    </>
+      </div>
+      <KlarnaProductExpressCheckout
+        product={product}
+        selectedVariant={selectedVariant ?? null}
+        className={cn(
+          'w-full px-6 pb-6',
+          compactMobile &&
+            'dark:border-dark-card-foreground/24 border-t border-card-foreground/24 px-2 pt-2 pb-2 md:border-t-0 md:px-6 md:pt-0 md:pb-6'
+        )}
+      />
+    </Card>
   )
 }

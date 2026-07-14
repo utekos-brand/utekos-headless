@@ -5,6 +5,7 @@ import { defaultConsentState } from './defaultConsentState'
 import { createCookiebotConsentState } from './createCookiebotConsentState'
 import { readStoredConsentState } from './readStoredConsentState'
 import { setLatestConsentServices } from '@/lib/tracking/consent/latestConsentServices'
+import { queueClarityConsent } from '@/lib/tracking/clarity/queueClarityConsent'
 import type { CookiebotConsentState } from './cookiebotConsentSchema'
 
 interface ConsentContextType {
@@ -34,7 +35,7 @@ function updateMicrosoftConsentMode(consent: CookiebotConsentState) {
 }
 
 function updateClarityConsentMode(consent: CookiebotConsentState) {
-  window.clarity?.('consentv2', {
+  queueClarityConsent({
     source: 'cookiebot',
     ad_Storage: consent.marketing ? 'granted' : 'denied',
     analytics_Storage: consent.statistics ? 'granted' : 'denied'

@@ -47,21 +47,6 @@ const MICROSOFT_UET_ENHANCED_CONVERSIONS_SCRIPT = `
       });
     }
 
-    window.uet_report_conversion = function(productId, revenueValue, currency, eventId) {
-      window.uetq = window.uetq || [];
-      setMicrosoftUetPid();
-      var payload = {
-        ecomm_prodid: productId,
-        ecomm_pagetype: 'PURCHASE',
-        revenue_value: Number(revenueValue) || 0,
-        currency: currency || 'NOK'
-      };
-      if (eventId) {
-        payload.event_id = eventId;
-      }
-      window.uetq.push('event', 'PRODUCT_PURCHASE', payload);
-    };
-
     setMicrosoftUetPid();
   })();
 `

@@ -12,8 +12,57 @@ const context: CaptureContext = {
     gaSessionId: '789'
   },
   clientIp: '203.0.113.10',
-  userAgent: 'node:test'
+  userAgent: 'node:test',
+  consentProvenance: {
+    schemaVersion: 1,
+    source: 'cookiebot',
+    capturedAt: '2026-07-12T10:00:00.000Z',
+    services: {
+      googleAnalytics: true,
+      googleAds: true,
+      meta: true,
+      microsoftAdvertising: true
+    }
+  }
 }
+
+test('retains only identifiers authorized by provider-specific consent', async () => {
+  const writes: CheckoutAttribution[] = []
+  const statisticsOnlyContext: CaptureContext = {
+    ...context,
+    consentProvenance: {
+      ...context.consentProvenance,
+      services: {
+        googleAnalytics: true,
+        googleAds: false,
+        meta: false,
+        microsoftAdvertising: false
+      }
+    }
+  }
+
+  await processCapture(
+    'checkout-token',
+    {
+      checkoutUrl: 'https://checkout.utekos.no/checkouts/cn/checkout-token',
+      userData: { email: 'kunde@example.com', fbp: 'fb.1.test' }
+    },
+    statisticsOnlyContext,
+    {
+      redisSet: async (_key, value) => {
+        writes.push(value)
+      },
+      logger: async () => {}
+    }
+  )
+
+  assert.equal(writes[0]?.ga_client_id, '123.456')
+  assert.equal(writes[0]?.ga_session_id, '789')
+  assert.equal(writes[0]?.msclkid, undefined)
+  assert.equal(writes[0]?.userData.email, undefined)
+  assert.equal(writes[0]?.userData.fbp, undefined)
+  assert.deepEqual(writes[0]?.consentProvenance, statisticsOnlyContext.consentProvenance)
+})
 
 test('stores checkout attribution under every webhook lookup token', async () => {
   const writes: Array<{ key: string; value: CheckoutAttribution; ttlSeconds: number | undefined }> = []

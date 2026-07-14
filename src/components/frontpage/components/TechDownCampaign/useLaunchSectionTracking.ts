@@ -1,14 +1,19 @@
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import {
+  dispatchTrackingEvent,
+  type BrowserTrackingEventName
+} from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { generateEventID } from '@/components/analytics/Meta/generateEventID'
 import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { productName, currentPrice } from '@/api/constants'
 import { useGA4Ids } from '@/hooks/useGA4Ids'
-import type { MetaEventType } from 'types/tracking/meta/event'
 
 export function useLaunchSectionTracking(variantId: string) {
   const { client_id, session_id } = useGA4Ids()
 
-  const trackEvent = (eventName: string, customEventName: string) => {
+  const trackEvent = (
+    eventName: string,
+    customEventName: BrowserTrackingEventName
+  ) => {
     const contentId = cleanShopifyId(variantId) || variantId
     const eventID = generateEventID().replace(
       'evt_',
@@ -28,9 +33,10 @@ export function useLaunchSectionTracking(variantId: string) {
       ...(session_id ? { session_id } : {})
     }
 
-    void dispatchMetaTrackingEvent({
-      eventName: customEventName as MetaEventType,
+    void dispatchTrackingEvent({
+      eventName: customEventName,
       eventId: eventID,
+      destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
       eventSourceUrl: sourceUrl,
       eventData,
       ga4Data

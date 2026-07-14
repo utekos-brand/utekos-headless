@@ -1,6 +1,5 @@
 import { prepareAddToCartEvent } from '@/lib/tracking/logic/prepareAddToCartEvent'
-import { dispatchAddToCartPixels } from '@/lib/tracking/pixels/dispatchAddToCartPixels'
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import type { TrackAddToCartOptions } from 'types/cart'
 
 export async function trackAddToCart(
@@ -8,16 +7,10 @@ export async function trackAddToCart(
 ): Promise<void> {
   const eventData = prepareAddToCartEvent(input)
 
-  dispatchAddToCartPixels({
-    eventData,
-    product: input.product,
-    selectedVariant: input.selectedVariant
-  })
-
-  await dispatchMetaTrackingEvent({
+  await dispatchTrackingEvent({
     eventName: 'AddToCart',
     eventId: eventData.eventID,
-    sendBrowserEvent: false,
+    destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
     eventData: {
       value: eventData.value,
       currency: eventData.currency,

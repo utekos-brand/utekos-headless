@@ -190,6 +190,22 @@ Code and architecture rules:
 - Do not hand-edit generated MCP files such as `mcp.json`,
   `.vscode/mcp.json`, or `.cursor/mcp.json`.
 
+Git and release rules:
+
+- `origin/main` is the only canonical production source reference.
+- Keep local `main` clean and identical to `origin/main`; all
+  intentional work belongs on a named branch based on current
+  `origin/main`.
+- Use `npm run repo:sync` to fast-forward a clean local `main`.
+  The command must never stage, commit, push, merge divergent history,
+  or deploy.
+- Production is triggered only by an explicitly approved pull-request
+  merge to GitHub `main`. Do not combine that Git-triggered deployment
+  with a second direct Vercel production deploy.
+- Remove completed linked worktrees after their work is committed or
+  explicitly archived. Never treat a worktree HEAD as another
+  production reference.
+
 Verification gates:
 
 - UI work requires browser/runtime verification: console,
@@ -444,3 +460,10 @@ Current MCP expectations:
   belong in ignored local env files or approved secret stores. If a
   token-like value has been exposed in chat, docs, generated config,
   or tracked files, remove it locally and rotate it at the provider.
+
+## Google Cloud Platform
+
+Read and follow the
+[Utekos Well-Architected Framework](.agent/utekos-well-architechted-framework.md)
+and use the Google Developer documentation MCP for current provider
+documentation before changing Google Cloud integrations.

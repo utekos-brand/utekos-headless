@@ -1,0 +1,181 @@
+{
+  "projectId": "project-c683eb2c-20ae-4ec2-ac3",
+  "region": "europe-west1",
+  "service": "gtm-server",
+  "serviceAccount": "sgtm-runtime@project-c683eb2c-20ae-4ec2-ac3.iam.gserviceaccount.com",
+  "vercel": {
+    "projectId": "prj_MpZN3Z0PDp8rfwpdzAeplGe4Di0s",
+    "orgId": "team_0B8gWWIxT2hGVIJnK8CwanAi",
+    "teamSlug": "utekos-marketing-group",
+    "projectName": "utekos-headless",
+    "receiptEnvKey": "SGTM_RECEIPT_HMAC_KEY_BASE64"
+  },
+  "capacity": {
+    "minInstances": 3,
+    "maxInstances": 10,
+    "concurrency": 80
+  },
+  "secret": {
+    "name": "sgtm-credentials",
+    "environmentVariable": "SGTM_CREDENTIALS",
+    "mountPath": "/secrets/sgtm/credentials.json",
+    "keyId": "receipt-key"
+  },
+  "uptime": {
+    "displayName": "sGTM /healthy production",
+    "host": "cloud.server.utekos.no",
+    "path": "/healthy",
+    "selectedRegions": ["EUROPE", "USA"]
+  },
+  "notificationChannel": {
+    "type": "email",
+    "addressEnv": "SGTM_ALERT_EMAIL"
+  },
+  "loggingMetrics": [
+    {
+      "name": "sgtm_loader_400_count",
+      "metricKind": "DELTA",
+      "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"gtm-server\" AND httpRequest.status=400 AND (httpRequest.requestUrl=~\"/gtm\\.js([?]|$)\" OR httpRequest.requestUrl=~\"/gtag/js([?]|$)\" OR httpRequest.requestUrl=~\"/ns\\.html([?]|$)\")"
+    },
+    {
+      "name": "sgtm_collect_400_count",
+      "metricKind": "DELTA",
+      "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"gtm-server\" AND httpRequest.status=400 AND httpRequest.requestUrl=~\"/g/collect([?]|$)\""
+    },
+    {
+      "name": "sgtm_collect_total_count",
+      "metricKind": "DELTA",
+      "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"gtm-server\" AND httpRequest.requestUrl=~\"/g/collect([?]|$)\""
+    },
+    {
+      "name": "sgtm_raw_upd_count",
+      "metricKind": "DELTA",
+      "filter": "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"gtm-server\" AND (httpRequest.requestUrl=~\"ep[.]user_data[.](email|phone|address)\" OR textPayload=~\"ep[.]user_data[.](email|phone|address)\" OR jsonPayload.message=~\"ep[.]user_data[.](email|phone|address)\" OR jsonPayload.eventData=~\"ep[.]user_data[.](email|phone|address)\" OR jsonPayload.event_data=~\"ep[.]user_data[.](email|phone|address)\")"
+    }
+  ],
+  "requiredAlertPolicies": [
+    {
+      "displayName": "sGTM canonical loader HTTP 400",
+      "condition": {
+        "displayName": "Any canonical loader 400",
+        "conditionThreshold": {
+          "filter": "metric.type=\"logging.googleapis.com/user/sgtm_loader_400_count\" AND resource.type=\"cloud_run_revision\"",
+          "comparison": "COMPARISON_GT",
+          "thresholdValue": 0,
+          "duration": "0s",
+          "aggregations": [{"alignmentPeriod":"60s","perSeriesAligner":"ALIGN_RATE","crossSeriesReducer":"REDUCE_SUM"}],
+          "trigger": {"count": 1}
+        }
+      }
+    },
+    {
+      "displayName": "sGTM 5xx rate above 1 percent for 5 minutes",
+      "condition": {
+        "displayName": "5xx ratio above 1 percent",
+        "conditionThreshold": {
+          "filter": "metric.type=\"run.googleapis.com/request_count\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"gtm-server\" AND metric.label.\"response_code_class\"=\"5xx\"",
+          "denominatorFilter": "metric.type=\"run.googleapis.com/request_count\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"gtm-server\"",
+          "comparison": "COMPARISON_GT",
+          "thresholdValue": 0.01,
+          "duration": "300s",
+          "aggregations": [{"alignmentPeriod":"60s","perSeriesAligner":"ALIGN_RATE","crossSeriesReducer":"REDUCE_SUM"}],
+          "denominatorAggregations": [{"alignmentPeriod":"60s","perSeriesAligner":"ALIGN_RATE","crossSeriesReducer":"REDUCE_SUM"}],
+          "trigger": {"count": 1}
+        }
+      }
+    },
+    {
+      "displayName": "sGTM collect HTTP 400 rate above 2 percent",
+      "condition": {
+        "displayName": "Collect 400 ratio above 2 percent",
+        "conditionThreshold": {
+          "filter": "metric.type=\"logging.googleapis.com/user/sgtm_collect_400_count\" AND resource.type=\"cloud_run_revision\"",
+          "denominatorFilter": "metric.type=\"logging.googleapis.com/user/sgtm_collect_total_count\" AND resource.type=\"cloud_run_revision\"",
+          "comparison": "COMPARISON_GT",
+          "thresholdValue": 0.02,
+          "duration": "300s",
+          "aggregations": [{"alignmentPeriod":"60s","perSeriesAligner":"ALIGN_RATE","crossSeriesReducer":"REDUCE_SUM"}],
+          "denominatorAggregations": [{"alignmentPeriod":"60s","perSeriesAligner":"ALIGN_RATE","crossSeriesReducer":"REDUCE_SUM"}],
+          "trigger": {"count": 1}
+        }
+      }
+    },
+    {
+      "displayName": "sGTM p95 latency above 500 ms",
+      "condition": {
+        "displayName": "Request p95 above 500 ms",
+        "conditionThreshold": {
+          "filter": "metric.type=\"run.googleapis.com/request_latencies\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"gtm-server\"",
+          "comparison": "COMPARISON_GT",
+          "thresholdValue": 500,
+          "duration": "300s",
+          "aggregations": [{"alignmentPeriod":"60s","perSeriesAligner":"ALIGN_PERCENTILE_95","crossSeriesReducer":"REDUCE_MAX"}],
+          "trigger": {"count": 1}
+        }
+      }
+    },
+    {
+      "displayName": "sGTM CPU above 80 percent",
+      "condition": {
+        "displayName": "Container CPU above 80 percent",
+        "conditionThreshold": {
+          "filter": "metric.type=\"run.googleapis.com/container/cpu/utilizations\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"gtm-server\"",
+          "comparison": "COMPARISON_GT",
+          "thresholdValue": 0.8,
+          "duration": "300s",
+          "aggregations": [{"alignmentPeriod":"60s","perSeriesAligner":"ALIGN_PERCENTILE_95","crossSeriesReducer":"REDUCE_MAX"}],
+          "trigger": {"count": 1}
+        }
+      }
+    },
+    {
+      "displayName": "sGTM maximum instance saturation",
+      "condition": {
+        "displayName": "Active instances reached configured maximum",
+        "conditionThreshold": {
+          "filter": "metric.type=\"run.googleapis.com/container/instance_count\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"gtm-server\" AND metric.label.\"state\"=\"active\"",
+          "comparison": "COMPARISON_GT",
+          "thresholdValue": 9,
+          "duration": "300s",
+          "aggregations": [{"alignmentPeriod":"60s","perSeriesAligner":"ALIGN_MAX","crossSeriesReducer":"REDUCE_SUM"}],
+          "trigger": {"count": 1}
+        }
+      }
+    },
+    {
+      "displayName": "sGTM traffic drop",
+      "condition": {
+        "displayName": "No requests for 15 minutes",
+        "conditionAbsent": {
+          "filter": "metric.type=\"run.googleapis.com/request_count\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"gtm-server\"",
+          "duration": "900s",
+          "aggregations": [{"alignmentPeriod":"60s","perSeriesAligner":"ALIGN_RATE","crossSeriesReducer":"REDUCE_SUM"}],
+          "trigger": {"count": 1}
+        }
+      }
+    },
+    {
+      "displayName": "sGTM raw user-provided data detected",
+      "condition": {
+        "displayName": "Any raw UPD log finding",
+        "conditionThreshold": {
+          "filter": "metric.type=\"logging.googleapis.com/user/sgtm_raw_upd_count\" AND resource.type=\"cloud_run_revision\"",
+          "comparison": "COMPARISON_GT",
+          "thresholdValue": 0,
+          "duration": "0s",
+          "aggregations": [{"alignmentPeriod":"60s","perSeriesAligner":"ALIGN_RATE","crossSeriesReducer":"REDUCE_SUM"}],
+          "trigger": {"count": 1}
+        }
+      }
+    }
+  ],
+  "budget": {
+    "displayName": "Utekos sGTM production budget",
+    "billingAccount": "012640-E91F1E-A107B9",
+    "filter": {
+      "projects": ["projects/741353863697"]
+    },
+    "useLastPeriodAmount": true,
+    "thresholdRules": [0.8, 1]
+  }
+}

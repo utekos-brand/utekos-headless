@@ -264,33 +264,22 @@
     },
     "google-analytics": {
       "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "mcp-google-analytics"],
+      "command": "analytics-mcp",
+      "args": [],
       "env": {
-        "GA_SERVICE_ACCOUNT_JSON": "${GA_SERVICE_ACCOUNT_JSON}",
-        "GA_PROPERTY_ID": "${GA_PROPERTY_ID}",
-        "GA_MEASUREMENT_ID": "${GA_MEASUREMENT_ID}",
-        "GA_API_SECRET": "${GA_API_SECRET}"
+        "GOOGLE_APPLICATION_CREDENTIALS": "${GOOGLE_ANALYTICS_APPLICATION_CREDENTIALS}",
+        "GOOGLE_PROJECT_ID": "${GOOGLE_PROJECT_ID}"
       },
       "tools": [
-        "ga_batch_run_reports",
-        "ga_get_metadata",
-        "ga_get_property",
-        "ga_list_accounts",
-        "ga_list_data_streams",
-        "ga_list_properties",
-        "ga_run_funnel_report",
-        "ga_run_pivot_report",
-        "ga_run_realtime_report",
-        "ga_run_report",
-        "ga_send_add_to_cart",
-        "ga_send_begin_checkout",
-        "ga_send_event",
-        "ga_send_login",
-        "ga_send_pageview",
-        "ga_send_purchase",
-        "ga_send_signup",
-        "ga_validate_event"
+        "get_account_summaries",
+        "get_property_details",
+        "list_google_ads_links",
+        "list_property_annotations",
+        "get_custom_dimensions_and_metrics",
+        "run_report",
+        "run_realtime_report",
+        "run_funnel_report",
+        "run_conversions_report"
       ],
       "autoApprove": []
     },
@@ -304,14 +293,12 @@
         "google-ads-mcp"
       ],
       "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "${GOOGLE_ADS_APPLICATION_CREDENTIALS}",
         "GOOGLE_PROJECT_ID": "${GOOGLE_PROJECT_ID}",
         "GOOGLE_ADS_DEVELOPER_TOKEN": "${GOOGLE_ADS_DEVELOPER_TOKEN}",
         "GOOGLE_ADS_CUSTOMER_ID": "${GOOGLE_ADS_CUSTOMER_ID}",
         "GOOGLE_ADS_LOGIN_CUSTOMER_ID": "${GOOGLE_ADS_LOGIN_CUSTOMER_ID}",
-        "GOOGLE_ADS_MANAGER_ID": "${GOOGLE_ADS_MANAGER_ID}",
-        "GOOGLE_ADS_CLIENT_ID": "${GOOGLE_ADS_CLIENT_ID}",
-        "GOOGLE_ADS_CLIENT_SECRET": "${GOOGLE_ADS_CLIENT_SECRET}",
-        "GOOGLE_ADS_REFRESH_TOKEN": "${GOOGLE_ADS_REFRESH_TOKEN}"
+        "GOOGLE_ADS_MANAGER_ID": "${GOOGLE_ADS_MANAGER_ID}"
       },
       "autoApprove": []
     },

@@ -7,7 +7,7 @@ import { generateEventID } from '@/components/analytics/Meta/generateEventID'
 import { getCookie } from '@/components/analytics/Meta/getCookie'
 import { getOrSetExternalId } from '@/components/analytics/Meta/getOrSetExternalId'
 import { getPageViewParams } from '@/components/analytics/Meta/getPageViewParams'
-import { dispatchMetaTrackingEvent } from '@/lib/tracking/meta/dispatchMetaTrackingEvent'
+import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
 import { runAfterPageSettles } from '@/lib/browser/runAfterPageSettles'
 
 let hasInitializedMetaPixel = false
@@ -56,21 +56,16 @@ export function PixelLogic() {
           hasInitializedMetaPixel = true
         }
 
-        if (window.fbq) {
-          window.fbq('track', 'PageView', {}, { eventID: eventId })
-        }
-
-        void dispatchMetaTrackingEvent({
+        void dispatchTrackingEvent({
           eventName: 'PageView',
           eventId,
-          sendBrowserEvent: false,
-          eventData: getPageViewParams(pathname, searchParams),
+          destinations: ['meta'],
+          eventData: getPageViewParams(pathname),
           userData: {
             external_id: externalId || undefined,
             fbc: fbc || undefined,
             fbp: fbp || undefined,
-            email_hash: userHash || undefined,
-            client_user_agent: navigator.userAgent
+            email_hash: userHash || undefined
           }
         })
       })

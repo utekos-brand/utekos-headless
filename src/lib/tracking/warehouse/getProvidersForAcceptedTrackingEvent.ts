@@ -1,7 +1,6 @@
-import { shouldQueueGoogleServerEvent } from '@/lib/tracking/google/shouldQueueGoogleServerEvent'
 import type { MetaEventPayload } from 'types/tracking/meta'
 
-export type TrackingProvider = 'meta' | 'google'
+export type TrackingProvider = 'meta'
 
 type ProviderConsent = {
   meta: boolean
@@ -9,11 +8,8 @@ type ProviderConsent = {
 }
 
 export function getProvidersForAcceptedTrackingEvent(
-  payload: MetaEventPayload,
+  _payload: MetaEventPayload,
   consent: ProviderConsent
 ): TrackingProvider[] {
-  return [
-    ...(consent.meta ? ['meta' as const] : []),
-    ...(shouldQueueGoogleServerEvent(payload, consent.google) ? ['google' as const] : [])
-  ]
+  return consent.meta ? ['meta'] : []
 }

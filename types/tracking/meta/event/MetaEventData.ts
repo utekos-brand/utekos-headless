@@ -16,6 +16,7 @@ export type MetaEventData = {
   item_list_name?: string | undefined
   num_items?: number | undefined
   order_id?: string | undefined
+  refund_id?: string | undefined
   transaction_id?: string | undefined
   tax?: number | undefined
   shipping?: number | undefined

@@ -4,7 +4,7 @@ import { sanitizeGA4EventParams } from '@/lib/tracking/google/sanitizeGA4EventPa
 const GA_MEASUREMENT_ID =
   process.env.GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 const GA_API_SECRET = process.env.GA_API_SECRET
-const GA_COLLECT_ORIGIN = 'https://www.google-analytics.com'
+const GA_COLLECT_ORIGIN = 'https://region1.google-analytics.com'
 
 export type GA4ValidationMessage = {
   fieldPath?: string
