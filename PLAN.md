@@ -6,10 +6,11 @@ STATUS 2026-07-14: `origin/main` ER ENESTE PRODUKSJONSKANON.
 LOKAL `main`, `origin/HEAD` OG VERCEL-PRODUKSJON PEKER PÅ SAMME
 COMMIT `400d72485`. ALT TILSIKTET LOKALT ARBEID ER BEVART PÅ
 NAVNGITTE RELEASE- ELLER ARKIVBRANCHES. RELEASE-ENHETENE ER
-ISOLERT DIREKTE FRA `origin/main`: GIT-OPERASJONER, KLARNA-
-STOREFRONT, MICROSOFT MERCHANT, POSTHOG SDK, STOREFRONT-
-TILGJENGELIGHET, MCP-/DRIFTSVERKTØY, KILDEHYGIENE OG
-S/GTM/SUPABASE.
+ISOLERT FRA `origin/main`: GIT-OPERASJONER, KLARNA-STOREFRONT,
+MICROSOFT MERCHANT, POSTHOG SDK, STOREFRONT-TILGJENGELIGHET,
+MCP-/DRIFTSVERKTØY OG KILDEHYGIENE. S/GTM/SUPABASE ER STABLET
+ETTER DEN KANONISKE GIT-RELEASEN FOR Å FJERNE KJENTE
+DOKUMENT-/PACKAGE-MERGEKONFLIKTER UTEN Å BLANDE INN POSTHOG.
 DE ER IKKE ALTERNATIVE PRODUKSJONSFASITER; DE SKAL VERIFISERES OG
 MERGES TIL DEN ENE KANONISKE LINJEN I GODKJENT REKKEFØLGE. SEKS
 ELDRE AGENT-/PAGESPEED-BRANCHES FRA FØR REPOSITORY-MIGRERINGEN ER
@@ -104,10 +105,11 @@ MUTASJON ER UTFØRT I DENNE GIT-AVSTEMMINGEN.
   statiske sider var grønne. Auditreferansen ble fjernet etter at
   resultatet var dokumentert; den ble ikke pushet eller deployet.
 - `codex/sgtm-remediation` bevarer tracking-, receipt-, refund-, sGTM-
-  tooling- og Supabase-kandidatene i en navngitt commitserie oppå samme
-  `origin/main`. Review-diff-artifacts er bevart separat i en navngitt
-  lokal stash og er ikke runtimekode. Kode, tester, TypeScript, build,
-  Supabase lint og read-only providerstatus er grønne. Migrasjonen
+  tooling- og Supabase-kandidatene stablet etter
+  `codex/release-git-operations`. PostHog er fortsatt separat.
+  Review-diff-artifacts er bevart separat i en navngitt lokal stash og
+  er ikke runtimekode. Kode, tester, TypeScript, build, Supabase lint og
+  read-only providerstatus er grønne. Migrasjonen
   `20260712120000`, receipt-secret/Vercel-env, Cloud Run-hardening og
   GTM-publisering må eksplisitt godkjennes og verifiseres før runtime-
   releasen kan signeres av.
