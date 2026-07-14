@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import process from 'node:process'
+
 import { z } from 'zod/v4'
 
 const configSchema = z.object({
