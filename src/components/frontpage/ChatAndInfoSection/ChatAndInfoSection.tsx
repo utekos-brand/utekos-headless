@@ -41,7 +41,7 @@ export function ChatAndInfoSection() {
           }}
           variants={sectionMotion}
         >
-          <div className='overflow-hidden rounded-xl border border-foreground/12 dark:border-dark-foreground/12 bg-card '>
+          <div className='dark:border-dark-foreground/12 overflow-hidden rounded-xl border border-foreground/12 bg-card'>
             <div className='grid min-w-0 lg:grid-cols-2'>
               <TrustContentView
                 InfoCardsComponent={InfoCardStackView}
@@ -49,7 +49,7 @@ export function ChatAndInfoSection() {
 
               <motion.div
                 variants={panelMotion}
-                className='relative min-h-100 overflow-hidden border-t border-foreground/10 dark:border-dark-foreground/10 bg-background dark:bg-dark-background pb-8 lg:border-t-0 lg:border-l'
+                className='dark:border-dark-foreground/10 dark:bg-dark-background @container/chat relative min-h-100 min-w-0 overflow-hidden border-t border-foreground/10 bg-background pb-8 lg:border-t-0 lg:border-l'
               >
                 <AnimatedChat />
               </motion.div>

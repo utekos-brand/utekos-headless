@@ -12,14 +12,12 @@ export function MomentsSection() {
       className={cn('mx-auto')}
     >
       <article className={cn('relative w-full overflow-hidden')}>
-        <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-          <TypographyMomentsH3 />
-          <Lead
-            Text='Uansett hvor du finner roen, er Utekos designet for å gjøre opplevelsen bedre.'
-            className='md:-4 -mt-2 text-xl! md:text-2xl!'
-          />
-          <MomentCardsGrid />
-        </div>
+        <TypographyMomentsH3 />
+        <Lead
+          Text='Uansett hvor du finner roen, er Utekos designet for å gjøre opplevelsen bedre.'
+          className='md:-4 -mt-2 text-xl! md:text-2xl!'
+        />
+        <MomentCardsGrid />
       </article>
     </PageSection>
   )

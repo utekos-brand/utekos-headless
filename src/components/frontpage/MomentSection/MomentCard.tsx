@@ -39,7 +39,7 @@ const iconClassName =
   'flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/15 bg-primary dark:bg-ceramic text-primary-foreground  shadow-xs ring-1 ring-primary/20 dark:ring-dark-primary/20 transition-transform duration-300 ease-out group-hover:scale-[1.08] motion-reduce:transition-none motion-reduce:group-hover:scale-100'
 
 const cardClassName =
-  'h-full border border-border p-8 text-card-foreground bg-background shadow-md transition-shadow duration-300 group-hover:shadow-lg motion-reduce:transition-none'
+  'h-full border border-border bg-background p-8 text-foreground shadow-md transition-shadow duration-300 group-hover:shadow-lg motion-reduce:transition-none'
 
 export function MomentCard({ moment }: { moment: Moment }) {
   const Icon = moment.icon
@@ -53,7 +53,7 @@ export function MomentCard({ moment }: { moment: Moment }) {
       className={articleClassName}
     >
       <Card className={cn(cardClassName, 'bg-background')}>
-        <CardHeader className='flex flex-row items-center gap-4 px-0 pb-0'>
+        <CardHeader className='flex flex-col items-start gap-4 px-0 pb-0 @2xs/moment-card:flex-row @2xs/moment-card:items-center'>
           <span className={iconClassName} aria-hidden='true'>
             <Icon
               aria-hidden='true'
@@ -61,19 +61,19 @@ export function MomentCard({ moment }: { moment: Moment }) {
             />
           </span>
 
-          <CardTitle className='text-card-foreground'>
+          <CardTitle className='min-w-0 text-foreground'>
             <H3
               ID={titleId}
-              className='pb-0 text-2xl leading-tight font-semibold tracking-normal text-balance text-card-foreground'
+              className='pb-0 text-2xl leading-tight font-semibold tracking-normal text-balance text-foreground'
             >
               {moment.title}
             </H3>
           </CardTitle>
         </CardHeader>
 
-        <CardContent className='flex flex-1 px-0 pb-0 text-card-foreground'>
-          <CardDescription className='font-utekos-text text-base leading-relaxed tracking-normal text-card-foreground'>
-            <P className='text-base leading-relaxed tracking-normal text-card-foreground not-first:mt-0'>
+        <CardContent className='flex flex-1 px-0 pb-0 text-foreground'>
+          <CardDescription className='font-utekos-text text-base leading-relaxed tracking-normal text-foreground'>
+            <P className='text-base leading-relaxed tracking-normal text-foreground not-first:mt-0'>
               {moment.description}
             </P>
           </CardDescription>

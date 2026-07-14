@@ -56,7 +56,7 @@ export async function ComfyrobeSection() {
       background='default'
       className={cn('mx-auto items-center')}
     >
-      <div className='dark:border-dark-foreground/12 relative overflow-hidden rounded-2xl border border-foreground/12 bg-card px-6 py-8 text-card-foreground'>
+      <div className='dark:border-dark-foreground/12 relative min-w-0 overflow-hidden rounded-2xl border border-foreground/12 bg-card px-6 py-8 text-card-foreground'>
         <div className='absolute inset-0 -z-10 overflow-hidden'>
           <div
             className='absolute top-1/4 left-1/4 size-150 opacity-15 blur-3xl'
@@ -73,7 +73,7 @@ export async function ComfyrobeSection() {
             }}
           />
         </div>
-        <div className='relative grid grid-cols-1 items-center gap-12 rounded-2xl lg:grid-cols-2'>
+        <div className='relative grid min-w-0 grid-cols-1 items-center gap-12 rounded-2xl lg:grid-cols-2'>
           <ComfyrobeImageSection image={comfyrobeImage} />
 
           <ComfyrobeContentColumn variantId={comfyrobeId} />

@@ -65,7 +65,7 @@ export function ComfyrobeContentColumn({
     <div
       ref={containerRef}
       className={cn(
-        'will-animate-fade-in-up',
+        'will-animate-fade-in-up min-w-0',
         containerInView && 'is-in-view'
       )}
       style={
@@ -75,15 +75,15 @@ export function ComfyrobeContentColumn({
       <div
         ref={badgeRef}
         className={cn(
-          'will-animate-fade-in-up mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-sidebar px-5 py-3 bg-background',
+          'will-animate-fade-in-up mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3',
           badgeInView && 'is-in-view'
         )}
         style={
           { '--transition-delay': '0.3s' } as React.CSSProperties
         }
       >
-        <Shield className='size-4 text-sidebar-foreground' />
-        <InlineText className='text-sm font-semibold text-sidebar-foreground'>
+        <Shield className='size-4 text-foreground' />
+        <InlineText className='text-sm font-semibold text-foreground'>
           Comfyrobe™
         </InlineText>
       </div>

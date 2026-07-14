@@ -73,7 +73,7 @@ export function AnimatedChat() {
         </motion.div>
         <motion.div
           variants={messageMotion}
-          className='flex justify-end pr-8 md:hidden'
+          className='flex justify-end pr-8 @lg/chat:hidden'
         >
           <NameCursor
             name='Hanne'
@@ -104,7 +104,7 @@ export function AnimatedChat() {
 
         <motion.div
           variants={messageMotion}
-          className='flex justify-start pl-8 md:hidden'
+          className='flex justify-start pl-8 @lg/chat:hidden'
         >
           <NameCursor
             name='Thomas'
@@ -142,9 +142,9 @@ export function AnimatedChat() {
                 <BubbleContent
                   className={outgoingBubbleContentClassName}
                 >
-                  <div className='flex items-center gap-2'>
-                    <P className='chat-bubble-text flex items-center whitespace-nowrap text-primary-foreground not-first:mt-0'>
-                      <InlineText>
+                  <div className='flex min-w-0 items-center gap-2'>
+                    <P className='chat-bubble-text flex min-w-0 items-center text-primary-foreground not-first:mt-0'>
+                      <InlineText className='min-w-0'>
                         Nettopp. Mer plass til vinen 😉
                       </InlineText>
                       <motion.span
@@ -171,7 +171,7 @@ export function AnimatedChat() {
           </Message>
         </motion.div>
       </MessageGroup>
-      <div className='hidden md:block'>
+      <div className='hidden @lg/chat:block'>
         <NameCursor
           name='Hanne'
           side='left'

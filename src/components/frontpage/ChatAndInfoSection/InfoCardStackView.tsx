@@ -40,7 +40,10 @@ const TrafficLights = ({
       {colors.map((color, i) => (
         <div
           key={i}
-          className={cn('aspect-square w-[0.45em] rounded-full', color)}
+          className={cn(
+            'aspect-square w-[0.45em] rounded-full',
+            color
+          )}
         />
       ))}
     </div>
@@ -64,7 +67,7 @@ const cardMotion = {
 } satisfies Variants
 
 const cardSizeClasses =
-  'absolute w-[84%] aspect-[1.62/1] sm:w-[76%] sm:aspect-[2/1] lg:w-[74%]'
+  'absolute aspect-[1.2/1] w-[84%] @2xs/stack:aspect-[1.62/1] sm:w-[76%] sm:aspect-[2/1] lg:w-[74%]'
 
 const cardBaseClasses =
   '@container/card overflow-hidden rounded-xl border p-[clamp(0.875rem,4.5cqi,1.5rem)] text-[clamp(0.82rem,3.45cqi,1rem)] shadow-2xl shadow-black/16 will-change-transform'
@@ -94,7 +97,7 @@ const frontCardClasses = cn(
   cardSizeClasses,
   cardBaseClasses,
   frontCardPlacementClasses,
-  'border-foreground/12 bg-background text-foreground dark:border-dark-foreground/12 dark:bg-dark-background dark:text-dark-foreground'
+  'dark:border-dark-foreground/12 dark:bg-dark-background dark:text-dark-foreground border-foreground/12 bg-background text-foreground'
 )
 
 const backCardIconClassName =
@@ -107,7 +110,7 @@ export function InfoCardStackView() {
   return (
     <motion.div
       variants={stackMotion}
-      className='@container/stack relative z-20 mx-auto aspect-[1/1.04] w-full max-w-[min(100%,44rem)] overflow-visible @container text-[clamp(0.875rem,2.8cqi,1rem)] sm:aspect-16/10'
+      className='@container/stack @container relative z-20 mx-auto aspect-[1/1.04] w-full max-w-[min(100%,44rem)] overflow-visible text-[clamp(0.875rem,2.8cqi,1rem)] sm:aspect-16/10'
     >
       <div
         className='pointer-events-none absolute inset-[-6%] rounded-3xl bg-[radial-gradient(70%_64%_at_24%_18%,color-mix(in_oklch,var(--color-secondary-foreground)_10%,transparent),transparent_68%)]'
@@ -140,11 +143,21 @@ export function InfoCardStackView() {
           </div>
 
           <div className='min-w-0'>
-            <H3 className={cn(cardTitleClasses, 'text-card-foreground')}>
+            <H3
+              className={cn(
+                cardTitleClasses,
+                'text-card-foreground'
+              )}
+            >
               En trygg handel
             </H3>
 
-            <P className={cn(cardTextClasses, 'text-card-foreground/88')}>
+            <P
+              className={cn(
+                cardTextClasses,
+                'text-card-foreground/88'
+              )}
+            >
               Sikre betalingsløsninger og 14 dagers angrerett.
             </P>
           </div>
@@ -178,16 +191,26 @@ export function InfoCardStackView() {
             </div>
 
             <div className='min-w-0'>
-              <H3 className={cn(cardTitleClasses, 'text-foreground')}>
+              <H3
+                className={cn(
+                  cardTitleClasses,
+                  'text-foreground'
+                )}
+              >
                 Ditt personvern
               </H3>
 
-              <P className={cn(cardTextClasses, 'text-foreground/88')}>
-                Vi tar personvern på alvor. Se hvordan vi behandler dine data i
-                vår{' '}
+              <P
+                className={cn(
+                  cardTextClasses,
+                  'text-foreground/88'
+                )}
+              >
+                Vi tar personvern på alvor. Se hvordan vi
+                behandler dine data i vår{' '}
                 <Link
                   href='/personvern'
-                  className='font-normal text-foreground underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground dark:focus-visible:outline-dark-foreground'
+                  className='dark:focus-visible:outline-dark-foreground font-normal text-foreground underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground'
                 >
                   <InlineText>personvernserklæring</InlineText>
                 </Link>

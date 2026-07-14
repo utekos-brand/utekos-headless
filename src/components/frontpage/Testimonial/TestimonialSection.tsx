@@ -15,13 +15,13 @@ export function TestimonialSection() {
         <div
           ref={hLineRef}
           className={cn(
-            'will-animate-scale-x absolute top-4 left-0 h-px w-full origin-left bg-border dark:bg-dark-border transition-transform duration-1000 ease-out',
+            'will-animate-scale-x dark:bg-dark-border absolute top-4 left-0 h-px w-full origin-left bg-border transition-transform duration-1000 ease-out',
             hLineInView ? 'scale-x-100' : 'scale-x-0'
           )}
         />
       </div>
 
-      <div className='grid grid-cols-1 gap-x-6 gap-y-12 px-4 md:grid-cols-2 lg:grid-cols-3'>
+      <div className='grid grid-cols-1 gap-x-6 gap-y-12 md:grid-cols-2 lg:grid-cols-3'>
         {testimonials.map((testimonial, i) => (
           <TestimonialCard
             key={`${testimonial.name}-${i}`}
