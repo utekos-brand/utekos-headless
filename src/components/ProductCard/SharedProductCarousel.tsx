@@ -60,7 +60,7 @@ export function SharedProductCarousel({
         itemListName={itemListName}
         contentCategory={contentCategory}
       />
-      <CarouselContent className='-ml-3 md:-ml-8'>
+      <CarouselContent className='-ml-3 md:-ml-8 lg:-ml-10'>
         {products.map((product, index) => {
           const colorHexMap = createColorHexMap(product)
           const initialOptions =
@@ -70,7 +70,7 @@ export function SharedProductCarousel({
           return (
             <CarouselItem
               key={product.id}
-              className='basis-[82%] pl-3 sm:basis-1/2 md:pl-8 lg:basis-1/3'
+              className='basis-[72%] pl-3 sm:basis-1/2 md:basis-[38%] md:pl-8 lg:pl-10 xl:basis-1/3'
             >
               <ProductCard
                 product={product}
@@ -91,20 +91,26 @@ export function SharedProductCarousel({
       <CarouselPrevious
         forceVisible
         className={cn(
-          'top-[34%] left-1.5 z-20 flex border-background dark:border-dark-background bg-foreground dark:bg-dark-foreground text-background dark:text-dark-background shadow-lg ring-1 ring-background/45 dark:ring-dark-background/45 backdrop-blur-sm hover:bg-foreground/90 dark:hover:bg-dark-foreground/90 disabled:opacity-70 md:hidden [&_svg]:size-5'
+          'dark:border-dark-background dark:bg-dark-foreground dark:text-dark-background dark:ring-dark-background/45 dark:hover:bg-dark-foreground/90 top-[34%] left-1.5 z-20 flex border-background bg-foreground text-background shadow-lg ring-1 ring-background/45 backdrop-blur-sm hover:bg-foreground/90 disabled:opacity-70 md:hidden [&_svg]:size-5'
         )}
       />
       <CarouselNext
         forceVisible
         className={cn(
-          'top-[34%] right-1.5 z-20 flex border-background dark:border-dark-background bg-foreground dark:bg-dark-foreground text-background dark:text-dark-background shadow-lg ring-1 ring-background/45 dark:ring-dark-background/45 backdrop-blur-sm hover:bg-foreground/90 dark:hover:bg-dark-foreground/90 disabled:opacity-70 md:hidden [&_svg]:size-5'
+          'dark:border-dark-background dark:bg-dark-foreground dark:text-dark-background dark:ring-dark-background/45 dark:hover:bg-dark-foreground/90 top-[34%] right-1.5 z-20 flex border-background bg-foreground text-background shadow-lg ring-1 ring-background/45 backdrop-blur-sm hover:bg-foreground/90 disabled:opacity-70 md:hidden [&_svg]:size-5'
         )}
       />
       <CarouselPrevious
-        className={cn('max-md:hidden', navigationClassName)}
+        className={cn(
+          'max-md:hidden md:left-2 xl:-left-12',
+          navigationClassName
+        )}
       />
       <CarouselNext
-        className={cn('max-md:hidden', navigationClassName)}
+        className={cn(
+          'max-md:hidden md:right-2 xl:-right-12',
+          navigationClassName
+        )}
       />
     </Carousel>
   )

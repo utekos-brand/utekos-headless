@@ -3,7 +3,7 @@ import type { ShopifyProduct } from 'types/product'
 import { cn } from '@/lib/utils/className'
 
 export const variantSwatchButtonClassName =
-  'size-8 shrink-0 overflow-hidden rounded-full border transition-all duration-300 hover:scale-110'
+  'size-8 shrink-0 overflow-hidden rounded-full border transition-all duration-300 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2'
 
 interface ProductColorSwatchesProps {
   colorOption: ShopifyProduct['options'][number]
@@ -27,7 +27,7 @@ export function ProductColorSwatches({
   return (
     <div
       className={cn(
-        'flex max-w-[46%] shrink-0 flex-wrap items-center justify-end gap-2 pt-1',
+        'flex shrink-0 flex-nowrap items-center justify-end gap-2',
         className
       )}
       aria-label='Velg farge'
@@ -54,11 +54,14 @@ export function ProductColorSwatches({
             className={cn(
               variantSwatchButtonClassName,
               isSelected ?
-                'border-coral-green ring-coral-green ring-1'
-              : 'border-card-foreground/24 hover:border-card-foreground/45 hover:ring-2 hover:ring-card-foreground/24 dark:border-dark-card-foreground/24 dark:hover:border-dark-card-foreground/45 dark:hover:ring-dark-card-foreground/24',
+                'border-card-foreground ring-2 ring-card-foreground ring-offset-1 ring-offset-card'
+              : 'border-card-foreground/70 hover:border-card-foreground hover:ring-2 hover:ring-card-foreground/70',
               swatchClassName
             )}
-            style={{ backgroundColor: colorCode }}
+            style={{
+              backgroundColor: colorCode,
+              outlineColor: 'var(--card-foreground)'
+            }}
             title={value.name}
             aria-label={`Velg farge ${value.name}`}
             aria-pressed={isSelected}

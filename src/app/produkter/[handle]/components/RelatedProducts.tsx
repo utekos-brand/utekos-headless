@@ -45,13 +45,14 @@ export function RelatedProducts({
             return (
               <CarouselItem
                 key={product.id}
-                className='h-auto basis-full pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/3 xl:basis-1/4'
+                className='h-auto basis-[72%] pl-4 sm:basis-1/2 md:basis-[40%] xl:basis-1/3'
               >
                 <ProductCard
                   product={product}
                   colorHexMap={colorHexMap}
                   isPriority={index < 4}
                   initialOptions={initialOptions ?? {}}
+                  compactMobile
                 />
               </CarouselItem>
             )
