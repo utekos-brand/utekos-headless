@@ -101,8 +101,8 @@ MUTASJON ER UTFØRT I DENNE GIT-AVSTEMMINGEN.
   konflikt. Frossen install uten supply-chain-bypass, 111 endrede
   tester, MCP build med 52 servere, MCP/commerce doctor, lint av alle
   endrede kodefiler, TypeScript og en Vercel-lignende build med 99/99
-  statiske sider var grønne. Auditreferansen er midlertidig og er ikke
-  pushet eller deployet.
+  statiske sider var grønne. Auditreferansen ble fjernet etter at
+  resultatet var dokumentert; den ble ikke pushet eller deployet.
 - `codex/sgtm-remediation` bevarer tracking-, receipt-, refund-, sGTM-
   tooling- og Supabase-kandidatene i tretten commits oppå samme
   `origin/main`. Review-diff-artifacts er bevart separat i en navngitt
