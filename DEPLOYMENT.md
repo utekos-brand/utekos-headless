@@ -292,9 +292,11 @@ Required before preview sign-off:
 Current status 2026-07-14: production fails the visible-button gate.
 `/produkter` has no product-card integration, while the product-detail
 container remains empty despite the SDK loading. The local candidate
-passes responsive rendering with a controlled SDK stub, but provider
-acceptance remains blocked until the environment and allowed origins
-are verified in a real preview.
+passes responsive rendering with a controlled SDK stub. Read-only Vercel
+CLI confirms that `NEXT_PUBLIC_KLARNA_CLIENT_ID` exists as a sensitive
+variable targeting both Preview and Production without exposing its value.
+Provider acceptance remains blocked until Klarna allowed origins and the
+visible button are verified in the Git-triggered preview.
 
 ## Tracking And Paid-Media Post-Deploy
 
