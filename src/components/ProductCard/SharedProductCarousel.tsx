@@ -60,7 +60,7 @@ export function SharedProductCarousel({
         itemListName={itemListName}
         contentCategory={contentCategory}
       />
-      <CarouselContent className='-ml-3 md:-ml-8'>
+      <CarouselContent className='-ml-3 md:-ml-8 lg:-ml-10'>
         {products.map((product, index) => {
           const colorHexMap = createColorHexMap(product)
           const initialOptions =
@@ -70,7 +70,7 @@ export function SharedProductCarousel({
           return (
             <CarouselItem
               key={product.id}
-              className='basis-[72%] pl-3 sm:basis-1/2 md:pl-8 lg:basis-1/3'
+              className='basis-[72%] pl-3 sm:basis-1/2 md:basis-[38%] md:pl-8 lg:pl-10 xl:basis-1/3'
             >
               <ProductCard
                 product={product}
@@ -101,10 +101,16 @@ export function SharedProductCarousel({
         )}
       />
       <CarouselPrevious
-        className={cn('max-md:hidden', navigationClassName)}
+        className={cn(
+          'max-md:hidden md:left-2 xl:-left-12',
+          navigationClassName
+        )}
       />
       <CarouselNext
-        className={cn('max-md:hidden', navigationClassName)}
+        className={cn(
+          'max-md:hidden md:right-2 xl:-right-12',
+          navigationClassName
+        )}
       />
     </Carousel>
   )

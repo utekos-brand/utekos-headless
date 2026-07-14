@@ -188,7 +188,7 @@ export function KlarnaExpressCheckoutButton({
     >
       <div
         id={containerId}
-        className='min-h-12 w-full overflow-hidden rounded-full ring-1 ring-card-foreground/50 ring-inset'
+        className='h-12 min-h-12 w-full overflow-hidden rounded-full ring-1 ring-card-foreground/50 ring-inset'
       />
     </div>
   )

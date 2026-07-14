@@ -118,7 +118,6 @@ export type ProductVariantSelectorProps = {
 }
 
 export type ProductCardFooterProps = {
-  price: string
   isAvailable: boolean
   isPending: boolean
   onQuickBuy: (e: React.MouseEvent) => void
@@ -132,6 +131,7 @@ export type ProductCardHeaderProps = {
   onOptionChange: React.Dispatch<
     React.SetStateAction<Record<string, string>>
   >
+  price: string
   productUrl: Route
   onViewProduct?: () => void
 }

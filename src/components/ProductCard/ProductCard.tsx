@@ -23,10 +23,10 @@ import { findMatchingVariant } from './findMatchingVariant'
 import { getInitialOptionsForProduct } from './getInitialOptionsForProduct'
 import { ProductCardFooter } from './ProductCardFooter'
 import { ProductCardHeader } from './ProductCardHeader'
-import { H3 } from '@/components/typography/TypographyH3'
 import { InlineText } from '@/components/typography/TypographyInlineText'
 import { KlarnaProductExpressCheckout } from '@/components/klarna/components/KlarnaProductExpressCheckout'
 import { ProductCardCompactVariantSelector } from './ProductCardCompactVariantSelector'
+import { ProductColorSwatches } from './ProductColorSwatches'
 
 interface ExtendedProductCardProps extends ProductCardProps {
   isPriority?: boolean
@@ -82,8 +82,33 @@ export function ProductCard({
   const isAvailable = selectedVariant?.availableForSale ?? false
   const imageSizes =
     compactMobile ?
-      '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 72vw'
+      '(min-width: 1280px) 33vw, (min-width: 768px) 38vw, (min-width: 640px) 50vw, 72vw'
     : '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw'
+  const productCardOptions = product.options.map(option => {
+    const optionName = option.name.toLowerCase()
+    const isColorOption =
+      optionName === 'farge' || optionName === 'color'
+
+    if (
+      product.handle !== 'utekos-mikrofiber' ||
+      !isColorOption
+    ) {
+      return option
+    }
+
+    return {
+      ...option,
+      optionValues: option.optionValues.filter(
+        value =>
+          value.name.toLocaleLowerCase('nb-NO') !== 'vargnatt'
+      )
+    }
+  })
+  const colorOption = productCardOptions.find(option => {
+    const optionName = option.name.toLowerCase()
+
+    return optionName === 'farge' || optionName === 'color'
+  })
 
   const trackProductSelect = () => {
     if (!selectedVariant || !listTrackingContext) {
@@ -168,68 +193,85 @@ export function ProductCard({
 
   const compactProductCardContent =
     compactMobile ?
-      <Link
-        href={productUrl}
-        data-track='ProductCardViewMoreClick'
-        onClick={trackProductSelect}
-        aria-label={`Se produkt ${product.title}`}
-        className='dark:focus-visible:outline-dark-card-foreground flex w-full flex-1 flex-col focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground md:hidden'
-      >
-        <CardContent className='relative p-0'>
-          {product.handle === 'utekos-dun' ?
-            <Badge
-              variant='destructive'
-              className='bg-disabled absolute top-2 right-2 z-10 border border-border px-2 py-0.5 text-[0.65rem] font-medium tracking-wide text-foreground uppercase'
-            >
-              <InlineText>Utsolgt</InlineText>
-            </Badge>
-          : null}
-
-          <AspectRatio
-            ratio={1 / 1}
-            className='w-full overflow-hidden'
+      <div className='flex flex-col xl:hidden'>
+        <CardContent className='relative overflow-hidden rounded-t-xl p-0'>
+          <Link
+            href={productUrl}
+            data-track='ProductCardViewMoreClick'
+            onClick={trackProductSelect}
+            aria-label={`Se produkt ${product.title}`}
+            className='dark:focus-visible:outline-dark-card-foreground block w-full rounded-t-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
           >
-            <Image
-              src={imageUrl}
-              alt={altText}
-              fill
-              quality={100}
-              sizes='(min-width: 640px) 50vw, 72vw'
-              className='object-cover transition-transform duration-300 group-hover:scale-[1.02]'
-              fetchPriority={isPriority ? 'high' : 'low'}
-              loading={isPriority ? 'eager' : 'lazy'}
-            />
-          </AspectRatio>
-        </CardContent>
-
-        <div className='dark:border-dark-card-foreground/24 flex flex-col gap-1 border-t border-card-foreground/24 px-3 py-2.5'>
-          <div className='flex items-start justify-between gap-2'>
-            <H3 className='line-clamp-2 min-w-0 flex-1 pb-0 text-[0.82rem] leading-snug font-semibold text-balance text-card-foreground'>
-              {product.title}
-            </H3>
             <BrandBadge
               backgroundColor='var(--background)'
               textColor='var(--foreground)'
-              className='dark:border-dark-foreground/12 shrink-0 border border-foreground/12 px-2 py-0.5 text-[0.65rem] font-medium tracking-wide'
+              className='dark:border-dark-foreground/12 absolute top-3 left-3 z-10 border border-foreground/12 px-2.5 py-1 text-[0.68rem] font-medium tracking-wide shadow-[0_12px_28px_-22px_rgba(32,28,54,0.58)]'
             >
               <InlineText>Unisex</InlineText>
             </BrandBadge>
+
+            {product.handle === 'utekos-dun' ?
+              <Badge
+                variant='destructive'
+                className='bg-disabled absolute top-3 right-3 z-10 border border-border px-2.5 py-1 text-[0.68rem] font-medium tracking-wide text-foreground uppercase'
+              >
+                <InlineText>Utsolgt</InlineText>
+              </Badge>
+            : null}
+
+            <AspectRatio
+              ratio={1 / 1}
+              className='w-full overflow-hidden rounded-t-xl'
+            >
+              <Image
+                src={imageUrl}
+                alt={altText}
+                fill
+                quality={100}
+                sizes={imageSizes}
+                className='rounded-t-xl object-cover motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-[1.02]'
+                fetchPriority={isPriority ? 'high' : 'low'}
+                loading={isPriority ? 'eager' : 'lazy'}
+              />
+            </AspectRatio>
+          </Link>
+        </CardContent>
+
+        <div className='dark:border-dark-card-foreground/24 flex flex-col gap-2 rounded-t-xl border-t border-card-foreground/24 p-3 md:gap-3 md:p-4'>
+          <div className='grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-2'>
+            <Link
+              href={productUrl}
+              data-track='ProductCardViewMoreClick'
+              onClick={trackProductSelect}
+              title={product.title}
+              className='dark:focus-visible:outline-dark-card-foreground min-w-0 flex-1 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
+            >
+              <h3 className='truncate text-base leading-6 font-semibold tracking-tight text-card-foreground md:text-lg md:leading-7'>
+                {product.title}
+              </h3>
+            </Link>
+            {colorOption ?
+              <ProductColorSwatches
+                colorOption={colorOption}
+                colorHexMap={colorHexMap}
+                selectedOptions={selectedOptions}
+                onOptionChange={setSelectedOptions}
+                className='gap-1.5 justify-self-end'
+                swatchClassName='!size-5 md:!size-7'
+              />
+            : null}
           </div>
-          <InlineText className='text-sm leading-none font-bold text-card-foreground'>
+          <InlineText className='text-sm leading-5 font-bold text-card-foreground md:text-lg md:leading-6'>
             {price}
           </InlineText>
+          <ProductCardCompactVariantSelector
+            options={productCardOptions}
+            colorHexMap={colorHexMap}
+            selectedOptions={selectedOptions}
+            onOptionChange={setSelectedOptions}
+          />
         </div>
-      </Link>
-    : null
-
-  const compactProductVariantSelector =
-    compactMobile ?
-      <ProductCardCompactVariantSelector
-        options={product.options}
-        selectedOptions={selectedOptions}
-        onOptionChange={setSelectedOptions}
-        productTitle={product.title}
-      />
+      </div>
     : null
 
   return (
@@ -240,19 +282,18 @@ export function ProductCard({
       )}
     >
       {compactProductCardContent}
-      {compactProductVariantSelector}
       <div
         className={
-          compactMobile ? 'hidden md:contents' : 'contents'
+          compactMobile ? 'hidden xl:contents' : 'contents'
         }
       >
-        <CardContent className='relative p-0'>
+        <CardContent className='relative overflow-hidden rounded-t-xl p-0'>
           <Link
             href={productUrl}
             data-track='ProductCardViewMoreClick'
             onClick={trackProductSelect}
             aria-label={`Se produkt ${product.title}`}
-            className='dark:focus-visible:outline-dark-card-foreground block w-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
+            className='dark:focus-visible:outline-dark-card-foreground block w-full rounded-t-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
           >
             <BrandBadge
               backgroundColor='var(--background)'
@@ -281,7 +322,7 @@ export function ProductCard({
 
             <AspectRatio
               ratio={1 / 1}
-              className='w-full overflow-hidden'
+              className='w-full overflow-hidden rounded-t-xl'
             >
               <Image
                 src={imageUrl}
@@ -289,7 +330,7 @@ export function ProductCard({
                 fill
                 quality={100}
                 sizes={imageSizes}
-                className='object-cover transition-transform duration-300 group-hover:scale-[1.02]'
+                className='rounded-t-xl object-cover motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-[1.02]'
                 fetchPriority={isPriority ? 'high' : 'low'}
                 loading={isPriority ? 'eager' : 'lazy'}
               />
@@ -299,10 +340,11 @@ export function ProductCard({
 
         <ProductCardHeader
           title={product.title}
-          options={product.options}
+          options={productCardOptions}
           colorHexMap={colorHexMap}
           selectedOptions={selectedOptions}
           onOptionChange={setSelectedOptions}
+          price={price}
           productUrl={productUrl}
           onViewProduct={trackProductSelect}
           compactMobile={compactMobile}
@@ -312,15 +354,13 @@ export function ProductCard({
         className={cn(
           'mt-auto flex w-full flex-col gap-3 p-6 pt-0',
           compactMobile &&
-            'gap-2 p-2 pt-0 md:gap-3 md:p-6 md:pt-0'
+            'gap-2 p-3 pt-0 md:gap-3 md:p-4 md:pt-0 xl:p-6 xl:pt-0'
         )}
       >
         <ProductCardFooter
-          price={price}
           isAvailable={isAvailable}
           isPending={isPending}
           onQuickBuy={handleQuickBuy}
-          compactMobile={compactMobile}
         />
         <KlarnaProductExpressCheckout
           product={product}

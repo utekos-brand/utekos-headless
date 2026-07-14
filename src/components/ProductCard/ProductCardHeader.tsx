@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ProductColorSwatches } from './ProductColorSwatches'
 import { ProductVariantSelector } from './ProductVariantSelector'
 import { H3 } from '@/components/typography/TypographyH3'
+import { InlineText } from '@/components/typography/TypographyInlineText'
 
 type ProductCardHeaderViewProps = ProductCardHeaderProps & {
   compactMobile?: boolean
@@ -16,53 +17,56 @@ export function ProductCardHeader({
   colorHexMap,
   selectedOptions,
   onOptionChange,
+  price,
   productUrl,
   onViewProduct,
   compactMobile = false
 }: ProductCardHeaderViewProps) {
-  const colorOption = options.find(
-    option => option.name.toLowerCase() === 'farge'
-  )
-  const optionsWithoutColor = options.filter(
-    option => option.name.toLowerCase() !== 'farge'
-  )
+  const colorOption = options.find(option => {
+    const optionName = option.name.toLowerCase()
+
+    return optionName === 'farge' || optionName === 'color'
+  })
+  const optionsWithoutColor = options.filter(option => {
+    const optionName = option.name.toLowerCase()
+
+    return optionName !== 'farge' && optionName !== 'color'
+  })
   const productViewClickProps =
     onViewProduct ? { onClick: onViewProduct } : {}
 
   return (
     <CardHeader
       className={cn(
-        ' grow border-t border-border p-6 pb-4',
+        'flex grow flex-col gap-3 rounded-t-xl border-t border-border p-6 pb-4',
         compactMobile && 'p-2 pb-2 md:p-6 md:pb-4'
       )}
     >
       <div
         className={cn(
-          'mb-4 flex items-start justify-between gap-4',
-          compactMobile &&
-            'mb-2 flex-col gap-1.5 md:mb-4 md:flex-row md:gap-4'
+          'grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-4',
+          compactMobile && 'gap-1.5 md:gap-4'
         )}
       >
         <Link
           href={productUrl}
           {...productViewClickProps}
+          title={title}
           className={cn(
-            'font-utekos-text-medium dark:focus-visible:outline-dark-card-foreground min-w-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground',
-            compactMobile && 'w-full md:w-auto'
+            'font-utekos-text-medium dark:focus-visible:outline-dark-card-foreground w-full min-w-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
           )}
         >
           <CardTitle
             className={cn(
               'text-card-foreground',
-              compactMobile &&
-                'text-card-foreground'
+              compactMobile && 'text-card-foreground'
             )}
           >
             <H3
               className={cn(
-                'line-clamp-2 pb-0 text-xl font-semibold text-balance text-card-foreground',
+                'truncate pb-0 text-xl leading-8 font-semibold text-card-foreground',
                 compactMobile &&
-                  'text-[0.82rem] leading-tight md:text-xl md:leading-normal'
+                  'text-[0.82rem] leading-5 md:text-xl md:leading-8'
               )}
             >
               {title}
@@ -78,14 +82,21 @@ export function ProductCardHeader({
             onOptionChange={onOptionChange}
             {...(compactMobile ?
               {
-                className:
-                  'max-w-full justify-start gap-1 pt-0 md:max-w-[46%] md:justify-end md:gap-2 md:pt-1',
+                className: 'justify-self-end gap-1 md:gap-2',
                 swatchClassName: '!size-5 md:!size-8'
               }
-            : {})}
+            : { className: 'justify-self-end' })}
           />
         )}
       </div>
+      <InlineText
+        className={cn(
+          'text-2xl leading-none font-bold text-card-foreground',
+          compactMobile && 'text-base md:text-2xl'
+        )}
+      >
+        {price}
+      </InlineText>
       <ProductVariantSelector
         options={optionsWithoutColor}
         colorHexMap={colorHexMap}

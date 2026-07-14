@@ -2,22 +2,22 @@
 
 import { SizeLabel } from '@/components/ProductCard/SizeLabel'
 import { variantSwatchButtonClassName } from '@/components/ProductCard/ProductColorSwatches'
-import type { ProductVariantSelectorProps } from '@types'
-import { cn } from '@/lib/utils/className'
 import { InlineText } from '@/components/typography/TypographyInlineText'
-import { Check } from 'lucide-react'
+import { cn } from '@/lib/utils/className'
+import type { ProductVariantSelectorProps } from '@types'
+import { Fragment } from 'react'
 
 type ProductVariantSelectorViewProps =
   ProductVariantSelectorProps & { compactMobile?: boolean }
 
 const sizeOptionClassName =
-  'btn-variant-option inline-flex hover:cursor-pointer min-h-9 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm leading-none font-medium whitespace-nowrap transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-border dark:focus-visible:ring-dark-border focus-visible:ring-offset-2 focus-visible:ring-offset-primary dark:focus-visible:ring-offset-dark-primary focus-visible:outline-none'
+  'btn-variant-option inline-flex min-h-9 w-18 shrink-0 items-center justify-center rounded-md border px-2 py-1.5 text-sm leading-none font-medium whitespace-nowrap motion-safe:transition-colors motion-safe:duration-200 hover:cursor-pointer focus-visible:ring-2 focus-visible:ring-card-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-card focus-visible:outline-none'
 
 const selectedSizeOptionClassName =
-  'border-primary dark:border-dark-primary bg-background dark:bg-dark-background text-foreground '
+  'border-card-foreground bg-transparent text-card-foreground'
 
 const unselectedSizeOptionClassName =
-  'border-border  bg-card  text-card-foreground  hover:cursor-pointer hover:bg-card-hover -hover'
+  'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/85'
 
 export function ProductVariantSelector({
   options,
@@ -27,117 +27,126 @@ export function ProductVariantSelector({
   compactMobile = false
 }: ProductVariantSelectorViewProps) {
   return (
-    <div
-      className={cn(
-        'flex flex-col gap-4',
-        compactMobile && 'gap-2 md:gap-4'
-      )}
-    >
+    <>
       {options
         .filter(option => option.name.toLowerCase() !== 'kjønn')
-        .map(option => (
-          <div key={option.name}>
-            {option.name.toLowerCase() === 'størrelse' ?
-              <SizeLabel
-                {...(compactMobile ?
-                  {
-                    className:
-                      'text-card-foreground  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground dark:focus-visible:outline-dark-card-foreground !text-[0.68rem] md:!text-sm'
-                  }
-                : {
-                    className:
-                      'text-card-foreground  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground dark:focus-visible:outline-dark-card-foreground'
-                  })}
-              />
-            : <InlineText
+        .map(option => {
+          const optionName = option.name.toLowerCase()
+          const isSizeOption =
+            optionName === 'størrelse' || optionName === 'size'
+          const isColorOption =
+            optionName === 'farge' || optionName === 'color'
+          const visibleOptionValues =
+            isSizeOption ?
+              option.optionValues.filter(
+                value =>
+                  value.name.toLocaleLowerCase('nb-NO') !==
+                  'ekstra stor'
+              )
+            : option.optionValues
+
+          return (
+            <Fragment key={option.name}>
+              {!isSizeOption ?
+                <InlineText
+                  className={cn(
+                    'font-sans text-sm font-semibold tracking-wide text-card-foreground uppercase',
+                    compactMobile && 'text-[0.68rem] md:text-sm'
+                  )}
+                >
+                  {option.name}
+                </InlineText>
+              : null}
+
+              <div
+                role='group'
+                aria-label={option.name}
                 className={cn(
-                  '! mb-2 font-sans text-sm font-semibold tracking-wide text-card-foreground! uppercase',
-                  compactMobile && 'text-[0.68rem] md:text-sm'
+                  'flex flex-wrap items-center gap-2',
+                  compactMobile && 'gap-1 md:gap-2'
                 )}
               >
-                {option.name}
-              </InlineText>
-            }
-            <div
-              className={cn(
-                'mt-2 flex flex-wrap items-center gap-2',
-                compactMobile && 'mt-1 gap-1 md:mt-2 md:gap-2'
-              )}
-            >
-              {option.name.toLowerCase() === 'farge' ?
-                option.optionValues.map(value => {
-                  const colorCode = colorHexMap.get(value.name)
-                  if (!colorCode) return null
+                {isColorOption ?
+                  visibleOptionValues.map(value => {
+                    const colorCode = colorHexMap.get(value.name)
+                    if (!colorCode) return null
 
-                  return (
-                    <button
-                      key={value.name}
-                      onClick={e => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        onOptionChange(prev => ({
-                          ...prev,
-                          [option.name]: value.name
-                        }))
-                      }}
-                      className={cn(
-                        variantSwatchButtonClassName,
-                        (
-                          selectedOptions[option.name] ===
-                            value.name
-                        ) ?
-                          'border-coral-green ring-coral-green ring-1'
-                        : 'dark:border-dark-card-foreground/24 dark:hover:border-dark-card-foreground/45 dark:hover:ring-dark-card-foreground/24 border-card-foreground/24 hover:border-card-foreground/45 hover:ring-2 hover:ring-card-foreground/24'
-                      )}
-                      style={{
-                        backgroundColor: colorCode ?? undefined
-                      }}
-                      title={value.name}
-                    />
-                  )
-                })
-              : option.optionValues.map(value => (
-                  <button
-                    type='button'
-                    aria-pressed={
+                    const isSelected =
                       selectedOptions[option.name] === value.name
-                    }
-                    key={value.name}
-                    onClick={e => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      onOptionChange(prev => ({
-                        ...prev,
-                        [option.name]: value.name
-                      }))
-                    }}
-                    className={cn(
-                      sizeOptionClassName,
-                      compactMobile &&
-                        'min-h-8 rounded-md px-2 py-1 text-xs md:min-h-9 md:rounded-lg md:px-3 md:py-1.5 md:text-sm',
-                      (
-                        selectedOptions[option.name] ===
-                          value.name
-                      ) ?
-                        selectedSizeOptionClassName
-                      : unselectedSizeOptionClassName
-                    )}
-                  >
-                    <InlineText>{value.name}</InlineText>
-                    {selectedOptions[option.name] ===
-                    value.name ?
-                      <Check
-                        className='size-3.5 shrink-0'
-                        strokeWidth={2.5}
-                        aria-hidden='true'
+
+                    return (
+                      <button
+                        type='button'
+                        key={value.name}
+                        onClick={event => {
+                          event.preventDefault()
+                          event.stopPropagation()
+                          onOptionChange(previousOptions => ({
+                            ...previousOptions,
+                            [option.name]: value.name
+                          }))
+                        }}
+                        className={cn(
+                          variantSwatchButtonClassName,
+                          isSelected ?
+                            'border-card-foreground ring-2 ring-card-foreground ring-offset-1 ring-offset-card'
+                          : 'border-card-foreground/70 hover:border-card-foreground hover:ring-2 hover:ring-card-foreground/70'
+                        )}
+                        style={{
+                          backgroundColor: colorCode,
+                          outlineColor: 'var(--card-foreground)'
+                        }}
+                        title={value.name}
+                        aria-label={`Velg farge ${value.name}`}
+                        aria-pressed={isSelected}
                       />
-                    : null}
-                  </button>
-                ))
-              }
-            </div>
-          </div>
-        ))}
-    </div>
+                    )
+                  })
+                : visibleOptionValues.map(value => {
+                    const isSelected =
+                      selectedOptions[option.name] === value.name
+
+                    return (
+                      <button
+                        type='button'
+                        aria-pressed={isSelected}
+                        key={value.name}
+                        onClick={event => {
+                          event.preventDefault()
+                          event.stopPropagation()
+                          onOptionChange(previousOptions => ({
+                            ...previousOptions,
+                            [option.name]: value.name
+                          }))
+                        }}
+                        className={cn(
+                          sizeOptionClassName,
+                          compactMobile &&
+                            'min-h-8 py-1 text-[0.68rem] md:text-sm xl:min-h-9 xl:py-1.5',
+                          isSelected ?
+                            selectedSizeOptionClassName
+                          : unselectedSizeOptionClassName
+                        )}
+                      >
+                        <InlineText>{value.name}</InlineText>
+                      </button>
+                    )
+                  })
+                }
+              </div>
+
+              {isSizeOption ?
+                <SizeLabel
+                  className={cn(
+                    'dark:focus-visible:outline-dark-card-foreground text-card-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground',
+                    compactMobile &&
+                      '!text-[0.68rem] md:!text-sm'
+                  )}
+                />
+              : null}
+            </Fragment>
+          )
+        })}
+    </>
   )
 }

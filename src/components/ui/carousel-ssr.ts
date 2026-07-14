@@ -23,18 +23,18 @@ export const CAROUSEL_SSR = {
     }
   }),
 
-  /** Product rows: `basis-full` → `sm:1/2` → `md:1/3` → `xl:1/4` */
+  /** Product rows: `basis-[72%]` → `sm:1/2` → `md:40%` → `xl:1/3` */
   productGrid: (slideCount: number): SsrOptionsType => ({
-    slideSizes: fillSlideSizes(slideCount, 100),
+    slideSizes: fillSlideSizes(slideCount, 72),
     breakpoints: {
       '(min-width: 640px)': {
         slideSizes: fillSlideSizes(slideCount, 50)
       },
       '(min-width: 768px)': {
-        slideSizes: fillSlideSizes(slideCount, 100 / 3)
+        slideSizes: fillSlideSizes(slideCount, 40)
       },
       '(min-width: 1280px)': {
-        slideSizes: fillSlideSizes(slideCount, 25)
+        slideSizes: fillSlideSizes(slideCount, 100 / 3)
       }
     }
   }),
@@ -54,7 +54,7 @@ export const CAROUSEL_SSR = {
     }
   }),
 
-  /** Product carousel: `basis-[72%]` → `sm:basis-1/2` → `lg:basis-1/3` */
+  /** Product carousel: `72%` → `sm:1/2` → `md:38%` → `xl:1/3` */
   mobilePeekHalvesAndThirds: (
     slideCount: number
   ): SsrOptionsType => ({
@@ -63,7 +63,10 @@ export const CAROUSEL_SSR = {
       '(min-width: 640px)': {
         slideSizes: fillSlideSizes(slideCount, 50)
       },
-      '(min-width: 1024px)': {
+      '(min-width: 768px)': {
+        slideSizes: fillSlideSizes(slideCount, 38)
+      },
+      '(min-width: 1280px)': {
         slideSizes: fillSlideSizes(slideCount, 100 / 3)
       }
     }

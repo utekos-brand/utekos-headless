@@ -7,7 +7,7 @@ import {
   HoverCardTrigger
 } from '@/components/ui/hover-card'
 import { cn } from '@/lib/utils/className'
-import { ExternalLink, Ruler } from 'lucide-react'
+import { ArrowUpRight, Ruler } from 'lucide-react'
 import type { SizeLabelProps } from '@types'
 import { H3 } from '@/components/typography/TypographyH3'
 import { InlineText } from '@/components/typography/TypographyInlineText'
@@ -20,13 +20,18 @@ export function SizeLabel({ className = '' }: SizeLabelProps) {
         href='/handlehjelp/storrelsesguide'
         target='_blank'
         rel='noopener noreferrer'
+        style={{ outlineColor: 'var(--card-foreground)' }}
         className={cn(
-          'font-utekos-text-medium /90 dark:focus-visible:outline-dark-card-foreground inline-flex items-center gap-1 text-sm tracking-wide text-card-foreground uppercase hover:text-card-foreground/90 hover:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground',
+          'font-utekos-text-medium dark:focus-visible:outline-dark-card-foreground inline-flex w-fit items-center gap-1 text-sm tracking-wide text-card-foreground uppercase hover:text-card-foreground/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground motion-safe:transition-colors',
           className
         )}
       >
         <InlineText>STØRRELSE</InlineText>
-        <ExternalLink className='font-utekos-text-medium size-3 text-current' />
+        <ArrowUpRight
+          className='size-3.5 shrink-0 text-current'
+          aria-hidden='true'
+        />
+        <span className='sr-only'>(åpnes i ny fane)</span>
       </HoverCardTrigger>
       <HoverCardContent
         className='w-60 border-border'
