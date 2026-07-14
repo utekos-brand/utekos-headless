@@ -191,6 +191,32 @@ This gate applies to the two-stage remediation described in
 Approval from an earlier telemetry release does not authorize these provider,
 database, deployment, GTM, Shopify, or Cloud Run mutations.
 
+### Current preflight status 2026-07-14
+
+- The full local integration with the storefront/platform releases passed
+  frozen install, 111 changed tests, changed-code ESLint, TypeScript, MCP build
+  and doctors, and a Vercel-like production build with 99/99 static pages.
+- Supabase linked history and lint are green. The dry-run contains exactly
+  `20260712120000_add_tagging_observations_and_verified_dispatch_status.sql`;
+  it has not been applied.
+- The provider-dispatch report is green with 0 active failures, 0 unresolved
+  dead letters and 0 alerts. Seven public sGTM/GTM loader endpoints are green.
+- The hardening verifier remains deliberately red: the receipt secret and
+  protected Vercel receipt env are absent, Cloud Run is still `0/5` instead of
+  `3/10`, the dedicated service identity/mount is absent, and required uptime,
+  logging metrics, alert policies and budget configuration are missing or
+  drifted.
+- Browser smoke with local GTM enabled proves duplicate Cookiebot loading while
+  the live GTM configuration still contains web tag `126`. The app owns the
+  single CMP loader; the coordinated GTM release must delete tag `126` before
+  consent sign-off.
+- A fresh Quick Preview capture is still required immediately before publish.
+  The latest refresh attempt was blocked by DNS resolution for
+  `tagmanager.googleapis.com`; no GTM resource was changed.
+
+No Supabase migration, Vercel env change, Cloud Run change, GTM publish,
+provider write or production deploy was performed by this preflight.
+
 ### Local preflight
 
 ```bash

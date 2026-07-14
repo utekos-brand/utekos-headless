@@ -2,47 +2,40 @@
 
 ## Status
 
-STATUS 2026-07-14: REN RELEASE-KANDIDAT ER BYGGET FRA
-`origin/main` PÅ `codex/reconcile-tracking-release`. FEM
-PRODUKSJONSMIGRASJONER ER GJENOPPRETTET SOM LOKALE, COMMITTEDE
-FILER UTEN SUPABASE-SKJEMAMUTASJON. 48 HISTORISKE GOOGLE
-`page_location`-DEAD-LETTERS ER KLASSIFISERT OG LUKKET UTEN
-REPLAY; PROVIDER-RAPPORTEN HAR 0 FAILED/DEAD-LETTERED, 0
-UNRESOLVED OG 0 ALERTS. SENTRAL GA4-SANITIZER, PURCHASE
-`external_id`-HERDING OG KLARNA EXPRESS CHECKOUT-INITIALISERING
-ER ISOLERT FRA POSTHOG-/PAKKEOPPGRADERINGEN. 67 TRACKINGTESTER,
-NEXT TYPEGEN, TYPESCRIPT, TARGETED ESLINT, SUPABASE DB LINT OG
-FULL NEXT.JS 16.2.9 TURBOPACK-BUILD ER GRØNNE. PREVIEW- OG
-PRODUKTSIDE-/KLARNA-SMOKE ER GRØNN PÅ READY PREVIEW OG LIVE
-PRODUKSJON. VERCEL PRODUKSJONSDEPLOY ER READY, OG ETTERKONTROLLEN
-HAR 0 RUNTIME-FEIL OG EN FORTSATT GRØNN PROVIDER-/DEAD-LETTER-GATE.
-PROVIDER WRITES OG GTM PUBLISH ER FORTSATT BLOKKERT UTEN SEPARAT
-EKSPLISITT GODKJENNING.
+STATUS 2026-07-14: `origin/main` ER ENESTE PRODUKSJONSKANON.
+LOKAL `main`, `origin/HEAD` OG VERCEL-PRODUKSJON PEKER PÅ COMMIT
+`400d72485`. `codex/sgtm-remediation` ER EN LOKAL, TILSIKTET
+RELEASEKANDIDAT, IKKE EN ALTERNATIV PRODUKSJONSREFERANSE. FULL
+INTEGRASJON MOT DE ØVRIGE RELEASEKANDIDATENE PASSERER 111 ENDREDE
+TESTER, ESLINT, TYPESCRIPT, MCP-DOCTORER OG NEXT.JS-BUILD MED
+99/99 STATISKE SIDER. PROVIDER-RAPPORTEN HAR 0 AKTIVE FEIL,
+0 ULØSTE DEAD LETTERS OG 0 ALERTS. SUPABASE-DRY-RUN VISER NØYAKTIG
+MIGRASJON `20260712120000`, MEN DEN ER IKKE KJØRT. RECEIPT-SECRET,
+VERCEL-ENV, CLOUD RUN-HERDING, GTM-PUBLISERING OG PRODUKSJONSDEPLOY
+ER FORTSATT BLOKKERT TIL HVER KONKRETE MUTASJON ER GODKJENT OG
+VERIFISERT.
 
 ### Releaseavstemming 2026-07-14
 
-- Full build var ikke blokkert av MDX eller typed routes i den
-  kanoniske builden. En stale `.next` Turbopack-filcache utløste
-  lokal worker-`ENOENT`; cachen er regenerert, og både den aktive
-  worktree-en og den rene releasen bygger alle ruter grønt.
-- MDX-/typed-route-feilene kom fra en separat `--webpack`/
-  `--debug-build-paths`-diagnose med ufullstendige genererte
-  rutetyper. `next typegen` etterfulgt av `tsc --noEmit` er grønn.
+- Full build er ikke blokkert av MDX eller typed routes. Den tidligere
+  worker-`ENOENT` kom fra stale `.next`-cache; `next typegen`,
+  `tsc --noEmit` og produksjonsbygget er grønne.
 - De fire omtalte migrasjonene var allerede registrert i Supabase,
-  men filene lå ucommittet i en separat lokal worktree. Supabase
-  og Git har uavhengig historikk; dette er årsaken til avviket.
-- PostHog `1.399.2`, øvrige dependency-endringer, `package.json`
-  og `pnpm-lock.yaml` er uttrykkelig ikke med i release-kandidaten.
-- Vercel-preview `dpl_2kJH2QCPpsaaxx5oDBKD9SuhUt6j` er `READY`.
-  Autentisert browser-smoke på TechDown-produktet er grønn ved
-  1440 px og 390 px: 0 konsollfeil, Klarna SDK lastet, og den
-  tilgjengelige «Pay with Klarna»-knappen er rendret og aktiv.
-- Vercel production deployment `dpl_AdQDmSi5tRjfP5U5cPgFZAhdYrg2`
-  fra `main` SHA `d5e3e789c55a736537a56ee90a9b7f0c6017cd59`
-  er `READY` og aliased til `utekos.no`/`www.utekos.no`. Samme
-  produktside-/Klarna-smoke er grønn live ved 1440 px og 390 px
-  med 0 konsollfeil. Vercel runtime-sjekk fant 0 feil, og provider-
-  rapporten passerte etter deploy med 0 alerts.
+  mens de lokale SQL-filene lå ucommittet i en separat worktree.
+  Supabase og Git har uavhengig historikk; filene er nå bevart på
+  navngitte branches.
+- PostHog `1.399.2` og package-/lockfile-endringene er isolert på
+  `codex/release-posthog-sdk` og inngår ikke i sGTM-releasen.
+- Preview `dpl_2kJH2QCPpsaaxx5oDBKD9SuhUt6j` beviste Klarna-knapp i
+  den gamle produktsideplasseringen, ikke flyttingen til produktkort.
+- Produksjon `dpl_BL1dJauLSVXy5KNNhPd4FjRXGwmT` kjører commit
+  `400d72485`. Live `/produkter` har ingen Klarna-knapper, og
+  produktdetaljens Klarna-container er tom. Den tidligere påstanden
+  om synlig og aktiv produksjonsknapp var feil.
+- sGTM-koden er lokalt grønn, men hele releasen er no-go før den ene
+  Supabase-migrasjonen, receipt-secret/Vercel-env, Cloud Run `3/10`
+  hardening og koordinert GTM-publisering er fullført. Lokal GTM-smoke
+  viser dobbel Cookiebot-loader frem til web-tag `126` slettes.
 
 ## Telemetry- og plattformherding
 
@@ -65,8 +58,8 @@ Usercentrics CMP v3-runtime er fjernet fra applikasjonen. Cookiebot
 CMP (Usercentrics-produkt) er nå autoritativ samtykkekilde.
 
 - Domain group ID: `f2145160-1ac5-4859-8385-36dc6327495f`
-- Loader: `https://consent.cookiebot.com/uc.js` med
-  `data-blockingmode="auto"`
+- Loader: `https://consent.cookiebot.com/uc.js` uten auto-blocking som
+  normaltilstand; appens egne consent-gater eier blokkeringen
 - Server consent cookie: `CookieConsent` (ikke `ucConsentAllowedDps`)
 - Window-events: `CookiebotOnConsentReady`, `CookiebotOnAccept`,
   `CookiebotOnDecline`
@@ -97,7 +90,9 @@ CMP (Usercentrics-produkt) er nå autoritativ samtykkekilde.
   `NEXT_PUBLIC_USERCENTRICS_SGTM_ORIGIN` og øvrige `NEXT_PUBLIC_USERCENTRICS_*`
 - `TRACKING_SMOKE_BASE_URL=https://utekos.no npm run tracking:smoke` etter deploy
 - `npm run tracking:commerce-smoke` mot prod
-- GTM Preview: Cookiebot CMP-tag + Consent Initialisation
+- GTM Quick Preview: bekreft at Consent Initialisation beholdes og at
+  den dupliserende `Cookiebot CMP`-taggen `126` fjernes, siden appen
+  eier den eneste CMP-loaderen
 - Cookiebot Admin: scanner må matche tjenestenavn i `cookiebotConfig.ts`
 
 ### Nåværende operativ beslutning
@@ -468,7 +463,7 @@ Gjeldende status etter 2026-07-07-herdingen står i
 
 - Cookiebot CMP lastes i dokumenthodet med kanonisk rekkefølge:
   Consent Mode defaults (`denied`) → Cookiebot `uc.js`
-  (`data-blockingmode="auto"`).
+  (uten auto-blocking som normaltilstand).
 - GTM (`GTM-5TWMJQFP`) lastes etter page-settle via
   `ConsentGatedGoogleTagManager` uten React-consent-gate; Consent
   Mode og GTM Consent Initialisation styrer tag-firing.

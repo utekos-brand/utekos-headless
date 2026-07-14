@@ -142,8 +142,11 @@ Consent Mode v2 defaults (`denied`) settes før Cookiebot i
 
 GTM lastes etter page-settle via
 [`ConsentGatedGoogleTagManager.tsx`](../../components/analytics/ConsentGatedGoogleTagManager.tsx)
-uten React-consent-gate. Consent Initialisation i GTM + Cookiebot CMP-tag
-styrer tag-firing sammen med appens `gtag('consent','update')`.
+uten React-consent-gate. Appens `CookieScript.tsx` er eneste CMP-loader;
+Consent Initialisation i GTM styrer tag-firing sammen med appens
+`gtag('consent','update')`. Web-workspacen skal derfor fjerne den eldre
+`Cookiebot CMP`-taggen `126`. App-loader og GTM-loader samtidig er en
+releasefeil fordi Cookiebot da initialiseres to ganger.
 
 Nettleseren bruker `CookiebotOnAccept` / `CookiebotOnConsentReady`;
 serverrutene leser `CookieConsent` fra request-cookies.
