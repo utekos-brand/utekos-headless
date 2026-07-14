@@ -23,6 +23,7 @@
     "docker:prod:build": "docker compose --profile prod build web-prod",
     "docker:reset": "docker compose down --volumes --remove-orphans",
     "docker:shell": "docker compose run --rm web bash",
+    "prebuild": "node scripts/deploy/validate-build-env.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
