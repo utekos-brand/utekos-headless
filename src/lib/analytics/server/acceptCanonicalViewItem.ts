@@ -1,12 +1,23 @@
-import type { CanonicalEventStore } from './canonicalEventStore'
-import type { CanonicalPageViewRequestContext } from './normalizeCanonicalPageView'
-import { normalizeCanonicalViewItem } from './normalizeCanonicalViewItem'
+import type { CanonicalViewItem } from '../viewItemEvent'
+import type {
+  CanonicalEventStore,
+  CanonicalEventStoreInput
+} from './canonicalEventStore'
+import {
+  normalizeCanonicalViewItem,
+  type CanonicalViewItemRequestContext
+} from './normalizeCanonicalViewItem'
 import { planCanonicalPageViewDispatch } from './planCanonicalPageViewDispatch'
+
+export type CanonicalViewItemStoreInput =
+  CanonicalEventStoreInput & { event: CanonicalViewItem }
+
+export type CanonicalViewItemStore = CanonicalEventStore
 
 type AcceptCanonicalViewItemInput = {
   payload: unknown
-  requestContext: CanonicalPageViewRequestContext
-  store: CanonicalEventStore
+  requestContext: CanonicalViewItemRequestContext
+  store: CanonicalViewItemStore
 }
 
 export type AcceptCanonicalViewItemResult =
@@ -21,8 +32,8 @@ export async function acceptCanonicalViewItem(
     input.requestContext
   )
   const hasPermittedPurpose =
-    event.consent.analytics === 'granted' ||
-    event.consent.marketing === 'granted'
+    event.consent.analytics === 'granted'
+    || event.consent.marketing === 'granted'
 
   if (!hasPermittedPurpose) {
     return { reason: 'consent_denied', status: 'rejected' }
