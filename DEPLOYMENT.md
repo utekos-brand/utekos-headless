@@ -218,7 +218,8 @@ deployed until production has:
 ### Shopify catalog Runtime Cache release
 
 The Runtime Cache release uses `@vercel/functions@3.7.5` with namespace
-`shopify-catalog:v1`. Product entries use normalized
+`shopify-catalog:v2`. The v2 namespace requires the Shopify vendor and
+variant tax fields used by canonical commerce events. Product entries use normalized
 `product:handle:{handle}` keys, a 900 second TTL and the tags
 `product:{shopifyId}`, `product-handle:{handle}` and `catalog`.
 

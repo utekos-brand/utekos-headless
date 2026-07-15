@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { getVercelRuntimeContext } from '@/lib/runtime/getVercelRuntimeContext'
 import type { ShopifyProduct } from 'types/product'
 
-export const SHOPIFY_CATALOG_RUNTIME_CACHE_NAMESPACE = 'shopify-catalog:v1'
+export const SHOPIFY_CATALOG_RUNTIME_CACHE_NAMESPACE = 'shopify-catalog:v2'
 export const SHOPIFY_PRODUCT_RUNTIME_CACHE_TTL_SECONDS = 900
 export const SHOPIFY_PRODUCT_RUNTIME_CACHE_MAX_SAFE_BYTES = 1_900_000
 
@@ -26,6 +26,7 @@ export const shopifyRuntimeCachedProductSchema = z.looseObject({
   id: z.string().min(1),
   title: z.string().min(1),
   handle: z.string().min(1),
+  vendor: z.string(),
   updatedAt: z.string().min(1),
   availableForSale: z.boolean(),
   tags: z.array(z.string()),
@@ -46,6 +47,7 @@ export const shopifyRuntimeCachedProductSchema = z.looseObject({
         id: z.string().min(1),
         title: z.string(),
         availableForSale: z.boolean(),
+        taxable: z.boolean(),
         price: moneySchema
       })
     }))
