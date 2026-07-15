@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { getRedis } from '@/lib/redis/getRedis'
-import type { AppLogEntry } from 'types/tracking/log/AppLogEntry'
+import type { AppLogEntry } from 'types/observability/log/AppLogEntry'
 
 // Timeout should be generous to account for:
 // 1. Redis client connection initialization (if not cached)

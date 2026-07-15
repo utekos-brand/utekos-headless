@@ -27,12 +27,7 @@ const ProductsPage = async () => {
         <ComparisonTeaser />
 
         <article className='mb-24'>
-          <LazyFeaturedProductCarousel
-            trackingEventName='ViewCategory'
-            itemListId='produkter-kolleksjon'
-            itemListName='Utekos produktkolleksjon'
-            contentCategory='Utekos produktkategori'
-          />
+          <LazyFeaturedProductCarousel />
         </article>
 
         <ComfyrobeFeatureSection />

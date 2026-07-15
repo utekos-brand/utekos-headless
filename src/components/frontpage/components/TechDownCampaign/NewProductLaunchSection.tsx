@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import { productHandle } from '@/api/constants'
-import { useLaunchSectionTracking } from './useLaunchSectionTracking'
 import { NewProductLaunchSectionView } from './NewProductLaunchSectionView'
 
 const QuickViewModal = dynamic(
@@ -14,23 +13,13 @@ const QuickViewModal = dynamic(
   { ssr: false }
 )
 
-interface NewProductLaunchSectionProps {
-  variantId: string
-}
-
-export function NewProductLaunchSection({
-  variantId
-}: NewProductLaunchSectionProps) {
+export function NewProductLaunchSection() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { trackEvent } = useLaunchSectionTracking(variantId)
 
-  const handleDiscoverClick = () => {
-    trackEvent('Discover', 'HeroInteract')
-  }
+  const handleDiscoverClick = () => {}
 
   const handleQuickViewClick = () => {
     setIsModalOpen(true)
-    trackEvent('QuickView', 'OpenQuickView')
   }
 
   return (
@@ -40,13 +29,13 @@ export function NewProductLaunchSection({
         onQuickViewClick={handleQuickViewClick}
       />
 
-      {isModalOpen && (
+      {isModalOpen ?
         <QuickViewModal
           productHandle={productHandle}
           isOpen={isModalOpen}
           onOpenChange={setIsModalOpen}
         />
-      )}
+      : null}
     </>
   )
 }

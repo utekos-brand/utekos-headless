@@ -3,6 +3,15 @@ import { withBotId } from 'botid/next/config'
 import { withSentryConfig } from '@sentry/nextjs'
 import createMDX from '@next/mdx'
 
+const GOOGLE_TAG_GATEWAY_PATH = '/__gtg'
+const SERVER_TAG_MANAGER_PATH = '/__sgtm'
+
+const GOOGLE_TAG_MANAGER_ORIGIN =
+  'https://www.googletagmanager.com'
+
+const SERVER_TAG_MANAGER_ORIGIN =
+  'https://cloud.server.utekos.no'
+
 const withMDX = createMDX({
   extension: /\.(md|mdx)$/,
   options: {
@@ -161,9 +170,32 @@ const nextConfig: NextConfig = {
           {
             key: 'Document-Policy',
             value: 'js-profiling'
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin'
           }
         ]
       },
+
+      {
+        source: `${SERVER_TAG_MANAGER_PATH}/:path*`,
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, max-age=0'
+          },
+          {
+            key: 'CDN-Cache-Control',
+            value: 'no-store'
+          },
+          {
+            key: 'Vercel-CDN-Cache-Control',
+            value: 'no-store'
+          }
+        ]
+      },
+
       {
         source:
           '/:path*.:extension(png|jpg|jpeg|webp|avif|gif|svg|ico|otf|woff2)',
@@ -174,6 +206,23 @@ const nextConfig: NextConfig = {
         headers: staticAssetHeaders
       }
     ]
+  },
+
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: `${GOOGLE_TAG_GATEWAY_PATH}/:path*`,
+          destination: `${GOOGLE_TAG_MANAGER_ORIGIN}/:path*`
+        },
+        {
+          source: `${SERVER_TAG_MANAGER_PATH}/:path*`,
+          destination: `${SERVER_TAG_MANAGER_ORIGIN}/:path*`
+        }
+      ],
+      afterFiles: [],
+      fallback: []
+    }
   },
 
   async redirects() {

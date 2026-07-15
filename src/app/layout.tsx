@@ -13,9 +13,28 @@ import Header from '@/components/header/Header'
 import { SiteChrome } from '@/components/layout/SiteChrome'
 import { OnlineStoreJsonLd } from './OnlineStoreJsonLd'
 import { CartProviderLoader } from '@/components/providers/CartProviderLoader'
-import { CookieScript } from '@/components/layout/CookieScript'
+import { CONSENT_MODE_DEFAULTS } from '@/components/layout/CookieScript'
+import {
+  COOKIEBOT_DOMAIN_GROUP_ID,
+  COOKIEBOT_SCRIPT_URL
+} from '@/components/cookie-consent/cookiebotConfig'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
+import { GoogleTagManager } from '@next/third-parties/google'
+import { SITE_URL } from '@/constants'
+import Script from 'next/script'
 import type { Metadata } from 'next'
+
+const googleTagGatewayOrigin =
+  process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL ?
+    `https://${process.env.VERCEL_URL}`
+  : process.env.NODE_ENV === 'development' ?
+    'http://localhost:3000'
+  : SITE_URL
+
+const googleTagGatewayUrl = new URL(
+  '/__gtg/gtm.js',
+  googleTagGatewayOrigin
+).toString()
 
 export const metadata: Metadata = {
   icons: { icon: '/icon.png', apple: '/apple-icon.png' },
@@ -79,7 +98,7 @@ export const metadata: Metadata = {
   }
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children
 }: {
   children: React.ReactNode
@@ -91,6 +110,21 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={`${utekosText.variable} ${utekosTextMedium.variable} ${googleSans.variable}`}
     >
+      <head>
+        <Script
+          id='consent-mode-defaults'
+          strategy='beforeInteractive'
+          data-cookieconsent='ignore'
+        >
+          {CONSENT_MODE_DEFAULTS}
+        </Script>
+        <Script
+          id='Cookiebot'
+          src={COOKIEBOT_SCRIPT_URL}
+          data-cbid={COOKIEBOT_DOMAIN_GROUP_ID}
+          strategy='beforeInteractive'
+        />
+      </head>
       <body className='scroll-smooth bg-background text-foreground antialiased dark:bg-background dark:text-foreground'>
         <ThemeProvider
           attribute='class'
@@ -99,8 +133,8 @@ export default async function RootLayout({
           enableColorScheme
           disableTransitionOnChange
         >
-          <CookieScript />
           <OnlineStoreJsonLd />
+
           <Suspense fallback={null}>
             <CartProviderLoader>
               <SiteChrome
@@ -112,6 +146,11 @@ export default async function RootLayout({
             </CartProviderLoader>
           </Suspense>
         </ThemeProvider>
+
+        <GoogleTagManager
+          gtmId='GTM-5TWMJQFP'
+          gtmScriptUrl={googleTagGatewayUrl}
+        />
       </body>
     </html>
   )

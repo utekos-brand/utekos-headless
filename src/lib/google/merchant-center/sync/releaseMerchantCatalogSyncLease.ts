@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { getTrackingWarehouse } from '@/lib/tracking/warehouse/getTrackingWarehouse'
+import { getPostgresClient } from '@/lib/db/getPostgresClient'
 
 import type { MerchantCatalogSyncLease } from './MerchantCatalogSyncLease'
 
@@ -11,7 +11,7 @@ export async function releaseMerchantCatalogSyncLease(
     return
   }
 
-  const sql = getTrackingWarehouse()
+  const sql = getPostgresClient()
 
   if (!sql) {
     return

@@ -1,16 +1,21 @@
 {
-  "crons": [
+  "headers": [
     {
-      "path": "/api/cron/sync-catalog",
-      "schedule": "0 4 * * *"
-    },
-    {
-      "path": "/api/cron/sync-meta-insights",
-      "schedule": "0 5 * * *"
-    },
-    {
-      "path": "/api/cron/retry-dispatch",
-      "schedule": "*/2 * * * *"
+      "source": "/__sgtm/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        },
+        {
+          "key": "CDN-Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Vercel-CDN-Cache-Control",
+          "value": "no-store"
+        }
+      ]
     }
   ],
   "regions": ["arn1"]

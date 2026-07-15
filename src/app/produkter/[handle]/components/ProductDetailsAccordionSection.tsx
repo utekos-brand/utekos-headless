@@ -1,48 +1,19 @@
 'use client'
 
-import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
-import { sendGAEvent } from '@next/third-parties/google'
 import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion'
 import { AccordionContentRenderer } from './AccordionContentRenderer'
-import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
-import { track } from '@vercel/analytics/react'
-import { generateEventID } from '@/components/analytics/Meta/generateEventID'
-import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
-import { COOKIEBOT_VERCEL_ANALYTICS_SERVICE_NAME } from '@/components/cookie-consent/cookiebotConfig'
 import type { AccordionSectionData } from '@types'
 
 export function ProductDetailsAccordionSection({
-  sectionData,
-  currentVariantId
+  sectionData
 }: {
   sectionData: AccordionSectionData
   currentVariantId?: string
 }) {
   const { id, title, content, Icon, color } = sectionData
-
-  const handleInteraction = () => {
-    const rawId =
-      currentVariantId ? cleanShopifyId(currentVariantId) : id
-    const contentId = rawId || ''
-    const contentIds = contentId ? [contentId] : []
-    const eventID = generateEventID().replace('evt_', 'acc_')
-    const pixelEventData = {
-      content_name: title,
-      content_ids: contentIds,
-      content_type: 'product',
-      accordion_section: id
-    }
-
-    void dispatchTrackingEvent({
-      eventName: 'InteractWithAccordion',
-      eventId: eventID,
-      destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
-      eventData: pixelEventData
-    })
-  }
 
   return (
     <AccordionItem
@@ -53,21 +24,6 @@ export function ProductDetailsAccordionSection({
       <div className='dark:bg-dark-background/0 dark:group-data-open:bg-dark-card-foreground/8 pointer-events-none absolute inset-0 z-0 bg-background/0 transition-colors duration-200 group-hover:cursor-pointer group-hover:bg-card-foreground/8 group-data-open:bg-card-foreground/8 dark:group-hover:bg-foreground/8' />
 
       <AccordionTrigger
-        onClick={() => {
-          handleInteraction()
-          if (
-            hasServiceConsent(
-              COOKIEBOT_VERCEL_ANALYTICS_SERVICE_NAME
-            )
-          ) {
-            track('ProductPageAccordionInteraction', {
-              section: title,
-              sectionId: id
-            })
-          }
-
-          sendGAEvent('event', 'buttonClicked', { value: title })
-        }}
         className='dark:focus-visible:ring-dark-card-foreground/45 dark:data-[state=open]:text-dark-card-foreground dark:svg]:text-dark-card-foreground/70 relative z-10 min-h-14 items-center px-5 py-4 text-card-foreground transition-colors duration-200 hover:text-card-foreground hover:no-underline focus-visible:ring-2 focus-visible:ring-card-foreground/45 data-[state=open]:text-card-foreground sm:px-6 [&>svg]:text-card-foreground/70'
       >
         <div className='flex items-center gap-4'>

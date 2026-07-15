@@ -19,41 +19,12 @@ import * as React from 'react'
 import { useTransition } from 'react'
 import { createDrawerStateHandler } from './utils/createDrawerStateHandler'
 import { Activity } from 'react'
-import { useEffect, useRef } from 'react'
-import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
-import {
-  buildCartTrackingData,
-  shouldTrackCartDrawerView
-} from '@/lib/tracking/cart/buildCartTrackingData'
-import { generateEventID } from '@/components/analytics/Meta/generateEventID'
 
 export function CartDrawer(): React.JSX.Element {
   const open = useCartOpen()
   const { data: cart } = useCartQuery()
   const [, startTransition] = useTransition()
   const baseHandleStateChange = createDrawerStateHandler(cartStore)
-  const hasTrackedView = useRef(false)
-
-  useEffect(() => {
-    const decision = shouldTrackCartDrawerView({
-      open,
-      hasCart: Boolean(cart),
-      trackedForCurrentOpen: hasTrackedView.current
-    })
-
-    hasTrackedView.current = decision.trackedForCurrentOpen
-
-    if (!decision.shouldTrack || !cart) {
-      return
-    }
-
-    void dispatchTrackingEvent({
-      eventName: 'ViewCart',
-      eventId: generateEventID(),
-      destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
-      eventData: buildCartTrackingData(cart)
-    })
-  }, [cart, open])
 
   const handleStateChangeWithTransition = (isOpen: boolean) => {
     if ('requestIdleCallback' in window) {

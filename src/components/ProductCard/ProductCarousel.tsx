@@ -3,24 +3,12 @@ import { handles as featuredProductHandles } from '@/db/data/products/product-in
 import { SharedProductCarousel } from './SharedProductCarousel'
 import { getProductWithoutSmallSize } from '@/components/products/getProductWithoutSmallSize'
 import type { ShopifyProduct } from 'types/product'
-import type { MetaEventType } from 'types/tracking/meta/event'
 
 type ProductCarouselProps = {
-  trackingEventName?: Extract<
-    MetaEventType,
-    'ViewCategory' | 'ViewItemList'
-  >
-  itemListId?: string
-  itemListName?: string
-  contentCategory?: string
   productCardClassName?: string
 }
 
 export async function ProductCarousel({
-  trackingEventName,
-  itemListId,
-  itemListName,
-  contentCategory,
   productCardClassName
 }: ProductCarouselProps) {
   const products = await getFeaturedProducts()
@@ -43,12 +31,6 @@ export async function ProductCarousel({
     return null
   }
 
-  const trackingProps = {
-    ...(trackingEventName ? { trackingEventName } : {}),
-    ...(itemListId ? { itemListId } : {}),
-    ...(itemListName ? { itemListName } : {}),
-    ...(contentCategory ? { contentCategory } : {})
-  }
   const cardStyleProps =
     productCardClassName ?
       { cardClassName: productCardClassName }
@@ -58,7 +40,6 @@ export async function ProductCarousel({
     <SharedProductCarousel
       products={featuredProducts}
       navigationClassName='bg-card '
-      {...trackingProps}
       {...cardStyleProps}
     />
   )

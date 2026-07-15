@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { ArrowRight, Mail } from 'lucide-react'
 import { toast } from 'sonner'
-import { trackNewsletterConversion } from '@/components/analytics/Meta/trackNewsletterConversion'
 import { H2 } from '@/components/typography/TypographyH2'
 import { P } from '@/components/typography/TypographyP'
 
@@ -23,20 +22,10 @@ export function NewsletterForm() {
     initialState
   )
   const formRef = useRef<HTMLFormElement>(null)
-  const submittedEmailRef = useRef<string | null>(null)
 
   useEffect(() => {
     if (state.status === 'success') {
       toast.success(state.message)
-
-      if (submittedEmailRef.current) {
-        trackNewsletterConversion(
-          submittedEmailRef.current,
-          'footer'
-        )
-        submittedEmailRef.current = null
-      }
-
       formRef.current?.reset()
     } else if (state.status === 'error') {
       toast.error(state.message)
@@ -44,12 +33,6 @@ export function NewsletterForm() {
   }, [state])
 
   const handleSubmit = (formData: FormData) => {
-    const email = formData.get('email') as string
-
-    if (email) {
-      submittedEmailRef.current = email
-    }
-
     formAction(formData)
   }
 

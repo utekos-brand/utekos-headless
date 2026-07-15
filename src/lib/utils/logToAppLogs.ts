@@ -1,7 +1,7 @@
 // Path: src/lib/utils/logToAppLogs.ts
 import { writeAppLogToRedis } from '@/lib/observability/logging/writeAppLogToRedis'
 import crypto from 'crypto'
-import type { AppLogLevel } from 'types/tracking/log/AppLogEntry'
+import type { AppLogLevel } from 'types/observability/log/AppLogEntry'
 
 export async function logToAppLogs(
   level: AppLogLevel,

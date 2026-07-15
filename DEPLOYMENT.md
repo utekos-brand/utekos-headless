@@ -1,6 +1,6 @@
 # Deployment And Migration Checklist
 
-Status date: 2026-07-14
+Status date: 2026-07-15
 
 This is the mandatory release checklist for Utekos Headless. Use it
 before every deploy, production mutation, provider change, GTM publish,
@@ -214,6 +214,59 @@ deployed until production has:
 - dead-letter resolution fields
 
 ## Vercel Production Gate
+
+### Tracking reset and first-party gateway release
+
+The 2026-07-15 tracking reset deliberately removes the legacy browser
+tracking hub, first-party event ingestion, Supabase provider dispatch,
+provider adapters, tracking webhooks and tracking crons. Those removed
+surfaces are gaps and must not be reported as active production
+telemetry.
+
+This release has no Supabase migration, provider mutation, GTM publish
+or direct Vercel production deployment. Its production trigger is the
+approved pull-request merge to GitHub `main`.
+
+Required local and preview gates:
+
+```bash
+git diff --check
+pnpm exec next typegen
+pnpm exec tsc --noEmit
+pnpm build
+npm run mcp:build
+npm run mcp:doctor
+TRACKING_GATEWAY_BASE_URL=<preview-url> npm run tracking:gateway:smoke
+```
+
+Production acceptance requires all of the following:
+
+- `/__gtg/gtm.js?id=GTM-5TWMJQFP` returns JavaScript.
+- `/__sgtm/healthy` returns `200`.
+- `/__sgtm` responses include `Cache-Control: no-store` and never
+  return `x-vercel-cache: HIT`.
+- Cookiebot is keyboard- and screen-reader-accessible.
+- Consent Mode v2 is `denied` before a choice, and no optional cookies
+  are created before consent.
+- Google cookieless pings may occur before consent, while Meta,
+  Microsoft, Clarity and other non-Google tags do not fire.
+- Accepting consent updates Google consent and permitted Google traffic
+  uses `/__sgtm`.
+- Rejecting or later withdrawing consent restores `denied` without new
+  optional cookies.
+
+The currently published GTM loader already contains
+`server_container_url=https://utekos.no/__sgtm`. No GTM publish belongs
+to this release. Legacy Cookiebot tag `126` is temporarily suppressed
+during container initialization with Google's `gtm.blocklist`; the
+block is cleared at `window.load` and `cookie_consent_update` is emitted
+again. Removing tag `126` remains a separate GTM release requiring
+explicit approval. A failing container consent gate requires an app
+rollback through Git; any GTM mutation needs separate approval.
+
+The removed commerce-tracking MCP doctor and provider/Supabase runtime
+checks are not gates for this reset release. They become mandatory
+again only when those capabilities are deliberately reintroduced.
 
 Use this gate for any Next.js runtime, route, action, tracking client,
 server tracking, env, or build-affecting change.

@@ -1,5 +1,4 @@
 import type { ShopifyProduct, ShopifyProductVariant } from 'types/product'
-import type { MetaContentItem } from 'types/tracking/meta'
 import type { UseFormReturn } from 'react-hook-form'
 import type { SizeOptionKey } from '@/app/inspirasjon/isbading/sizeSelectorData'
 import type { LucideIcon } from 'lucide-react'
@@ -13,30 +12,6 @@ export type AddToCartButtonProps = {
 }
 
 export type PrepareAddToCartInput = {
-  product: ShopifyProduct
-  selectedVariant: ShopifyProductVariant
-  quantity: number
-  additionalLine?: { variantId: string; quantity: number } | undefined
-}
-
-export type AddToCartEventData = {
-  eventID: string
-  contentName: string
-  contentIds: string[]
-  contents: MetaContentItem[]
-  value: number
-  currency: string
-  totalQty: number
-  mainVariantId: string
-}
-
-export type DispatchPixelsOptions = {
-  eventData: AddToCartEventData
-  product: ShopifyProduct
-  selectedVariant: ShopifyProductVariant
-}
-
-export type TrackAddToCartOptions = {
   product: ShopifyProduct
   selectedVariant: ShopifyProductVariant
   quantity: number

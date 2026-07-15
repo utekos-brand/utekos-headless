@@ -1,6 +1,6 @@
 # FLOW - tracking, observability og kommersiell innsikt
 
-Statusdato: 2026-07-14.
+Statusdato: 2026-07-15.
 
 Dette dokumentet er den operative flytbeskrivelsen for hvordan
 Utekos skal samle inn, lagre, levere og bruke analytics-,
@@ -24,41 +24,45 @@ kundechatbot ligger i
 
 ## Kort fasit
 
-- Supabase er kanonisk tracking-, audit- og provider-lager. Det
-  er her accepted events, provider-kø, provider-respons, dead
-  letters, consent snapshots, attribution, web vitals og kald
-  arkivering skal kunne etterprøves.
-- PostHog er produkt- og webanalyse. Det skal brukes til
-  adferdsforståelse, funnel-analyse, CRO, session replay og
-  produktinnsikt. Det skal ikke være økonomisk fasit,
-  provider-audit eller rå payload-lager.
-- Redis er ikke analytics-lager. Redis brukes som kortlevd støtte
-  for attribusjon, dedupe og runtime state, spesielt `fbp`/`fbc`,
-  `client_id` og `msclkid` når server-events skal matches mot
-  kjøp. Samme checkout-attribusjon er materialisert i Supabase
-  som varig snapshot slik at token-miss, Redis-expiry og senere
-  reparasjon ikke mister identifikatorene.
-- Providerne bruker dataene til optimalisering og kontroll: Meta
-  CAPI, Google Measurement Protocol / GA4, Microsoft UET CAPI,
-  Google Merchant Center, Microsoft Shopping/Ads og Clarity.
-- De 48 Google-avvisningene fra 2026-07-08 til 2026-07-10 skyldtes
-  at Measurement Protocol mottok `page_location` over 100 tegn.
-  Den scoped browser-rettingen ble produksjonsdeployet
-  2026-07-10T17:36:15Z, og ingen nye treff er observert etter
-  deployen. Backloggen ble 2026-07-14 klassifisert som historisk,
-  ikke replaybar radgjeld og lukket uten provider-replay.
-  `ops:provider-dispatch-report -- --fail-on-alerts` er grønn med
-  0 failed/dead-lettered, 0 unresolved og 0 alerts. Den sentrale
-  GA4-sanitizeren som også dekker newsletter og fremtidige
-  serverkall er produksjonsdeployet.
-- Den planlagte Vercel-cronen kalte den eksplisitt godkjenningsgatede
-  replay-ruten hvert 15. minutt og fikk korrekt `403`. Cronplanen er
-  fjernet i produksjon; ruten og dens fail-closed auth/godkjenningsgate
-  beholdes for manuell engangskjøring.
-- Klientloggen fanget også en `DataCloneError` med dokumentert
-  `chrome-extension://`-kilde. Lokal observability-filtering dropper
-  nå bare feil med verifisert extension-origin; identisk
-  førstepartsfeil forblir rapportert.
+Tracking ble bevisst nullstilt 2026-07-15. Den aktive appflaten etter
+resetten består kun av:
+
+- Cookiebot lastet direkte som minimal CMP.
+- Synkrone Consent Mode v2-defaults satt til `denied` før GTM.
+- Google Tag Manager via førstepartsruten `/__gtg`.
+- Google server-side tagging via førstepartsruten `/__sgtm`.
+
+GTM får laste før samtykke for Advanced Consent Mode og cookieless
+pings. Meta, Microsoft, Clarity og øvrige ikke-Google-tagger skal
+fortsatt være blokkert av consent-gates i GTM. `/__sgtm` er alltid
+`no-store` og skal aldri returneres som `x-vercel-cache: HIT`.
+
+Den publiserte GTM-containeren inneholder fortsatt legacy Cookiebot-tag
+`126`. Appen bruker derfor Googles `gtm.blocklist` under containerens
+initialisering for å blokkere sandboxede custom templates, fjerner
+blokkeringen ved `window.load` og sender `cookie_consent_update` på
+nytt. Dette hindrer dobbel Cookiebot uten GTM-publisering, samtidig som
+samtykkede custom templates kan kjøre etterpå. Tag `126` skal fjernes i
+en separat, eksplisitt godkjent GTM-release.
+
+Følgende tidligere appimplementasjoner er fjernet og skal behandles
+som åpne gap, ikke som aktive eller verifiserte flater:
+
+- browser tracking hub, direkte Meta/Microsoft/PostHog-klientkode og
+  produkt-/kampanje-trackere;
+- `/api/tracking-events`, consent snapshots, checkout-attribusjon,
+  tracking receipts og analytics-ruter;
+- Supabase ledger/provider-kø, retry/dead-letter-dispatch og
+  ordre-/refund-webhooks;
+- provider-adaptere for Meta CAPI, GA4 Measurement Protocol og
+  Microsoft UET CAPI;
+- tracking-, katalog- og provider-crons som tidligere var koblet til
+  Vercel.
+
+Supabase kan fortsatt være det fremtidige kanoniske lageret, og
+PostHog kan fortsatt være ønsket produktanalyse, men ingen av dem må
+omtales som aktiv storefront-tracking før de er innført på nytt,
+samtykkeverifisert og produksjonstestet.
 
 ## 1. Målbildet: komplett end-to-end-flyt
 

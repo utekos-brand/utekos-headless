@@ -10,7 +10,6 @@ import { cartStore } from '@/lib/state/cartStore'
 import { useCartMutations } from '@/hooks/useCartMutations'
 import { useOptimisticCartUpdate } from '@/hooks/useOptimisticCartUpdate'
 import { getCartIdFromCookie } from '@/lib/actions/getCartIdFromCookie'
-import { trackAddToCart } from '@/lib/tracking/client/trackAddToCart'
 import { getVariants } from '@/app/skreddersy-varmen/utekos-orginal/utils/getVariants'
 import { getSelectableSizes, PRODUCT_VARIANTS } from '@/api/constants'
 import type { ModelKey } from '@/api/constants'
@@ -175,12 +174,6 @@ export function useLandingPurchaseLogic({ products }: UseLandingPurchaseLogicPro
           cartId = cart.id
           queryClient.setQueryData(['cart', cart.id], cart)
         }
-
-        void trackAddToCart({
-          product,
-          selectedVariant,
-          quantity
-        }).catch(error => console.error('AddToCart tracking failed', error))
       } catch (error) {
         console.error('Kunne ikke legge til vare:', error)
         toast.error('Kunne ikke legge varen i handlekurven.')

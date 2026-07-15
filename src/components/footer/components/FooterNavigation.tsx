@@ -1,5 +1,4 @@
 // Path: src/components/footer/FooterNavigation.tsx
-import CookieSettingsButton from '@/components/cookie-consent/CookieSettingsButton'
 import { footerConfig } from '@/db/config/footer.config'
 import Link from 'next/link'
 
@@ -18,7 +17,6 @@ export function FooterNavigation() {
                   <Link
                     href={link.path}
                     className='font-utekos-text text-base transition-colors hover:text-foreground dark:hover:text-dark-foreground'
-                    data-track={link.trackingEvent}
                     {...(link.external && {
                       target: '_blank',
                       rel: 'noopener noreferrer'
@@ -28,9 +26,6 @@ export function FooterNavigation() {
                   </Link>
                 </li>
               ))}
-              {section.title === 'Kundeservice' && (
-                <CookieSettingsButton />
-              )}
             </ul>
           </nav>
         </div>

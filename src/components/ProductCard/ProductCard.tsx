@@ -7,9 +7,6 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { CartMutationContext } from '@/lib/context/CartMutationContext'
 import { cartStore } from '@/lib/state/cartStore'
-import { generateEventID } from '@/components/analytics/Meta/generateEventID'
-import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
-import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { formatPrice } from '@/lib/utils/formatPrice'
 import { cn } from '@/lib/utils/className'
 import type { ProductCardProps } from '@types'
@@ -40,7 +37,6 @@ export function ProductCard({
   colorHexMap,
   isPriority = false,
   initialOptions,
-  listTrackingContext,
   compactMobile = false,
   cardClassName
 }: ExtendedProductCardProps) {
@@ -110,55 +106,6 @@ export function ProductCard({
     return optionName === 'farge' || optionName === 'color'
   })
 
-  const trackProductSelect = () => {
-    if (!selectedVariant || !listTrackingContext) {
-      return
-    }
-
-    const contentId =
-      cleanShopifyId(selectedVariant.id) || selectedVariant.id
-    const price = Number(selectedVariant.price.amount)
-
-    void dispatchTrackingEvent({
-      eventName: 'SelectItem',
-      eventId: generateEventID(),
-      destinations: [
-        'google',
-        'meta',
-        'microsoft_uet',
-        'posthog'
-      ],
-      eventData: {
-        value: Number.isFinite(price) ? price : undefined,
-        currency: selectedVariant.price.currencyCode,
-        content_name: product.title,
-        content_type: 'product',
-        content_category:
-          product.productType || 'Utekos products',
-        content_ids: [contentId],
-        contents: [
-          {
-            id: contentId,
-            quantity: 1,
-            item_price:
-              Number.isFinite(price) ? price : undefined,
-            item_name: product.title,
-            item_brand: product.vendor || 'Utekos',
-            item_category:
-              product.productType || 'Utekos products',
-            item_variant: selectedVariant.title,
-            item_list_id: listTrackingContext.itemListId,
-            item_list_name: listTrackingContext.itemListName,
-            index: listTrackingContext.index
-          }
-        ],
-        item_list_id: listTrackingContext.itemListId,
-        item_list_name: listTrackingContext.itemListName,
-        num_items: 1
-      }
-    })
-  }
-
   const handleQuickBuy = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -198,7 +145,6 @@ export function ProductCard({
           <Link
             href={productUrl}
             data-track='ProductCardViewMoreClick'
-            onClick={trackProductSelect}
             aria-label={`Se produkt ${product.title}`}
             className='dark:focus-visible:outline-dark-card-foreground block w-full rounded-t-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
           >
@@ -242,7 +188,6 @@ export function ProductCard({
             <Link
               href={productUrl}
               data-track='ProductCardViewMoreClick'
-              onClick={trackProductSelect}
               title={product.title}
               className='dark:focus-visible:outline-dark-card-foreground min-w-0 flex-1 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
             >
@@ -291,7 +236,6 @@ export function ProductCard({
           <Link
             href={productUrl}
             data-track='ProductCardViewMoreClick'
-            onClick={trackProductSelect}
             aria-label={`Se produkt ${product.title}`}
             className='dark:focus-visible:outline-dark-card-foreground block w-full rounded-t-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
           >
@@ -346,7 +290,6 @@ export function ProductCard({
           onOptionChange={setSelectedOptions}
           price={price}
           productUrl={productUrl}
-          onViewProduct={trackProductSelect}
           compactMobile={compactMobile}
         />
       </div>

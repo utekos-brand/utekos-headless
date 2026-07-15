@@ -8,7 +8,6 @@ import { LandingPurchaseSection } from './components/LandingPurchaseSection'
 import { StickyMobileAction } from './components/StickyMobileAction'
 import { PreFooterNavigation } from './components/PreFooterNavigation'
 import { SkreddersyVarmenBreadcrumbs } from './components/SkreddersyVarmenBreadcrumbs'
-import { LandingTracking } from './components/LandingTracking'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -63,7 +62,6 @@ export const metadata: Metadata = {
 export default function LandingPage() {
   return (
     <article className='flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip bg-background dark:bg-dark-background'>
-      <LandingTracking />
       <StickyMobileAction />
 
       <SkreddersyVarmenBreadcrumbs />

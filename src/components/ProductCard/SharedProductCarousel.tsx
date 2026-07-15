@@ -8,33 +8,20 @@ import {
   CarouselPrevious
 } from '@/components/ui/carousel'
 import { CAROUSEL_SSR } from '@/components/ui/carousel-ssr'
-import { ProductListTracking } from '@/components/analytics/ProductListTracking'
 import { createColorHexMap } from '@/lib/helpers/shared/createColorHexMap'
 import { cn } from '@/lib/utils/className'
 import { initializeCarouselProducts } from './initializeCarouselProducts'
 import { ProductCard } from './ProductCard'
 import type { ShopifyProduct } from 'types/product'
-import type { MetaEventType } from 'types/tracking/meta/event'
 
 interface SharedProductCarouselProps {
   products: ShopifyProduct[]
-  trackingEventName?: Extract<
-    MetaEventType,
-    'ViewCategory' | 'ViewItemList'
-  >
-  itemListId?: string
-  itemListName?: string
-  contentCategory?: string
   navigationClassName?: string
   cardClassName?: string
 }
 
 export function SharedProductCarousel({
   products,
-  trackingEventName = 'ViewItemList',
-  itemListId = 'product-carousel',
-  itemListName = 'Product carousel',
-  contentCategory = 'Utekos products',
   navigationClassName,
   cardClassName
 }: SharedProductCarouselProps) {
@@ -53,15 +40,8 @@ export function SharedProductCarousel({
       opts={{ align: 'start', loop: products.length > 3 }}
       className='w-full'
     >
-      <ProductListTracking
-        products={products}
-        eventName={trackingEventName}
-        itemListId={itemListId}
-        itemListName={itemListName}
-        contentCategory={contentCategory}
-      />
       <CarouselContent className='-ml-3 md:-ml-8 lg:-ml-10'>
-        {products.map((product, index) => {
+        {products.map(product => {
           const colorHexMap = createColorHexMap(product)
           const initialOptions =
             productOptionsMap.get(product.handle) ??
@@ -78,11 +58,6 @@ export function SharedProductCarousel({
                 initialOptions={initialOptions}
                 compactMobile
                 {...(cardClassName ? { cardClassName } : {})}
-                listTrackingContext={{
-                  itemListId,
-                  itemListName,
-                  index
-                }}
               />
             </CarouselItem>
           )

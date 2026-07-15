@@ -13,7 +13,6 @@ import {
   type OptimisticItemInput
 } from '@/hooks/useOptimisticCartUpdate'
 import { handlePostAddToCartCampaigns } from '@/lib/campaigns/cart/handlePostAddToCartCampaigns'
-import { trackAddToCart } from '@/lib/tracking/client/trackAddToCart'
 import type { UseAddToCartActionProps, Cart } from 'types/cart'
 import type { ShopifyProduct, ShopifyProductVariant } from 'types/product'
 
@@ -147,13 +146,6 @@ export function useAddToCartAction({
           queryClient
         }).catch(console.error)
       }
-
-      await trackAddToCart({
-        product,
-        selectedVariant,
-        quantity,
-        additionalLine
-      })
 
       return {
         cart: resultCart,
