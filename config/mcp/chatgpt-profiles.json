@@ -378,6 +378,7 @@
       "requiresExplicitUserSelection": true,
       "tunnelTarget": "codex-bridge",
       "tunnelProfile": "utekos-chatgpt-codex-bridge",
+      "runtimeApiKeyEnv": "PERSONAL_OPENAI_API_KEY",
       "mcpCommand": "node ${repoRoot}/scripts/mcp/utekos-codex-bridge-server.mjs",
       "mcpSurface": "utekos-codex-controlled-agent-bridge",
       "healthAddr": "127.0.0.1:8087",
