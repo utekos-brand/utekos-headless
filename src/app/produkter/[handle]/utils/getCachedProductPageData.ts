@@ -3,7 +3,7 @@ import { getCachedRelatedProducts } from '@/api/lib/products/getCachedRelatedPro
 import { cacheLife, cacheTag } from 'next/cache'
 
 export async function getCachedProductPageData(handle: string) {
-  'use cache'
+  'use cache: remote'
 
   cacheTag(`product-${handle}`, 'products')
   cacheLife('products')

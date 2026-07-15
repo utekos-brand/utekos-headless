@@ -6,17 +6,16 @@ import { shopifyFetch } from '@/api/shopify/request/fetchShopify'
 import { reshapeProduct } from '@/lib/utils/reshapeProduct'
 import { cacheTag, cacheLife } from 'next/cache'
 import { TAGS } from '@/api/constants'
+import {
+  getRuntimeCachedShopifyProduct,
+  normalizeShopifyProductHandle
+} from '@/lib/cache/shopifyProductRuntimeCache'
 import type { ShopifyProduct } from 'types/product'
 import type { ShopifyProductOperation } from '@types'
 
-export async function getProduct(
+async function fetchProductFromShopify(
   handle: string
 ): Promise<ShopifyProduct | null> {
-  'use cache'
-
-  cacheTag(`product-${handle}`, TAGS.products)
-  cacheLife('products')
-
   const res = await shopifyFetch<ShopifyProductOperation>({
     query: getProductQuery,
     variables: { handle }
@@ -32,4 +31,19 @@ export async function getProduct(
   if (!rawProduct) return null
 
   return reshapeProduct(rawProduct)
+}
+
+export async function getProduct(
+  handle: string
+): Promise<ShopifyProduct | null> {
+  'use cache: remote'
+
+  const normalizedHandle = normalizeShopifyProductHandle(handle)
+  cacheTag(`product-${normalizedHandle}`, TAGS.products)
+  cacheLife('products')
+
+  return getRuntimeCachedShopifyProduct(
+    normalizedHandle,
+    fetchProductFromShopify
+  )
 }

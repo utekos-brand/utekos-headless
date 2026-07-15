@@ -1,7 +1,14 @@
 // Path: src/app/api/search-index/route.ts
 import { buildSearchIndex } from '@/lib/helpers/search'
-import { NextResponse } from 'next/server'
+import { NextResponse, connection } from 'next/server'
 import { cacheLife } from 'next/cache'
+import { addCacheTag } from '@vercel/functions'
+
+const SEARCH_INDEX_CACHE_HEADERS = {
+  'Cache-Control': 'public, max-age=0, must-revalidate',
+  'CDN-Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+  'Vercel-CDN-Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400'
+}
 
 async function getCachedSearchIndex() {
   'use cache'
@@ -12,13 +19,17 @@ async function getCachedSearchIndex() {
 }
 
 export async function GET() {
+  await connection()
+
   try {
     const groups = await getCachedSearchIndex()
+    await addCacheTag('search-index:v1')
 
     return NextResponse.json(
       { groups },
       {
-        status: 200
+        status: 200,
+        headers: SEARCH_INDEX_CACHE_HEADERS
       }
     )
   } catch (error) {

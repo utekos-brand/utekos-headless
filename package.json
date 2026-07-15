@@ -183,6 +183,7 @@
     "@types/mdx": "^2.0.14",
     "@upstash/redis": "^1.38.0",
     "@vercel/flags-core": "^1.4.0",
+    "@vercel/functions": "^3.7.5",
     "@vercel/otel": "^2.1.2",
     "@vercel/speed-insights": "^2.0.0",
     "@xstate/react": "^6.1.0",

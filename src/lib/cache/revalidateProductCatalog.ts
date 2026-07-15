@@ -1,23 +1,57 @@
 import 'server-only'
 
+import type { RuntimeCache } from '@vercel/functions'
 import { revalidateTag } from 'next/cache'
 import { TAGS } from '@/api/constants'
+import {
+  getShopifyCatalogRuntimeCache,
+  normalizeShopifyProductHandle,
+  normalizeShopifyProductId
+} from '@/lib/cache/shopifyProductRuntimeCache'
 
-export function revalidateProductCatalog(handles: readonly string[] = []): string[] {
+type ProductCatalogInvalidationDependencies = {
+  runtimeCache?: RuntimeCache
+  revalidateNextTag?: typeof revalidateTag
+}
+
+export type ProductCatalogInvalidationResult = {
+  nextTags: string[]
+  runtimeTags: string[]
+}
+
+export async function revalidateProductCatalog(
+  handles: readonly string[] = [],
+  productIds: readonly (string | number)[] = [],
+  dependencies: ProductCatalogInvalidationDependencies = {}
+): Promise<ProductCatalogInvalidationResult> {
   const tags = new Set<string>([TAGS.products])
+  const runtimeTags = new Set<string>(['catalog'])
 
   for (const handle of handles) {
-    const normalizedHandle = handle.trim()
+    const normalizedHandle = normalizeShopifyProductHandle(handle)
 
     if (normalizedHandle) {
       tags.add(`product-${normalizedHandle}`)
       tags.add(`related-products-${normalizedHandle}`)
+      runtimeTags.add(`product-handle:${normalizedHandle}`)
     }
   }
 
-  for (const tag of tags) {
-    revalidateTag(tag, { expire: 0 })
+  for (const productId of productIds) {
+    const normalizedProductId = normalizeShopifyProductId(productId)
+    if (normalizedProductId) runtimeTags.add(`product:${normalizedProductId}`)
   }
 
-  return Array.from(tags)
+  const revalidateNextTag = dependencies.revalidateNextTag ?? revalidateTag
+  for (const tag of tags) {
+    revalidateNextTag(tag, { expire: 0 })
+  }
+
+  const runtimeCache = dependencies.runtimeCache ?? getShopifyCatalogRuntimeCache()
+  await runtimeCache.expireTag(Array.from(runtimeTags))
+
+  return {
+    nextTags: Array.from(tags),
+    runtimeTags: Array.from(runtimeTags)
+  }
 }

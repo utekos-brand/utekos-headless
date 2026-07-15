@@ -12,7 +12,7 @@ export async function getCachedRelatedProducts(
   currentHandle: string,
   limit: number = 12
 ): Promise<ShopifyProduct[]> {
-  'use cache'
+  'use cache: remote'
 
   cacheTag(`related-products-${currentHandle}`, TAGS.products)
   cacheLife('collections')
