@@ -2,7 +2,6 @@ import { geolocation, ipAddress } from '@vercel/functions'
 import { handleCanonicalViewItemRequest } from '@/lib/analytics/server/handleCanonicalViewItemRequest'
 import { postgresCanonicalEventStore } from '@/lib/analytics/server/postgresCanonicalPageViewStore'
 
-export const runtime = 'nodejs'
 export const maxDuration = 10
 
 export function POST(request: Request) {
