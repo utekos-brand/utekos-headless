@@ -1,6 +1,4 @@
-import type {
-  CanonicalPageViewStore
-} from './acceptCanonicalPageView'
+import type { CanonicalEventStore } from './canonicalEventStore'
 import {
   mapCanonicalPageViewPersistence,
   type CanonicalLedgerInsert,
@@ -20,12 +18,14 @@ export type CanonicalPageViewTransactionRunner = (
 
 export function createCanonicalPageViewStore(
   runTransaction: CanonicalPageViewTransactionRunner
-): CanonicalPageViewStore {
+): CanonicalEventStore {
   return {
     accept: input =>
       runTransaction(async transaction => {
         const rows = mapCanonicalPageViewPersistence(input)
-        const inserted = await transaction.insertLedger(rows.ledger)
+        const inserted = await transaction.insertLedger(
+          rows.ledger
+        )
 
         if (!inserted) return 'duplicate'
 

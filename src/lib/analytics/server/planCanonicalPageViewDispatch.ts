@@ -1,4 +1,4 @@
-import type { CanonicalPageView } from '../pageViewEvent'
+import type { ConsentSnapshot } from '../pageViewEvent'
 
 export type ProviderDispatchIntent = {
   dispatch_mode: 'server_retry'
@@ -6,8 +6,13 @@ export type ProviderDispatchIntent = {
   provider: 'meta' | 'microsoft_uet'
 }
 
+type CanonicalDispatchEvent = {
+  consent: ConsentSnapshot
+  event_id: string
+}
+
 export function planCanonicalPageViewDispatch(
-  event: CanonicalPageView
+  event: CanonicalDispatchEvent
 ): ProviderDispatchIntent[] {
   if (event.consent.marketing !== 'granted') return []
 

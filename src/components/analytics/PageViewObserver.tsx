@@ -6,23 +6,30 @@ import { emitCanonicalPageView } from '@/lib/analytics/emitCanonicalPageView'
 import {
   extractBrowserIds,
   extractClickIds,
-  getConsentSnapshot,
-  type CookiebotConsent
+  getConsentSnapshot
 } from '@/lib/analytics/pageViewClientContext'
+import {
+  browserPageViewCollectorTransport,
+  type CookiebotState
+} from '@/lib/analytics/pageViewCollectorTransport'
 import {
   createCanonicalPageView,
   resolvePageViewNavigation,
   type TrackingEnvironment
 } from '@/lib/analytics/pageViewEvent'
 
-type PageViewObserverProps = {
-  environment: TrackingEnvironment
-}
+type PageViewObserverProps = { environment: TrackingEnvironment }
 
-type CookiebotWindow = Window & {
-  Cookiebot?: {
-    consent?: CookiebotConsent
-  }
+type CookiebotWindow = Window & { Cookiebot?: CookiebotState }
+
+const COOKIEBOT_CONSENT_EVENTS = [
+  'CookiebotOnConsentReady',
+  'CookiebotOnAccept',
+  'CookiebotOnDecline'
+] as const
+
+function getCookiebotState() {
+  return (window as CookiebotWindow).Cookiebot
 }
 
 export function PageViewObserver({
@@ -31,6 +38,27 @@ export function PageViewObserver({
   const pathname = usePathname()
   const search = useSearchParams().toString()
   const previousUrl = useRef<string | null>(null)
+
+  useEffect(() => {
+    const handleConsentUpdate = () => {
+      void browserPageViewCollectorTransport.flush()
+    }
+
+    for (const eventName of COOKIEBOT_CONSENT_EVENTS) {
+      window.addEventListener(eventName, handleConsentUpdate)
+    }
+
+    void browserPageViewCollectorTransport.flush()
+
+    return () => {
+      for (const eventName of COOKIEBOT_CONSENT_EVENTS) {
+        window.removeEventListener(
+          eventName,
+          handleConsentUpdate
+        )
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const navigation = resolvePageViewNavigation({
@@ -43,15 +71,15 @@ export function PageViewObserver({
     previousUrl.current = navigation.pageUrl
 
     const consent = getConsentSnapshot(
-      (window as CookiebotWindow).Cookiebot?.consent
+      getCookiebotState()?.consent
     )
     const browserId = extractBrowserIds(document.cookie, consent)
     const clickId = extractClickIds(navigation.pageUrl)
     const searchParams = new URL(navigation.pageUrl).searchParams
     const impressionId =
-      searchParams.get('impression_id')
-      ?? searchParams.get('impressionId')
-      ?? undefined
+      searchParams.get('impression_id') ??
+      searchParams.get('impressionId') ??
+      undefined
 
     const event = createCanonicalPageView({
       environment,
@@ -80,6 +108,7 @@ export function PageViewObserver({
     })
 
     emitCanonicalPageView(event)
+    void browserPageViewCollectorTransport.queue(event)
   }, [environment, pathname, search])
 
   return null

@@ -1,6 +1,4 @@
-import type {
-  CanonicalPageViewStoreInput
-} from './acceptCanonicalPageView'
+import type { CanonicalEventStoreInput } from './canonicalEventStore'
 
 type UserDataQuality = {
   email_sha256_count: number
@@ -9,36 +7,36 @@ type UserDataQuality = {
 }
 
 export type CanonicalLedgerInsert = {
-  consent: CanonicalPageViewStoreInput['event']['consent']
+  consent: CanonicalEventStoreInput['event']['consent']
   event_id: string
-  event_name: 'page_view'
+  event_name: CanonicalEventStoreInput['event']['event_name']
   external_id?: string
   idempotency_key: string
   occurred_at: string
-  payload: CanonicalPageViewStoreInput['event']
+  payload: CanonicalEventStoreInput['event']
   source_url: string
   user_data_quality: UserDataQuality
 }
 
 export type ProviderDispatchInsert = {
-  consent_basis: CanonicalPageViewStoreInput['event']['consent']
+  consent_basis: CanonicalEventStoreInput['event']['consent']
   data_quality: UserDataQuality
   dispatch_mode: 'server_retry'
   event_id: string
-  event_name: 'page_view'
+  event_name: CanonicalEventStoreInput['event']['event_name']
   idempotency_key: string
-  payload: CanonicalPageViewStoreInput['event']
-  provider: CanonicalPageViewStoreInput['dispatches'][number]['provider']
+  payload: CanonicalEventStoreInput['event']
+  provider: CanonicalEventStoreInput['dispatches'][number]['provider']
   status: 'pending'
 }
 
 export function mapCanonicalPageViewPersistence(
-  input: CanonicalPageViewStoreInput
+  input: CanonicalEventStoreInput
 ): {
   dispatches: ProviderDispatchInsert[]
   ledger: CanonicalLedgerInsert
 } {
-  const idempotencyKey = `page_view:${input.event.event_id}`
+  const idempotencyKey = `${input.event.event_name}:${input.event.event_id}`
   const dataQuality: UserDataQuality = {
     email_sha256_count:
       input.event.user_data?.email_sha256?.length ?? 0,

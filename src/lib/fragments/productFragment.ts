@@ -1,6 +1,7 @@
 // Path: src/lib/fragments/productFragment.ts
 
 import seo from './seoFragment'
+
 const product = /* GraphQL */ `
   fragment product on Product {
     id
@@ -10,6 +11,7 @@ const product = /* GraphQL */ `
     totalInventory
     updatedAt
     productType
+    vendor
     collections(first: 10) {
       nodes {
         id
@@ -68,6 +70,7 @@ const product = /* GraphQL */ `
           id
           title
           currentlyNotInStock
+          taxable
           selectedOptions {
             name
             value
@@ -81,10 +84,6 @@ const product = /* GraphQL */ `
             amount
             currencyCode
           }
-          selectedOptions {
-            name
-            value
-          }
           image {
             url
             altText
@@ -93,7 +92,10 @@ const product = /* GraphQL */ `
           sku
           barcode
           weight
-          metafield(namespace: "bridgeFor", key: "VariantHandler") {
+          metafield(
+            namespace: "bridgeFor"
+            key: "VariantHandler"
+          ) {
             value
             type
             reference {
@@ -132,12 +134,16 @@ const product = /* GraphQL */ `
                   value
                   type
                 }
-                swatchHexcolorForVariant: field(key: "swatch_hexcolor_for_variant") {
+                swatchHexcolorForVariant: field(
+                  key: "swatch_hexcolor_for_variant"
+                ) {
                   key
                   value
                   type
                 }
-                swatchHexcolorForUnselectedVariant: field(key: "swatch_hexcolor_for_unselected_variant") {
+                swatchHexcolorForUnselectedVariant: field(
+                  key: "swatch_hexcolor_for_unselected_variant"
+                ) {
                   key
                   value
                   type

@@ -1,33 +1,22 @@
-import type { CanonicalPageView } from '../pageViewEvent'
-import {
-  normalizeCanonicalPageView,
-  type CanonicalPageViewRequestContext
-} from './normalizeCanonicalPageView'
+import type { CanonicalEventStore } from './canonicalEventStore'
+import type { CanonicalPageViewRequestContext } from './normalizeCanonicalPageView'
+import { normalizeCanonicalViewItem } from './normalizeCanonicalViewItem'
 import { planCanonicalPageViewDispatch } from './planCanonicalPageViewDispatch'
-import type {
-  CanonicalEventStore,
-  CanonicalEventStoreInput
-} from './canonicalEventStore'
 
-export type CanonicalPageViewStoreInput =
-  CanonicalEventStoreInput & { event: CanonicalPageView }
-
-export type CanonicalPageViewStore = CanonicalEventStore
-
-type AcceptCanonicalPageViewInput = {
+type AcceptCanonicalViewItemInput = {
   payload: unknown
   requestContext: CanonicalPageViewRequestContext
-  store: CanonicalPageViewStore
+  store: CanonicalEventStore
 }
 
-export type AcceptCanonicalPageViewResult =
+export type AcceptCanonicalViewItemResult =
   | { event_id: string; status: 'accepted' | 'duplicate' }
   | { reason: 'consent_denied'; status: 'rejected' }
 
-export async function acceptCanonicalPageView(
-  input: AcceptCanonicalPageViewInput
-): Promise<AcceptCanonicalPageViewResult> {
-  const event = normalizeCanonicalPageView(
+export async function acceptCanonicalViewItem(
+  input: AcceptCanonicalViewItemInput
+): Promise<AcceptCanonicalViewItemResult> {
+  const event = normalizeCanonicalViewItem(
     input.payload,
     input.requestContext
   )

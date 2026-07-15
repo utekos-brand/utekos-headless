@@ -12,7 +12,9 @@ function getTrackingSql() {
     process.env.SUPABASE_VERCEL_POSTGRES_URL_NON_POOLING
 
   if (!connectionString) {
-    throw new Error('Missing tracking database connection string')
+    throw new Error(
+      'Missing tracking database connection string'
+    )
   }
 
   trackingSql ??= postgres(connectionString, {
@@ -89,5 +91,8 @@ const runPostgresTransaction: CanonicalPageViewTransactionRunner =
       })
     )
 
-export const postgresCanonicalPageViewStore =
+export const postgresCanonicalEventStore =
   createCanonicalPageViewStore(runPostgresTransaction)
+
+export const postgresCanonicalPageViewStore =
+  postgresCanonicalEventStore

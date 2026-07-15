@@ -13,6 +13,7 @@ const argv = process.argv.slice(2)
 const command =
   argv.find(arg => !arg.startsWith('--')) ?? 'check'
 const envPath = path.join(root, '.env.tunnel.local')
+const appEnvPath = path.join(root, '.env.local')
 const examplePath = path.join(root, '.env.tunnel.example')
 const chatgptProfilesPath = path.join(
   root,
@@ -75,6 +76,27 @@ function applyTargetEnv(env, target) {
   ]) {
     const targetKey = `${key}_${suffix}`
     if (hasValue(env, targetKey)) env[key] = env[targetKey]
+  }
+
+  const targetApiKey = `CONTROL_PLANE_API_KEY_${suffix}`
+  if (
+    !hasValue(env, targetApiKey) &&
+    typeof target.runtimeApiKeyEnv === 'string'
+  ) {
+    const appEnv = readEnvFile(appEnvPath)
+    const runtimeApiKey =
+      process.env[target.runtimeApiKeyEnv] ??
+      appEnv[target.runtimeApiKeyEnv]
+    if (runtimeApiKey?.trim()) {
+      env.CONTROL_PLANE_API_KEY = runtimeApiKey
+    }
+  }
+
+  if (
+    target.dedicatedTunnel === true &&
+    !hasValue(env, `CONTROL_PLANE_TUNNEL_ID_${suffix}`)
+  ) {
+    env.CONTROL_PLANE_TUNNEL_ID = ''
   }
 
   env.OPENAI_TUNNEL_TARGET = target.tunnelTarget
@@ -193,7 +215,10 @@ function required(env, keys) {
 }
 
 function tunnelEnv(env) {
-  const localBin = path.join(process.env.HOME ?? '', '.local/bin')
+  const localBin = path.join(
+    process.env.HOME ?? '',
+    '.local/bin'
+  )
   const currentPath = env.PATH ?? process.env.PATH ?? ''
   const pathEntries = currentPath.split(path.delimiter)
   const PATH =
@@ -370,20 +395,68 @@ function doctor() {
     'MCP_GATEWAY_AUTH_TOKEN'
   ])
 
-  const result = run(
-    tunnelClient(),
-    [
-      'doctor',
-      '--profile',
-      env.OPENAI_TUNNEL_PROFILE,
-      '--explain'
-    ],
-    { env: tunnelEnv(env) }
-  )
+  const runningProcesses = matchingTunnelProcesses(env)
+  const doctorArgs = [
+    'doctor',
+    '--profile',
+    env.OPENAI_TUNNEL_PROFILE,
+    '--explain'
+  ]
+
+  if (runningProcesses.length > 0) {
+    doctorArgs.push('--health.listen-addr', '127.0.0.1:0')
+  }
+
+  const result = run(tunnelClient(), doctorArgs, {
+    env: tunnelEnv(env)
+  })
 
   process.stdout.write(result.stdout ?? '')
   process.stderr.write(result.stderr ?? '')
-  process.exit(result.status ?? 0)
+
+  if ((result.status ?? 0) !== 0) {
+    process.exit(result.status ?? 1)
+  }
+
+  if (runningProcesses.length === 0) {
+    process.exit(0)
+  }
+
+  const healthUrl = `http://${env.OPENAI_TUNNEL_HEALTH_ADDR}/healthz`
+  const readyUrl = `http://${env.OPENAI_TUNNEL_HEALTH_ADDR}/readyz`
+  const health = run('curl', ['-fsS', healthUrl])
+  const ready = run('curl', ['-fsS', readyUrl])
+  const liveChecks = [
+    {
+      name: 'live_runtime_owner',
+      ok: true,
+      message: `${env.OPENAI_TUNNEL_PROFILE} pid ${runningProcesses.map(item => item.pid).join(', ')}`
+    },
+    {
+      name: 'live_healthz',
+      ok: health.status === 0,
+      message: healthUrl
+    },
+    {
+      name: 'live_readyz',
+      ok: ready.status === 0,
+      message: readyUrl
+    }
+  ]
+
+  for (const check of liveChecks) {
+    console.log(
+      `CHECK ${check.name.padEnd(24)} ${check.ok ? 'PASS' : 'FAIL'} ${check.message}`
+    )
+  }
+
+  const failedLiveChecks = liveChecks.filter(check => !check.ok)
+  if (failedLiveChecks.length > 0) {
+    console.error(
+      `FAILED_CHECKS ${failedLiveChecks.map(check => check.name).join(' ')}`
+    )
+    process.exit(2)
+  }
 }
 
 function gateway() {
@@ -547,7 +620,7 @@ function listTargets() {
 
 function usage() {
   console.log(
-    'Usage: node scripts/mcp/openai-tunnel.mjs <bootstrap-env|check|init|doctor|gateway|run|start|status|stop|list-targets> [--target insight|browser|shadcn|live-ops|commerce-tracking|shopify-readonly|codex-bridge|google-analytics]'
+    'Usage: node scripts/mcp/openai-tunnel.mjs <bootstrap-env|check|init|doctor|gateway|run|start|status|stop|list-targets> [--target insight|source-insight|browser|shadcn|live-ops|commerce-tracking|shopify-readonly|codex-bridge|google-analytics]'
   )
 }
 
