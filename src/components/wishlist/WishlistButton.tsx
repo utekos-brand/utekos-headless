@@ -49,7 +49,7 @@ export function WishlistButton({
             size={isLabelled ? 'default' : 'icon-lg'}
             aria-label={`Legg ${productTitle} til i ønskelisten`}
             className={cn(
-              'border border-white/70 bg-cyan-500 text-[#172744] shadow-[0_12px_30px_-16px_rgba(0,0,0,0.85)] hover:bg-cyan-400 hover:text-[#172744] focus-visible:border-white focus-visible:ring-white/70',
+              'border border-white/70 bg-cyan-500 text-[#172744] shadow-[0_12px_30px_-16px_rgba(0,0,0,0.85)] hover:bg-cyan-400 hover:text-[#172744] focus-visible:border-white focus-visible:ring-white/70 dark:bg-cyan-500 dark:text-[#172744] dark:hover:bg-cyan-400 dark:hover:text-[#172744]',
               isLabelled ?
                 'h-11 rounded-full px-4 text-sm font-semibold'
               : 'size-12 rounded-2xl',
@@ -95,7 +95,7 @@ export function WishlistButton({
               className='mt-0.5 size-5 shrink-0 text-sidebar-primary'
               aria-hidden='true'
             />
-            <p className='dark:text-dark-muted-foreground text-sm leading-6 text-muted-foreground'>
+            <p className='text-sm leading-6 text-muted-foreground dark:text-popover-foreground'>
               Innlogging og nye kontoer håndteres sikkert av
               Shopify. Du kan bruke e-post, Facebook eller Google
               når det er tilgjengelig for kontoen din.
