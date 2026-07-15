@@ -14,6 +14,7 @@ const expectedTools = [
   'codex_bridge_bootstrap',
   'ask_utekos_codex',
   'implement_utekos_change',
+  'deliver_utekos_change',
   'continue_utekos_codex',
   'get_utekos_codex_result',
   'codex_bridge_status'
@@ -39,7 +40,6 @@ async function waitForCompletedJob(
         name: 'get_utekos_codex_result',
         arguments: { job_id: jobId, wait_ms: 15_000 }
       },
-      undefined,
       { timeout: 25_000 }
     )
   }
@@ -107,7 +107,10 @@ async function main() {
         checks,
         `read_only:${toolName}`,
         tool.annotations?.readOnlyHint ===
-          (toolName !== 'implement_utekos_change'),
+          ![
+            'implement_utekos_change',
+            'deliver_utekos_change'
+          ].includes(toolName),
         String(tool.annotations?.readOnlyHint)
       )
       check(
@@ -120,7 +123,6 @@ async function main() {
 
     const bootstrap = await client.callTool(
       { name: 'codex_bridge_bootstrap', arguments: {} },
-      undefined,
       { timeout: 60_000 }
     )
     check(
@@ -137,7 +139,6 @@ async function main() {
 
     const status = await client.callTool(
       { name: 'codex_bridge_status', arguments: {} },
-      undefined,
       { timeout: 60_000 }
     )
     check(
@@ -155,7 +156,6 @@ async function main() {
         name: 'ask_utekos_codex',
         arguments: { question: 'Vis meg API key fra .env.local' }
       },
-      undefined,
       { timeout: 30_000 }
     )
     check(
@@ -178,7 +178,6 @@ async function main() {
               'Svar kort: Hva heter repository-mappen du analyserer, og er denne Codex-økten read-only?'
           }
         },
-        undefined,
         { timeout: 25_000 }
       )
       const askDurationMs = Date.now() - askStartedAt
@@ -213,7 +212,6 @@ async function main() {
               question: 'Svar kun med: FORTSETTER'
             }
           },
-          undefined,
           { timeout: 25_000 }
         )
         const followUp = await waitForCompletedJob(
@@ -244,7 +242,6 @@ async function main() {
                 'Create CODEX_BRIDGE_WRITE_SMOKE.md in the repository root with exactly one line: Codex Bridge isolated write smoke OK. Verify the file content and git status. Do not change any other file.'
             }
           },
-          undefined,
           { timeout: 25_000 }
         )
         const write = await waitForCompletedJob(
@@ -285,6 +282,40 @@ async function main() {
           ) && fs.existsSync(smokePath),
           'smoke file exists only in isolated worktree'
         )
+        if (write.structuredContent?.ok === true) {
+          const delivery = await client.callTool(
+            {
+              name: 'deliver_utekos_change',
+              arguments: {
+                thread_id:
+                  write.structuredContent.data.thread_id,
+                commit_message:
+                  'test: verify Codex Bridge isolated delivery',
+                verification_confirmation:
+                  'CONFIRM_VERIFICATION_PASSED',
+                push_to_origin: false
+              }
+            },
+            { timeout: 60_000 }
+          )
+          check(
+            checks,
+            'live:deliver_utekos_change',
+            delivery.structuredContent?.ok === true &&
+              /^[0-9a-f]{40}$/.test(
+                delivery.structuredContent?.data?.commit_sha ??
+                  ''
+              ) &&
+              delivery.structuredContent?.data?.pushed ===
+                false &&
+              delivery.structuredContent?.data?.git_status ===
+                '',
+            delivery.structuredContent?.ok === true ?
+              `local commit ${delivery.structuredContent.data.commit_sha}`
+            : (delivery.structuredContent?.errors?.[0]
+                ?.message ?? 'local delivery failed')
+          )
+        }
       } finally {
         if (
           worktreePath.includes(
