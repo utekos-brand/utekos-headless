@@ -423,6 +423,7 @@
         "codex_bridge_bootstrap",
         "ask_utekos_codex",
         "implement_utekos_change",
+        "deliver_utekos_change",
         "continue_utekos_codex",
         "get_utekos_codex_result",
         "codex_bridge_status"
@@ -433,6 +434,7 @@
         "codex_bridge_bootstrap",
         "ask_utekos_codex",
         "implement_utekos_change",
+        "deliver_utekos_change",
         "continue_utekos_codex",
         "get_utekos_codex_result",
         "codex_bridge_status"
@@ -453,7 +455,7 @@
         "code-mode"
       ],
       "knownGaps": [
-        "This private app starts dedicated Codex MCP threads; it does not send messages into the currently focused Codex Desktop task. Long-running analysis and implementation use asynchronous jobs plus get_utekos_codex_result polling so ChatGPT calls stay below the tunnel deadline. Explicit implementation is limited to a dedicated codex/... branch and .worktrees/ checkout. Commit, push, merge, deploy, GTM publish, schema mutation, provider mutation, secret access, and other external writes remain unavailable. Internal Codex jobs have a fixed 15-minute total timeout and use GPT-5.6 Sol with high reasoning, high verbosity, a 1,050,000-token context window, and automatic compaction at 900,000 tokens."
+        "This private app starts dedicated Codex MCP threads; it does not send messages into the currently focused Codex Desktop task. Long-running analysis and implementation use asynchronous jobs plus get_utekos_codex_result polling so ChatGPT calls stay below the tunnel deadline. Explicit implementation is limited to a dedicated codex/chatgpt-* branch and .worktrees/ checkout based on origin/main. deliver_utekos_change can create a local commit and, only with the exact per-call confirmation token, non-force push that new branch to origin. Direct main writes, force-push, merge, deploy, GTM publish, schema mutation, provider mutation, and secret access remain unavailable. Internal Codex jobs have a fixed 15-minute total timeout and use GPT-5.6 Sol with high reasoning, high verbosity, a 1,050,000-token context window, and automatic compaction at 900,000 tokens."
       ]
     },
     {

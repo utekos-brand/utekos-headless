@@ -426,16 +426,21 @@ npm run mcp:chatgpt:accept:codex-bridge:watch
 npm run mcp:tunnel:stop:codex-bridge
 ```
 
-The app exposes six tools:
+The app exposes seven tools:
 
 - `codex_bridge_bootstrap`: returns the fixed bridge policy and
   upstream capability status.
 - `ask_utekos_codex`: starts a dedicated read-only Codex thread
   job for a new question and returns immediately with a `job_id`.
 - `implement_utekos_change`: creates an isolated `.worktrees/`
-  checkout and `codex/chatgpt-...` branch, then lets Codex edit
-  only that checkout. Pass a completed write `thread_id` to
-  continue in the same worktree.
+  checkout and `codex/chatgpt-...` branch from `origin/main`,
+  then lets Codex edit and verify only that checkout. Pass a
+  completed write `thread_id` to continue in the same worktree.
+- `deliver_utekos_change`: after a completed write job, runs Git
+  integrity checks and creates a local commit. It can non-force
+  push only the new `codex/chatgpt-*` branch to `origin` when the
+  call sets `push_to_origin=true` and supplies the exact
+  `CONFIRM_PUSH_TO_ORIGIN` confirmation token.
 - `continue_utekos_codex`: continues that thread using the
   returned read-only `thread_id` and returns a new `job_id`.
 - `get_utekos_codex_result`: polls an asynchronous Codex job
@@ -467,10 +472,13 @@ exclusions, and have workspace-write network access disabled.
 Package installs or other shell operations that require network
 access therefore fail closed.
 
-The write lane never commits, pushes, merges, deploys, publishes
-GTM, mutates schemas, changes providers, or performs other
-external writes. Its result includes the branch, worktree path,
-changed files, `git status`, and diff summary for human review.
+The implementation lane never writes directly to `main`. Codex
+must run relevant verification and returns the branch, worktree
+path, changed files, `git status`, and diff summary for review.
+Delivery is a separate explicit tool intent: it may commit and
+non-force push the new branch, but never force-pushes, merges,
+deploys, publishes GTM, mutates schemas, changes providers, or
+performs other external writes.
 
 After the tunnel is healthy, create the ChatGPT app using the
 dedicated tunnel id and **No Authentication**. Select
@@ -482,9 +490,12 @@ Call codex_bridge_bootstrap. Then call implement_utekos_change with:
 ChatGPT to Codex isolated write accepted. Verify the file content and git status.
 Do not change any other file."
 Poll get_utekos_codex_result with the returned job_id until status is completed.
+Then call deliver_utekos_change with that thread_id, commit_message
+"test: verify ChatGPT Codex Bridge delivery", verification_confirmation
+CONFIRM_VERIFICATION_PASSED, and push_to_origin false.
 Return thread_id, branch, worktree_path, changed_files, git_status, diff_stat,
-and the Codex summary. Do not commit, push, merge, deploy, publish GTM, or
-mutate an external provider.
+commit_sha, pushed, and the Codex summary. Do not push, merge, deploy, publish
+GTM, or mutate an external provider.
 ```
 
 To request a local change from ChatGPT:
@@ -494,8 +505,12 @@ Use Utekos Codex Bridge. Call implement_utekos_change with the complete
 implementation request and acceptance criteria. Poll
 get_utekos_codex_result with the returned job_id until completed. Report
 the branch, worktree_path, changed_files, git_status, diff_stat, Codex
-summary, verification performed, and blocked verification. Do not commit,
-push, merge, deploy, publish GTM, or mutate external providers.
+summary, verification performed, and blocked verification. If the user also
+explicitly requested commit and push, call deliver_utekos_change with a concise
+commit_message, verification_confirmation CONFIRM_VERIFICATION_PASSED,
+push_to_origin true, and push_confirmation CONFIRM_PUSH_TO_ORIGIN. Report
+commit_sha and remote_ref. Never merge, deploy, publish GTM, force-push, or
+mutate external providers.
 ```
 
 Run `npm run mcp:chatgpt:accept:codex-bridge` after the ChatGPT
