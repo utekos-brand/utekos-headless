@@ -3,16 +3,12 @@
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
-import { useAnalytics } from '@/hooks/useAnalytics'
 
 /**
  * Isbading-heroens primær-CTA. Isolert som klient-komponent slik at selve
- * hero-seksjonen kan forbli en Server Component. Sporer interaksjon og
- * scroller til produkt-spotlight.
+ * hero-seksjonen kan forbli en Server Component.
  */
 export function IceBathingHeroCta() {
-  const { trackEvent } = useAnalytics()
-
   return (
     <BrandBadge
       asChild
@@ -24,10 +20,6 @@ export function IceBathingHeroCta() {
         href='#product-spotlight'
         onClick={e => {
           e.preventDefault()
-          trackEvent('HeroInteract', {
-            content_name: 'Scroll to Product Spotlight',
-            content_category: 'Hero Section'
-          })
 
           const element = document.getElementById('product-spotlight')
           if (element) {

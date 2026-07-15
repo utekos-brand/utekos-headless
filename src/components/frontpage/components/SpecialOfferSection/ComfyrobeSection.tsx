@@ -1,34 +1,9 @@
 import ComfyrobeFallbackImage from '@public/comfyrobe/monica-arne-comfy.png'
 import { ComfyrobeImageSection } from './ComfyrobeImageSection'
 import { ComfyrobeContentColumn } from './ComfyrobeContentColumn'
-import { getProduct } from '@/api/lib/products/getProduct'
-import { cacheLife, cacheTag } from 'next/cache'
 import type { ShopifyMediaImage } from 'types/media'
 import { PageSection } from '@/components/layout/PageSection'
 import { cn } from '@/lib/utils/className'
-
-interface ProductVariantEdge {
-  node: { id: string; availableForSale: boolean }
-}
-
-interface Product {
-  variants?: { edges: ProductVariantEdge[] }
-}
-
-function getFirstAvailableVariantId(
-  product: Product | null
-): string {
-  if (!product || !product.variants || !product.variants.edges)
-    return ''
-
-  const availableVariant = product.variants.edges.find(
-    (edge: ProductVariantEdge) => edge.node.availableForSale
-  )
-  if (availableVariant) {
-    return availableVariant.node.id
-  }
-  return product.variants.edges[0]?.node?.id || ''
-}
 
 const COMFYROBE_FALLBACK_IMAGE: ShopifyMediaImage = {
   id: 'comfyrobe-fallback',
@@ -41,13 +16,7 @@ const COMFYROBE_FALLBACK_IMAGE: ShopifyMediaImage = {
   }
 }
 
-export async function ComfyrobeSection() {
-  'use cache'
-  cacheLife('days')
-  cacheTag('comfyrobe-section')
-  const comfyrobeProduct = await getProduct('comfyrobe')
-  const comfyrobeId =
-    getFirstAvailableVariantId(comfyrobeProduct)
+export function ComfyrobeSection() {
   const comfyrobeImage = COMFYROBE_FALLBACK_IMAGE
 
   return (
@@ -76,7 +45,7 @@ export async function ComfyrobeSection() {
         <div className='relative grid min-w-0 grid-cols-1 items-stretch gap-12 rounded-2xl lg:grid-cols-2'>
           <ComfyrobeImageSection image={comfyrobeImage} />
 
-          <ComfyrobeContentColumn variantId={comfyrobeId} />
+          <ComfyrobeContentColumn />
         </div>
       </div>
     </PageSection>

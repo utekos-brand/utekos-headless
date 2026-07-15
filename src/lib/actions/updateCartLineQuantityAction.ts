@@ -2,7 +2,6 @@
 'use server'
 
 import { performCartLinesUpdateMutation } from '@/lib/actions/perform/performCartLinesUpdateMutation'
-import { syncCartMarketingAttributesSafely } from '@/lib/actions/perform/syncCartMarketingAttributes'
 import { mapThrownErrorToActionResult } from '@/lib/errors/mapThrownErrorToActionResult'
 import { MissingCartIdError } from '@/lib/errors/MissingCartIdError'
 import { getCartIdFromCookie } from '@/lib/actions/getCartIdFromCookie'
@@ -25,15 +24,9 @@ export const updateCartLineQuantityAction = async (
       throw new MissingCartIdError()
     }
 
-    let rawCart = await performCartLinesUpdateMutation(cartId, input)
+    const rawCart = await performCartLinesUpdateMutation(cartId, input)
     if (!rawCart) {
       throw new Error('Oppdatering av handlekurv returnerte ingen data.')
-    }
-
-    const attributedCart =
-      await syncCartMarketingAttributesSafely(rawCart.id)
-    if (attributedCart) {
-      rawCart = attributedCart
     }
 
     if (rawCart.id) {

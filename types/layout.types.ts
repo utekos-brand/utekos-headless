@@ -6,7 +6,6 @@ import type {
   ShopifyProduct,
   ShopifyProductVariant
 } from 'types/product'
-import type { ProductListTrackingContext } from 'types/tracking/ProductListTrackingContext'
 import type { Image } from 'types/media/Image'
 import type { RootNode } from '@types'
 import type {
@@ -104,7 +103,6 @@ export type ProductCardProps = {
   product: ShopifyProduct
   preferredColor?: string
   colorHexMap: Map<string, string>
-  listTrackingContext?: ProductListTrackingContext
 }
 export type RichTextRendererProps = { content: RootNode | null }
 

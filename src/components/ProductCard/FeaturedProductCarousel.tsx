@@ -6,14 +6,6 @@ import { handles as featuredProductHandles } from '@/db/data/products/product-in
 import { getProductWithoutSmallSize } from '@/components/products/getProductWithoutSmallSize'
 import { SharedProductCarousel } from './SharedProductCarousel'
 import type { ShopifyProduct } from 'types/product'
-import type { MetaEventType } from 'types/tracking/meta/event'
-
-type FeaturedProductCarouselProps = {
-  trackingEventName?: Extract<MetaEventType, 'ViewCategory' | 'ViewItemList'>
-  itemListId?: string
-  itemListName?: string
-  contentCategory?: string
-}
 
 async function getClientFeaturedProducts(): Promise<ShopifyProduct[]> {
   const response = await getProductsAction()
@@ -30,12 +22,7 @@ async function getClientFeaturedProducts(): Promise<ShopifyProduct[]> {
     .map(getProductWithoutSmallSize)
 }
 
-export function FeaturedProductCarousel({
-  trackingEventName,
-  itemListId,
-  itemListName,
-  contentCategory
-}: FeaturedProductCarouselProps) {
+export function FeaturedProductCarousel() {
   const { data: products } = useQuery({
     queryKey: ['products', 'featured', 'visible'],
     queryFn: getClientFeaturedProducts
@@ -45,13 +32,5 @@ export function FeaturedProductCarousel({
     return null
   }
 
-  return (
-    <SharedProductCarousel
-      products={products}
-      {...(trackingEventName ? { trackingEventName } : {})}
-      {...(itemListId ? { itemListId } : {})}
-      {...(itemListName ? { itemListName } : {})}
-      {...(contentCategory ? { contentCategory } : {})}
-    />
-  )
+  return <SharedProductCarousel products={products} />
 }

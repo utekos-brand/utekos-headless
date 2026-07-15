@@ -8,24 +8,7 @@ import { CartMutationProvider } from '@/clients/CartMutationProvider'
 import { serverActions } from '@/constants/serverActions'
 import { CartIdProvider } from '@/components/providers/CartIdProvider'
 import type { DehydratedState } from '@tanstack/react-query'
-import { CookiebotConsentProvider } from '@/components/cookie-consent/CookiebotConsentProvider'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
-
-const EssentialTrackingServices = dynamic(
-  () =>
-    import('@/components/analytics/EssentialTrackingServices').then(
-      module => module.EssentialTrackingServices
-    ),
-  { ssr: false }
-)
-
-const DeferredTrackingServices = dynamic(
-  () =>
-    import('@/components/analytics/DeferredTrackingServices').then(
-      module => module.DeferredTrackingServices
-    ),
-  { ssr: false }
-)
 
 const ReactQueryDevtools =
   process.env.NODE_ENV === 'development' ?
@@ -55,33 +38,29 @@ export default function Providers({
   )
 
   return (
-    <CookiebotConsentProvider>
-      <ThemeProvider
-        attribute='class'
-        defaultTheme='dark'
-        forcedTheme='dark'
-        disableTransitionOnChange
-        enableColorScheme
-      >
-        <QueryClientProvider client={queryClient}>
-          <HydrationBoundary state={dehydratedState}>
-            <CartIdProvider value={cartId}>
-              <CartMutationProvider
-                actions={serverActions}
-                cartId={cartId}
-                setCartId={setCartId}
-              >
-                {children}
-              </CartMutationProvider>
-            </CartIdProvider>
-          </HydrationBoundary>
-          {ReactQueryDevtools ?
-            <ReactQueryDevtools initialIsOpen={false} />
-          : null}
-        </QueryClientProvider>
-      </ThemeProvider>
-      <EssentialTrackingServices />
-      <DeferredTrackingServices />
-    </CookiebotConsentProvider>
+    <ThemeProvider
+      attribute='class'
+      defaultTheme='dark'
+      forcedTheme='dark'
+      disableTransitionOnChange
+      enableColorScheme
+    >
+      <QueryClientProvider client={queryClient}>
+        <HydrationBoundary state={dehydratedState}>
+          <CartIdProvider value={cartId}>
+            <CartMutationProvider
+              actions={serverActions}
+              cartId={cartId}
+              setCartId={setCartId}
+            >
+              {children}
+            </CartMutationProvider>
+          </CartIdProvider>
+        </HydrationBoundary>
+        {ReactQueryDevtools ?
+          <ReactQueryDevtools initialIsOpen={false} />
+        : null}
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }

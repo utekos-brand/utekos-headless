@@ -7,18 +7,6 @@ import { cartStore } from '@/lib/state/cartStore'
 import { useCartMutations } from '@/hooks/useCartMutations'
 import { useOptimisticCartUpdate } from '@/hooks/useOptimisticCartUpdate'
 import { getCartIdFromCookie } from '@/lib/actions/getCartIdFromCookie'
-import { trackAddToCart } from '@/lib/tracking/client/trackAddToCart'
-import { resolveClientGA4Data } from '@/lib/tracking/google/getClientGA4Data'
-import { dispatchTrackingEvent } from '@/lib/tracking/dispatch/dispatchTrackingEvent'
-import { getClientMetaUserData } from '@/lib/tracking/meta/utils/getClientMetaUserData'
-import { hasServiceConsent } from '@/lib/tracking/consent/hasServiceConsent'
-import { shouldCaptureCheckoutIdentifiers } from '@/lib/tracking/consent/hasBrowserTrackingConsent'
-import { generateEventID } from '@/components/analytics/Meta/generateEventID'
-import {
-  COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME,
-  COOKIEBOT_META_SERVICE_NAME
-} from '@/components/cookie-consent/cookiebotConfig'
-import { cleanShopifyId } from '@/lib/utils/cleanShopifyId'
 import { getVariants } from '@/app/skreddersy-varmen/utekos-orginal/utils/getVariants'
 import { getSelectableSizes, PRODUCT_VARIANTS } from '@/api/constants'
 import type { ModelKey } from '@/api/constants'
@@ -27,21 +15,12 @@ import type { UsePurchaseLogicProps } from 'types/product/PageProps'
 import type { ShopifyProduct, ShopifyProductVariant } from 'types/product'
 import type { Cart } from 'types/cart'
 import type { OptimisticItemInput } from '@/hooks/useOptimisticCartUpdate'
-import type { CaptureBody } from 'types/tracking/meta'
 
 type ConfiguredSelectionCartResult = {
   cart: Cart | null
   cartId: string | null
   product: ShopifyProduct
   selectedVariant: ShopifyProductVariant
-}
-
-const CHECKOUT_TRACKING_NAVIGATION_TIMEOUT_MS = 1200
-
-function waitForCheckoutTrackingDeadline() {
-  return new Promise<void>(resolve => {
-    window.setTimeout(resolve, CHECKOUT_TRACKING_NAVIGATION_TIMEOUT_MS)
-  })
 }
 
 function normalizeSelectedSize(size: string, selectableSizes: readonly string[]): string {
@@ -199,12 +178,6 @@ export function usePurchaseLogic({ products }: UsePurchaseLogicProps) {
         currentCartId = cart?.id ?? (await getCartIdFromCookie())
       }
 
-      void trackAddToCart({
-        product,
-        selectedVariant,
-        quantity
-      }).catch(error => console.error('AddToCart tracking failed', error))
-
       return {
         cart,
         cartId: currentCartId ?? null,
@@ -230,64 +203,6 @@ export function usePurchaseLogic({ products }: UsePurchaseLogicProps) {
     })
   }
 
-  const trackCheckoutStart = async ({
-    cartId,
-    checkoutUrl,
-    selectedVariant
-  }: {
-    cartId: string | null
-    checkoutUrl: string
-    selectedVariant: ShopifyProductVariant
-  }) => {
-    try {
-      const rawEventID = generateEventID()
-      const eventID = rawEventID.replace('evt_', 'ic_')
-      const productId = cleanShopifyId(selectedVariant.id) || selectedVariant.id
-      const value = (Number.parseFloat(selectedVariant.price.amount) || 0) * quantity
-      const currency = selectedVariant.price.currencyCode
-      const userData =
-        hasServiceConsent(COOKIEBOT_META_SERVICE_NAME) ? getClientMetaUserData() : undefined
-
-      if (shouldCaptureCheckoutIdentifiers(hasServiceConsent)) {
-        const ga4Data =
-          hasServiceConsent(COOKIEBOT_GOOGLE_ANALYTICS_SERVICE_NAME) ?
-            await resolveClientGA4Data()
-          : undefined
-        const captureBody: CaptureBody = {
-          cartId,
-          checkoutUrl,
-          eventId: eventID,
-          ...(ga4Data?.client_id ? { gaClientId: ga4Data.client_id } : {}),
-          ...(ga4Data?.session_id ? { gaSessionId: ga4Data.session_id } : {}),
-          ...(userData ? { userData } : {})
-        }
-
-        fetch('/api/checkout/capture-identifiers', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(captureBody),
-          keepalive: true
-        }).catch(error => console.error('Capture identifiers failed', error))
-      }
-
-      void dispatchTrackingEvent({
-        eventName: 'InitiateCheckout',
-        eventId: eventID,
-        destinations: ['google', 'meta', 'microsoft_uet', 'posthog'],
-        eventData: {
-          value,
-          currency,
-          content_ids: [productId],
-          content_type: 'product',
-          num_items: quantity
-        },
-        ...(userData ? { userData } : {})
-      })
-    } catch (error) {
-      console.error('Feil under sending av checkout-events:', error)
-    }
-  }
-
   const handleGoToCheckout = async () => {
     if (isCheckoutRedirecting || isPendingFromMachine) {
       return
@@ -303,15 +218,6 @@ export function usePurchaseLogic({ products }: UsePurchaseLogicProps) {
       toast.error('Kunne ikke åpne kassen. Prøv igjen.')
       return
     }
-
-    await Promise.race([
-      trackCheckoutStart({
-        cartId: result.cartId,
-        checkoutUrl,
-        selectedVariant: result.selectedVariant
-      }),
-      waitForCheckoutTrackingDeadline()
-    ])
 
     window.location.assign(checkoutUrl)
   }

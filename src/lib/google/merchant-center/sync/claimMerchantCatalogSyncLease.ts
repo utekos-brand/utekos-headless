@@ -2,7 +2,7 @@ import 'server-only'
 
 import { randomUUID } from 'node:crypto'
 
-import { getTrackingWarehouse } from '@/lib/tracking/warehouse/getTrackingWarehouse'
+import { getPostgresClient } from '@/lib/db/getPostgresClient'
 
 import type { MerchantCatalogSyncLease } from './MerchantCatalogSyncLease'
 
@@ -34,7 +34,7 @@ function mapLeaseRow(row: LeaseRow): Extract<MerchantCatalogSyncLease, { status:
 export async function claimMerchantCatalogSyncLease(
   metadata: LeaseMetadata
 ): Promise<MerchantCatalogSyncLease> {
-  const sql = getTrackingWarehouse()
+  const sql = getPostgresClient()
   const leaseOwner = randomUUID()
 
   if (!sql) {
@@ -42,7 +42,7 @@ export async function claimMerchantCatalogSyncLease(
       status: 'unavailable',
       jobName: MERCHANT_CATALOG_SYNC_JOB_NAME,
       leaseOwner,
-      reason: 'tracking_warehouse_unavailable'
+      reason: 'postgres_unavailable'
     }
   }
 

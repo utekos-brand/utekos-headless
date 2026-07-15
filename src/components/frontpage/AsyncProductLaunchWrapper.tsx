@@ -21,5 +21,5 @@ export async function AsyncProductLaunchWrapper() {
 
   if (!techDownId) return null
 
-  return <NewProductLaunchSection variantId={techDownId} />
+  return <NewProductLaunchSection />
 }

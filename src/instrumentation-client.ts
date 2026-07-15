@@ -3,7 +3,7 @@ import {
   CHROME_EXTENSION_URL_PATTERN,
   isIgnorableClientError
 } from '@/lib/observability/client/isIgnorableClientError'
-import type { LogPayload } from 'types/tracking/log/LogPayload'
+import type { LogPayload } from 'types/observability/log/LogPayload'
 
 /**
  * Client instrumentation — executes after the HTML document is loaded but
@@ -18,9 +18,7 @@ import type { LogPayload } from 'types/tracking/log/LogPayload'
  *  - Expose `onRouterTransitionStart` so client-side App Router navigations
  *    are marked for SPA-transition diagnostics.
  *
- * Web Vitals are handled separately by `WebVitalsReporter`.
- * Optional analytics, replay and browser profiling are initialized elsewhere
- * only after Cookiebot consent.
+ * Optional analytics and replay are initialized elsewhere when enabled.
  */
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'

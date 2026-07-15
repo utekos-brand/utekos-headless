@@ -14,12 +14,11 @@ import {
   CarouselPrevious
 } from '@/components/ui/carousel'
 import { NewsletterForm } from '@/components/form/components/NewsLetterForm'
-import { useAnalytics } from '@/hooks/useAnalytics'
 import { CartMutationContext } from '@/lib/context/CartMutationContext'
 import { cartStore } from '@/lib/state/cartStore'
 import { VippsLogo } from '@/components/payments/VippsLogo'
 import { KlarnaLogo } from '@/components/payments/KlarnaLogo'
-import { ShoppingBag, Check } from 'lucide-react'
+import { ShoppingBag } from 'lucide-react'
 import type { ShopifyProduct } from 'types/product'
 import { cn } from '@/lib/utils/className'
 import { toast } from 'sonner'
@@ -37,7 +36,6 @@ export function ComfyrobeQuickBuy({ product }: Props) {
     v => v.id === selectedVariantId
   )
   const cartActor = CartMutationContext.useActorRef()
-  const { trackEvent } = useAnalytics()
   const [isAdding, setIsAdding] = useState(false)
 
   const handleAddToCart = () => {
@@ -48,14 +46,6 @@ export function ComfyrobeQuickBuy({ product }: Props) {
     cartActor.send({
       type: 'ADD_LINES',
       input: [{ variantId: selectedVariant.id, quantity: 1 }]
-    })
-
-    trackEvent('AddToCart', {
-      content_name: product.title,
-      content_ids: [selectedVariant.id],
-      content_type: 'product',
-      value: Number(selectedVariant.price.amount),
-      currency: selectedVariant.price.currencyCode
     })
 
     setTimeout(() => {

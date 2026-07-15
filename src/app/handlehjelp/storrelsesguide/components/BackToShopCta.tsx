@@ -26,12 +26,7 @@ export async function BackToShopCta({
             Klar for å kjøpe din Utekos?
           </h2>
         </div>
-        <LazyFeaturedProductCarousel
-          trackingEventName='ViewCategory'
-          itemListId='produkter-kolleksjon'
-          itemListName='Utekos produktkolleksjon'
-          contentCategory='Utekos produktkategori'
-        />
+        <LazyFeaturedProductCarousel />
       </div>
     </SizeGuideSectionShell>
   )
