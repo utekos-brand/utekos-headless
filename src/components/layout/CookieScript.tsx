@@ -16,6 +16,16 @@ export const CONSENT_MODE_DEFAULTS = `
   window.gtag('set', 'url_passthrough', true);
   window.uetq = window.uetq || [];
   window.uetq.push('consent', 'default', { ad_storage: 'denied' });
+  window.CookiebotCallback_OnLoad = function() {
+    if (
+      window.Cookiebot &&
+      window.Cookiebot.regulations &&
+      window.Cookiebot.regulations.gdprApplies &&
+      !window.Cookiebot.hasResponse
+    ) {
+      window.Cookiebot.renew();
+    }
+  };
   window.addEventListener('load', function() {
     window.dataLayer.push({ 'gtm.blocklist': [] });
     if (window.Cookiebot && window.Cookiebot.consent) {
