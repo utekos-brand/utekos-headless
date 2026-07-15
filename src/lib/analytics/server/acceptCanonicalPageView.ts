@@ -8,7 +8,7 @@ import {
   type ProviderDispatchIntent
 } from './planCanonicalPageViewDispatch'
 
-type CanonicalPageViewStoreInput = {
+export type CanonicalPageViewStoreInput = {
   dispatches: ProviderDispatchIntent[]
   event: CanonicalPageView
 }

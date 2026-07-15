@@ -40,9 +40,9 @@ category is already granted. The event does not create identifier cookies.
 
 ## Server ingestion foundation
 
-The server ingestion foundation is implemented as pure, tested contracts.
-It is not yet exposed as an API route and does not currently write to
-Supabase or any provider.
+The server ingestion foundation includes a tested first-party Route Handler
+at `POST /api/events/page-view`. The route is not a live browser data flow
+until the consent-aware client transport is added and the change is merged.
 
 At the server trust boundary:
 
@@ -54,10 +54,17 @@ At the server trust boundary:
 - events with both analytics and marketing consent denied are rejected
   before storage.
 
-The storage port accepts the canonical event and all provider-dispatch
-intents as one unit. The Supabase implementation must persist the ledger
-event and provider outbox rows atomically and return `duplicate` for an
-existing `event_id`.
+The Postgres adapter persists the canonical event in
+`marketing.event_ledger` and its provider intents in
+`ops.provider_dispatch_attempts` within one transaction. Stable
+idempotency keys use the canonical event name and `event_id`; a ledger
+conflict returns `duplicate` without creating new outbox rows. No schema
+change is required.
+
+The Route Handler requires same-origin JSON, rejects bodies over 32 KiB,
+returns no-store responses, and derives IP, user agent and coarse location
+with `@vercel/functions`. Raw database errors and event payloads are not
+returned or logged.
 
 For `page_view`, marketing consent creates server-retry intents for Meta
 and Microsoft UET. Google is deliberately excluded from this outbox:
@@ -68,6 +75,12 @@ commerce events where it does not duplicate the active sGTM event.
 Microsoft UET CAPI maps `page_view_id` to `pageLoadId` and uses `event_id`
 for deduplication. Microsoft ID sync remains a separate consent-gated
 browser responsibility when audience matching or remarketing is enabled.
+
+The next increment adds browser transport. It must keep the pre-consent
+Google `dataLayer` event separate from first-party persistence: wait for a
+Cookiebot decision, send at most one permitted canonical event to the
+collector, and never emit a second Google `page_view` merely because
+consent changed.
 
 ## Browser verification gate
 
