@@ -30,6 +30,7 @@ import { DesktopBreadcrump } from './DesktopBreadcrump'
 import { PRODUCT_GALLERY_IMAGE_OVERRIDES } from '../utils/gallery-images/productGalleryImageOverrides'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { ProductGalleryGrid } from './ProductGalleryGrid'
+import { SoldOutWaitlistDialog } from '@/components/product-waitlist/SoldOutWaitlistDialog'
 
 const SmartRealTimeActivity = dynamic(
   () =>
@@ -152,6 +153,9 @@ export function ProductPageView({
 
   return (
     <article className='dark:bg-dark-background ! relative isolate overflow-x-clip bg-background py-0 text-foreground! md:py-6'>
+      {productData.handle === 'utekos-dun' ?
+        <SoldOutWaitlistDialog />
+      : null}
       <KlarnaOnSiteMessagingScript />
       <div className='pointer-events-none absolute inset-0 -z-10'>
         <div className='absolute top-12 left-[8%] size-80 rounded-full' />

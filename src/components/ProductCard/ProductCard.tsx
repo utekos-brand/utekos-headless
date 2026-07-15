@@ -24,6 +24,7 @@ import { InlineText } from '@/components/typography/TypographyInlineText'
 import { KlarnaProductExpressCheckout } from '@/components/klarna/components/KlarnaProductExpressCheckout'
 import { ProductCardCompactVariantSelector } from './ProductCardCompactVariantSelector'
 import { ProductColorSwatches } from './ProductColorSwatches'
+import { WishlistButton } from '@/components/wishlist/WishlistButton'
 
 interface ExtendedProductCardProps extends ProductCardProps {
   isPriority?: boolean
@@ -181,6 +182,11 @@ export function ProductCard({
               />
             </AspectRatio>
           </Link>
+          <WishlistButton
+            productTitle={product.title}
+            returnTo={productUrl}
+            className='absolute right-3 bottom-3 z-20 size-11 rounded-xl md:right-4 md:bottom-4 md:size-12 md:rounded-2xl'
+          />
         </CardContent>
 
         <div className='dark:border-dark-card-foreground/24 flex flex-col gap-2 rounded-t-xl border-t border-card-foreground/24 p-3 md:gap-3 md:p-4'>
@@ -280,6 +286,15 @@ export function ProductCard({
               />
             </AspectRatio>
           </Link>
+          <WishlistButton
+            productTitle={product.title}
+            returnTo={productUrl}
+            className={cn(
+              'absolute right-4 bottom-4 z-20',
+              compactMobile &&
+                'right-2 bottom-2 size-10 rounded-xl md:right-4 md:bottom-4 md:size-12 md:rounded-2xl'
+            )}
+          />
         </CardContent>
 
         <ProductCardHeader
