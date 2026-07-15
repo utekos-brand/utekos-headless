@@ -2,11 +2,13 @@
 
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { useProductPage } from '@/hooks/useProductPage'
 import { ProductPageView } from '@/app/produkter/[handle]/components/ProductPageView'
+import { reportCanonicalViewItem } from '@/lib/analytics/viewItemReporter'
 import { ProductPageSkeleton } from './ProductPageSkeleton'
-import type { ShopifyProduct } from 'types/product'
 import { ProductPageErrorState } from './ProductPageErrorState'
+import type { ShopifyProduct } from 'types/product'
 
 interface ProductPageControllerProps {
   handle: string
@@ -19,6 +21,8 @@ export function ProductPageController({
   initialVariantId = null,
   initialRelatedProducts
 }: ProductPageControllerProps) {
+  const reportedProductId = useRef<string | null>(null)
+
   const {
     productData,
     selectedVariant,
@@ -31,7 +35,29 @@ export function ProductPageController({
     refetch,
     isFetching,
     isLoading
-  } = useProductPage(handle, initialRelatedProducts, initialVariantId)
+  } = useProductPage(
+    handle,
+    initialRelatedProducts,
+    initialVariantId
+  )
+
+  useEffect(() => {
+    if (
+      !productData ||
+      !selectedVariant ||
+      reportedProductId.current === productData.id
+    ) {
+      return
+    }
+
+    return reportCanonicalViewItem({
+      product: productData,
+      variant: selectedVariant,
+      onEmitted: () => {
+        reportedProductId.current = productData.id
+      }
+    })
+  }, [productData, selectedVariant])
 
   if (productError && !productData) {
     return (
@@ -45,7 +71,11 @@ export function ProductPageController({
     )
   }
 
-  if ((isLoading && !productData) || !productData || !selectedVariant) {
+  if (
+    (isLoading && !productData) ||
+    !productData ||
+    !selectedVariant
+  ) {
     return <ProductPageSkeleton />
   }
 

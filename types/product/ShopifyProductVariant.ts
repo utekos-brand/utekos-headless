@@ -14,6 +14,7 @@ export type ShopifyProductVariant = {
   barcode: string | null
   availableForSale: boolean
   currentlyNotInStock: boolean
+  taxable: boolean
   selectedOptions: SelectedOption[]
   price: Money
   image: Image | null

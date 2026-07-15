@@ -88,6 +88,24 @@ function checkCanonicalSurface(checks, profile) {
     )
   }
 
+  if (profile.tunnelTarget === 'source-insight') {
+    const canonical = run(
+      'npm',
+      ['run', 'mcp:source-insight:doctor'],
+      { timeout: 120000 }
+    )
+    check(
+      checks,
+      `profile:${profile.id}:canonical-surface`,
+      canonical.status === 0 ? 'ok' : 'error',
+      canonical.status === 0 ?
+        'schema-bound source insight tools OK'
+      : firstLine(canonical.stderr) ||
+          firstLine(canonical.stdout) ||
+          'source insight doctor failed'
+    )
+  }
+
   if (profile.tunnelTarget === 'browser') {
     const canonical = run('npm', ['run', 'mcp:browser:doctor'], {
       timeout: 120000
@@ -180,7 +198,9 @@ function checkCanonicalSurface(checks, profile) {
       check(
         checks,
         `profile:${profile.id}:canonical-tools`,
-        missing.length === 0 && extra.length === 0 ? 'ok' : 'error',
+        missing.length === 0 && extra.length === 0 ?
+          'ok'
+        : 'error',
         missing.length === 0 && extra.length === 0 ?
           `${profileTools.length} tools match server`
         : `missing ${missing.join(', ') || '-'}; extra ${extra.join(', ') || '-'}`

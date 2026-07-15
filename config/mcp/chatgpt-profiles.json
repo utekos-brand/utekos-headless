@@ -124,6 +124,42 @@
       ]
     },
     {
+      "id": "utekos_chatgpt_source_insight",
+      "name": "Utekos Source Insight",
+      "mode": "read-only-source",
+      "defaultForChatGPT": false,
+      "tunnelTarget": "source-insight",
+      "dedicatedTunnel": true,
+      "runtimeApiKeyEnv": "OPEN_AI_ADMIN_TUNNEL",
+      "tunnelProfile": "utekos-chatgpt-source-insight",
+      "mcpCommand": "node ${repoRoot}/scripts/mcp/utekos-source-insight-server.mjs",
+      "mcpSurface": "utekos-source-read-only",
+      "healthAddr": "127.0.0.1:8089",
+      "mcpPort": "8820",
+      "canonicalTools": [
+        "source_access_bootstrap",
+        "source_file_inventory",
+        "search_source_files",
+        "read_source_files"
+      ],
+      "allowedPaths": [
+        "${repoRoot}/src",
+        "${repoRoot}/next.config.mts",
+        "${repoRoot}/package.json",
+        "${repoRoot}/vercel.json",
+        "${repoRoot}/global.d.ts",
+        "${repoRoot}/supabase"
+      ],
+      "secretDenylist": [
+        ".env",
+        ".env.local",
+        ".env.mcp.local",
+        ".env.tunnel.local",
+        "src/api/lib/cloud-credentials",
+        "supabase/md.md"
+      ]
+    },
+    {
       "id": "utekos_chatgpt_browser",
       "name": "Utekos ChatGPT Browser Workbench",
       "mode": "runtime-browser",
@@ -378,6 +414,7 @@
       "requiresExplicitUserSelection": true,
       "tunnelTarget": "codex-bridge",
       "tunnelProfile": "utekos-chatgpt-codex-bridge",
+      "runtimeApiKeyEnv": "PERSONAL_OPENAI_API_KEY",
       "mcpCommand": "node ${repoRoot}/scripts/mcp/utekos-codex-bridge-server.mjs",
       "mcpSurface": "utekos-codex-controlled-agent-bridge",
       "healthAddr": "127.0.0.1:8087",

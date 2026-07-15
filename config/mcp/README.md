@@ -261,11 +261,11 @@ performance verification is handled by
 ## Official Google Analytics MCP
 
 `google-analytics` uses Google's official experimental read-only
-server from `googleanalytics/google-analytics-mcp`. The source template
-launches the persistent `analytics-mcp` CLI installed and pinned to
-PyPI package `analytics-mcp==0.6.0` through `pipx`. It replaces the
-previous third-party `mcp-google-analytics` server and does not expose
-Measurement Protocol write tools.
+server from `googleanalytics/google-analytics-mcp`. The source
+template launches the persistent `analytics-mcp` CLI installed
+and pinned to PyPI package `analytics-mcp==0.6.0` through `pipx`.
+It replaces the previous third-party `mcp-google-analytics`
+server and does not expose Measurement Protocol write tools.
 
 Credentials are isolated through:
 
@@ -275,9 +275,10 @@ GOOGLE_PROJECT_ID=project-c683eb2c-20ae-4ec2-ac3
 ```
 
 The credential path is mapped to the official server's required
-`GOOGLE_APPLICATION_CREDENTIALS` environment variable only for this
-server. Verify package version, MCP handshake, all nine tools, account
-access, property `489598217`, and a live seven-day event report with:
+`GOOGLE_APPLICATION_CREDENTIALS` environment variable only for
+this server. Verify package version, MCP handshake, all nine
+tools, account access, property `489598217`, and a live seven-day
+event report with:
 
 ```bash
 npm run mcp:google-analytics:doctor
@@ -285,11 +286,12 @@ npm run mcp:google-analytics:doctor
 
 ### Private ChatGPT app and dedicated tunnel
 
-`utekos_chatgpt_google_analytics` is the tool-only private ChatGPT
-surface for the same official server. The local proxy preserves the
-official nine-tool catalog and adds the output schemas, structured
-content, and read-only/destructive/idempotent/open-world annotations
-required by ChatGPT. It adds no Analytics mutation tools.
+`utekos_chatgpt_google_analytics` is the tool-only private
+ChatGPT surface for the same official server. The local proxy
+preserves the official nine-tool catalog and adds the output
+schemas, structured content, and
+read-only/destructive/idempotent/open-world annotations required
+by ChatGPT. It adds no Analytics mutation tools.
 
 ```bash
 npm run mcp:google-analytics:chatgpt:doctor
@@ -300,31 +302,33 @@ npm run mcp:tunnel:status:google-analytics
 ```
 
 The private app name is `Utekos Google Analytics`. Its dedicated
-tunnel target is `google-analytics`; the real tunnel id belongs only
-in ignored `.env.tunnel.local`. Create or refresh the app in ChatGPT
-Developer Mode while the tunnel status reports `healthz=ok` and
-`readyz=ok`.
+tunnel target is `google-analytics`; the real tunnel id belongs
+only in ignored `.env.tunnel.local`. Create or refresh the app in
+ChatGPT Developer Mode while the tunnel status reports
+`healthz=ok` and `readyz=ok`.
 
 ## Official Google Ads MCP authentication
 
-The official `googleads/google-ads-mcp` server uses Google Application
-Default Credentials with the `adwords` scope. It does not require a
-standalone `GOOGLE_ADS_REFRESH_TOKEN` environment variable. Create an
-isolated authorized-user ADC file with the existing dedicated OAuth
-client by running:
+The official `googleads/google-ads-mcp` server uses Google
+Application Default Credentials with the `adwords` scope. It does
+not require a standalone `GOOGLE_ADS_REFRESH_TOKEN` environment
+variable. Create an isolated authorized-user ADC file with the
+existing dedicated OAuth client by running:
 
 ```bash
 npm run mcp:google-ads:login
 ```
 
-The browser consent grants `adwords` and `cloud-platform`. The command
-stores the resulting refresh token inside the ignored, mode-0600 file
+The browser consent grants `adwords` and `cloud-platform`. The
+command stores the resulting refresh token inside the ignored,
+mode-0600 file
 `.agent-artifacts/google-ads-adc/application_default_credentials.json`
 and never prints it. `google-ads-mcp` receives that path through
 `GOOGLE_ADS_APPLICATION_CREDENTIALS` mapped to
-`GOOGLE_APPLICATION_CREDENTIALS`. Keep the developer token and account
-ids in `.env.mcp.local`; do not copy the refresh token into chat,
-documentation, generated MCP JSON, or a tracked env file.
+`GOOGLE_APPLICATION_CREDENTIALS`. Keep the developer token and
+account ids in `.env.mcp.local`; do not copy the refresh token
+into chat, documentation, generated MCP JSON, or a tracked env
+file.
 
 `utekos_chatgpt_commerce_tracking` uses the local canonical
 Commerce/Tracking server:
@@ -351,8 +355,8 @@ reads, Microsoft Advertising auth/account/campaign/Ad Insight
 status reads, Microsoft Shopping Content status reads, Microsoft
 Clarity Ads readiness reads, tracking architecture inventory,
 canonical event contracts, and local docs/source routing. It
-never returns secret values and does not mutate Shopify, GTM,
-ads platforms, Vercel, Supabase, PostHog, or Sentry.
+never returns secret values and does not mutate Shopify, GTM, ads
+platforms, Vercel, Supabase, PostHog, or Sentry.
 
 `utekos_chatgpt_shopify_readonly` is a separate, explicitly
 selected app with its own Secure MCP Tunnel:
@@ -517,8 +521,9 @@ credential paths are available:
 - Provider access remediation report: implemented and read-only;
   use it after `provider_env_readiness` for exact
   provider-by-provider fix steps.
-- GA4 probe: live query OK. The separate official Google Analytics MCP
-  also verifies account summary, property details, and report reads.
+- GA4 probe: live query OK. The separate official Google
+  Analytics MCP also verifies account summary, property details,
+  and report reads.
 - Merchant Center probe: implemented, currently returns
   structured partial API/access failure.
 - Google Ads probes: implemented for accessible customer
@@ -581,6 +586,38 @@ Start the insight tunnel for ChatGPT connector work:
 npm run mcp:tunnel:start:insight
 npm run mcp:tunnel:status:insight
 ```
+
+The dedicated `source-insight` target is a separate
+least-privilege, read-only ChatGPT surface for implementation
+discovery. It exposes only:
+
+- `src/`
+- `supabase/`, except `supabase/md.md`
+- `next.config.mts`
+- `package.json`
+- `vercel.json`
+- `global.d.ts`
+
+Environment files and `src/api/lib/cloud-credentials/` remain
+denied. The canonical tools are `source_access_bootstrap`,
+`source_file_inventory`, `search_source_files`, and
+`read_source_files`; no write, shell, Git mutation, network,
+database, or provider tool is exposed.
+
+```bash
+npm run mcp:source-insight:doctor
+npm run mcp:tunnel:init:source-insight
+npm run mcp:tunnel:doctor:source-insight
+npm run mcp:tunnel:start:source-insight
+npm run mcp:tunnel:status:source-insight
+```
+
+Set the dedicated local values in the ignored `.env.tunnel.local`
+using the `*_SOURCE_INSIGHT` names documented in
+`.env.tunnel.example`. Reuse the local runtime project key from
+`.env.local` through the profile's `runtimeApiKeyEnv`; never use
+the OpenAI admin key as tunnel runtime auth. Assign the dedicated
+tunnel ID to `CONTROL_PLANE_TUNNEL_ID_SOURCE_INSIGHT`.
 
 The insight, browser, and commerce-tracking tunnel profiles use
 stdio and let `tunnel-client` start local Utekos canonical MCP

@@ -167,6 +167,8 @@ scripts/mcp/*
 !/scripts/mcp/openai-tunnel.mjs
 !/scripts/mcp/apply-chatgpt-profiles.mjs
 !/scripts/mcp/doctor-chatgpt-profiles.mjs
+!/scripts/mcp/utekos-source-insight-server.mjs
+!/scripts/mcp/doctor-utekos-source-insight-server.mjs
 !/scripts/mcp/utekos-css-insight-server.mjs
 !/scripts/mcp/doctor-utekos-css-insight-server.mjs
 !/scripts/mcp/run-server.mjs
