@@ -324,8 +324,7 @@ async function main() {
               '.agents/css/brand-colors.css',
               '.env.local',
               'package.json',
-              'mcp.json',
-              'gcloud components install alpha beta skaffold minikube kubectl gke-gcloud-auth-plugin/google-cloud-sdk/lib/googlecloudsdk/api_lib/meta/help_html_data/_menu_.css'
+              'mcp.json'
             ],
             max_bytes_per_file: 1000
           }
@@ -335,7 +334,7 @@ async function main() {
       check(
         checks,
         'policy:denied_paths',
-        denied.structuredContent?.ok === false && denied.structuredContent?.data?.denied_files?.length === 5,
+        denied.structuredContent?.ok === false && denied.structuredContent?.data?.denied_files?.length === 4,
         `${denied.structuredContent?.data?.denied_files?.length ?? 0} denied`
       )
 
