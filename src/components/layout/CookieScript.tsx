@@ -1,12 +1,6 @@
-import Script from 'next/script'
-import {
-  COOKIEBOT_BLOCKING_MODE,
-  COOKIEBOT_DOMAIN_GROUP_ID,
-  COOKIEBOT_SCRIPT_URL
-} from '@/components/cookie-consent/cookiebotConfig'
-
-export const GOOGLE_AND_MICROSOFT_CONSENT_DEFAULT_SCRIPT = `
+export const CONSENT_MODE_DEFAULTS = `
   window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ 'gtm.blocklist': ['sandboxedScripts'] });
   window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
   window.gtag('consent', 'default', {
     ad_personalization: 'denied',
@@ -16,27 +10,16 @@ export const GOOGLE_AND_MICROSOFT_CONSENT_DEFAULT_SCRIPT = `
     functionality_storage: 'denied',
     personalization_storage: 'denied',
     security_storage: 'granted',
-    wait_for_update: 2000
+    wait_for_update: 500
   });
   window.gtag('set', 'ads_data_redaction', true);
   window.gtag('set', 'url_passthrough', true);
   window.uetq = window.uetq || [];
   window.uetq.push('consent', 'default', { ad_storage: 'denied' });
+  window.addEventListener('load', function() {
+    window.dataLayer.push({ 'gtm.blocklist': [] });
+    if (window.Cookiebot && window.Cookiebot.consent) {
+      window.dataLayer.push({ event: 'cookie_consent_update' });
+    }
+  }, { once: true });
 `
-
-export const CookieScript = () => {
-  return (
-    <>
-      <Script id='consent-defaults' strategy='beforeInteractive'>
-        {GOOGLE_AND_MICROSOFT_CONSENT_DEFAULT_SCRIPT}
-      </Script>
-      <Script
-        id='Cookiebot'
-        src={COOKIEBOT_SCRIPT_URL}
-        data-cbid={COOKIEBOT_DOMAIN_GROUP_ID}
-        data-blockingmode={COOKIEBOT_BLOCKING_MODE}
-        strategy='beforeInteractive'
-      />
-    </>
-  )
-}

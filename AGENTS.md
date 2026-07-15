@@ -239,7 +239,22 @@ Brand and business-critical posture:
 
 ### Telemetry and paid-media operating baseline
 
-Status date: 2026-07-07.
+Status date: 2026-07-15.
+
+The storefront tracking implementation was deliberately reset on
+2026-07-15. The active app contract is now limited to direct Cookiebot,
+default-denied Consent Mode v2, `/__gtg` for the Google Tag Manager
+loader and `/__sgtm` for Google server-side tagging. GTM may load before
+consent for Advanced Consent Mode cookieless pings. Meta, Microsoft,
+Clarity and other non-Google tags remain consent-gated in GTM.
+
+The previous browser tracking hub, PostHog client, first-party event
+ingestion, Supabase ledger/provider queue runtime, provider adapters,
+tracking webhooks and tracking crons have been removed. The historical
+details below describe the desired/recoverable architecture, not an
+active storefront data flow. Do not report those surfaces as active or
+healthy until they are intentionally reintroduced and production-
+verified.
 
 - Supabase is the canonical tracking, audit, and provider-status
   warehouse. PostHog is product analytics, not the canonical
@@ -293,10 +308,11 @@ Status date: 2026-07-07.
 ### Telemetry verification gates
 
 - Required local gates after telemetry/platform changes:
-  `npm run mcp:build`, `npm run mcp:doctor`,
-  `npm run mcp:commerce-tracking:doctor`, targeted unit tests,
-  `pnpm exec tsc --noEmit`, and Supabase lint where schema files are
-  touched.
+  `npm run mcp:build`, `npm run mcp:doctor`, targeted unit tests,
+  `pnpm exec next typegen`, `pnpm exec tsc --noEmit`, `pnpm build`, and
+  `npm run tracking:gateway:smoke`. Supabase lint is required only when
+  schema files are touched. The removed commerce-tracking doctor is not
+  a gate until that diagnostic surface is reintroduced.
 - Deployment and migration order is not optional. Use
   [DEPLOYMENT.md](DEPLOYMENT.md) to classify changed files, decide
   what must be migrated/configured/deployed, and record blocked
@@ -355,13 +371,9 @@ npm run db:reset   # apply migrations
 
 ### Cloud Run sGTM env (production)
 
-See
-  [src/lib/tracking/server-side-tagging.md](src/lib/tracking/server-side-tagging.md).
-Minimum:
+The app exposes Cloud Run through `/__sgtm/:path*`; the GTM loader is
+exposed through `/__gtg/:path*`. Minimum:
 
-- `NEXT_PUBLIC_TRACKING_SGTM_ORIGIN=https://cloud.server.utekos.no`
-  (hostname-only `cloud.server.utekos.no` is normalized to `https://` in
-  `cookiebotConfig.ts`; no trailing slash)
 - `NEXT_PUBLIC_GOOGLE_GTM_ID=GTM-5TWMJQFP`
 - `gtm-preview` and `gtm-server` are recreated in Google Cloud
   project `project-c683eb2c-20ae-4ec2-ac3`, region
@@ -379,15 +391,12 @@ Minimum:
   `/healthy`, `uc-consent-signals.js`, `gtm.js?id=GTM-5TWMJQFP`,
   `ns.html?id=GTM-5TWMJQFP`, and `gtag/js?id=GT-MKRLF5WK` return
   HTTP 200.
-- Resilient GTM script URL is defaulted in
-  `googleTagManagerConfig.ts`; keep
-  `NEXT_PUBLIC_GTM_RESILIENT_SCRIPT_URL` unset unless a freshly
-  verified first-party loader is intentionally introduced.
-- `GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm` only after Cloud Run
-  `/healthy`, `uc-consent-signals.js`, `gtm.js`, `ns.html`,
-  canonical `gtag/js`, GTM Preview, and production tracking smoke
-  pass.
-- `NEXT_PUBLIC_ENABLE_GTM_IN_DEV=1` for local GTM smoke only
+- Every `/__sgtm` response must be `no-store` and must never return
+  `x-vercel-cache: HIT`.
+- The published loader must retain
+  `server_container_url=https://utekos.no/__sgtm`.
+- No GTM publish is implied by an app release; it requires separate
+  explicit approval.
 
 Operational note: the old project `nifty-structure-490519-u6`
 returned Google Frontend 500/503 because billing was disabled. Do
@@ -407,7 +416,9 @@ explicitly asks for that cost-bearing provider mutation.
   `hkoawfbomhnzupcsdggb`). `plugin-supabase-supabase` er
   org-scoped til Utekos Atlas og gir permission-denied mot
   pink-lens.
-- **Skjema:** `marketing`, `ops`, `partner`, `analytics`. Ledger:
+- **Skjema:** `marketing`, `ops`, `partner`, `analytics`. These remain
+  available for historical audit and future rebuilding, but the reset
+  storefront does not currently write to them. Ledger:
   `marketing.event_ledger`. Kø: `ops.provider_dispatch_attempts`.
   Meta quality: `marketing.meta_quality_snapshots` via
   `/api/cron/sync-meta-insights`.
@@ -417,13 +428,10 @@ explicitly asks for that cost-bearing provider mutation.
 - **Iceberg:** `analytics_bucket_fdw` over `analytics-bucket` med
   vault-creds. Kald lagring: `analytics.event_ledger_archive` +
   `archive_event_ledger_batch` (pg_cron).
-- **Server GA4:** Direkte Measurement Protocol for server-events.
-  sGTM eier fortsatt consent-gated browser-GTM via
-  `cloud.server.utekos.no`.
-- **PostHog:** Én consent-gatet init via `@posthog/react` og
-  `portal.utekos.no` i `DeferredTrackingBundle`. Autocapture er av,
-  pageviews er manuelle, commerce-events er eksplisitte og replay er
-  maskert. Ingen Vercel `/relay-MAhe`-relay i aktiv flyt.
+- **Server GA4:** Direkte Measurement Protocol-runtime er fjernet.
+  sGTM eier fortsatt consent-gated Google-trafikk via `/__sgtm`.
+- **PostHog:** Storefront-integrasjonen er fjernet i resetten og er et
+  åpent gap til den eventuelt innføres på nytt med consent-gate.
 
 ### Local MCP and secrets
 
