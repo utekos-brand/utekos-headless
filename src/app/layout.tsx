@@ -18,11 +18,13 @@ import {
   COOKIEBOT_DOMAIN_GROUP_ID,
   COOKIEBOT_SCRIPT_URL
 } from '@/components/cookie-consent/cookiebotConfig'
+import { PageViewObserver } from '@/components/analytics/PageViewObserver'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { GoogleTagManager } from '@next/third-parties/google'
 import { SITE_URL } from '@/constants'
 import Script from 'next/script'
 import type { Metadata } from 'next'
+import type { TrackingEnvironment } from '@/lib/analytics/pageViewEvent'
 
 const googleTagGatewayOrigin =
   process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL ?
@@ -35,6 +37,13 @@ const googleTagGatewayUrl = new URL(
   '/__gtg/gtm.js',
   googleTagGatewayOrigin
 ).toString()
+
+function getTrackingEnvironment(): TrackingEnvironment {
+  if (process.env.NODE_ENV === 'test') return 'test'
+  if (process.env.VERCEL_ENV === 'production') return 'production'
+  if (process.env.VERCEL_ENV === 'preview') return 'preview'
+  return 'development'
+}
 
 export const metadata: Metadata = {
   icons: { icon: '/icon.png', apple: '/apple-icon.png' },
@@ -126,6 +135,15 @@ export default function RootLayout({
         />
       </head>
       <body className='scroll-smooth bg-background text-foreground antialiased dark:bg-background dark:text-foreground'>
+        <GoogleTagManager
+          gtmId='GTM-5TWMJQFP'
+          gtmScriptUrl={googleTagGatewayUrl}
+        />
+
+        <Suspense fallback={null}>
+          <PageViewObserver environment={getTrackingEnvironment()} />
+        </Suspense>
+
         <ThemeProvider
           attribute='class'
           defaultTheme='dark'
@@ -146,11 +164,6 @@ export default function RootLayout({
             </CartProviderLoader>
           </Suspense>
         </ThemeProvider>
-
-        <GoogleTagManager
-          gtmId='GTM-5TWMJQFP'
-          gtmScriptUrl={googleTagGatewayUrl}
-        />
       </body>
     </html>
   )
