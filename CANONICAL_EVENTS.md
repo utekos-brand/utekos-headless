@@ -9,7 +9,7 @@ not the event inventory or source of truth.
 
 | Event | Owner | Detection | Delivery | Status |
 | --- | --- | --- | --- | --- |
-| `page_view` | Next.js application | Initial render and App Router URL change | `dataLayer` -> web GTM -> `/__sgtm` -> GA4 | Implemented in code; GTM publish and preview verification pending |
+| `page_view` | Next.js application | Initial render and App Router URL change | `dataLayer` -> web GTM -> `/__sgtm` -> GA4 | Deployed with web GTM version 113; browser provider verification remains |
 
 GA4 Enhanced Measurement page views, browser-history page views and the
 Google tag's automatic `send_page_view` must remain disabled. This avoids
@@ -38,7 +38,38 @@ location requires a separate explicit browser permission and use case.
 Existing browser identifiers are read only when the matching Cookiebot
 category is already granted. The event does not create identifier cookies.
 
-## Verification gate
+## Server ingestion foundation
+
+The server ingestion foundation is implemented as pure, tested contracts.
+It is not yet exposed as an API route and does not currently write to
+Supabase or any provider.
+
+At the server trust boundary:
+
+- the complete payload is reparsed with the canonical Zod schema;
+- request-derived IP address, user agent and coarse location replace
+  browser-supplied values;
+- marketing identifiers and hashed user data are removed unless marketing
+  consent is granted; and
+- events with both analytics and marketing consent denied are rejected
+  before storage.
+
+The storage port accepts the canonical event and all provider-dispatch
+intents as one unit. The Supabase implementation must persist the ledger
+event and provider outbox rows atomically and return `duplicate` for an
+existing `event_id`.
+
+For `page_view`, marketing consent creates server-retry intents for Meta
+and Microsoft UET. Google is deliberately excluded from this outbox:
+GTG, web GTM and same-origin sGTM remain the only Google `page_view`
+delivery path. Google Data Manager is reserved for qualified server and
+commerce events where it does not duplicate the active sGTM event.
+
+Microsoft UET CAPI maps `page_view_id` to `pageLoadId` and uses `event_id`
+for deduplication. Microsoft ID sync remains a separate consent-gated
+browser responsibility when audience matching or remarketing is enabled.
+
+## Browser verification gate
 
 Before publish, prove in GTM Preview and sGTM Preview that:
 
