@@ -1,6 +1,7 @@
 'use client'
 
 import { useAddToCartAction } from '@/hooks/useAddToCartAction'
+import { WishlistButton } from '@/components/wishlist/WishlistButton'
 import { AnimatePresence, motion } from 'motion/react'
 import { ArrowUpRight, Loader2, MousePointer2, ShoppingBag, X } from 'lucide-react'
 import type { Route } from 'next'
@@ -373,6 +374,11 @@ export function HelpChooseCard({ product, index, glowColor }: HelpChooseCardProp
           />
         </div>
       </Link>
+      <WishlistButton
+        productTitle={product.title}
+        returnTo={`/produkter/${product.handle}`}
+        className='absolute top-14 right-3 z-50 size-11 rounded-xl md:top-16 md:right-4 md:size-12 md:rounded-2xl'
+      />
     </motion.div>
   )
 }
