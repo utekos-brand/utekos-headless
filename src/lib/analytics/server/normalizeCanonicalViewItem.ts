@@ -2,43 +2,35 @@ import {
   canonicalViewItemSchema,
   type CanonicalViewItem
 } from '../viewItemEvent'
-import type { CanonicalPageViewRequestContext } from './normalizeCanonicalPageView'
+import type {
+  CanonicalPageViewRequestContext
+} from './normalizeCanonicalPageView'
+
+export type CanonicalViewItemRequestContext =
+  CanonicalPageViewRequestContext
 
 export function normalizeCanonicalViewItem(
   payload: unknown,
-  requestContext: CanonicalPageViewRequestContext
+  requestContext: CanonicalViewItemRequestContext
 ): CanonicalViewItem {
   const parsed = canonicalViewItemSchema.parse(payload)
-  const {
-    browser_id,
-    click_id,
-    client_ip_address: _clientIpAddress,
-    event_device_info,
-    external_id,
-    impression_id,
-    location: _location,
-    region_code: _regionCode,
-    user_data,
-    ...event
-  } = parsed
-  void _clientIpAddress
-  void _location
-  void _regionCode
+  const normalized: CanonicalViewItem = { ...parsed }
+  const clientLocation = parsed.location
+  const deviceInfo = { ...parsed.event_device_info }
 
-  const { user_agent: _userAgent, ...clientDeviceInfo } =
-    event_device_info ?? {}
-  void _userAgent
+  delete normalized.client_ip_address
+  delete normalized.event_device_info
+  delete normalized.location
+  delete normalized.region_code
+  delete deviceInfo.user_agent
 
-  const deviceInfo = {
-    ...clientDeviceInfo,
+  Object.assign(deviceInfo, {
     ...(requestContext.userAgent ?
       { user_agent: requestContext.userAgent }
     : {})
-  }
-  const location = {
-    ...(requestContext.city ?
-      { city: requestContext.city }
-    : {}),
+  })
+  const serverLocation = {
+    ...(requestContext.city ? { city: requestContext.city } : {}),
     ...(requestContext.countryCode ?
       { country_code: requestContext.countryCode.toUpperCase() }
     : {}),
@@ -49,31 +41,34 @@ export function normalizeCanonicalViewItem(
       { region_code: requestContext.regionCode }
     : {})
   }
+  const mayUseBrowserLocation =
+    parsed.consent.preferences === 'granted'
+    && clientLocation?.source === 'browser_permission'
+  const location =
+    mayUseBrowserLocation ?
+      clientLocation
+    : Object.keys(serverLocation).length > 0 ?
+      { ...serverLocation, source: 'server_request' as const }
+    : undefined
   const hasDeviceInfo = Object.keys(deviceInfo).length > 0
-  const hasLocation = Object.keys(location).length > 0
   const hasMarketingConsent =
     parsed.consent.marketing === 'granted'
 
-  return canonicalViewItemSchema.parse({
-    ...event,
-    ...(hasDeviceInfo ? { event_device_info: deviceInfo } : {}),
-    ...(requestContext.regionCode ?
-      { region_code: requestContext.regionCode }
-    : {}),
-    ...(hasLocation ?
-      { location: { ...location, source: 'server_request' } }
-    : {}),
-    ...(hasMarketingConsent && browser_id ? { browser_id } : {}),
-    ...(hasMarketingConsent && click_id ? { click_id } : {}),
-    ...(hasMarketingConsent && external_id ?
-      { external_id }
-    : {}),
-    ...(hasMarketingConsent && impression_id ?
-      { impression_id }
-    : {}),
-    ...(hasMarketingConsent && requestContext.clientIpAddress ?
-      { client_ip_address: requestContext.clientIpAddress }
-    : {}),
-    ...(hasMarketingConsent && user_data ? { user_data } : {})
-  })
+  if (hasDeviceInfo) normalized.event_device_info = deviceInfo
+  if (requestContext.regionCode) {
+    normalized.region_code = requestContext.regionCode
+  }
+  if (location) normalized.location = location
+
+  if (!hasMarketingConsent) {
+    delete normalized.browser_id
+    delete normalized.click_id
+    delete normalized.external_id
+    delete normalized.impression_id
+    delete normalized.user_data
+  } else if (requestContext.clientIpAddress) {
+    normalized.client_ip_address = requestContext.clientIpAddress
+  }
+
+  return canonicalViewItemSchema.parse(normalized)
 }
