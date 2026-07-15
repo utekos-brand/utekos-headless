@@ -9,8 +9,8 @@ adapters, not the event inventory or source of truth.
 
 | Event       | Owner               | Detection                                                      | Delivery                                                                              | Status                                                                                  |
 | ----------- | ------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `page_view` | Next.js application | Initial render and App Router URL change                       | `dataLayer` -> web GTM -> `/__sgtm` -> GA4, plus consent-aware first-party collection | GTM version 113 is deployed; first-party collection is in the current release candidate |
-| `view_item` | Next.js application | First resolved product and selected variant for a product page | `dataLayer` -> web GTM, plus consent-aware first-party collection                     | In the current release candidate; GTM/provider configuration is a separate publish gate |
+| `page_view` | Next.js application | Initial render and App Router URL change                       | `dataLayer` -> web GTM -> `/__sgtm` -> GA4, plus consent-aware first-party collection | Deployed; live browser contract verified without optional consent                        |
+| `view_item` | Next.js application | First resolved product and selected variant for a product page | `dataLayer` -> web GTM, plus consent-aware first-party collection                     | Deployed; live dataLayer contract verified, GTM/provider publish remains a separate gate  |
 
 GA4 Enhanced Measurement page views, browser-history page views
 and the Google tag's automatic `send_page_view` must remain
