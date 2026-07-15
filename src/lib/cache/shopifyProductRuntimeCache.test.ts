@@ -4,6 +4,7 @@ import type { RuntimeCache } from '@vercel/functions'
 import {
   getRuntimeCachedShopifyProduct,
   getShopifyProductRuntimeCacheKey,
+  SHOPIFY_CATALOG_RUNTIME_CACHE_NAMESPACE,
   SHOPIFY_PRODUCT_RUNTIME_CACHE_TTL_SECONDS
 } from './shopifyProductRuntimeCache'
 import type { ShopifyProduct } from 'types/product'
@@ -43,6 +44,7 @@ function createProduct(handle = 'utekos-techdown'): ShopifyProduct {
     id: 'gid://shopify/Product/123',
     title: 'Utekos TechDown',
     handle,
+    vendor: 'Utekos',
     updatedAt: '2026-07-15T00:00:00Z',
     availableForSale: true,
     tags: [],
@@ -55,6 +57,53 @@ function createProduct(handle = 'utekos-techdown'): ShopifyProduct {
     variants: { edges: [] }
   } as unknown as ShopifyProduct
 }
+
+test('uses the v2 namespace for the enriched product payload', () => {
+  assert.equal(SHOPIFY_CATALOG_RUNTIME_CACHE_NAMESPACE, 'shopify-catalog:v2')
+})
+
+test('replaces a legacy cache hit without variant tax data', async () => {
+  const cache = new FakeRuntimeCache()
+  const key = getShopifyProductRuntimeCacheKey('utekos-techdown')
+  const legacyProduct = createProduct() as unknown as {
+    variants: { edges: Array<{ node: Record<string, unknown> }> }
+  }
+  legacyProduct.variants.edges = [{
+    node: {
+      availableForSale: true,
+      id: 'gid://shopify/ProductVariant/456',
+      price: { amount: '1790.00', currencyCode: 'NOK' },
+      title: 'Middels'
+    }
+  }]
+  cache.values.set(key, legacyProduct)
+
+  const freshProduct = createProduct() as unknown as {
+    variants: { edges: Array<{ node: Record<string, unknown> }> }
+  }
+  freshProduct.variants.edges = [{
+    node: {
+      availableForSale: true,
+      id: 'gid://shopify/ProductVariant/456',
+      price: { amount: '1790.00', currencyCode: 'NOK' },
+      taxable: true,
+      title: 'Middels'
+    }
+  }]
+
+  let fetchCount = 0
+  const result = await getRuntimeCachedShopifyProduct(
+    'utekos-techdown',
+    async () => {
+      fetchCount += 1
+      return freshProduct as unknown as ShopifyProduct
+    },
+    cache
+  )
+
+  assert.equal(fetchCount, 1)
+  assert.equal(result?.variants.edges[0]?.node.taxable, true)
+})
 
 test('serves miss then hit with the expected key, TTL and tags', async () => {
   const cache = new FakeRuntimeCache()
