@@ -2,12 +2,26 @@
 
 import { PurchaseClientLanding } from './PurchaseClientLanding'
 import { getProduct } from '@/api/lib/products/getProduct'
+import { cacheLife, cacheTag } from 'next/cache'
 
-export async function LandingPurchaseSection() {
-  const [techDown, mikro] = await Promise.all([
+async function getLandingPurchaseProducts() {
+  'use cache: remote'
+
+  cacheLife('products')
+  cacheTag(
+    'products',
+    'product-utekos-techdown',
+    'product-utekos-mikrofiber'
+  )
+
+  return Promise.all([
     getProduct('utekos-techdown'),
     getProduct('utekos-mikrofiber')
   ])
+}
+
+export async function LandingPurchaseSection() {
+  const [techDown, mikro] = await getLandingPurchaseProducts()
 
   const productsMap = {
     'utekos-techdown': techDown,

@@ -215,6 +215,46 @@ deployed until production has:
 
 ## Vercel Production Gate
 
+### Shopify catalog Runtime Cache release
+
+The Runtime Cache release uses `@vercel/functions@3.7.5` with namespace
+`shopify-catalog:v1`. Product entries use normalized
+`product:handle:{handle}` keys, a 900 second TTL and the tags
+`product:{shopifyId}`, `product-handle:{handle}` and `catalog`.
+
+Runtime Cache is an acceleration layer, not durable storage. Cache reads
+are Zod-validated; invalid entries are deleted and fetched again. Errors,
+missing products and serialized items at or above the 1.9 MB safety limit
+are never stored.
+
+Shopify product webhooks must complete both operations before returning
+success:
+
+1. `revalidateTag(tag, { expire: 0 })` for the existing Next.js product
+   and collection tags.
+2. `getCache({ namespace: 'shopify-catalog:v1' }).expireTag(tags)` for
+   Runtime Cache.
+
+Do not move either invalidation into `after()`. A failed invalidation must
+produce a failed webhook attempt so Shopify can retry it.
+
+`/api/search-index` is a public response cache with the independent tag
+`search-index:v1`. It must not receive the Shopify `catalog` tag. `/api/log`
+may use `after()` for best-effort Redis persistence and Sentry reporting;
+orders and other durable commercial work may not.
+
+Required release evidence:
+
+- Targeted miss -> hit -> signed webhook -> miss test.
+- Invalid-hit deletion, null/error exclusion and item-size boundary tests.
+- Differential ESLint, Next route type generation, TypeScript and full build.
+- Preview proof for product pages, `/skreddersy-varmen`, webhook behavior and
+  `/api/search-index` cache headers/tag.
+- Git-triggered production deployment followed by browser and endpoint smoke.
+
+The comparison baseline and required 7-/14-day follow-up are recorded in
+[`VERCEL_RUNTIME_CACHE_BASELINE.md`](VERCEL_RUNTIME_CACHE_BASELINE.md).
+
 ### Tracking reset and first-party gateway release
 
 The 2026-07-15 tracking reset deliberately removes the legacy browser

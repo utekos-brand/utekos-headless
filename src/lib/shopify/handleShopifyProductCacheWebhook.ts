@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { revalidateProductCatalog } from '@/lib/cache/revalidateProductCatalog'
 import { verifyShopifyWebhook } from '@/lib/shopify/verifyWebhook'
+import type { ProductCatalogInvalidationResult } from '@/lib/cache/revalidateProductCatalog'
 
 const shopifyProductWebhookSchema = z
   .object({
@@ -14,9 +15,17 @@ const shopifyProductWebhookSchema = z
 
 type ShopifyProductWebhookTopic = 'products/create' | 'products/delete' | 'products/update'
 
+type ShopifyProductCacheWebhookDependencies = {
+  invalidateProductCatalog?: (
+    handles: readonly string[],
+    productIds: readonly (string | number)[]
+  ) => Promise<ProductCatalogInvalidationResult>
+}
+
 export async function handleShopifyProductCacheWebhook(
   request: Request,
-  topic: ShopifyProductWebhookTopic
+  topic: ShopifyProductWebhookTopic,
+  dependencies: ShopifyProductCacheWebhookDependencies = {}
 ) {
   const hmac = request.headers.get('x-shopify-hmac-sha256') ?? ''
   const shopifyTopic = request.headers.get('x-shopify-topic')
@@ -54,13 +63,19 @@ export async function handleShopifyProductCacheWebhook(
   }
 
   const handle = parsedProduct.data.handle
-  const invalidatedTags = revalidateProductCatalog(handle ? [handle] : [])
+  const productId = parsedProduct.data.id
+  const invalidateProductCatalog =
+    dependencies.invalidateProductCatalog ?? revalidateProductCatalog
+  const invalidatedTags = await invalidateProductCatalog(
+    handle ? [handle] : [],
+    productId === undefined ? [] : [productId]
+  )
 
   return NextResponse.json({
     success: true,
     topic,
     receivedTopic: shopifyTopic,
-    productId: parsedProduct.data.id ?? null,
+    productId: productId ?? null,
     handle: handle ?? null,
     invalidatedTags
   })
