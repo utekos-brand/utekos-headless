@@ -120,6 +120,10 @@ test('sends one event to the configured GA4 destination', async () => {
       },
       destinations: [
         {
+          loginAccount: {
+            accountId: '123456789',
+            accountType: 'GOOGLE_ANALYTICS_PROPERTY'
+          },
           operatingAccount: {
             accountId: '123456789',
             accountType:

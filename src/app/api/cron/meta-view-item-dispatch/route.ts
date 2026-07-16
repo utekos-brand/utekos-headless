@@ -1,8 +1,8 @@
 import { timingSafeEqual } from 'node:crypto'
 import {
-  runMetaViewItemOutboxBatch,
-  type MetaViewItemBatchSummary
-} from '../../../../lib/analytics/server/runMetaViewItemOutboxBatch'
+  runViewItemOutboxBatch,
+  type ViewItemOutboxBatchSummary
+} from '../../../../lib/analytics/server/runViewItemOutboxBatch'
 
 const CRON_BATCH_SIZE = 10
 
@@ -10,7 +10,7 @@ export const maxDuration = 60
 
 type RunBatch = (input: {
   maxItems: number
-}) => Promise<MetaViewItemBatchSummary>
+}) => Promise<ViewItemOutboxBatchSummary>
 
 export type MetaViewItemOutboxCronDependencies = {
   getCronSecret: () => string | undefined
@@ -19,7 +19,7 @@ export type MetaViewItemOutboxCronDependencies = {
 
 const defaultDependencies: MetaViewItemOutboxCronDependencies = {
   getCronSecret: () => process.env.CRON_SECRET,
-  runBatch: runMetaViewItemOutboxBatch
+  runBatch: runViewItemOutboxBatch
 }
 
 function hasValidAuthorization(

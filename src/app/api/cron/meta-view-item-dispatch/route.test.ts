@@ -28,11 +28,20 @@ function dependencies(secret: string | undefined): {
         calls.push(input.maxItems)
 
         return {
-          acceptedUnverified: 2,
-          claimed: 3,
-          deadLettered: 0,
-          limitReached: false,
-          retryScheduled: 1
+          google: {
+            acceptedUnverified: 1,
+            claimed: 1,
+            deadLettered: 0,
+            limitReached: false,
+            retryScheduled: 0
+          },
+          meta: {
+            acceptedUnverified: 2,
+            claimed: 3,
+            deadLettered: 0,
+            limitReached: false,
+            retryScheduled: 1
+          }
         }
       }
     }
@@ -75,12 +84,21 @@ test('awaits a bounded batch for an authorized cron request', async () => {
   assert.equal(response.headers.get('cache-control'), 'no-store')
   assert.deepEqual(fake.calls, [10])
   assert.deepEqual(await response.json(), {
-    acceptedUnverified: 2,
-    claimed: 3,
-    deadLettered: 0,
-    limitReached: false,
-    ok: true,
-    retryScheduled: 1
+    google: {
+      acceptedUnverified: 1,
+      claimed: 1,
+      deadLettered: 0,
+      limitReached: false,
+      retryScheduled: 0
+    },
+    meta: {
+      acceptedUnverified: 2,
+      claimed: 3,
+      deadLettered: 0,
+      limitReached: false,
+      retryScheduled: 1
+    },
+    ok: true
   })
 })
 

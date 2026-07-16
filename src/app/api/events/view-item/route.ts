@@ -3,7 +3,7 @@ import { after } from 'next/server'
 import { handleCanonicalViewItemRequest } from '@/lib/analytics/server/handleCanonicalViewItemRequest'
 import { handleCanonicalViewItemRoute } from '@/lib/analytics/server/handleCanonicalViewItemRoute'
 import { postgresCanonicalEventStore } from '@/lib/analytics/server/postgresCanonicalPageViewStore'
-import { runMetaViewItemOutboxBatch } from '@/lib/analytics/server/runMetaViewItemOutboxBatch'
+import { runViewItemOutboxBatch } from '@/lib/analytics/server/runViewItemOutboxBatch'
 
 export const maxDuration = 60
 
@@ -32,7 +32,7 @@ export function POST(request: Request) {
         },
         store: postgresCanonicalEventStore
       }),
-    runBatch: runMetaViewItemOutboxBatch,
+    runBatch: runViewItemOutboxBatch,
     scheduleAfter: task => {
       after(task)
     }

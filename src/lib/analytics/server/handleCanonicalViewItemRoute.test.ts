@@ -8,11 +8,20 @@ import {
 type ScheduledTask = () => Promise<void>
 
 const batchSummary = {
-  acceptedUnverified: 1,
-  claimed: 1,
-  deadLettered: 0,
-  limitReached: true,
-  retryScheduled: 0
+  google: {
+    acceptedUnverified: 1,
+    claimed: 1,
+    deadLettered: 0,
+    limitReached: true,
+    retryScheduled: 0
+  },
+  meta: {
+    acceptedUnverified: 1,
+    claimed: 1,
+    deadLettered: 0,
+    limitReached: true,
+    retryScheduled: 0
+  }
 } as const
 
 function createHarness(status: number) {
@@ -89,7 +98,7 @@ for (const status of [204, 400, 403, 413, 415, 500]) {
 
 test('keeps a background failure observable without changing the response', async () => {
   const harness = createHarness(202)
-  const expectedError = new Error('Meta unavailable')
+  const expectedError = new Error('Provider unavailable')
   harness.dependencies.runBatch = async () => {
     throw expectedError
   }
