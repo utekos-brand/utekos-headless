@@ -72,6 +72,35 @@ function stringProperty(
   return typeof candidate === 'string' ? candidate : undefined
 }
 
+function serializeGoogleErrorDetails(
+  error: Record<string, unknown> | undefined
+) {
+  const reason = stringProperty(error, 'reason')
+  const domain = stringProperty(error, 'domain')
+  const errorInfoMetadata = asRecord(error?.errorInfoMetadata)
+  const statusDetails = error?.statusDetails
+
+  if (
+    !reason &&
+    !domain &&
+    !errorInfoMetadata &&
+    statusDetails === undefined
+  ) {
+    return ''
+  }
+
+  try {
+    return ` details=${JSON.stringify({
+      ...(reason ? { reason } : {}),
+      ...(domain ? { domain } : {}),
+      ...(errorInfoMetadata ? { errorInfoMetadata } : {}),
+      ...(statusDetails === undefined ? {} : { statusDetails })
+    })}`
+  } catch {
+    return ''
+  }
+}
+
 function isRetryable(error: unknown) {
   const current = asRecord(error)
   const cause = asRecord(current?.cause)
@@ -103,8 +132,11 @@ function safeErrorMessage(error: unknown) {
   const message =
     stringProperty(current, 'message') ??
     'Unknown Google Data Manager error'
+  const details = serializeGoogleErrorDetails(current)
 
-  return `${name}: ${message}`.replaceAll(/\s+/g, ' ').slice(0, 1000)
+  return `${name}: ${message}${details}`
+    .replaceAll(/\s+/g, ' ')
+    .slice(0, 1000)
 }
 
 export async function processGoogleDataManagerViewItemAttempt(
