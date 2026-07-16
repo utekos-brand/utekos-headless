@@ -8,6 +8,7 @@ type DataManagerParameter =
 
 const GA_CLIENT_ID = /^\d+\.\d+$/
 const GA_COOKIE = /^GA\d+\.\d+\.(\d+\.\d+)$/
+const MAX_ADDITIONAL_ITEM_PARAMETERS = 24
 const SUBDIVISION_CODE = /^[A-Z]{2}-[A-Z0-9]{1,3}$/
 const REGION_PART = /^[A-Z0-9]{1,3}$/
 const {
@@ -77,56 +78,58 @@ function compactParameters(
 function mapItem(
   item: CanonicalViewItem['custom_data']['items'][number]
 ): DataManagerItem {
+  const additionalItemParameters = compactParameters([
+    parameter('item_name', item.item_name),
+    parameter('item_brand', item.item_brand),
+    parameter('item_variant', item.item_variant),
+    parameter('item_category', item.item_category),
+    parameter('item_category2', item.item_category2),
+    parameter('item_category3', item.item_category3),
+    parameter('item_category4', item.item_category4),
+    parameter('item_category5', item.item_category5),
+    parameter('discount', item.discount),
+    parameter('product_id', item.product_id),
+    parameter('variant_id', item.variant_id),
+    parameter('product_handle', item.product_handle),
+    parameter('sku', item.sku),
+    parameter('gtin', item.gtin),
+    parameter('tax_amount', item.tax_amount),
+    parameter('tax_rate', item.tax_rate),
+    parameter('taxable', item.taxable),
+    parameter(
+      'price_includes_tax',
+      item.price_includes_tax
+    ),
+    parameter('gross_unit_price', item.gross_unit_price),
+    parameter(
+      'compare_at_unit_price',
+      item.compare_at_unit_price
+    ),
+    parameter(
+      'gross_compare_at_unit_price',
+      item.gross_compare_at_unit_price
+    ),
+    parameter('gross_discount', item.gross_discount),
+    parameter(
+      'available_for_sale',
+      item.available_for_sale
+    ),
+    parameter(
+      'currently_not_in_stock',
+      item.currently_not_in_stock
+    ),
+    parameter('product_type', item.product_type),
+    parameter(
+      'quantity_available',
+      item.quantity_available
+    )
+  ]).slice(0, MAX_ADDITIONAL_ITEM_PARAMETERS)
+
   return {
     itemId: item.item_id,
     quantity: item.quantity,
     unitPrice: item.unit_price,
-    additionalItemParameters: compactParameters([
-      parameter('item_name', item.item_name),
-      parameter('item_brand', item.item_brand),
-      parameter('item_variant', item.item_variant),
-      parameter('item_category', item.item_category),
-      parameter('item_category2', item.item_category2),
-      parameter('item_category3', item.item_category3),
-      parameter('item_category4', item.item_category4),
-      parameter('item_category5', item.item_category5),
-      parameter('discount', item.discount),
-      parameter('product_id', item.product_id),
-      parameter('variant_id', item.variant_id),
-      parameter('product_handle', item.product_handle),
-      parameter('product_type', item.product_type),
-      parameter('sku', item.sku),
-      parameter('gtin', item.gtin),
-      parameter('tax_amount', item.tax_amount),
-      parameter('tax_rate', item.tax_rate),
-      parameter('taxable', item.taxable),
-      parameter(
-        'price_includes_tax',
-        item.price_includes_tax
-      ),
-      parameter('gross_unit_price', item.gross_unit_price),
-      parameter(
-        'compare_at_unit_price',
-        item.compare_at_unit_price
-      ),
-      parameter(
-        'gross_compare_at_unit_price',
-        item.gross_compare_at_unit_price
-      ),
-      parameter('gross_discount', item.gross_discount),
-      parameter(
-        'available_for_sale',
-        item.available_for_sale
-      ),
-      parameter(
-        'currently_not_in_stock',
-        item.currently_not_in_stock
-      ),
-      parameter(
-        'quantity_available',
-        item.quantity_available
-      )
-    ])
+    additionalItemParameters
   }
 }
 
