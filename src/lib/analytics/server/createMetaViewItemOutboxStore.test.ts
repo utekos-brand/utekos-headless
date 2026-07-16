@@ -155,6 +155,21 @@ test('dead-letters an invalid payload and continues to the next row', async () =
   })
 })
 
+test('claims a legacy canonical payload stored as a JSON string', async () => {
+  const attempt = rawAttempt(JSON.stringify(viewItem()))
+  const fake = fakeDatabase([attempt])
+  const store = createMetaViewItemOutboxStore(fake.database)
+
+  const claimed = await store.claimNext()
+
+  assert.deepEqual(fake.invalid, [])
+  assert.deepEqual(claimed, {
+    attemptCount: attempt.attemptCount,
+    attemptId: attempt.attemptId,
+    event: viewItem()
+  })
+})
+
 test('persists provider acceptance as accepted_unverified', async () => {
   const fake = fakeDatabase([])
   const store = createMetaViewItemOutboxStore(fake.database)

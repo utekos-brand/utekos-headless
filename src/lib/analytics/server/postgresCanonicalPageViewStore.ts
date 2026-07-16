@@ -49,9 +49,9 @@ const runPostgresTransaction: CanonicalPageViewTransactionRunner =
               ${row.idempotency_key},
               ${row.external_id ?? null},
               ${row.source_url},
-              ${JSON.stringify(row.consent)}::jsonb,
-              ${JSON.stringify(row.user_data_quality)}::jsonb,
-              ${JSON.stringify(row.payload)}::jsonb,
+              ${sql.json(row.consent)},
+              ${sql.json(row.user_data_quality)},
+              ${sql.json(row.payload as postgres.JSONValue)},
               ${row.occurred_at}
             )
             on conflict (idempotency_key) do nothing
@@ -80,9 +80,9 @@ const runPostgresTransaction: CanonicalPageViewTransactionRunner =
               ${row.event_name},
               ${row.status},
               now(),
-              ${JSON.stringify(row.payload)}::jsonb,
-              ${JSON.stringify(row.consent_basis)}::jsonb,
-              ${JSON.stringify(row.data_quality)}::jsonb,
+              ${sql.json(row.payload as postgres.JSONValue)},
+              ${sql.json(row.consent_basis)},
+              ${sql.json(row.data_quality)},
               ${row.dispatch_mode}
             )
             on conflict (provider, idempotency_key) do nothing

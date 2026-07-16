@@ -69,6 +69,16 @@ function summarizeInvalidPayload(error: {
   )
 }
 
+function parseStoredPayload(payload: unknown): unknown {
+  if (typeof payload !== 'string') return payload
+
+  try {
+    return JSON.parse(payload)
+  } catch {
+    return payload
+  }
+}
+
 export function createMetaViewItemOutboxStore(
   database: MetaViewItemOutboxDatabase
 ): MetaViewItemOutboxStore {
@@ -83,7 +93,7 @@ export function createMetaViewItemOutboxStore(
         if (!claimed) return null
 
         const parsed = canonicalViewItemSchema.safeParse(
-          claimed.payload
+          parseStoredPayload(claimed.payload)
         )
 
         if (parsed.success) {
