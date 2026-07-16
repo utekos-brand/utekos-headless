@@ -272,21 +272,189 @@ test('maps a canonical view_item to a GA4 Data Manager event', () => {
   })
 })
 
-test('caps optional item parameters at the live Data Manager limit', () => {
+test('caps optional item parameters for every item in an event', () => {
+  const event = viewItem()
+  const firstItem = event.custom_data.items[0]
+
+  assert.ok(firstItem)
+
   const mapped = normalize(
-    mapCanonicalViewItemToGoogleDataManager(viewItem())
+    mapCanonicalViewItemToGoogleDataManager({
+      ...event,
+      custom_data: {
+        ...event.custom_data,
+        items: [
+          firstItem,
+          {
+            ...firstItem,
+            item_id: 'gid://shopify/ProductVariant/2',
+            variant_id: 'gid://shopify/ProductVariant/2'
+          }
+        ]
+      }
+    })
   )
-  const parameters =
-    mapped.cartData?.items?.[0]?.additionalItemParameters ?? []
-  const names = parameters.map(
-    (parameter: { parameterName?: string }) =>
-      parameter.parameterName
+  const items = mapped.cartData?.items ?? []
+
+  assert.equal(items.length, 2)
+
+  for (const item of items) {
+    const parameters = item.additionalItemParameters ?? []
+    const names = parameters.map(
+      (parameter: { parameterName?: string }) =>
+        parameter.parameterName
+    )
+
+    assert.equal(parameters.length, 24)
+    assert.ok(names.includes('currently_not_in_stock'))
+    assert.ok(!names.includes('product_type'))
+    assert.ok(!names.includes('quantity_available'))
+  }
+})
+
+test('normalizes the observed 529-character referrer without mutating the canonical event', () => {
+  const referrerUrl = [
+    'https://utekos.no/skreddersy-varmen?utm_campaign=Sales+Campaign',
+    'utm_source=facebook',
+    'utm_medium=paid',
+    'utm_id=120246491016390788',
+    'hsa_acc=772268237116474',
+    'hsa_cam=120246491016390788',
+    'hsa_grp=120246491016400788',
+    'hsa_ad=120246491016410788',
+    'hsa_src=fb',
+    'hsa_net=facebook',
+    'hsa_ver=3',
+    'fbclid=IwcGRvZgNmZGlkFlCqq5wNEOPlO8uW0HWyK5bsUmHLrnBleHRuA2FlbQEwAGFkaWQBqzOMqNaLVHNydGMGYXBwX2lkCjY2Mjg1NjgzNzkAAR5oK2c2vK6yD8ylw-4pB9IEqTMMVnw4NUb5wHk4yeirsC1SwpaRt5gL06rpXA_aem_TdoHEa1uTQZEmbN3JZ_p4A',
+    'utm_content=120246491016410788',
+    'utm_term=120246491016400788'
+  ].join('&')
+  const canonicalEvent = viewItem({ referrer_url: referrerUrl })
+
+  assert.equal(referrerUrl.length, 529)
+
+  const mapped = normalize(
+    mapCanonicalViewItemToGoogleDataManager(canonicalEvent)
+  )
+  const referrer = mapped.additionalEventParameters?.find(
+    (candidate: { parameterName?: string }) =>
+      candidate.parameterName === 'page_referrer'
   )
 
-  assert.equal(parameters.length, 24)
-  assert.ok(names.includes('currently_not_in_stock'))
-  assert.ok(!names.includes('product_type'))
-  assert.ok(!names.includes('quantity_available'))
+  assert.equal(
+    referrer?.value,
+    'https://utekos.no/skreddersy-varmen'
+  )
+  assert.equal(canonicalEvent.referrer_url, referrerUrl)
+
+  const hashed = normalize(
+    mapCanonicalViewItemToGoogleDataManager(
+      viewItem({
+        referrer_url:
+          'https://utekos.no/produkter?source=test#details'
+      })
+    )
+  )
+  const hashedReferrer =
+    hashed.additionalEventParameters?.find(
+      (candidate: { parameterName?: string }) =>
+        candidate.parameterName === 'page_referrer'
+    )
+
+  assert.equal(
+    hashedReferrer?.value,
+    'https://utekos.no/produkter'
+  )
+})
+
+test('enforces documented GA4 parameter value limits', () => {
+  const longLocation =
+    `https://utekos.no/produkter/comfyrobe?campaign=${'x'.repeat(1100)}`
+  const longTitle = 'T'.repeat(350)
+  const longItemName = 'I'.repeat(150)
+  const longSku = 'S'.repeat(101)
+  const baseEvent = viewItem()
+  const baseItem = baseEvent.custom_data.items[0]
+
+  assert.ok(baseItem)
+
+  const canonicalEvent = viewItem({
+    page_url: longLocation,
+    page_title: longTitle,
+    custom_data: {
+      ...baseEvent.custom_data,
+      items: [
+        {
+          ...baseItem,
+          item_name: longItemName,
+          sku: longSku
+        }
+      ]
+    }
+  })
+
+  const mapped = normalize(
+    mapCanonicalViewItemToGoogleDataManager(canonicalEvent)
+  )
+  const eventParameters = mapped.additionalEventParameters ?? []
+  const itemParameters =
+    mapped.cartData?.items?.[0]?.additionalItemParameters ?? []
+  const pageLocation = eventParameters.find(
+    (candidate: { parameterName?: string }) =>
+      candidate.parameterName === 'page_location'
+  )
+  const pageTitle = eventParameters.find(
+    (candidate: { parameterName?: string }) =>
+      candidate.parameterName === 'page_title'
+  )
+  const itemName = itemParameters.find(
+    (candidate: { parameterName?: string }) =>
+      candidate.parameterName === 'item_name'
+  )
+  const sku = itemParameters.find(
+    (candidate: { parameterName?: string }) =>
+      candidate.parameterName === 'sku'
+  )
+
+  assert.ok(String(pageLocation?.value).length <= 1000)
+  assert.equal(String(pageTitle?.value).length, 300)
+  assert.equal(String(itemName?.value).length, 100)
+  assert.equal(sku, undefined)
+  assert.equal(canonicalEvent.page_url, longLocation)
+  assert.equal(canonicalEvent.page_title, longTitle)
+})
+
+test('counts encoded URLs and Unicode parameter values safely', () => {
+  const pageUrl = `https://utekos.no/produkter/${'å'.repeat(400)}`
+  const pageTitle = `${'T'.repeat(299)}🏕️mer`
+  const canonicalEvent = viewItem({
+    page_url: pageUrl,
+    page_title: pageTitle
+  })
+
+  const mapped = normalize(
+    mapCanonicalViewItemToGoogleDataManager(canonicalEvent)
+  )
+  const eventParameters = mapped.additionalEventParameters ?? []
+  const pageLocation = eventParameters.find(
+    (candidate: { parameterName?: string }) =>
+      candidate.parameterName === 'page_location'
+  )
+  const mappedPageTitle = eventParameters.find(
+    (candidate: { parameterName?: string }) =>
+      candidate.parameterName === 'page_title'
+  )
+
+  assert.ok(String(pageLocation?.value).length <= 1000)
+  assert.ok(!String(pageLocation?.value).endsWith('%'))
+  assert.ok(!/%[0-9A-F]$/i.test(String(pageLocation?.value)))
+  assert.equal(
+    Array.from(String(mappedPageTitle?.value)).length,
+    300
+  )
+  assert.ok(!String(mappedPageTitle?.value).endsWith('\uFFFD'))
+  assert.equal(canonicalEvent.page_url, pageUrl)
+  assert.equal(canonicalEvent.page_title, pageTitle)
 })
 
 test('fails closed without analytics consent', () => {
