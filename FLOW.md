@@ -1,6 +1,6 @@
 # FLOW - tracking, observability og kommersiell innsikt
 
-Statusdato: 2026-07-15.
+Statusdato: 2026-07-16.
 
 Dette dokumentet er den operative flytbeskrivelsen for hvordan
 Utekos skal samle inn, lagre, levere og bruke analytics-,
@@ -32,6 +32,26 @@ resetten består kun av:
 - Google Tag Manager via førstepartsruten `/__gtg`.
 - Google server-side tagging via førstepartsruten `/__sgtm`.
 
+En avgrenset kanonisk storefront-flyt ble reintrodusert og
+produksjonsverifisert 2026-07-16:
+
+- `POST /api/events/page-view` og `POST /api/events/view-item`
+  validerer samtykkede events og lagrer kanonisk JSONB i
+  `marketing.event_ledger`.
+- `view_item` oppretter separate provider-rader i
+  `ops.provider_dispatch_attempts`. Meta og Google Data Manager
+  deler kanonisk payload, men har uavhengig status, claim og retry.
+- Next.js `after()` starter Meta/Google-dispatch etter 202-responsen.
+  Den autoriserte `/api/cron/meta-view-item-dispatch`-ruten bruker
+  samme claim-batch og er den varige retry-garantien.
+- Google bruker Vercel OIDC/WIF og står fortsatt i
+  `GOOGLE_DATA_MANAGER_VALIDATE_ONLY=true`. Live browser-event
+  `5aaf2d4c-6f58-47f5-9ddd-a887baf49e8d` ble validert av Data
+  Manager og lagret som `accepted_unverified` med request-ID
+  `v-0a11d206-0bc7-4d82-a190-b62d0446b7d4`.
+- Microsoft UET-intentet lagres fortsatt, men workerstatusen var ikke
+  del av denne aktiveringen og live-raden står `pending`.
+
 GTM får laste før samtykke for Advanced Consent Mode og cookieless
 pings. Meta, Microsoft, Clarity og øvrige ikke-Google-tagger skal
 fortsatt være blokkert av consent-gates i GTM. `/__sgtm` er alltid
@@ -45,24 +65,26 @@ nytt. Dette hindrer dobbel Cookiebot uten GTM-publisering, samtidig som
 samtykkede custom templates kan kjøre etterpå. Tag `126` skal fjernes i
 en separat, eksplisitt godkjent GTM-release.
 
-Følgende tidligere appimplementasjoner er fjernet og skal behandles
-som åpne gap, ikke som aktive eller verifiserte flater:
+Følgende tidligere appimplementasjoner utover den avgrensede flyten
+over er fortsatt fjernet og skal behandles som åpne gap, ikke som
+aktive eller verifiserte flater:
 
 - browser tracking hub, direkte Meta/Microsoft/PostHog-klientkode og
   produkt-/kampanje-trackere;
 - `/api/tracking-events`, consent snapshots, checkout-attribusjon,
   tracking receipts og analytics-ruter;
-- Supabase ledger/provider-kø, retry/dead-letter-dispatch og
-  ordre-/refund-webhooks;
-- provider-adaptere for Meta CAPI, GA4 Measurement Protocol og
-  Microsoft UET CAPI;
-- tracking-, katalog- og provider-crons som tidligere var koblet til
-  Vercel.
+- øvrige eventers provider-dispatch, ordre-/refund-webhooks og den
+  tidligere generiske retry/dead-letter-runtime;
+- provider-adaptere utover aktiv Meta `ViewContent` og Google Data
+  Manager validate-only for `view_item`, inkludert direkte GA4
+  Measurement Protocol og Microsoft UET CAPI;
+- tracking-, katalog- og provider-crons utover den aktive
+  `view_item`-cronruten som tidligere var koblet til Vercel.
 
-Supabase kan fortsatt være det fremtidige kanoniske lageret, og
-PostHog kan fortsatt være ønsket produktanalyse, men ingen av dem må
-omtales som aktiv storefront-tracking før de er innført på nytt,
-samtykkeverifisert og produksjonstestet.
+Supabase er nå kanonisk lager for den reintroduserte `page_view`- og
+`view_item`-flaten. PostHog kan fortsatt være ønsket produktanalyse,
+men må ikke omtales som aktiv storefront-tracking før den er innført
+på nytt, samtykkeverifisert og produksjonstestet.
 
 ## 1. Målbildet: komplett end-to-end-flyt
 
