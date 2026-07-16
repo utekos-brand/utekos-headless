@@ -1,4 +1,5 @@
 import { captureException } from '@sentry/nextjs'
+import { enrichCanonicalViewItemWithGoogleAnalyticsIds } from './googleAnalyticsBrowserIds'
 import type { ConsentSnapshot } from './pageViewEvent'
 import type { CanonicalViewItem } from './viewItemEvent'
 
@@ -41,7 +42,9 @@ type ViewItemCollectorTransportDependencies = {
   resolveCurrentCollection: (
     event: CanonicalViewItem
   ) => ResolvedViewItemCollection
-  subscribeToConsentChanges: (listener: () => void) => () => void
+  subscribeToConsentChanges: (
+    listener: () => void
+  ) => () => void
 }
 
 function compactRecord(
@@ -53,7 +56,9 @@ function compactRecord(
     if (value) record[key] = value
   }
 
-  return Object.keys(record).length > 0 ? record : undefined
+  return Object.keys(record).length > 0 ?
+      record
+    : undefined
 }
 
 function readCookie(name: string): string | undefined {
@@ -140,9 +145,13 @@ export function applyViewItemCollectionContext(
     context.consent.preferences === 'granted'
 
   const browserId = {
-    ...(analyticsGranted ? context.analyticsBrowserId : {}),
+    ...(analyticsGranted ?
+      context.analyticsBrowserId
+    : {}),
     ...(marketingGranted ? event.browser_id : {}),
-    ...(marketingGranted ? context.marketingBrowserId : {})
+    ...(marketingGranted ?
+      context.marketingBrowserId
+    : {})
   }
 
   if (Object.keys(browserId).length > 0) {
@@ -150,7 +159,10 @@ export function applyViewItemCollectionContext(
   }
 
   if (marketingGranted) {
-    const clickId = { ...event.click_id, ...context.clickId }
+    const clickId = {
+      ...event.click_id,
+      ...context.clickId
+    }
 
     if (Object.keys(clickId).length > 0) {
       nextEvent.click_id = clickId
@@ -183,13 +195,15 @@ function resolveBrowserCollection(
   event: CanonicalViewItem
 ): ResolvedViewItemCollection {
   const cookiebot =
-    typeof window === 'undefined' ? undefined : (
-      (window as CookiebotWindow).Cookiebot
-    )
+    typeof window === 'undefined' ?
+      undefined
+    : (window as CookiebotWindow).Cookiebot
+
   const consent = resolveConsent(
     cookiebot,
     event.consent.version
   )
+
   const context: ViewItemCollectionContext = {
     consent,
     hasResponse:
@@ -209,7 +223,10 @@ function resolveBrowserCollection(
           ['fbp', readCookie('_fbp')],
           ['fbc', readCookie('_fbc')],
           ['gcl_au', readCookie('_gcl_au')],
-          ['uet_msclkid', readCookie('_uetmsclkid')],
+          [
+            'uet_msclkid',
+            readCookie('_uetmsclkid')
+          ],
           ['uet_sid', readCookie('_uetsid')],
           ['uet_vid', readCookie('_uetvid')]
         ])
@@ -219,7 +236,10 @@ function resolveBrowserCollection(
 
   return {
     context,
-    event: applyViewItemCollectionContext(event, context)
+    event: applyViewItemCollectionContext(
+      event,
+      context
+    )
   }
 }
 
@@ -240,12 +260,21 @@ function subscribeToCookiebotChanges(
 }
 
 function isRetryableStatus(status: number) {
-  return status === 408 || status === 429 || status >= 500
+  return (
+    status === 408 ||
+    status === 429 ||
+    status >= 500
+  )
 }
 
 async function postCanonicalViewItem(
   event: CanonicalViewItem
 ): Promise<void> {
+  const enrichedEvent =
+    await enrichCanonicalViewItemWithGoogleAnalyticsIds(
+      event
+    )
+
   for (let attempt = 0; attempt < 2; attempt += 1) {
     let response: Response
 
@@ -256,7 +285,7 @@ async function postCanonicalViewItem(
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(event),
+        body: JSON.stringify(enrichedEvent),
         cache: 'no-store',
         credentials: 'same-origin',
         keepalive: true
@@ -268,7 +297,10 @@ async function postCanonicalViewItem(
 
     if (response.ok) return
 
-    if (attempt === 1 || !isRetryableStatus(response.status)) {
+    if (
+      attempt === 1 ||
+      !isRetryableStatus(response.status)
+    ) {
       throw new Error(
         `View-item collector returned ${response.status}`
       )
@@ -285,7 +317,9 @@ function reportCollectorError(error: unknown) {
   })
 }
 
-function hasCollectionConsent(event: CanonicalViewItem) {
+function hasCollectionConsent(
+  event: CanonicalViewItem
+) {
   return (
     event.consent.analytics === 'granted' ||
     event.consent.marketing === 'granted'
@@ -303,6 +337,7 @@ export function createViewItemCollectorTransport(
 
     const finish = () => {
       if (finished) return
+
       finished = true
       unsubscribe()
     }
@@ -315,9 +350,11 @@ export function createViewItemCollectorTransport(
 
       if (hasCollectionConsent(current.event)) {
         finish()
+
         void dependencies
           .postEvent(current.event)
           .catch(dependencies.reportError)
+
         return
       }
 
@@ -330,7 +367,10 @@ export function createViewItemCollectorTransport(
 
     if (!finished) {
       unsubscribe =
-        dependencies.subscribeToConsentChanges(evaluate)
+        dependencies.subscribeToConsentChanges(
+          evaluate
+        )
+
       evaluate()
     }
 
@@ -343,13 +383,16 @@ const startBrowserViewItemCollector =
     postEvent: postCanonicalViewItem,
     reportError: reportCollectorError,
     resolveCurrentCollection: resolveBrowserCollection,
-    subscribeToConsentChanges: subscribeToCookiebotChanges
+    subscribeToConsentChanges:
+      subscribeToCookiebotChanges
   })
 
 export function startViewItemCollectorTransport(
   event: CanonicalViewItem
 ): () => void {
-  if (typeof window === 'undefined') return () => {}
+  if (typeof window === 'undefined') {
+    return () => {}
+  }
 
   return startBrowserViewItemCollector(event)
 }
