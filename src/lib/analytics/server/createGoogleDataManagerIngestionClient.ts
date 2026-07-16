@@ -134,12 +134,12 @@ export function readGoogleDataManagerAuthConfig(
   )
 
   if (
-    !/^https:\/\/iam\.googleapis\.com\/projects\/\d+\/locations\/global\/workloadIdentityPools\/[A-Za-z0-9._-]+\/providers\/[A-Za-z0-9._-]+$/.test(
+    !/^\/\/iam\.googleapis\.com\/projects\/\d+\/locations\/global\/workloadIdentityPools\/[A-Za-z0-9._-]+\/providers\/[A-Za-z0-9._-]+$/.test(
       audience
     )
   ) {
     throw new Error(
-      'GCP_AUDIENCE must be a Google Workload Identity provider URL'
+      'GCP_AUDIENCE must be a canonical Google Workload Identity provider resource name'
     )
   }
 
