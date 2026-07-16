@@ -365,6 +365,28 @@ test('normalizes the observed 529-character referrer without mutating the canoni
     hashedReferrer?.value,
     'https://utekos.no/produkter'
   )
+
+  const longPathReferrer =
+    `https://utekos.no/${'r'.repeat(500)}?source=test#details`
+  const longPathCanonicalEvent = viewItem({
+    referrer_url: longPathReferrer
+  })
+  const longPathMapped = normalize(
+    mapCanonicalViewItemToGoogleDataManager(
+      longPathCanonicalEvent
+    )
+  )
+  const boundedReferrer =
+    longPathMapped.additionalEventParameters?.find(
+      (candidate: { parameterName?: string }) =>
+        candidate.parameterName === 'page_referrer'
+    )
+
+  assert.equal(String(boundedReferrer?.value).length, 420)
+  assert.equal(
+    longPathCanonicalEvent.referrer_url,
+    longPathReferrer
+  )
 })
 
 test('enforces documented GA4 parameter value limits', () => {
