@@ -9,6 +9,10 @@ type DataManagerParameter =
 const GA_CLIENT_ID = /^\d+\.\d+$/
 const GA_COOKIE = /^GA\d+\.\d+\.(\d+\.\d+)$/
 const MAX_ADDITIONAL_ITEM_PARAMETERS = 24
+const MAX_PARAMETER_VALUE_LENGTH = 100
+const MAX_PAGE_LOCATION_LENGTH = 1000
+const MAX_PAGE_REFERRER_LENGTH = 420
+const MAX_PAGE_TITLE_LENGTH = 300
 const SUBDIVISION_CODE = /^[A-Z]{2}-[A-Z0-9]{1,3}$/
 const REGION_PART = /^[A-Z0-9]{1,3}$/
 const {
@@ -57,13 +61,88 @@ function mapTimestamp(eventTime: string) {
 
 function parameter(
   parameterName: string,
-  value: string | number | boolean | null | undefined
+  value: string | number | boolean | null | undefined,
+  maxLength = MAX_PARAMETER_VALUE_LENGTH
 ): DataManagerParameter | undefined {
   if (value === undefined || value === null || value === '') {
     return undefined
   }
 
-  return { parameterName, value: String(value) }
+  return {
+    parameterName,
+    value: Array.from(String(value)).slice(0, maxLength).join('')
+  }
+}
+
+function identifierParameter(
+  parameterName: string,
+  value: string | null | undefined
+) {
+  if (
+    !value
+    || Array.from(value).length > MAX_PARAMETER_VALUE_LENGTH
+  ) {
+    return undefined
+  }
+
+  return { parameterName, value }
+}
+
+function truncateUrlToOriginAndPathname(
+  url: URL,
+  maxLength: number
+) {
+  const availablePathLength = maxLength - url.origin.length
+
+  if (availablePathLength < 1) return undefined
+
+  let pathname = url.pathname.slice(0, availablePathLength)
+  const lastPercent = pathname.lastIndexOf('%')
+
+  if (lastPercent >= pathname.length - 2) {
+    pathname = pathname.slice(0, lastPercent)
+  }
+
+  return `${url.origin}${pathname}`
+}
+
+function normalizeReferrerUrl(value: string | undefined) {
+  if (!value) return undefined
+
+  const url = new URL(value)
+  const normalized = `${url.origin}${url.pathname}`
+
+  if (normalized.length <= MAX_PAGE_REFERRER_LENGTH) {
+    return normalized
+  }
+
+  return truncateUrlToOriginAndPathname(
+    url,
+    MAX_PAGE_REFERRER_LENGTH
+  )
+}
+
+function limitPageLocation(value: string) {
+  const url = new URL(value)
+
+  if (url.href.length <= MAX_PAGE_LOCATION_LENGTH) return value
+
+  url.hash = ''
+
+  if (url.href.length <= MAX_PAGE_LOCATION_LENGTH) {
+    return url.href
+  }
+
+  url.search = ''
+
+  if (url.href.length <= MAX_PAGE_LOCATION_LENGTH) {
+    return url.href
+  }
+
+  return truncateUrlToOriginAndPathname(
+    url,
+    MAX_PAGE_LOCATION_LENGTH
+  ) ?? url.origin
 }
 
 function compactParameters(
@@ -88,11 +167,11 @@ function mapItem(
     parameter('item_category4', item.item_category4),
     parameter('item_category5', item.item_category5),
     parameter('discount', item.discount),
-    parameter('product_id', item.product_id),
-    parameter('variant_id', item.variant_id),
+    identifierParameter('product_id', item.product_id),
+    identifierParameter('variant_id', item.variant_id),
     parameter('product_handle', item.product_handle),
-    parameter('sku', item.sku),
-    parameter('gtin', item.gtin),
+    identifierParameter('sku', item.sku),
+    identifierParameter('gtin', item.gtin),
     parameter('tax_amount', item.tax_amount),
     parameter('tax_rate', item.tax_rate),
     parameter('taxable', item.taxable),
@@ -245,11 +324,23 @@ function mapEventLocation(event: CanonicalViewItem) {
 
 function mapEventParameters(event: CanonicalViewItem) {
   return compactParameters([
-    parameter('event_id', event.event_id),
-    parameter('page_view_id', event.page_view_id),
-    parameter('page_location', event.page_url),
-    parameter('page_title', event.page_title),
-    parameter('page_referrer', event.referrer_url),
+    identifierParameter('event_id', event.event_id),
+    identifierParameter('page_view_id', event.page_view_id),
+    parameter(
+      'page_location',
+      limitPageLocation(event.page_url),
+      MAX_PAGE_LOCATION_LENGTH
+    ),
+    parameter(
+      'page_title',
+      event.page_title,
+      MAX_PAGE_TITLE_LENGTH
+    ),
+    parameter(
+      'page_referrer',
+      normalizeReferrerUrl(event.referrer_url),
+      MAX_PAGE_REFERRER_LENGTH
+    ),
     parameter(
       'session_id',
       event.browser_id?.ga_session_id
