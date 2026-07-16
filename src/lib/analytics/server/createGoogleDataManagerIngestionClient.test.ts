@@ -57,7 +57,7 @@ test('uses local Application Default Credentials outside Vercel', () => {
 
 test('builds a scoped external account client on Vercel', async () => {
   const audience =
-    'https://iam.googleapis.com/projects/123456789/locations/global/workloadIdentityPools/vercel/providers/vercel'
+    '//iam.googleapis.com/projects/123456789/locations/global/workloadIdentityPools/vercel/providers/vercel'
 
   const externalAuthClient =
     {} as BaseExternalAccountClient
@@ -181,7 +181,7 @@ test('rejects incomplete or unsafe Vercel auth configuration', () => {
     () =>
       readGoogleDataManagerAuthConfig({
         GCP_AUDIENCE:
-          'https://example.com/provider',
+          'https://iam.googleapis.com/projects/123/locations/global/workloadIdentityPools/vercel/providers/vercel',
         GCP_PROJECT_ID:
           'utekos-production',
         GCP_SERVICE_ACCOUNT_EMAIL:
@@ -195,7 +195,7 @@ test('rejects incomplete or unsafe Vercel auth configuration', () => {
     () =>
       readGoogleDataManagerAuthConfig({
         GCP_AUDIENCE:
-          'https://iam.googleapis.com/projects/123/locations/global/workloadIdentityPools/vercel/providers/vercel',
+          '//iam.googleapis.com/projects/123/locations/global/workloadIdentityPools/vercel/providers/vercel',
         GCP_PROJECT_ID:
           'utekos-production',
         GCP_SERVICE_ACCOUNT_EMAIL:
