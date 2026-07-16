@@ -232,7 +232,6 @@ test('maps a canonical view_item to a GA4 Data Manager event', () => {
               parameterName: 'product_handle',
               value: 'comfyrobe'
             },
-            { parameterName: 'product_type', value: 'Skalljakke' },
             {
               parameterName: 'sku',
               value: 'COMFYROBE-FJELLNATT-XS'
@@ -265,16 +264,29 @@ test('maps a canonical view_item to a GA4 Data Manager event', () => {
             {
               parameterName: 'currently_not_in_stock',
               value: 'false'
-            },
-            {
-              parameterName: 'quantity_available',
-              value: '20'
             }
           ]
         }
       ]
     }
   })
+})
+
+test('caps optional item parameters at the live Data Manager limit', () => {
+  const mapped = normalize(
+    mapCanonicalViewItemToGoogleDataManager(viewItem())
+  )
+  const parameters =
+    mapped.cartData?.items?.[0]?.additionalItemParameters ?? []
+  const names = parameters.map(
+    (parameter: { parameterName?: string }) =>
+      parameter.parameterName
+  )
+
+  assert.equal(parameters.length, 24)
+  assert.ok(names.includes('currently_not_in_stock'))
+  assert.ok(!names.includes('product_type'))
+  assert.ok(!names.includes('quantity_available'))
 })
 
 test('fails closed without analytics consent', () => {
