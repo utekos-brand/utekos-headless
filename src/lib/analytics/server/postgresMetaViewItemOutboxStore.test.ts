@@ -109,9 +109,9 @@ test('stores Meta acceptance as accepted_unverified', async () => {
   )
   assert.deepEqual(fake.calls[0]?.parameters, [
     '7bcd24a4-190c-4eca-a834-5c9854bd54ea',
-    JSON.stringify(succeededOutcome().receipt.result),
+    succeededOutcome().receipt.result,
     'meta-trace-1',
-    JSON.stringify({ events_received: 1, processed_entries: 1 }),
+    { events_received: 1, processed_entries: 1 },
     125
   ])
 })

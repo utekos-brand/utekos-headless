@@ -246,9 +246,9 @@ export function createPostgresMetaViewItemOutboxDatabase(
         ACCEPTED_UNVERIFIED_QUERY,
         [
           outcome.attemptId,
-          JSON.stringify(result),
+          result,
           result.fbTraceId ?? null,
-          JSON.stringify(validationResult),
+          validationResult,
           outcome.latencyMs
         ]
       )
