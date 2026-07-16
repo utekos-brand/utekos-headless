@@ -23,11 +23,11 @@ type CookiebotApi = {
 type CookiebotWindow = Window & { Cookiebot?: CookiebotApi }
 
 export type ViewItemCollectionContext = {
-  analyticsBrowserId?: Record<string, string>
-  clickId?: Record<string, string>
+  analyticsBrowserId?: Record<string, string> | undefined
+  clickId?: Record<string, string> | undefined
   consent: ConsentSnapshot
   hasResponse: boolean
-  marketingBrowserId?: Record<string, string>
+  marketingBrowserId?: Record<string, string> | undefined
 }
 
 export type ResolvedViewItemCollection = {
@@ -190,33 +190,31 @@ function resolveBrowserCollection(
     cookiebot,
     event.consent.version
   )
-  const analyticsBrowserId =
-    consent.analytics === 'granted' ?
-      compactRecord([['ga_cookie', readCookie('_ga')]])
-    : undefined
-  const clickId =
-    consent.marketing === 'granted' ?
-      readClickIds(event.page_url)
-    : undefined
-  const marketingBrowserId =
-    consent.marketing === 'granted' ?
-      compactRecord([
-        ['fbp', readCookie('_fbp')],
-        ['fbc', readCookie('_fbc')],
-        ['gcl_au', readCookie('_gcl_au')],
-        ['uet_msclkid', readCookie('_uetmsclkid')],
-        ['uet_sid', readCookie('_uetsid')],
-        ['uet_vid', readCookie('_uetvid')]
-      ])
-    : undefined
   const context: ViewItemCollectionContext = {
     consent,
     hasResponse:
       cookiebot?.hasResponse === true ||
       cookiebot?.declined === true,
-    ...(analyticsBrowserId ? { analyticsBrowserId } : {}),
-    ...(clickId ? { clickId } : {}),
-    ...(marketingBrowserId ? { marketingBrowserId } : {})
+    ...(consent.analytics === 'granted' ?
+      {
+        analyticsBrowserId: compactRecord([
+          ['ga_cookie', readCookie('_ga')]
+        ])
+      }
+    : {}),
+    ...(consent.marketing === 'granted' ?
+      {
+        clickId: readClickIds(event.page_url),
+        marketingBrowserId: compactRecord([
+          ['fbp', readCookie('_fbp')],
+          ['fbc', readCookie('_fbc')],
+          ['gcl_au', readCookie('_gcl_au')],
+          ['uet_msclkid', readCookie('_uetmsclkid')],
+          ['uet_sid', readCookie('_uetsid')],
+          ['uet_vid', readCookie('_uetvid')]
+        ])
+      }
+    : {})
   }
 
   return {
