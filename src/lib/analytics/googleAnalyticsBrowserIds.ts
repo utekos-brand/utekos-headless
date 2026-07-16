@@ -54,9 +54,12 @@ function getGoogleTagValue(
 }
 
 const defaultDependencies: GoogleAnalyticsBrowserIdDependencies = {
-  clearTimer: clearTimeout,
+  clearTimer: timer => {
+    clearTimeout(timer)
+  },
   getGoogleTagValue,
-  setTimer: setTimeout,
+  setTimer: (callback, timeoutMs) =>
+    setTimeout(callback, timeoutMs),
   timeoutMs: GOOGLE_TAG_TIMEOUT_MS
 }
 
