@@ -86,3 +86,48 @@ test('dead-letters a permanent validation failure', async () => {
     assert.equal(outcome.reason, 'permanent_error')
   }
 })
+
+test('persists structured Google error details for provider diagnosis', async () => {
+  const outcome = await processGoogleDataManagerViewItemAttempt(
+    { attemptCount: 1, attemptId: 'google-attempt-1', event },
+    {
+      dispatch: async () => {
+        const error = new Error('invalid request') as Error & {
+          code: number
+          domain: string
+          errorInfoMetadata: Record<string, string>
+          reason: string
+          statusDetails: Array<Record<string, unknown>>
+        }
+        error.code = 3
+        error.domain = 'datamanager.googleapis.com'
+        error.errorInfoMetadata = { requestId: 'request-1' }
+        error.reason = 'INVALID_ARGUMENT'
+        error.statusDetails = [
+          {
+            fieldViolations: [
+              {
+                description: 'Resource not found.',
+                field: 'destinations.product_destination_id'
+              }
+            ]
+          }
+        ]
+        throw error
+      },
+      now: (() => {
+        const values = [1000, 1125]
+        return () => values.shift() ?? 1125
+      })()
+    }
+  )
+
+  assert.equal(outcome.status, 'dead_lettered')
+  if (outcome.status === 'dead_lettered') {
+    assert.match(outcome.errorMessage, /request-1/)
+    assert.match(
+      outcome.errorMessage,
+      /destinations\.product_destination_id/
+    )
+  }
+})
