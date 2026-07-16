@@ -1,6 +1,6 @@
 # Canonical events
 
-Status date: 2026-07-15
+Status date: 2026-07-16
 
 The application owns event meaning. GTM and sGTM are delivery
 adapters, not the event inventory or source of truth.
@@ -10,7 +10,7 @@ adapters, not the event inventory or source of truth.
 | Event       | Owner               | Detection                                                      | Delivery                                                                              | Status                                                                                  |
 | ----------- | ------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
 | `page_view` | Next.js application | Initial render and App Router URL change                       | `dataLayer` -> web GTM -> `/__sgtm` -> GA4, plus consent-aware first-party collection | Deployed; live browser contract verified without optional consent                        |
-| `view_item` | Next.js application | First resolved product and selected variant for a product page | `dataLayer` -> web GTM, plus consent-aware first-party collection                     | Deployed; live dataLayer contract verified, GTM/provider publish remains a separate gate  |
+| `view_item` | Next.js application | First resolved product and selected variant for a product page | `dataLayer` -> web GTM -> `/__sgtm`, plus canonical ledger and separate Meta/Google outbox rows | Deployed; live browser, `after()`, Meta and Google Data Manager validate-only paths verified |
 
 GA4 Enhanced Measurement page views, browser-history page views
 and the Google tag's automatic `send_page_view` must remain
@@ -73,11 +73,32 @@ and coarse location with `@vercel/functions`. Raw database errors
 and event payloads are not returned or logged.
 
 For `page_view` and `view_item`, marketing consent creates
-server-retry intents for Meta and Microsoft UET. Google is
-deliberately excluded from this outbox: GTG, web GTM and
-same-origin sGTM remain the Google delivery path. Google Data
-Manager is reserved for qualified server and commerce events
-where it does not duplicate the active sGTM event.
+server-retry intents for Meta and Microsoft UET. A qualified
+`view_item` with analytics consent also creates a separate Google
+Data Manager server-retry intent in the same transaction. Meta and
+Google consume the same canonical payload but own independent rows,
+attempt counts, statuses and retry histories.
+
+After a successful collection response, Next.js `after()` starts a
+combined Meta/Google claim batch. Delivery does not depend on
+`after()`: the authenticated
+`/api/cron/meta-view-item-dispatch` route invokes the same batch and
+can reclaim due, retry-scheduled or stale-processing Google rows.
+Google authenticates with Vercel OIDC and Google Workload Identity
+Federation, then sends to Data Manager with
+`GOOGLE_DATA_MANAGER_VALIDATE_ONLY=true`. A validated response is
+stored as `accepted_unverified`, including request and validation
+metadata. The adapter caps `additionalItemParameters` at the live
+provider limit of 24; the canonical ledger retains every source
+field.
+
+The production validation event
+`5aaf2d4c-6f58-47f5-9ddd-a887baf49e8d` reached Meta and Google on
+their first independent attempts. Google returned request ID
+`v-0a11d206-0bc7-4d82-a190-b62d0446b7d4` with validate-only
+acceptance. Enabling executed Google ingestion remains a separate
+release gate because the existing web GTM/sGTM `view_item` path must
+not be double-counted.
 
 Microsoft UET CAPI maps `page_view_id` to `pageLoadId` and uses
 `event_id` for deduplication. Microsoft ID sync remains a
