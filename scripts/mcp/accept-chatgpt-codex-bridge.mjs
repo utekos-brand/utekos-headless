@@ -25,6 +25,7 @@ const canonicalToolNames = [
   'codex_bridge_bootstrap',
   'ask_utekos_codex',
   'implement_utekos_change',
+  'deliver_utekos_change',
   'continue_utekos_codex',
   'get_utekos_codex_result',
   'codex_bridge_status'
@@ -32,10 +33,11 @@ const canonicalToolNames = [
 const requiredObservedTools = [
   'codex_bridge_bootstrap',
   'implement_utekos_change',
-  'get_utekos_codex_result'
+  'get_utekos_codex_result',
+  'deliver_utekos_change'
 ]
 const acceptancePrompt =
-  'Use the Utekos Codex Bridge app. Call codex_bridge_bootstrap, then call implement_utekos_change with this request: "Create CODEX_BRIDGE_CHATGPT_ACCEPTANCE.md in the repository root with exactly one line: ChatGPT to Codex isolated write accepted. Verify the file content and git status. Do not change any other file." Poll get_utekos_codex_result with the returned job_id until completed. Return thread_id, branch, worktree_path, changed_files, git_status, diff_stat, and the Codex summary. Do not commit, push, merge, deploy, publish GTM, or mutate an external provider.'
+  'Use the Utekos Codex Bridge app. Call codex_bridge_bootstrap, then call implement_utekos_change with this request: "Create CODEX_BRIDGE_CHATGPT_ACCEPTANCE.md in the repository root with exactly one line: ChatGPT to Codex isolated write accepted. Verify the file content and git status. Do not change any other file." Poll get_utekos_codex_result with the returned job_id until completed. After confirming that verification passed, call deliver_utekos_change with that thread_id, commit_message "test: verify ChatGPT Codex Bridge delivery", verification_confirmation CONFIRM_VERIFICATION_PASSED, and push_to_origin false. Return thread_id, branch, worktree_path, changed_files, git_status, diff_stat, commit_sha, pushed, and the Codex summary. Do not push, merge, deploy, publish GTM, or mutate an external provider.'
 
 function hasFlag(name) {
   return args.includes(name)
