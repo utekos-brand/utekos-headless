@@ -1,10 +1,10 @@
-import type { MetaViewItemBatchSummary } from './runMetaViewItemOutboxBatch'
+import type { ViewItemOutboxBatchSummary } from './runViewItemOutboxBatch'
 
 const IMMEDIATE_BATCH_SIZE = 1
 
 type RunBatch = (input: {
   maxItems: number
-}) => Promise<MetaViewItemBatchSummary>
+}) => Promise<ViewItemOutboxBatchSummary>
 
 export type CanonicalViewItemRouteDependencies = {
   collect: (request: Request) => Promise<Response>
@@ -24,15 +24,15 @@ export async function handleCanonicalViewItemRoute(
 
   if (shouldScheduleImmediateDispatch(response.status)) {
     dependencies.scheduleAfter(async () => {
-      console.info('[meta-view-item-after] started')
+      console.info('[view-item-outbox-after] started')
 
       try {
         const summary = await dependencies.runBatch({
           maxItems: IMMEDIATE_BATCH_SIZE
         })
-        console.info('[meta-view-item-after] completed', summary)
+        console.info('[view-item-outbox-after] completed', summary)
       } catch (error) {
-        console.error('[meta-view-item-after] failed', error)
+        console.error('[view-item-outbox-after] failed', error)
         throw error
       }
     })

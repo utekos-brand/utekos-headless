@@ -119,14 +119,17 @@ export async function sendGoogleDataManagerEvent(
     )
   }
 
+  const analyticsPropertyAccount =
+    ProductAccount.create({
+      accountId: config.propertyId,
+      accountType:
+        ProductAccount.AccountType
+          .GOOGLE_ANALYTICS_PROPERTY
+    })
+
   const destination = Destination.create({
-    operatingAccount:
-      ProductAccount.create({
-        accountId: config.propertyId,
-        accountType:
-          ProductAccount.AccountType
-            .GOOGLE_ANALYTICS_PROPERTY
-      }),
+    loginAccount: analyticsPropertyAccount,
+    operatingAccount: analyticsPropertyAccount,
     productDestinationId:
       GA_MEASUREMENT_ID
   })

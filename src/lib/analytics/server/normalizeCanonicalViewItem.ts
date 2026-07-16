@@ -61,7 +61,29 @@ export function normalizeCanonicalViewItem(
   if (location) normalized.location = location
 
   if (!hasMarketingConsent) {
-    delete normalized.browser_id
+    const analyticsBrowserId = {
+      ...(parsed.browser_id?.ga_client ?
+        { ga_client: parsed.browser_id.ga_client }
+      : {}),
+      ...(parsed.browser_id?.ga_client_id ?
+        { ga_client_id: parsed.browser_id.ga_client_id }
+      : {}),
+      ...(parsed.browser_id?.ga_cookie ?
+        { ga_cookie: parsed.browser_id.ga_cookie }
+      : {}),
+      ...(parsed.browser_id?.ga_session_id ?
+        { ga_session_id: parsed.browser_id.ga_session_id }
+      : {})
+    }
+
+    if (
+      parsed.consent.analytics === 'granted' &&
+      Object.keys(analyticsBrowserId).length > 0
+    ) {
+      normalized.browser_id = analyticsBrowserId
+    } else {
+      delete normalized.browser_id
+    }
     delete normalized.click_id
     delete normalized.external_id
     delete normalized.impression_id

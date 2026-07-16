@@ -49,7 +49,11 @@ function viewItem(
 ) {
   return {
     ...createCanonicalViewItem({
-      browserId: { fbp: 'fb.1.123.456' },
+      browserId: {
+        fbp: 'fb.1.123.456',
+        ga_client_id: '97245370.1784201643',
+        ga_session_id: '1784201643'
+      },
       clickId: { fbclid: 'fb-click-1' },
       commerce,
       consent: {
@@ -166,12 +170,18 @@ test('strips marketing identifiers without marketing consent', async () => {
 
   assert.equal(response.status, 202)
   assert.ok(storedInput)
-  assert.equal(storedInput.event.browser_id, undefined)
+  assert.deepEqual(storedInput.event.browser_id, {
+    ga_client_id: '97245370.1784201643',
+    ga_session_id: '1784201643'
+  })
   assert.equal(storedInput.event.click_id, undefined)
   assert.equal(storedInput.event.external_id, undefined)
   assert.equal(storedInput.event.client_ip_address, undefined)
   assert.equal(storedInput.event.user_data, undefined)
-  assert.deepEqual(storedInput.dispatches, [])
+  assert.deepEqual(
+    storedInput.dispatches.map(dispatch => dispatch.provider),
+    ['google']
+  )
 })
 
 test('preserves identifiers and replaces client network context', async () => {
@@ -194,7 +204,9 @@ test('preserves identifiers and replaces client network context', async () => {
   const storedEvent = storedInput.event
   assert.equal(storedEvent.event_name, 'view_item')
   assert.deepEqual(storedEvent.browser_id, {
-    fbp: 'fb.1.123.456'
+    fbp: 'fb.1.123.456',
+    ga_client_id: '97245370.1784201643',
+    ga_session_id: '1784201643'
   })
   assert.deepEqual(storedEvent.click_id, {
     fbclid: 'fb-click-1'
@@ -210,7 +222,7 @@ test('preserves identifiers and replaces client network context', async () => {
   assert.equal(storedEvent.region_code, '03')
   assert.deepEqual(
     storedInput.dispatches.map(dispatch => dispatch.provider),
-    ['meta', 'microsoft_uet']
+    ['google', 'meta', 'microsoft_uet']
   )
 })
 
