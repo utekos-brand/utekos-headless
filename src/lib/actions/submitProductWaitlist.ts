@@ -73,7 +73,10 @@ export async function submitProductWaitlist(
       productHandle: result.data.productHandle
     })
 
-    if (message.includes('CONTACT_FORM_SEND_TO_EMAIL')) {
+    if (
+      message.includes('CONTACT_FORM_SEND_TO_EMAIL') ||
+      message.includes('Invalid Resend email configuration')
+    ) {
       return {
         status: 'error',
         message:

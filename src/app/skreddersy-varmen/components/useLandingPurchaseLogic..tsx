@@ -1,7 +1,7 @@
 // Path: src/app/skreddersy-varmen/components/useLandingPurchaseLogic.ts
 'use client'
 
-import { useContext, useState, useTransition } from 'react'
+import { useContext, useMemo, useState, useTransition } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { CartIdContext } from '@/lib/context/CartIdContext'
@@ -71,17 +71,25 @@ export function useLandingPurchaseLogic({ products }: UseLandingPurchaseLogicPro
     setSelectedSizeState(size => normalizeSelectedSize(size, nextSelectableSizes))
   }
 
-  const resolveSelectedVariant = (): {
+  const resolveSelectedVariant = (
+    options: { silent?: boolean } = {}
+  ): {
     product: ShopifyProduct
     selectedVariant: ShopifyProductVariant
   } | null => {
+    const { silent = false } = options
+
     if (!currentShopifyProduct) {
-      toast.error(`Fant ikke produktdata for ${currentConfig.title}.`)
+      if (!silent) {
+        toast.error(`Fant ikke produktdata for ${currentConfig.title}.`)
+      }
       return null
     }
 
     if (!currentColor) {
-      toast.error(`Fant ikke fargevalg for ${currentConfig.title}.`)
+      if (!silent) {
+        toast.error(`Fant ikke fargevalg for ${currentConfig.title}.`)
+      }
       return null
     }
 
@@ -100,12 +108,16 @@ export function useLandingPurchaseLogic({ products }: UseLandingPurchaseLogicPro
     })
 
     if (!selectedVariant) {
-      toast.error(`Fant ikke variant for ${currentColor.name} / ${safeSelectedSize}.`)
+      if (!silent) {
+        toast.error(`Fant ikke variant for ${currentColor.name} / ${safeSelectedSize}.`)
+      }
       return null
     }
 
     if (!selectedVariant.availableForSale) {
-      toast.error('Denne varianten er dessverre utsolgt for øyeblikket.')
+      if (!silent) {
+        toast.error('Denne varianten er dessverre utsolgt for øyeblikket.')
+      }
       return null
     }
 
@@ -115,13 +127,23 @@ export function useLandingPurchaseLogic({ products }: UseLandingPurchaseLogicPro
     }
   }
 
+  const resolvedCheckout = useMemo(
+    () => resolveSelectedVariant({ silent: true }),
+    [
+      currentColor,
+      currentConfig.title,
+      currentShopifyProduct,
+      safeSelectedSize
+    ]
+  )
+
   const handleAddToCart = () => {
     if (isPendingFromMachine || isTransitioning) {
       return
     }
 
     startTransition(async () => {
-      const resolvedVariant = resolveSelectedVariant()
+      const resolvedVariant = resolveSelectedVariant({ silent: false })
 
       if (!resolvedVariant) {
         return
@@ -198,6 +220,8 @@ export function useLandingPurchaseLogic({ products }: UseLandingPurchaseLogicPro
     handleAddToCart,
     isPending: isTransitioning || isPendingFromMachine,
     currentConfig,
-    currentColor
+    currentColor,
+    shopifyProduct: resolvedCheckout?.product ?? null,
+    selectedShopifyVariant: resolvedCheckout?.selectedVariant ?? null
   }
 }

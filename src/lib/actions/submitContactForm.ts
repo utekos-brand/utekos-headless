@@ -106,6 +106,13 @@ export async function submitContactForm(
       }
     }
 
+    if (message.includes('Invalid Resend email configuration')) {
+      return {
+        message:
+          'Serverkonfigurasjonsfeil. Innsending er midlertidig utilgjengelig.'
+      }
+    }
+
     return {
       message: 'En uventet feil oppstod. Vennligst prøv igjen senere.'
     }

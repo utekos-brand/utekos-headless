@@ -6,14 +6,11 @@ import { WelcomeEmail } from '@/components/emails/WelcomeEmail'
 import { formatFromAddress, getEmailConfig } from '@/lib/email/config'
 import { sendTransactionalEmail } from '@/lib/email/sendTransactionalEmail'
 import type { SendTransactionalEmailResult } from '@/lib/email/emailTypes'
-import { upsertResendContact } from '@/lib/email/upsertResendContact'
 
 export async function sendWelcomeEmail(
   email: string
 ): Promise<SendTransactionalEmailResult> {
   const { fromEmail, fromName } = getEmailConfig()
-
-  await upsertResendContact(email)
 
   const emailHtml = await render(<WelcomeEmail email={email} />)
   const emailText = await render(<WelcomeEmail email={email} />, {

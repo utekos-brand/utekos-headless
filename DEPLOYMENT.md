@@ -614,26 +614,29 @@ Transactional email for kontaktskjema, produktventeliste and nyhetsbrev runs
 through [`src/lib/email/`](src/lib/email/). All sends must use the verified
 `utekos.no` domain — never `onboarding@resend.dev` in Preview or Production.
 
+The project uses the **Vercel Resend integration**. The runtime resolves the
+API key from the integration secret first, then falls back to a legacy local
+key for development.
+
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `RESEND_API_KEY` | Yes | Resend API authentication |
+| `RESEND_HEADLESS_API_KEY_RESEND_API_KEY` | Yes in Vercel | Resend API key from Vercel integration |
+| `RESEND_API_KEY` | Local fallback only | Manual/local dev when integration secret is absent |
 | `RESEND_FROM_EMAIL` | No (default `kundeservice@utekos.no`) | Verified sender domain |
 | `RESEND_FROM_NAME` | No (default `Utekos`) | Display name for customer-facing mail |
 | `CONTACT_FORM_SEND_TO_EMAIL` | Yes for kontakt/venteliste | Internal notification recipient |
-| `RESEND_AUDIENCE_ID` | No | Newsletter audience sync in Resend |
 
 ### Vercel Production requirement
 
 Before marking kontaktskjema or venteliste OK in production:
 
 1. Confirm `utekos.no` is verified in Resend Dashboard → Domains.
-2. Set `RESEND_API_KEY` in Vercel Production.
+2. Connect the Vercel Resend integration to the project so
+   `RESEND_HEADLESS_API_KEY_RESEND_API_KEY` is injected in Production.
 3. Set `RESEND_FROM_EMAIL=kundeservice@utekos.no`.
-4. Set `CONTACT_FORM_SEND_TO_EMAIL=kundeservice@utekos.no` (or the approved
-   internal inbox).
-5. Set `RESEND_AUDIENCE_ID` when newsletter audience sync is active.
-6. Redeploy production.
-7. Verify in Resend Dashboard → Logs:
+4. Set `CONTACT_FORM_SEND_TO_EMAIL=kundeservice@utekos.no`.
+5. Redeploy production after env changes.
+6. Verify in Resend Dashboard → Logs:
    - kontaktskjema submission from `Utekos Kontaktskjema <kundeservice@utekos.no>`
    - venteliste submission from `Utekos Venteliste <kundeservice@utekos.no>`
    - newsletter welcome from `Utekos <kundeservice@utekos.no>`

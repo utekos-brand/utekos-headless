@@ -13,13 +13,15 @@ type KlarnaProductExpressCheckoutProps = {
   selectedVariant: ShopifyProductVariant | null
   quantity?: number
   className?: string
+  buttonContainerClassName?: string
 }
 
 export function KlarnaProductExpressCheckout({
   product,
   selectedVariant,
   quantity = 1,
-  className
+  className,
+  buttonContainerClassName
 }: KlarnaProductExpressCheckoutProps) {
   const [errorMessage, setErrorMessage] = useState<
     string | null
@@ -50,6 +52,9 @@ export function KlarnaProductExpressCheckout({
         key={`${selectedVariant.id}-${quantity}-${orderPayload.order_amount}`}
         orderPayload={orderPayload}
         disabled={!selectedVariant.availableForSale}
+        {...(buttonContainerClassName ?
+          { buttonContainerClassName }
+        : {})}
         onError={message => {
           setErrorMessage(message)
         }}

@@ -1,0 +1,47 @@
+'use client'
+
+import { KlarnaProductExpressCheckout } from '@/components/klarna/components/KlarnaProductExpressCheckout'
+import { cn } from '@/lib/utils/className'
+import type { ShopifyProduct } from 'types/product/ShopifyProduct'
+import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
+
+type KlarnaLandingExpressCheckoutProps = {
+  product: ShopifyProduct | null
+  selectedVariant: ShopifyProductVariant | null
+  quantity: number
+  className?: string
+}
+
+const klarnaButtonContainerClassName = cn(
+  'h-14 min-h-14 ring-foreground/20 dark:ring-dark-foreground/20',
+  'md:h-16 md:min-h-16'
+)
+
+export function KlarnaLandingExpressCheckout({
+  product,
+  selectedVariant,
+  quantity,
+  className
+}: KlarnaLandingExpressCheckoutProps) {
+  if (!product || !selectedVariant) {
+    return null
+  }
+
+  return (
+    <div
+      className={cn(
+        'flex w-full min-w-0 flex-col gap-3 min-[900px]:gap-4',
+        className
+      )}
+      aria-label='Klarna express checkout'
+    >
+      <KlarnaProductExpressCheckout
+        product={product}
+        selectedVariant={selectedVariant}
+        quantity={quantity}
+        className='w-full min-w-0'
+        buttonContainerClassName={klarnaButtonContainerClassName}
+      />
+    </div>
+  )
+}

@@ -35,7 +35,10 @@ import {
 } from '@/components/ui/accordion'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
 import { ShippingAndReturnComponent } from './ShippingAndReturnComponent'
+import { KlarnaLandingExpressCheckout } from './KlarnaLandingExpressCheckout'
 import type { ModelKey, PRODUCT_VARIANTS } from '@/api/constants'
+import type { ShopifyProduct } from 'types/product/ShopifyProduct'
+import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
 
 export type PurchaseClientViewLandingProps = {
   selectedModel: ModelKey
@@ -51,6 +54,8 @@ export type PurchaseClientViewLandingProps = {
   isPending: boolean
   currentConfig: (typeof PRODUCT_VARIANTS)[ModelKey]
   isTechDownOffer: boolean
+  shopifyProduct: ShopifyProduct | null
+  selectedShopifyVariant: ShopifyProductVariant | null
 }
 
 export function PurchaseClientViewLanding({
@@ -66,7 +71,9 @@ export function PurchaseClientViewLanding({
   handleAddToCart,
   isPending,
   currentConfig,
-  isTechDownOffer
+  isTechDownOffer,
+  shopifyProduct,
+  selectedShopifyVariant
 }: PurchaseClientViewLandingProps) {
   const guidance = SIZE_GUIDANCE[selectedSize]
   const modelName = getModelName(currentConfig.title)
@@ -468,6 +475,13 @@ export function PurchaseClientViewLanding({
                 }
               </BrandBadge>
             </div>
+
+            <KlarnaLandingExpressCheckout
+              product={shopifyProduct}
+              selectedVariant={selectedShopifyVariant}
+              quantity={quantity}
+              className='mb-4 min-[900px]:mb-6 min-[1280px]:mb-8'
+            />
 
             {/* Teksten tilktnyttet frakt/retur blir automatisk synlig mot card-bakgrunnen */}
             <ShippingAndReturnComponent />

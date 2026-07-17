@@ -21,6 +21,7 @@ type KlarnaExpressCheckoutButtonProps = {
   shopifyCartId?: string
   disabled?: boolean
   className?: string
+  buttonContainerClassName?: string
   onError?: (message: string) => void
   onAuthorizing?: () => void
 }
@@ -46,6 +47,7 @@ export function KlarnaExpressCheckoutButton({
   shopifyCartId,
   disabled = false,
   className,
+  buttonContainerClassName,
   onError,
   onAuthorizing
 }: KlarnaExpressCheckoutButtonProps) {
@@ -188,7 +190,10 @@ export function KlarnaExpressCheckoutButton({
     >
       <div
         id={containerId}
-        className='h-12 min-h-12 w-full overflow-hidden rounded-full ring-1 ring-card-foreground/50 ring-inset'
+        className={cn(
+          'h-12 min-h-12 w-full overflow-hidden rounded-full ring-1 ring-card-foreground/50 ring-inset',
+          buttonContainerClassName
+        )}
       />
     </div>
   )

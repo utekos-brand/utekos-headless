@@ -2,18 +2,16 @@ import 'server-only'
 
 import { z } from 'zod'
 
+import {
+  resolveResendApiKey,
+  resendApiKeyEnvNames
+} from '@/lib/email/resolveResendApiKey'
+
 const EmailEnvSchema = z.object({
-  RESEND_API_KEY: z.string().min(1, 'RESEND_API_KEY is required'),
-  RESEND_FROM_EMAIL: z
-    .string()
-    .email()
-    .default('kundeservice@utekos.no'),
-  RESEND_FROM_NAME: z.string().min(1).default('Utekos'),
-  CONTACT_FORM_SEND_TO_EMAIL: z
-    .string()
-    .email()
-    .optional(),
-  RESEND_AUDIENCE_ID: z.string().min(1).optional()
+  apiKey: z.string().min(1),
+  fromEmail: z.string().email().default('kundeservice@utekos.no'),
+  fromName: z.string().min(1).default('Utekos'),
+  contactFormSendToEmail: z.string().email().optional()
 })
 
 export type EmailConfig = {
@@ -21,18 +19,18 @@ export type EmailConfig = {
   fromEmail: string
   fromName: string
   contactFormSendToEmail: string | undefined
-  audienceId: string | undefined
 }
 
 let cachedConfig: EmailConfig | null = null
 
 function parseEmailConfig(): EmailConfig {
+  const apiKey = resolveResendApiKey()
+
   const parsed = EmailEnvSchema.safeParse({
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
-    RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL,
-    RESEND_FROM_NAME: process.env.RESEND_FROM_NAME,
-    CONTACT_FORM_SEND_TO_EMAIL: process.env.CONTACT_FORM_SEND_TO_EMAIL,
-    RESEND_AUDIENCE_ID: process.env.RESEND_AUDIENCE_ID
+    apiKey,
+    fromEmail: process.env.RESEND_FROM_EMAIL,
+    fromName: process.env.RESEND_FROM_NAME,
+    contactFormSendToEmail: process.env.CONTACT_FORM_SEND_TO_EMAIL
   })
 
   if (!parsed.success) {
@@ -43,11 +41,10 @@ function parseEmailConfig(): EmailConfig {
   }
 
   return {
-    apiKey: parsed.data.RESEND_API_KEY,
-    fromEmail: parsed.data.RESEND_FROM_EMAIL,
-    fromName: parsed.data.RESEND_FROM_NAME,
-    contactFormSendToEmail: parsed.data.CONTACT_FORM_SEND_TO_EMAIL,
-    audienceId: parsed.data.RESEND_AUDIENCE_ID
+    apiKey: parsed.data.apiKey,
+    fromEmail: parsed.data.fromEmail,
+    fromName: parsed.data.fromName,
+    contactFormSendToEmail: parsed.data.contactFormSendToEmail
   }
 }
 
@@ -71,4 +68,8 @@ export function requireInternalNotificationRecipient(): string {
   }
 
   return contactFormSendToEmail
+}
+
+export function getResendApiKeyConfigurationError(): string {
+  return `Missing Resend API key. Set ${resendApiKeyEnvNames.join(' or ')}.`
 }
