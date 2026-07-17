@@ -13,15 +13,18 @@ const TAG_GATEWAY_ORIGINS = [
 
 const KLARNA_ORIGINS = [
   'https://js.klarna.com',
-  'https://x.klarnacdn.net'
+  'https://x.klarnacdn.net',
+  'https://*.klarnaevt.com'
 ] as const
 
 const MICROSOFT_TRACKING_ORIGINS = [
   'https://bat.bing.com',
+  'https://c.bing.com',
   'https://*.clarity.ms'
 ] as const
 
 const GOOGLE_ADS_ORIGINS = [
+  'https://ad.doubleclick.net',
   'https://googleads.g.doubleclick.net',
   'https://www.googleadservices.com',
   'https://pagead2.googlesyndication.com'
