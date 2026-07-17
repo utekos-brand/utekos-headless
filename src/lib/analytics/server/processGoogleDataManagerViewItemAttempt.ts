@@ -11,6 +11,7 @@ const RETRY_DELAYS_MS = [
   30 * 60_000,
   2 * 60 * 60_000
 ] as const
+const MAX_RETRY_JITTER_RATIO = 0.2
 const RETRYABLE_GRPC_CODES = new Set([1, 4, 8, 10, 13, 14, 16])
 const RETRYABLE_NETWORK_CODES = new Set([
   'ECONNRESET',
@@ -51,11 +52,25 @@ export type GoogleDataManagerViewItemAttemptOutcome =
 export type GoogleDataManagerViewItemAttemptDependencies = {
   dispatch: typeof dispatchCanonicalViewItemToGoogleDataManager
   now: () => number
+  random: () => number
 }
 
 const defaultDependencies: GoogleDataManagerViewItemAttemptDependencies = {
   dispatch: dispatchCanonicalViewItemToGoogleDataManager,
-  now: Date.now
+  now: Date.now,
+  random: Math.random
+}
+
+function addPositiveJitter(delayMs: number, random: () => number) {
+  const sample = random()
+  const normalizedSample =
+    Number.isFinite(sample) ?
+      Math.min(1, Math.max(0, sample))
+    : 0
+
+  return delayMs + Math.floor(
+    delayMs * MAX_RETRY_JITTER_RATIO * normalizedSample
+  )
 }
 
 function asRecord(value: unknown) {
@@ -165,7 +180,12 @@ export async function processGoogleDataManagerViewItemAttempt(
     }
 
     if (isRetryable(error) && attempt.attemptCount < MAX_ATTEMPTS) {
-      const delay = RETRY_DELAYS_MS[attempt.attemptCount - 1]!
+      const baseDelay =
+        RETRY_DELAYS_MS[attempt.attemptCount - 1]!
+      const delay = addPositiveJitter(
+        baseDelay,
+        dependencies.random
+      )
       return {
         ...failure,
         nextAttemptAt: new Date(finishedAt + delay).toISOString(),
