@@ -2,6 +2,12 @@
 
 ## Status
 
+STATUS 2026-07-17: DEN ENKLE GIT-FLYTEN ER GJENOPPRETTET.
+`pnpm run sync -- "Commit message"` STAGER ALLE ENDRINGER,
+COMMITTER OG PUSHER. PUSH TIL `main` UTLØSER VERCEL-PRODUKSJON.
+DEN OBLIGATORISKE BRANCH-/PR-/WORKTREE-MODELLEN SOM BLE INNFØRT
+2026-07-14 ER FJERNET SOM OPERATIV REGEL.
+
 STATUS 2026-07-16: GOOGLE DATA MANAGER `view_item`-OUTBOX ER
 AKTIVERT I PRODUKSJON VIA PR #36, MED WIF-HOTFIXER I PR #38,
 STRUKTURERT PROVIDERDIAGNOSTIKK I PR #39 OG PROVIDERGRENSEN PÅ
@@ -54,50 +60,8 @@ PRODUKTSIDESPESIFIKK REACT HYDRATION-MELDING (#418) GJENSTÅR
 SOM OPPFØLGING; HJEMMESIDEN HAR 0 KONSOLLFEIL OG TRACKING-
 KONTRAKTEN ER VERIFISERT.
 
-STATUS 2026-07-14: `origin/main` ER ENESTE PRODUKSJONSKANON.
-LOKAL `main`, `origin/HEAD` OG VERCEL-PRODUKSJON PEKER PÅ SAMME
-COMMIT `400d72485`. ALT TILSIKTET LOKALT ARBEID ER BEVART PÅ
-NAVNGITTE RELEASE- ELLER ARKIVBRANCHES. RELEASE-ENHETENE ER
-ISOLERT FRA `origin/main`: GIT-OPERASJONER, KLARNA-STOREFRONT,
-MICROSOFT MERCHANT, POSTHOG SDK, STOREFRONT-TILGJENGELIGHET,
-MCP-/DRIFTSVERKTØY OG KILDEHYGIENE. S/GTM/SUPABASE ER STABLET
-ETTER DEN KANONISKE GIT-RELEASEN FOR Å FJERNE KJENTE
-DOKUMENT-/PACKAGE-MERGEKONFLIKTER UTEN Å BLANDE INN POSTHOG.
-DE ER IKKE ALTERNATIVE PRODUKSJONSFASITER; DE SKAL VERIFISERES OG
-MERGES TIL DEN ENE KANONISKE LINJEN I GODKJENT REKKEFØLGE. SEKS
-ELDRE AGENT-/PAGESPEED-BRANCHES FRA FØR REPOSITORY-MIGRERINGEN ER
-BEVART SOM LOKALE
-`archive/pre-migration/*`-REFERANSER. DEN ELDRE HYTTE-/SESONG-
-BRANCHEN ER BEVART SOM `archive/needs-reconciliation/*` FOR EGEN
-FRONTENDMODERNISERING OG BROWSER-VERIFIKASJON. ALLE TILHØRENDE
-WORKTREES ER FJERNET; BARE HOVEDWORKTREE-EN GJENSTÅR. INGEN PUSH, PR-MERGE,
-VERCEL-DEPLOY, PROVIDER-WRITE, GTM-PUBLISH ELLER SUPABASE-
-MUTASJON ER UTFØRT I DENNE GIT-AVSTEMMINGEN.
-
 ### Releaseavstemming 2026-07-14
 
-- Git-modellen er nå entydig: `origin/main` er produksjonskilden,
-  lokal `main` skal alltid være ren og identisk, og kandidatbranches
-  kan bare være foran fordi de inneholder arbeid som ennå ikke er
-  verifisert og merget.
-- Ulike branch-SHA-er er nødvendig for pågående arbeid og er ikke
-  Git-drift. Drift betyr her at lokal `main`, `origin/main`, Vercels
-  production branch eller deploymentens Git-kilde er uenige. De fire
-  er nå enige. En releasebranch inneholder tilsiktet arbeid med en
-  gjenstående releaseport, aldri «tilfeldige endringer».
-- `origin/codex/reconcile-tracking-release` peker på nøyaktig samme
-  commit som `origin/main` og har 0 unike commits. Den er redundant;
-  sletting vil bare fjerne branchnavnet og påvirker ikke kode,
-  produksjon eller historikk. Remote-sletting krever eksplisitt
-  godkjenning.
-- Den tidligere `sync-and-deploy.mjs`-flyten er avviklet. Den kunne
-  stage hele arbeidsområdet, pushe GitHub og deretter starte en ekstra
-  direkte Vercel production deploy. `npm run repo:sync` er nå
-  fast-forward-only og utfører aldri commit, push eller deploy.
-- `codex/release-git-operations` er første release: 8 filer som gjør
-  `repo:sync` fast-forward-only, pensjonerer kombinert sync/deploy og
-  dokumenterer GitHub-merge til `main` som eneste production-trigger.
-  Teststatus: 5/5 grønn; den pensjonerte kommandoen avslutter med exit 1.
 - `codex/release-klarna-product-cards` er 9 filer og 2 commits. Den
   flytter Express Checkout fra produktdetalj til produktkort, deler én
   idempotent SDK-loader og feiler Vercel-build lukket ved tom Client
