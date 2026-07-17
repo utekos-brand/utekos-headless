@@ -25,7 +25,7 @@ export async function LandingPurchaseSection() {
 
   const productsMap = {
     'utekos-techdown': techDown,
-    'utekos-mikro': mikro
+    'utekos-mikrofiber': mikro
   }
 
   if (!techDown) {

@@ -10,7 +10,7 @@ adapters, not the event inventory or source of truth.
 | Event | Owner | Detection | Delivery | Status |
 | --- | --- | --- | --- | --- |
 | `page_view` | Next.js application | Initial render and App Router URL change | `dataLayer` -> web GTM -> `/__sgtm` -> GA4, plus consent-aware first-party collection | Active; ledger only (no server outbox) |
-| `view_item` | Next.js application | Resolved product and selected variant on a product page | GTM/sGTM + ledger + Google Data Manager + Meta CAPI | Active |
+| `view_item` | Next.js application | Resolved product and selected variant on a product page or landing purchase context (`/skreddersy-varmen`) | GTM/sGTM + ledger + Google Data Manager + Meta CAPI | Active |
 | `add_to_cart` | Shopify cart service | After accepted cart mutation | GTM/sGTM + ledger + Google Data Manager + Meta CAPI | Active |
 | `begin_checkout` | Shopify checkout service | Before checkout redirect with valid checkout URL | GTM/sGTM + ledger + Google Data Manager + Meta CAPI; persists checkout consent snapshot | Active |
 | `purchase` | Shopify orders-paid webhook | Verified order-paid webhook | Ledger (operational) + Google Data Manager + Meta CAPI when checkout consent granted | Active |
@@ -133,9 +133,10 @@ values, tax data, availability, selected options and collection
 context.
 
 The product reporter emits once for each resolved product/variant
-context after the owning `page_view` has been emitted. Re-rendering the
-same context is deduplicated; a committed variant change is a new
-legitimate `view_item`. The collector re-evaluates
+context after the owning `page_view` has been emitted. This covers
+product pages and the `/skreddersy-varmen` landing purchase section.
+Re-rendering the same context is deduplicated; a committed variant
+change is a new legitimate `view_item`. The collector re-evaluates
 Cookiebot at send time, removes marketing identifiers without
 marketing consent and replaces browser-supplied IP, user-agent
 and coarse location with request-derived values at the server
