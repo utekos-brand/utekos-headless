@@ -33,30 +33,21 @@ resetten består kun av:
 - Google server-side tagging via førstepartsruten `/__sgtm`.
 
 En avgrenset kanonisk storefront-flyt ble reintrodusert og
-produksjonsverifisert 2026-07-16:
+produksjonsverifisert 2026-07-16 for `page_view`/`view_item`, og
+utvidet lokalt 2026-07-17 til hele commerce-funnelen plus øvrige
+ikke-blokkerte katalogevents:
 
-- `POST /api/events/page-view` og `POST /api/events/view-item`
-  validerer samtykkede events og lagrer kanonisk JSONB i
+- Førsteparts Route Handlers under `/api/events/*` validerer
+  samtykkede browser-events og lagrer kanonisk JSONB i
   `marketing.event_ledger`.
-- Dagens deployede planner kan opprette legacy Meta/Microsoft-rader for
-  `page_view` og Microsoft-rad for `view_item`; disse har ingen godkjent worker
-  og skal ikke replayes. Den lokale, upubliserte grunnmuren begrenser nye
-  rader til Google og Meta for `view_item` og ingen server-rader for
-  `page_view`.
-- Dagens deployede Next.js `after()` starter den kombinerte Meta/Google-
-  batchen. Den lokale grunnmuren innfører generiske providerworkere og
-  femminutters Vercel-cron på `/api/cron/provider-outbox-dispatch`; denne
-  schedule-konfigurasjonen er ennå ikke deployet.
-- Google bruker Vercel OIDC/WIF og kjører nå med
-  `GOOGLE_DATA_MANAGER_VALIDATE_ONLY=false`. Live browser-event
-  `a28a8f3c-ba90-4006-9dd8-429072a3c772` ble akseptert av Data
-  Manager med request-ID
-  `a9ebe80f-9c54-4bd9-9971-6c4c7bb1a43c`, og Meta mottok samme
-  `event_id` med `events_received=1`.
-- Lokal patch forbereder canonical `event_id` som samme Google
-  `transaction_id`/`transactionId` og utelater request-IP for EØS,
-  Storbritannia, Sveits og ukjent land. Publisert GTM er ikke bekreftet å
-  videresende feltet, så cross-source dedupe er ikke produksjonsverifisert.
+- `purchase` og `refund` kommer fra Shopify-webhooks
+  (`orders-paid`, `refunds-create`) med operativ ledger og
+  consent-gated provider-export.
+- Provider-outbox for aktive Google/Meta-par kjøres via registrerte
+  workere og `/api/cron/provider-outbox-dispatch`.
+- Fire events forblir `blocked_source`:
+  `add_shipping_info`, `add_payment_info`, `checkout_error`,
+  `payment_error`.
 
 GTM får laste før samtykke for Advanced Consent Mode og cookieless
 pings. Meta, Microsoft, Clarity og øvrige ikke-Google-tagger skal
