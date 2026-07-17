@@ -190,22 +190,6 @@ Code and architecture rules:
 - Do not hand-edit generated MCP files such as `mcp.json`,
   `.vscode/mcp.json`, or `.cursor/mcp.json`.
 
-Git and release rules:
-
-- `origin/main` is the only canonical production source reference.
-- Keep local `main` clean and identical to `origin/main`; all
-  intentional work belongs on a named branch based on current
-  `origin/main`.
-- Use `npm run repo:sync` to fast-forward a clean local `main`.
-  The command must never stage, commit, push, merge divergent history,
-  or deploy.
-- Production is triggered only by an explicitly approved pull-request
-  merge to GitHub `main`. Do not combine that Git-triggered deployment
-  with a second direct Vercel production deploy.
-- Remove completed linked worktrees after their work is committed or
-  explicitly archived. Never treat a worktree HEAD as another
-  production reference.
-
 Verification gates:
 
 - UI work requires browser/runtime verification: console,
@@ -218,7 +202,7 @@ Verification gates:
 - Next.js, React, Vercel AI SDK, OpenAI, Shopify, Supabase,
   analytics, consent, and ad-platform changes require current
   local or official documentation.
-- Production deploy, GTM publish, PR merge, provider-resource
+- Production deploy, GTM publish, provider-resource
   mutation, ad campaign creation, Shopify catalog mutation, and
   Supabase schema mutation require explicit user confirmation and
   must not be hidden behind a default agent profile.

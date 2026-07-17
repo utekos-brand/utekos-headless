@@ -27,32 +27,6 @@ known and completed in the correct order.
 - Treat row counts as evidence only when source, status, reason,
   unresolved/resolved state, and replay policy are visible.
 
-## Canonical Git And Vercel Release Model
-
-- `origin/main` is the only canonical production source reference.
-- Local `main` must be clean and point to the same commit as
-  `origin/main`. Do not develop or create commits directly on local
-  `main`.
-- Intentional work belongs on a named branch created from the latest
-  `origin/main`. A branch being ahead is expected; a local `main`
-  being ahead, behind after synchronization, dirty, or diverged is
-  not.
-- Linked worktrees are working directories, not additional production
-  references. Use them only for concurrent active tasks, base their
-  branches on current `origin/main`, and remove them when the task is
-  committed or archived.
-- `npm run repo:sync` is the only local main synchronization command.
-  It fetches and prunes `origin`, then performs a fast-forward only
-  when local `main` is clean and behind. It never stages, commits,
-  pushes, merges divergent history, or deploys.
-- `scripts/deploy/sync-and-deploy.mjs` is retired and exits fail-closed.
-  It must never be restored as a combined stage/commit/push/direct-
-  deploy command.
-- The standard Vercel path is GitHub-based: a pushed candidate branch
-  receives a preview, and an explicitly approved pull-request merge to
-  `main` creates production. Do not run a second direct Vercel
-  production deployment for the same release.
-
 ### Local integration audit 2026-07-14
 
 The isolated Git operations, Microsoft Merchant, PostHog SDK, Klarna
@@ -117,8 +91,7 @@ Run these before deciding the release order:
 
 | Check | Command or source | Required conclusion |
 | --- | --- | --- |
-| Canonical refs | `npm run repo:sync`, then `git rev-parse main origin/main` | Both refs resolve to the same commit before a new candidate branch is created. |
-| Worktree scope | `git status --short` | Identify every intentional changed file and classify whether it is verified, pending verification, or a local artifact. |
+| Worktree scope | `git status --short` | Identify relevant files and ignore unrelated dirty files. |
 | Runtime diff | `git diff --name-only` | Identify whether app runtime, Supabase, env, MCP, GTM, scripts, or docs changed. |
 | Supabase history | `SUPABASE_NO_TELEMETRY=1 npx supabase migration list --linked` | Know exactly which local migrations are missing remote and which remote migrations are missing local. |
 | Supabase schema proof | `SUPABASE_NO_TELEMETRY=1 npx supabase db dump --linked --schema ops,marketing --file /tmp/utekos-linked-ops-marketing-schema.sql` | Confirm production has the columns, constraints, tables, and views the runtime will use. |
@@ -156,18 +129,11 @@ Run these before deciding the release order:
    migrations first.
 5. Verify Supabase production schema and migration history.
 6. Run local verification again after migration.
-7. Push the named candidate branch only after explicit push approval;
-   inspect the Git-triggered Vercel preview.
-8. Run preview smoke checks for the changed surfaces and record the
-   result.
-9. Merge the pull request to `main` only after explicit production
-   approval. This GitHub merge is the production trigger.
-10. Inspect the Git-triggered Vercel production deployment until it is
-    ready or failed. Do not run a duplicate direct CLI deployment.
-11. Run post-deploy smoke checks for the changed surfaces.
-12. Run `npm run repo:sync` from the clean local `main` checkout and
-    verify `main` equals `origin/main`.
-13. Update [PLAN.md](PLAN.md) with the final deployment and migration
+7. Run `pnpm run sync -- "Commit message"` after explicit production
+   approval. The push to `main` triggers the Vercel deployment.
+8. Inspect the Vercel production deployment until it is ready or failed.
+9. Run post-deploy smoke checks for the changed surfaces.
+10. Update [PLAN.md](PLAN.md) with the final deployment and migration
     status.
 
 ## Supabase Production Gate
@@ -249,9 +215,9 @@ Required release evidence:
 - Targeted miss -> hit -> signed webhook -> miss test.
 - Invalid-hit deletion, null/error exclusion and item-size boundary tests.
 - Differential ESLint, Next route type generation, TypeScript and full build.
-- Preview proof for product pages, `/skreddersy-varmen`, webhook behavior and
+- Browser proof for product pages, `/skreddersy-varmen`, webhook behavior and
   `/api/search-index` cache headers/tag.
-- Git-triggered production deployment followed by browser and endpoint smoke.
+- Production deployment followed by browser and endpoint smoke.
 
 The comparison baseline and required 7-/14-day follow-up are recorded in
 [`VERCEL_RUNTIME_CACHE_BASELINE.md`](VERCEL_RUNTIME_CACHE_BASELINE.md).
@@ -264,11 +230,9 @@ provider adapters, tracking webhooks and tracking crons. Those removed
 surfaces are gaps and must not be reported as active production
 telemetry.
 
-This release has no Supabase migration, provider mutation, GTM publish
-or direct Vercel production deployment. Its production trigger is the
-approved pull-request merge to GitHub `main`.
+This release has no Supabase migration, provider mutation or GTM publish.
 
-Required local and preview gates:
+Required local and production gates:
 
 ```bash
 git diff --check
@@ -277,7 +241,7 @@ pnpm exec tsc --noEmit
 pnpm build
 npm run mcp:build
 npm run mcp:doctor
-TRACKING_GATEWAY_BASE_URL=<preview-url> npm run tracking:gateway:smoke
+TRACKING_GATEWAY_BASE_URL=<base-url> npm run tracking:gateway:smoke
 ```
 
 Production acceptance requires all of the following:
@@ -340,23 +304,14 @@ TRACKING_SMOKE_BASE_URL=https://utekos.no npm run tracking:smoke
 Required sequence:
 
 1. Confirm project link with `.vercel/project.json` or `.vercel/repo.json`.
-2. Confirm the Vercel project is connected to
-   `utekos-brand/utekos-headless` and tracks `main` as its production
-   branch.
-3. Confirm Vercel inspection auth with `vercel whoami` when the CLI is
-   available, and confirm the intended scope/team from the linked
-   project file.
-4. Ensure required Supabase migrations and provider/env changes are done
+2. Ensure required Supabase migrations and provider/env changes are done
    first.
-5. Run `pnpm exec tsc --noEmit` and relevant tests.
-6. Push the named candidate branch only after explicit approval and
-   inspect its Git-triggered preview.
-7. Merge the approved pull request to `main`; do not run a direct
-   `vercel deploy --prod` for the same release.
-8. Inspect the Git-triggered production deployment with
-   `vercel inspect <deployment-url>` or the Vercel dashboard.
-9. If failed, fetch build logs and stop. Do not retry blindly.
-10. If ready, verify the production domain and relevant runtime surfaces.
+3. Run `pnpm exec tsc --noEmit` and relevant tests.
+4. Run `pnpm run sync -- "Commit message"` after explicit production
+   approval.
+5. Inspect the resulting production deployment in Vercel.
+6. If failed, fetch build logs and stop. Do not retry blindly.
+7. If ready, verify the production domain and relevant runtime surfaces.
 
 ### Klarna Express Checkout gate (Preview + Production)
 
@@ -375,7 +330,7 @@ Required before preview sign-off:
    cards may initialize separate containers through the shared loader.
 4. Run the Vercel build. `prebuild` must fail closed when the Client
    Identifier is empty in a Vercel build.
-5. In the Git-triggered preview, verify desktop and mobile DOM,
+5. In the controlled browser verification, verify desktop and mobile DOM,
    screenshot, console and network. At least one eligible product must
    show a visible «Pay with Klarna» button; an SDK request or empty
    container alone is a failed gate.
@@ -390,7 +345,7 @@ passes responsive rendering with a controlled SDK stub. Read-only Vercel
 CLI confirms that `NEXT_PUBLIC_KLARNA_CLIENT_ID` exists as a sensitive
 variable targeting both Preview and Production without exposing its value.
 Provider acceptance remains blocked until Klarna allowed origins and the
-visible button are verified in the Git-triggered preview.
+visible button are verified in production.
 
 ### Klarna Express Checkout gate (Preview + Production)
 
@@ -409,7 +364,7 @@ Required before preview sign-off:
    cards may initialize separate containers through the shared loader.
 4. Run the Vercel build. `prebuild` must fail closed when the Client
    Identifier is empty in a Vercel build.
-5. In the Git-triggered preview, verify desktop and mobile DOM,
+5. In the controlled browser verification, verify desktop and mobile DOM,
    screenshot, console and network. At least one eligible product must
    show a visible «Pay with Klarna» button; an SDK request or empty
    container alone is a failed gate.
