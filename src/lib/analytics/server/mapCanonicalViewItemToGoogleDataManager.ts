@@ -13,6 +13,7 @@ const MAX_PARAMETER_VALUE_LENGTH = 100
 const MAX_PAGE_LOCATION_LENGTH = 1000
 const MAX_PAGE_REFERRER_LENGTH = 420
 const MAX_PAGE_TITLE_LENGTH = 300
+const MAX_USER_IDENTIFIERS = 10
 const SUBDIVISION_CODE = /^[A-Z]{2}-[A-Z0-9]{1,3}$/
 const REGION_PART = /^[A-Z0-9]{1,3}$/
 const {
@@ -246,14 +247,34 @@ function mapConsent(event: CanonicalViewItem) {
 function mapUserData(event: CanonicalViewItem) {
   if (event.consent.marketing !== 'granted') return undefined
 
-  const userIdentifiers = [
-    ...(event.user_data?.email_sha256 ?? []).map(
-      emailAddress => ({ emailAddress })
-    ),
-    ...(event.user_data?.phone_sha256 ?? []).map(
-      phoneNumber => ({ phoneNumber })
-    )
+  const emailAddresses = [
+    ...new Set(event.user_data?.email_sha256 ?? [])
   ]
+  const phoneNumbers = [
+    ...new Set(event.user_data?.phone_sha256 ?? [])
+  ]
+  const userIdentifiers: Array<
+    { emailAddress: string } | { phoneNumber: string }
+  > = []
+
+  for (
+    let index = 0;
+    userIdentifiers.length < MAX_USER_IDENTIFIERS
+    && (index < emailAddresses.length
+      || index < phoneNumbers.length);
+    index += 1
+  ) {
+    const emailAddress = emailAddresses[index]
+    const phoneNumber = phoneNumbers[index]
+
+    if (emailAddress) userIdentifiers.push({ emailAddress })
+    if (
+      phoneNumber
+      && userIdentifiers.length < MAX_USER_IDENTIFIERS
+    ) {
+      userIdentifiers.push({ phoneNumber })
+    }
+  }
 
   return userIdentifiers.length > 0 ?
       { userIdentifiers }

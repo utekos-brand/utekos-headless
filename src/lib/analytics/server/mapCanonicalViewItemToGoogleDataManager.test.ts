@@ -9,6 +9,11 @@ const phoneHash = 'b'.repeat(64)
 const { Event: DataManagerEvent } =
   protos.google.ads.datamanager.v1
 
+type NormalizedUserIdentifier = {
+  emailAddress?: string
+  phoneNumber?: string
+}
+
 function normalize(
   event: protos.google.ads.datamanager.v1.Event
 ) {
@@ -19,6 +24,10 @@ function normalize(
     enums: String,
     longs: Number
   })
+}
+
+function syntheticHash(value: number) {
+  return value.toString(16).padStart(64, '0')
 }
 
 function viewItem(
@@ -270,6 +279,58 @@ test('maps a canonical view_item to a GA4 Data Manager event', () => {
       ]
     }
   })
+})
+
+test('deduplicates and caps provider identifiers without mutating the canonical event', () => {
+  const emails = Array.from(
+    { length: 8 },
+    (_, index) => syntheticHash(index + 1)
+  )
+  const phones = Array.from(
+    { length: 8 },
+    (_, index) => syntheticHash(index + 101)
+  )
+  const canonicalEvent = viewItem({
+    user_data: {
+      email_sha256: [emails[0]!, ...emails, emails[1]!],
+      phone_sha256: [phones[0]!, ...phones, phones[1]!]
+    }
+  })
+  const canonicalSnapshot = structuredClone(canonicalEvent)
+
+  const mapped = normalize(
+    mapCanonicalViewItemToGoogleDataManager(canonicalEvent)
+  )
+  const identifiers = (
+    mapped.userData?.userIdentifiers ?? []
+  ) as NormalizedUserIdentifier[]
+  const mappedEmails = identifiers.flatMap(identifier =>
+    identifier.emailAddress ? [identifier.emailAddress] : []
+  )
+  const mappedPhones = identifiers.flatMap(identifier =>
+    identifier.phoneNumber ? [identifier.phoneNumber] : []
+  )
+
+  assert.equal(
+    canonicalEvent.user_data?.email_sha256?.length,
+    10
+  )
+  assert.equal(
+    canonicalEvent.user_data?.phone_sha256?.length,
+    10
+  )
+  assert.equal(identifiers.length, 10)
+  assert.equal(
+    new Set(
+      identifiers.map(identifier => JSON.stringify(identifier))
+    ).size,
+    10
+  )
+  assert.equal(mappedEmails.length, 5)
+  assert.equal(mappedPhones.length, 5)
+  assert.deepEqual(mappedEmails, emails.slice(0, 5))
+  assert.deepEqual(mappedPhones, phones.slice(0, 5))
+  assert.deepEqual(canonicalEvent, canonicalSnapshot)
 })
 
 test('caps optional item parameters for every item in an event', () => {
