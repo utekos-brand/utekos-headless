@@ -7,12 +7,12 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: ['Googlebot', 'Googlebot-Video'],
-        allow: ['/', '/videos/', '/api/google/feed'],
+        allow: ['/', '/videos/', '/api/google/feed', '/klarna-feed.xml'],
         disallow: ['/cart/', '/account/', '/api/']
       },
       {
         userAgent: '*',
-        allow: ['/', '/api/google/feed'],
+        allow: ['/', '/api/google/feed', '/klarna-feed.xml'],
         disallow: ['/cart/', '/account/', '/api/', '/videos/']
       }
     ],

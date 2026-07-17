@@ -37,7 +37,10 @@ function hasRequiredConsent(
     case 'none':
       return true
     case 'operational':
-      return false
+      // Transaction events (purchase/refund) are operationally
+      // eligible for outbox planning; provider-specific analytics
+      // or marketing gates still apply via their own requirements.
+      return true
   }
 }
 

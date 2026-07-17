@@ -1,0 +1,4 @@
+import { createBrowserEventRouteHandler } from './createBrowserEventRouteHandler'
+
+export const handleCanonicalScrollDepthRoute =
+  createBrowserEventRouteHandler('scroll-depth')

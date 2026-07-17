@@ -31,8 +31,14 @@ test('keeps catalog, adapters, and workers in one active-outbox allowlist', () =
   const adapterKeys = [...registeredProviderAdapterKeys]
   const workerKeys = Object.keys(providerOutboxWorkerRegistry)
 
-  assert.deepEqual(adapterKeys, catalogKeys)
-  assert.deepEqual(workerKeys, catalogKeys)
+  assert.deepEqual(
+    [...adapterKeys].sort(),
+    [...catalogKeys].sort()
+  )
+  assert.deepEqual(
+    [...workerKeys].sort(),
+    [...catalogKeys].sort()
+  )
 
   for (const key of adapterKeys) {
     assert.equal(providerAdapterRegistry[key].key, key)

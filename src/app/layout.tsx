@@ -14,6 +14,7 @@ import { SiteChrome } from '@/components/layout/SiteChrome'
 import { OnlineStoreJsonLd } from './OnlineStoreJsonLd'
 import { CartProviderLoader } from '@/components/providers/CartProviderLoader'
 import { PageViewObserver } from '@/components/analytics/PageViewObserver'
+import { ScrollDepthObserver } from '@/components/analytics/ScrollDepthObserver'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { GoogleTagManager } from '@next/third-parties/google'
 import { SITE_URL } from '@/constants'
@@ -121,6 +122,7 @@ export default function RootLayout({
       />
         <Suspense fallback={null}>
           <PageViewObserver environment={getTrackingEnvironment()} />
+          <ScrollDepthObserver />
         </Suspense>
 
         <ThemeProvider

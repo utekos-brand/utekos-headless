@@ -49,7 +49,7 @@ export type PageViewDataLayerEvent = {
   event: 'page_view'
   event_id: string
   event_time: string
-  page_view_id: string
+  page_view_id?: string
   page_location: string
   page_referrer?: string
   page_title: string

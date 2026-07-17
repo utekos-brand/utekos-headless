@@ -1,9 +1,26 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import { registeredProviderAdapterKeys } from '@/lib/analytics/server/providerAdapterRegistry'
 import {
   handleProviderOutboxCron,
   type ProviderOutboxCronDependencies
 } from './route'
+
+const emptySummary = {
+  acceptedUnverified: 0,
+  claimed: 0,
+  deadLettered: 0,
+  limitReached: false,
+  retryScheduled: 0
+}
+
+function emptyBatchResult() {
+  return Object.fromEntries(
+    registeredProviderAdapterKeys.map(key => [key, emptySummary])
+  ) as Awaited<
+    ReturnType<NonNullable<ProviderOutboxCronDependencies['runBatch']>>
+  >
+}
 
 function request(authorization?: string) {
   return new Request(
@@ -35,22 +52,7 @@ test('runs one item per provider to stay inside the function duration budget', a
     getCronSecret: () => 'correct-secret',
     runBatch: async input => {
       calls.push(input.maxItems)
-      return {
-        'google:view_item': {
-          acceptedUnverified: 0,
-          claimed: 0,
-          deadLettered: 0,
-          limitReached: false,
-          retryScheduled: 0
-        },
-        'meta:view_item': {
-          acceptedUnverified: 0,
-          claimed: 0,
-          deadLettered: 0,
-          limitReached: false,
-          retryScheduled: 0
-        }
-      }
+      return emptyBatchResult()
     }
   }
 

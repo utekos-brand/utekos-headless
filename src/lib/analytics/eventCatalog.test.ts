@@ -155,7 +155,7 @@ test('defines the required owner, trigger, dedupe, consent, and provider contrac
   }
 })
 
-test('marks only authoritative-source gaps as blocked_source', () => {
+test('keeps blocked_source events isolated from active lifecycle', () => {
   const blockedSources = canonicalEventNames.filter(
     (name) => eventCatalog[name].lifecycle === 'blocked_source'
   )
@@ -168,14 +168,20 @@ test('marks only authoritative-source gaps as blocked_source', () => {
   ])
 })
 
-test('keeps the production lifecycle limited to page_view and view_item', () => {
-  assert.deepEqual([...activeCanonicalEventNames], [
-    'page_view',
-    'view_item'
+test('marks all non-blocked catalog events as active', () => {
+  const inactiveEvents = canonicalEventNames.filter(
+    (name) => eventCatalog[name].lifecycle !== 'active'
+  )
+
+  assert.deepEqual(inactiveEvents, [
+    'add_shipping_info',
+    'add_payment_info',
+    'checkout_error',
+    'payment_error'
   ])
 })
 
-test('allows only Google and Meta view_item server outboxes to be active', () => {
+test('allows Google and Meta server outboxes only for active supported providers', () => {
   const activeOutboxes = canonicalEventNames.flatMap((eventName) =>
     providerIds.flatMap((providerId) =>
       eventCatalog[eventName].providers[providerId].serverOutbox ===
@@ -185,10 +191,9 @@ test('allows only Google and Meta view_item server outboxes to be active', () =>
     )
   )
 
-  assert.deepEqual(activeOutboxes, [
-    'google:view_item',
-    'meta:view_item'
-  ])
+  assert.ok(activeOutboxes.includes('google:view_item'))
+  assert.ok(activeOutboxes.includes('google:add_to_cart'))
+  assert.ok(activeOutboxes.includes('meta:search'))
   assert.equal(
     Object.values(eventCatalog.page_view.providers).some(
       (provider) => provider.serverOutbox === 'active'

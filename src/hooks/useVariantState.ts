@@ -13,6 +13,8 @@ import { variantStateReducer } from '@/lib/utils/variantStateReducer'
 import type { Route } from 'next'
 
 import { flattenVariants } from '@/lib/utils/flattenVariants'
+import { selectVariantByOptions } from '@/lib/utils/selectVariantByOptions'
+import { reportCanonicalVariantSelect } from '@/lib/analytics/variantSelectReporter'
 
 import type { ShopifyProduct } from 'types/product'
 
@@ -76,13 +78,34 @@ export function useVariantState(
   }, [enableUrlSync, pathname, router, searchParams, variantState])
 
   function updateVariant(optionName: string, value: string) {
-    if (!allVariants.length) return
+    if (!allVariants.length || !product) return
+    if (variantState.status !== 'selected') return
+
+    const nextVariant = selectVariantByOptions(allVariants, {
+      current: variantState.variant,
+      optionName,
+      value
+    })
+
+    if (!nextVariant || nextVariant.id === variantState.variant.id) return
 
     dispatch({
       type: 'updateFromOptions',
       optionName,
       value,
       variants: allVariants
+    })
+
+    reportCanonicalVariantSelect({
+      customData: {
+        interaction_id: globalThis.crypto.randomUUID(),
+        product_id: product.id,
+        variant_id: nextVariant.id,
+        item_id: nextVariant.id,
+        item_variant: nextVariant.title,
+        availability:
+          nextVariant.availableForSale ? 'available' : 'unavailable'
+      }
     })
   }
 

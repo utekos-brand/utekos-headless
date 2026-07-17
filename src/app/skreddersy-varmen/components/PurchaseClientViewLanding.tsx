@@ -20,19 +20,12 @@ import { KlarnaCheckoutImage } from './KlarnaCheckoutImage'
 import {
   SIZE_GUIDANCE,
   focusRing,
-  maritimePanelClass,
-  maritimePanelHeaderClass,
   choiceGridClass,
   choicePillClass
 } from '../utils/constants'
 import { LandingPageVariantSelector } from './LandingPageVariantSelector'
 import { getModelName } from '@/app/skreddersy-varmen/utils/getModelName'
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@/components/ui/accordion'
+import { LandingProductHighlightsPanel } from './LandingProductHighlightsPanel'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
 import { ShippingAndReturnComponent } from './ShippingAndReturnComponent'
 import { KlarnaLandingExpressCheckout } from './KlarnaLandingExpressCheckout'
@@ -81,14 +74,13 @@ export function PurchaseClientViewLanding({
 
   return (
     <>
-      <article className='dark:text-dark-background relative w-full max-w-full overflow-x-clip text-background min-[900px]:grid min-[900px]:grid-cols-2'>
+      <article className='relative w-full max-w-full overflow-x-clip text-background min-[900px]:grid min-[900px]:grid-cols-2'>
         <LandingPageProductCarouselPurchaseSection
           selectedModel={selectedModel}
           currentConfig={currentConfig}
         />
 
-        {/* Hovedpanelet er lyst og rent for optimal lesbarhet */}
-        <div className='dark:bg-dark-foreground flex w-full flex-col bg-foreground'>
+        <div className='flex w-full flex-col bg-foreground'>
           <div className='flex-1 p-6 min-[1280px]:p-20 md:p-12'>
             <LandingPageVariantSelector
               selectedModel={selectedModel}
@@ -97,7 +89,7 @@ export function PurchaseClientViewLanding({
               }
             />
             <div key={`hero-${selectedModel}`} className='mb-12'>
-              <h2 className='dark:text-dark-background mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-sans text-4xl leading-[0.95] font-bold tracking-[-0.01em] text-background min-[1280px]:text-7xl'>
+              <h2 className='mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-sans text-4xl leading-[0.95] font-bold tracking-[-0.01em] text-background min-[1280px]:text-7xl'>
                 <span className='sr-only'>Utekos </span>
                 <UtekosWordmark
                   aria-hidden
@@ -109,27 +101,27 @@ export function PurchaseClientViewLanding({
                 </span>
               </h2>
 
-              <p className='leading-text-paragraph dark:text-dark-background/90 mb-8 max-w-152 text-lg tracking-normal text-background/90 md:text-xl'>
+              <p className='leading-text-paragraph mb-8 max-w-152 text-lg tracking-normal text-background/90 md:text-xl'>
                 {currentConfig.subtitle}
               </p>
 
-              <div className='grid w-full max-w-none grid-cols-[auto_minmax(0,1fr)] items-center gap-4 min-[900px]:max-w-152 sm:gap-5'>
-                <span className='dark:text-dark-background shrink-0 text-3xl font-medium text-background min-[1280px]:text-4xl'>
+              <div className='space-y-4'>
+                <p className='text-4xl font-bold tracking-tight text-background tabular-nums min-[900px]:text-5xl min-[1280px]:text-6xl min-[1280px]:leading-none'>
                   {currentConfig.price},-
-                </span>
-                <KlarnaCheckoutImage className='w-full' />
+                </p>
+                <KlarnaCheckoutImage className='min-[900px]:max-w-md' />
               </div>
 
               {isTechDownOffer && (
-                <div className='dark:border-dark-accent/30 dark:bg-dark-accent/10 mt-8 flex items-center gap-4 rounded-lg border border-accent/30 bg-accent/10 p-4 shadow-sm'>
-                  <div className='dark:bg-dark-accent/20 flex size-10 shrink-0 items-center justify-center rounded-full bg-accent/20'>
-                    <Gift className='dark:text-dark-accent size-5 text-accent' />
+                <div className='mt-8 flex items-center gap-4 rounded-lg border border-accent/30 bg-accent/10 p-4 shadow-sm'>
+                  <div className='flex size-10 shrink-0 items-center justify-center rounded-full bg-accent/20'>
+                    <Gift className='size-5 text-accent' />
                   </div>
                   <div>
-                    <h3 className='dark:text-dark-background font-semibold text-background'>
+                    <h3 className='font-semibold text-background'>
                       Sommertilbud
                     </h3>
-                    <p className='dark:text-dark-background/80 text-sm text-background/80'>
+                    <p className='text-sm text-background/80'>
                       10% rabatt + Gratis Buff™ (verdi 249,-)
                       legges til i kurven.
                     </p>
@@ -149,7 +141,7 @@ export function PurchaseClientViewLanding({
                 rootMargin='0px 0px 25% 0px'
                 threshold={0.01}
               >
-                <p className='leading-text-paragraph dark:text-dark-background/85 text-base text-background/85 md:text-lg'>
+                <p className='leading-text-paragraph text-base text-background/85 md:text-lg'>
                   {currentConfig.description}
                 </p>
               </AnimatedBlock>
@@ -162,16 +154,16 @@ export function PurchaseClientViewLanding({
               >
                 <div className={choiceGridClass}>
                   {currentConfig.features.map(feature => (
-                    <BrandBadge
+                    <span
                       key={feature}
-                      tone='promo'
                       className={cn(
                         choicePillClass,
-                        'border-promo-foreground/15 dark:border-dark-promo-foreground/15 border shadow-sm'
+                        'bg-muted text-foreground border-border border shadow-sm',
+                        'px-2.5 text-xs font-bold sm:px-4 sm:text-sm md:text-base'
                       )}
                     >
-                      <span>{feature}</span>
-                    </BrandBadge>
+                      {feature}
+                    </span>
                   ))}
                 </div>
               </AnimatedBlock>
@@ -182,52 +174,20 @@ export function PurchaseClientViewLanding({
                 rootMargin='0px 0px 25% 0px'
                 threshold={0.01}
               >
-                <div
-                  className={cn(
-                    maritimePanelClass,
-                    'dark:border-dark-background/10 dark:bg-dark-foreground border border-background/10 bg-foreground px-5'
-                  )}
-                >
-                  <div
-                    className={cn(
-                      maritimePanelHeaderClass,
-                      'dark:border-dark-background/10 border-background/10'
-                    )}
-                  >
-                    <span className='dark:text-dark-background/80 text-xs font-semibold tracking-[0.02em] text-background/80'>
-                      Dette gjør {modelName} spesiell
-                    </span>
-                  </div>
-
-                  <Accordion
-                    key={`highlights-${selectedModel}`}
-                    className='w-full'
-                  >
-                    {currentConfig.highlights.map(highlight => (
-                      <AccordionItem
-                        key={highlight.title}
-                        value={highlight.title}
-                        className='dark:border-dark-background/10 border-b border-background/10 last:border-b-0'
-                      >
-                        <AccordionTrigger className='dark:text-dark-background dark:hover:text-dark-primary py-3 text-left text-sm font-semibold text-background hover:text-primary hover:no-underline'>
-                          {highlight.title}
-                        </AccordionTrigger>
-                        <AccordionContent className='leading-text-paragraph dark:text-dark-background/80 pt-0 pb-3 text-sm text-background/80'>
-                          {highlight.body}
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
-                </div>
+                <LandingProductHighlightsPanel
+                  modelName={modelName}
+                  selectedModel={selectedModel}
+                  highlights={currentConfig.highlights}
+                />
               </AnimatedBlock>
             </div>
 
-            <div className='dark:bg-dark-background/10 mb-12 h-px w-full bg-background/10' />
+            <div className='mb-12 h-px w-full bg-background/10' />
 
             <div className='mb-12 space-y-12'>
               <div>
                 <div className='mb-4 flex items-center justify-between'>
-                  <span className='dark:text-dark-background text-sm font-bold tracking-normal text-background'>
+                  <span className='text-sm font-bold tracking-normal text-background'>
                     Størrelse
                   </span>
                   <Link
@@ -235,7 +195,7 @@ export function PurchaseClientViewLanding({
                       '/handlehjelp/storrelsesguide' as Route
                     }
                     data-track='SizeGuideSkreddersyVarmen'
-                    className='dark:text-dark-background dark:hover:text-dark-primary text-sm text-background underline transition-colors hover:text-primary'
+                    className='text-sm text-background underline transition-colors hover:text-primary'
                   >
                     Se størrelsesguide
                   </Link>
@@ -251,8 +211,8 @@ export function PurchaseClientViewLanding({
                     const sizePillClassName = cn(
                       choicePillClass,
                       isActive ?
-                        'dark:border-dark-background dark:bg-dark-background border border-background bg-background text-foreground shadow-md'
-                      : 'dark:border-dark-background/15 dark:bg-dark-foreground dark:text-dark-background dark:hover:bg-dark-background/5 border border-background/15 bg-foreground text-background hover:bg-background/5',
+                        'border border-background bg-background text-foreground shadow-md'
+                      : 'border border-background/15 bg-foreground text-background hover:bg-background/5',
                       focusRing
                     )
 
@@ -287,9 +247,9 @@ export function PurchaseClientViewLanding({
                     key={selectedSize}
                     className='animate-in fade-in slide-in-from-top-2 mt-3 duration-300'
                   >
-                    <div className='dark:border-dark-primary/20  relative overflow-hidden rounded-2xl border border-primary/20 bg-card p-4 text-foreground shadow-md'>
-                      <div className='dark:border-dark-foreground/15 mb-2 flex items-center gap-2 border-b border-foreground/15 pb-2'>
-                        <Ruler className='dark:text-dark-primary size-4 text-primary' />
+                    <div className='relative overflow-hidden rounded-2xl border border-primary/20 bg-card p-4 text-foreground shadow-md'>
+                      <div className='mb-2 flex items-center gap-2 border-b border-foreground/15 pb-2'>
+                        <Ruler className='size-4 text-primary' />
                         <span className='text-sm font-bold tracking-normal text-foreground'>
                           Passer best for deg som er{' '}
                           {guidance.height}
@@ -309,13 +269,13 @@ export function PurchaseClientViewLanding({
                   </div>
                 )}
 
-                <div className='dark:border-dark-background/10 mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 border-t border-background/10 pt-4'>
+                <div className='mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 border-t border-background/10 pt-4'>
                   <div
                     className='min-w-0'
                     role='radiogroup'
                     aria-label='Velg farge'
                   >
-                    <span className='dark:text-dark-background/80 mb-2 block text-xs font-semibold tracking-normal text-background/80'>
+                    <span className='mb-2 block text-xs font-semibold tracking-normal text-background/80'>
                       Farge
                     </span>
 
@@ -327,18 +287,17 @@ export function PurchaseClientViewLanding({
                           const isInteractive =
                             currentConfig.colors.length > 1
                           const colorPillClassName = cn(
-                            'dark:border-dark-background/15 dark:bg-dark-foreground dark:text-dark-background inline-flex h-10 min-w-0 items-center justify-start gap-2 rounded-full border border-background/15 bg-foreground px-3 text-sm font-semibold text-background transition',
-                            isInteractive &&
-                              'dark:hover:bg-dark-background/5 hover:bg-background/5',
+                            'inline-flex h-10 min-w-0 items-center justify-start gap-2 rounded-full border border-background/15 bg-foreground px-3 text-sm font-semibold text-background transition',
+                            isInteractive && 'hover:bg-background/5',
                             !isInteractive && 'cursor-default',
                             isActive &&
-                              'dark:border-dark-background dark:ring-dark-background border-background shadow-sm ring-1 ring-background',
+                              'border-background shadow-sm ring-1 ring-background',
                             focusRing
                           )
                           const colorPillContent = (
                             <>
                               <span
-                                className='dark:border-dark-background/20 size-4 shrink-0 rounded-full border border-background/20 shadow-sm'
+                                className='size-4 shrink-0 rounded-full border border-background/20 shadow-sm'
                                 style={{
                                   backgroundColor: colorObj.hex
                                 }}
@@ -384,16 +343,16 @@ export function PurchaseClientViewLanding({
                   </div>
 
                   <div className='shrink-0'>
-                    <span className='dark:text-dark-background/80 mb-2 block text-xs font-semibold tracking-normal text-background/80'>
+                    <span className='mb-2 block text-xs font-semibold tracking-normal text-background/80'>
                       Antall
                     </span>
 
-                    <div className='dark:border-dark-background/15 dark:bg-dark-foreground dark:text-dark-background mt-1 flex h-10 items-center rounded-full border border-background/15 bg-foreground text-background'>
+                    <div className='mt-1 flex h-10 items-center rounded-full border border-background/15 bg-foreground text-background'>
                       <button
                         type='button'
                         onClick={() => setQuantity(quantity - 1)}
                         className={cn(
-                          'dark:text-dark-background dark:hover:bg-dark-background/5 flex size-10 items-center justify-center rounded-l-full text-background transition-colors hover:bg-background/5',
+                          'flex size-10 items-center justify-center rounded-l-full text-background transition-colors hover:bg-background/5',
                           focusRing
                         )}
                         aria-label='Reduser antall'
@@ -402,7 +361,7 @@ export function PurchaseClientViewLanding({
                       </button>
 
                       <span
-                        className='dark:text-dark-background w-9 text-center text-base font-semibold text-background tabular-nums'
+                        className='w-9 text-center text-base font-semibold text-background tabular-nums'
                         aria-live='polite'
                         aria-atomic='true'
                       >
@@ -413,7 +372,7 @@ export function PurchaseClientViewLanding({
                         type='button'
                         onClick={() => setQuantity(quantity + 1)}
                         className={cn(
-                          'dark:text-dark-background dark:hover:bg-dark-background/5 flex size-10 items-center justify-center rounded-r-full text-background transition-colors hover:bg-background/5',
+                          'flex size-10 items-center justify-center rounded-r-full text-background transition-colors hover:bg-background/5',
                           focusRing
                         )}
                         aria-label='Øk antall'
@@ -427,13 +386,13 @@ export function PurchaseClientViewLanding({
             </div>
           </div>
 
-          <div className='dark:border-dark-background/20  border-t border-background/20 bg-card p-6 text-foreground min-[900px]:p-8 min-[1280px]:p-12 md:p-12'>
+          <div className='border-t border-background/20 bg-card p-6 text-foreground min-[900px]:p-8 min-[1280px]:p-12 md:p-12'>
             <div className='mb-4 min-[900px]:mb-6 min-[1280px]:mb-8'>
               <BrandBadge
                 asChild
                 tone='commerce-primary'
                 className={cn(
-                  'h-14 w-full min-w-0 bg-primary px-4 py-0 text-sm font-bold tracking-normal text-primary-foreground shadow-[0_4px_20px_rgba(255,180,120,0.15)] transition-[transform,filter,box-shadow] hover:bg-primary-hover hover:text-primary-foreground hover:shadow-[0_4px_25px_rgba(255,180,120,0.3)] hover:brightness-105 active:scale-[0.985] dark:bg-dark-primary dark:text-dark-primary-foreground dark:hover:bg-dark-primary-hover dark:hover:text-dark-primary-hover-foreground sm:text-base md:h-16 md:px-6 md:text-lg',
+                  'h-14 w-full min-w-0 bg-primary px-4 py-0 text-sm font-bold tracking-normal text-primary-foreground shadow-[0_4px_20px_rgba(255,180,120,0.15)] transition-[transform,filter,box-shadow] hover:bg-primary-hover hover:text-primary-foreground hover:shadow-[0_4px_25px_rgba(255,180,120,0.3)] hover:brightness-105 active:scale-[0.985] sm:text-base md:h-16 md:px-6 md:text-lg',
                   isPending && 'cursor-not-allowed opacity-80'
                 )}
               >
@@ -467,7 +426,7 @@ export function PurchaseClientViewLanding({
                     <span className='whitespace-nowrap'>
                       Legg i handlekurv
                     </span>
-                    <span className='dark:bg-dark-background/20 hidden h-5 w-px bg-background/20 sm:block' />
+                    <span className='hidden h-5 w-px bg-background/20 sm:block' />
                     <span className='hidden font-bold whitespace-nowrap sm:inline'>
                       {currentConfig.price * quantity},-
                     </span>

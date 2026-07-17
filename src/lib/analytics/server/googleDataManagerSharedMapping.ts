@@ -1,0 +1,339 @@
+import { protos } from '@google-ads/datamanager'
+import type { CanonicalEventEnvelope } from '../canonicalEventEnvelope'
+
+type DataManagerParameter =
+  protos.google.ads.datamanager.v1.IEventParameter
+
+export const GA_CLIENT_ID = /^\d+\.\d+$/
+export const GA_COOKIE = /^GA\d+\.\d+\.(\d+\.\d+)$/
+export const MAX_PARAMETER_VALUE_LENGTH = 100
+export const MAX_ADDITIONAL_ITEM_PARAMETERS = 24
+export const MAX_PAGE_LOCATION_LENGTH = 1000
+export const MAX_PAGE_REFERRER_LENGTH = 420
+export const MAX_PAGE_TITLE_LENGTH = 300
+export const MAX_USER_IDENTIFIERS = 10
+export const IP_MATCHING_RESTRICTED_COUNTRY_CODES = new Set([
+  'AT', 'BE', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES',
+  'FI', 'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI',
+  'LT', 'LU', 'LV', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SE',
+  'SI', 'SK', 'UK'
+])
+const SUBDIVISION_CODE = /^[A-Z]{2}-[A-Z0-9]{1,3}$/
+const REGION_PART = /^[A-Z0-9]{1,3}$/
+
+const { ConsentStatus } = protos.google.ads.datamanager.v1
+
+type MappableBrowserEvent = Pick<
+  CanonicalEventEnvelope,
+  | 'browser_id'
+  | 'click_id'
+  | 'client_ip_address'
+  | 'consent'
+  | 'event_device_info'
+  | 'external_id'
+  | 'impression_id'
+  | 'location'
+  | 'user_data'
+>
+
+export function resolveGoogleClientId(
+  browserId: CanonicalEventEnvelope['browser_id']
+) {
+  const candidate =
+    browserId?.ga_client_id
+    ?? browserId?.ga_client
+    ?? browserId?.ga_cookie
+
+  if (!candidate) {
+    throw new Error(
+      'Google Data Manager event requires a GA client ID'
+    )
+  }
+
+  const normalized = candidate.trim()
+  if (GA_CLIENT_ID.test(normalized)) return normalized
+
+  const cookieMatch = GA_COOKIE.exec(normalized)
+  if (cookieMatch?.[1]) return cookieMatch[1]
+
+  throw new Error(
+    'Google Data Manager event requires a valid GA client ID'
+  )
+}
+
+export function mapGoogleDataManagerTimestamp(eventTime: string) {
+  const milliseconds = Date.parse(eventTime)
+
+  if (!Number.isFinite(milliseconds)) {
+    throw new Error(
+      'Google Data Manager event_time must be a valid timestamp'
+    )
+  }
+
+  return {
+    seconds: Math.floor(milliseconds / 1000),
+    nanos: (milliseconds % 1000) * 1_000_000
+  }
+}
+
+export function googleDataManagerParameter(
+  parameterName: string,
+  value: string | number | boolean | null | undefined,
+  maxLength = MAX_PARAMETER_VALUE_LENGTH
+): DataManagerParameter | undefined {
+  if (value === undefined || value === null || value === '') {
+    return undefined
+  }
+
+  return {
+    parameterName,
+    value: Array.from(String(value)).slice(0, maxLength).join('')
+  }
+}
+
+export function googleDataManagerIdentifierParameter(
+  parameterName: string,
+  value: string | null | undefined
+) {
+  if (
+    !value
+    || Array.from(value).length > MAX_PARAMETER_VALUE_LENGTH
+  ) {
+    return undefined
+  }
+
+  return { parameterName, value }
+}
+
+function encodePathnameUnits(pathname: string) {
+  const units: string[] = []
+
+  for (const [index, segment] of pathname.split('/').entries()) {
+    if (index > 0) units.push('/')
+
+    for (const codePoint of Array.from(
+      decodeURIComponent(segment)
+    )) {
+      units.push(encodeURIComponent(codePoint))
+    }
+  }
+
+  return units
+}
+
+function truncateUrlToOriginAndPathname(
+  url: URL,
+  maxLength: number
+) {
+  const availablePathLength = maxLength - url.origin.length
+
+  if (availablePathLength < 1) return undefined
+
+  const pathname: string[] = []
+  let pathnameLength = 0
+
+  for (const unit of encodePathnameUnits(url.pathname)) {
+    if (pathnameLength + unit.length > availablePathLength) break
+
+    pathname.push(unit)
+    pathnameLength += unit.length
+  }
+
+  return `${url.origin}${pathname.join('')}`
+}
+
+export function normalizeGoogleReferrerUrl(value: string | undefined) {
+  if (!value) return undefined
+
+  const url = new URL(value)
+  const normalized = `${url.origin}${url.pathname}`
+
+  if (normalized.length <= MAX_PAGE_REFERRER_LENGTH) {
+    return normalized
+  }
+
+  return truncateUrlToOriginAndPathname(
+    url,
+    MAX_PAGE_REFERRER_LENGTH
+  )
+}
+
+export function limitGooglePageLocation(value: string) {
+  const url = new URL(value)
+
+  if (url.href.length <= MAX_PAGE_LOCATION_LENGTH) return value
+
+  url.hash = ''
+
+  if (url.href.length <= MAX_PAGE_LOCATION_LENGTH) {
+    return url.href
+  }
+
+  url.search = ''
+
+  if (url.href.length <= MAX_PAGE_LOCATION_LENGTH) {
+    return url.href
+  }
+
+  return truncateUrlToOriginAndPathname(
+    url,
+    MAX_PAGE_LOCATION_LENGTH
+  ) ?? url.origin
+}
+
+export function compactGoogleDataManagerParameters(
+  parameters: Array<DataManagerParameter | undefined>
+) {
+  return parameters.filter(
+    (candidate): candidate is DataManagerParameter =>
+      candidate !== undefined
+  )
+}
+
+export function mapGoogleDataManagerConsent(
+  consent: CanonicalEventEnvelope['consent']
+) {
+  const advertisingConsent =
+    consent.marketing === 'granted' ?
+      ConsentStatus.CONSENT_GRANTED
+    : ConsentStatus.CONSENT_DENIED
+
+  return {
+    adUserData: advertisingConsent,
+    adPersonalization: advertisingConsent
+  }
+}
+
+export function mapGoogleDataManagerUserData(
+  event: MappableBrowserEvent
+) {
+  if (event.consent.marketing !== 'granted') return undefined
+
+  const emailAddresses = [
+    ...new Set(event.user_data?.email_sha256 ?? [])
+  ]
+  const phoneNumbers = [
+    ...new Set(event.user_data?.phone_sha256 ?? [])
+  ]
+  const userIdentifiers: Array<
+    { emailAddress: string } | { phoneNumber: string }
+  > = []
+
+  for (
+    let index = 0;
+    userIdentifiers.length < MAX_USER_IDENTIFIERS
+    && (index < emailAddresses.length
+      || index < phoneNumbers.length);
+    index += 1
+  ) {
+    const emailAddress = emailAddresses[index]
+    const phoneNumber = phoneNumbers[index]
+
+    if (emailAddress) userIdentifiers.push({ emailAddress })
+    if (
+      phoneNumber
+      && userIdentifiers.length < MAX_USER_IDENTIFIERS
+    ) {
+      userIdentifiers.push({ phoneNumber })
+    }
+  }
+
+  return userIdentifiers.length > 0 ?
+      { userIdentifiers }
+    : undefined
+}
+
+export function mapGoogleDataManagerAdIdentifiers(
+  event: MappableBrowserEvent
+) {
+  if (event.consent.marketing !== 'granted') return undefined
+
+  const identifiers = {
+    ...(event.click_id?.dclid ?
+      { dclid: event.click_id.dclid }
+    : {}),
+    ...(event.click_id?.gbraid ?
+      { gbraid: event.click_id.gbraid }
+    : {}),
+    ...(event.click_id?.gclid ?
+      { gclid: event.click_id.gclid }
+    : {}),
+    ...(event.click_id?.wbraid ?
+      { wbraid: event.click_id.wbraid }
+    : {}),
+    ...(event.impression_id ?
+      { impressionId: event.impression_id }
+    : {})
+  }
+
+  return Object.keys(identifiers).length > 0 ?
+      identifiers
+    : undefined
+}
+
+export function mapGoogleDataManagerDeviceInfo(
+  event: MappableBrowserEvent
+) {
+  const source = event.event_device_info
+  const countryCode = event.location?.country_code?.toUpperCase()
+  const ipAddress =
+    countryCode &&
+    !IP_MATCHING_RESTRICTED_COUNTRY_CODES.has(countryCode) ?
+      event.client_ip_address
+    : undefined
+  const deviceInfo = {
+    ...(ipAddress ?
+      { ipAddress }
+    : {}),
+    ...(source?.user_agent ?
+      { userAgent: source.user_agent }
+    : {}),
+    ...(source?.language ?
+      { languageCode: source.language }
+    : {}),
+    ...(source?.screen_height === undefined ?
+      {}
+    : { screenHeight: source.screen_height }),
+    ...(source?.screen_width === undefined ?
+      {}
+    : { screenWidth: source.screen_width })
+  }
+
+  return Object.keys(deviceInfo).length > 0 ?
+      deviceInfo
+    : undefined
+}
+
+function resolveSubdivisionCode(
+  event: MappableBrowserEvent
+) {
+  const countryCode = event.location?.country_code?.toUpperCase()
+  const regionCode = event.location?.region_code?.toUpperCase()
+
+  if (!regionCode) return undefined
+  if (SUBDIVISION_CODE.test(regionCode)) return regionCode
+
+  return countryCode && REGION_PART.test(regionCode) ?
+      `${countryCode}-${regionCode}`
+    : undefined
+}
+
+export function mapGoogleDataManagerEventLocation(
+  event: MappableBrowserEvent
+) {
+  const location = event.location
+  const subdivisionCode = resolveSubdivisionCode(event)
+  const eventLocation = {
+    ...(location?.city ? { city: location.city } : {}),
+    ...(location?.country_code ?
+      { regionCode: location.country_code.toUpperCase() }
+    : {}),
+    ...(subdivisionCode ?
+      { subdivisionCode }
+    : {})
+  }
+
+  return Object.keys(eventLocation).length > 0 ?
+      eventLocation
+    : undefined
+}

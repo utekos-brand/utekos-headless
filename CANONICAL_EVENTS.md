@@ -7,10 +7,16 @@ adapters, not the event inventory or source of truth.
 
 ## Active inventory
 
-| Event       | Owner               | Detection                                                      | Delivery                                                                              | Status                                                                                  |
-| ----------- | ------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `page_view` | Next.js application | Initial render and App Router URL change                       | `dataLayer` -> web GTM -> `/__sgtm` -> GA4, plus consent-aware first-party collection | Deployed; live browser contract verified without optional consent                        |
-| `view_item` | Next.js application | Resolved product and selected variant context on a product page | `dataLayer` -> web GTM -> `/__sgtm`, plus canonical ledger and provider outbox rows | Deployed; browser, Meta and executed Data Manager acceptance verified, but cross-source Google dedupe is not live-verified |
+| Event | Owner | Detection | Delivery | Status |
+| --- | --- | --- | --- | --- |
+| `page_view` | Next.js application | Initial render and App Router URL change | `dataLayer` -> web GTM -> `/__sgtm` -> GA4, plus consent-aware first-party collection | Active; ledger only (no server outbox) |
+| `view_item` | Next.js application | Resolved product and selected variant on a product page | GTM/sGTM + ledger + Google Data Manager + Meta CAPI | Active |
+| `add_to_cart` | Shopify cart service | After accepted cart mutation | GTM/sGTM + ledger + Google Data Manager + Meta CAPI | Active |
+| `begin_checkout` | Shopify checkout service | Before checkout redirect with valid checkout URL | GTM/sGTM + ledger + Google Data Manager + Meta CAPI; persists checkout consent snapshot | Active |
+| `purchase` | Shopify orders-paid webhook | Verified order-paid webhook | Ledger (operational) + Google Data Manager + Meta CAPI when checkout consent granted | Active |
+| `refund` | Shopify refunds-create webhook | Verified refund webhook | Ledger (operational) + Google Data Manager | Active |
+| Remaining behavior/commerce/lead/form/UX events | Storefront detectors / reporters | See `EVENT_CATALOG.md` | First-party API + Google Data Manager; Meta where catalog specifies | Active (schemas, collectors, adapters); some detectors still reporter-only |
+| `add_shipping_info`, `add_payment_info`, `checkout_error`, `payment_error` | — | — | — | `blocked_source` until Shopify Customer Events/Web Pixels source is chosen |
 
 GA4 Enhanced Measurement page views, browser-history page views
 and the Google tag's automatic `send_page_view` must remain
@@ -139,10 +145,11 @@ boundary.
 
 [`EVENT_CATALOG.md`](EVENT_CATALOG.md) and
 `src/lib/analytics/eventCatalog.ts` are the authoritative human- and
-machine-readable allowlists for all 29 v1 decisions. Only `page_view`
-and `view_item` currently have implemented schemas in the discriminated
-canonical union. Planned or source-blocked entries are decisions, not
-claims of runtime support.
+machine-readable allowlists for all 29 v1 decisions. All non-blocked
+catalog events now have implemented schemas in the discriminated
+canonical union. The four `blocked_source` entries remain decisions
+without runtime detectors until an authoritative checkout source is
+approved.
 
 This foundation is implemented locally and is not deployed. Provider routing
 reads the catalog and can enqueue only an explicitly

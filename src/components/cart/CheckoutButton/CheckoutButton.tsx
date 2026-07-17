@@ -4,7 +4,9 @@
 import * as React from 'react'
 import { cn } from '@/lib/utils/className'
 import { Button } from '@/components/ui/button'
+import { reportCanonicalBeginCheckout } from '@/lib/analytics/beginCheckoutReporter'
 import { getCheckoutAriaLabel } from './getCheckoutAriaLabel'
+import type { Cart } from 'types/cart'
 
 export const CheckoutButton = ({
   checkoutUrl,
@@ -12,6 +14,7 @@ export const CheckoutButton = ({
   isPending,
   disabled = false,
   disabledReason,
+  cart,
   className,
   children,
   ...props
@@ -21,6 +24,7 @@ export const CheckoutButton = ({
   isPending: boolean
   disabled?: boolean
   disabledReason?: string
+  cart?: Cart | null
   cartId?: string | null
   subtotalAmount?: string
   currency?: string
@@ -59,6 +63,11 @@ export const CheckoutButton = ({
     }
 
     event.preventDefault()
+
+    if (cart) {
+      reportCanonicalBeginCheckout({ cart })
+    }
+
     window.location.assign(checkoutUrl)
   }
 

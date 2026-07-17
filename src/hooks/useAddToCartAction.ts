@@ -13,6 +13,8 @@ import {
   type OptimisticItemInput
 } from '@/hooks/useOptimisticCartUpdate'
 import { handlePostAddToCartCampaigns } from '@/lib/campaigns/cart/handlePostAddToCartCampaigns'
+import { reportCanonicalAddToCart } from '@/lib/analytics/addToCartReporter'
+import { reportCanonicalBeginCheckout } from '@/lib/analytics/beginCheckoutReporter'
 import type { UseAddToCartActionProps, Cart } from 'types/cart'
 import type { ShopifyProduct, ShopifyProductVariant } from 'types/product'
 
@@ -111,6 +113,15 @@ export function useAddToCartAction({
         cartId = await getCartIdFromCookie()
       }
 
+      if (cartId && selectedVariant) {
+        reportCanonicalAddToCart({
+          cartId,
+          product,
+          quantity,
+          variant: selectedVariant
+        })
+      }
+
       if (cartId && additionalLine) {
         const freshCart = queryClient.getQueryData<Cart>(['cart', cartId])
 
@@ -190,6 +201,10 @@ export function useAddToCartAction({
         setPendingAction(null)
         toast.error('Kunne ikke åpne kassen. Prøv igjen.')
         return
+      }
+
+      if (result.cart) {
+        reportCanonicalBeginCheckout({ cart: result.cart })
       }
 
       window.location.assign(checkoutUrl)

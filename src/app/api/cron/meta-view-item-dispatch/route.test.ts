@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import { registeredProviderAdapterKeys } from '@/lib/analytics/server/providerAdapterRegistry'
 import {
   handleMetaViewItemOutboxCron,
   type MetaViewItemOutboxCronDependencies
@@ -7,6 +8,29 @@ import {
 
 const cronUrl =
   'https://utekos.no/api/cron/meta-view-item-dispatch'
+
+const emptySummary = {
+  acceptedUnverified: 0,
+  claimed: 0,
+  deadLettered: 0,
+  limitReached: false,
+  retryScheduled: 0
+}
+
+function emptyBatchResult(
+  overrides: Partial<Record<string, typeof emptySummary>> = {}
+) {
+  return {
+    ...Object.fromEntries(
+      registeredProviderAdapterKeys.map(key => [key, emptySummary])
+    ),
+    ...overrides
+  } as Awaited<
+    ReturnType<
+      NonNullable<MetaViewItemOutboxCronDependencies['runBatch']>
+    >
+  >
+}
 
 function request(authorization?: string) {
   return new Request(cronUrl, {
@@ -27,7 +51,7 @@ function dependencies(secret: string | undefined): {
       runBatch: async input => {
         calls.push(input.maxItems)
 
-        return {
+        return emptyBatchResult({
           'google:view_item': {
             acceptedUnverified: 1,
             claimed: 1,
@@ -42,7 +66,7 @@ function dependencies(secret: string | undefined): {
             limitReached: false,
             retryScheduled: 1
           }
-        }
+        })
       }
     }
   }
@@ -79,26 +103,25 @@ test('awaits a bounded batch for an authorized cron request', async () => {
     request('Bearer correct-secret'),
     fake.dependencies
   )
+  const body = await response.json()
 
   assert.equal(response.status, 200)
   assert.equal(response.headers.get('cache-control'), 'no-store')
   assert.deepEqual(fake.calls, [1])
-  assert.deepEqual(await response.json(), {
-    'google:view_item': {
-      acceptedUnverified: 1,
-      claimed: 1,
-      deadLettered: 0,
-      limitReached: false,
-      retryScheduled: 0
-    },
-    'meta:view_item': {
-      acceptedUnverified: 2,
-      claimed: 3,
-      deadLettered: 0,
-      limitReached: false,
-      retryScheduled: 1
-    },
-    ok: true
+  assert.equal(body.ok, true)
+  assert.deepEqual(body['google:view_item'], {
+    acceptedUnverified: 1,
+    claimed: 1,
+    deadLettered: 0,
+    limitReached: false,
+    retryScheduled: 0
+  })
+  assert.deepEqual(body['meta:view_item'], {
+    acceptedUnverified: 2,
+    claimed: 3,
+    deadLettered: 0,
+    limitReached: false,
+    retryScheduled: 1
   })
 })
 

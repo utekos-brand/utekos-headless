@@ -356,6 +356,139 @@ function plannedProviders(
   }
 }
 
+
+type ActiveProviderInput = PlannedProviderInput & {
+  commerce?: boolean
+  firstPartyRequired?: readonly string[]
+}
+
+function activeEventProviders(
+  eventName: string,
+  input: ActiveProviderInput = {}
+): Readonly<Record<ProviderId, ProviderCatalogEntry>> {
+  const googleRequired =
+    input.commerce ?
+      ([
+        'client_id',
+        'transaction_id',
+        'currency',
+        'value',
+        'items',
+        ...(input.googleRequired ?? [])
+      ] as const)
+    : (['client_id', ...(input.googleRequired ?? [])] as const)
+
+  return {
+    supabase: providerMapping({
+      support: 'supported',
+      eventName,
+      transport: { browser: null, server: 'first_party_api' },
+      requiredParameters: [
+        ...baseCanonicalParameters,
+        ...(input.firstPartyRequired ?? [])
+      ],
+      dedupeField: 'event_id',
+      consentRequirement:
+        input.firstPartyConsentRequirement ??
+        'analytics_or_marketing',
+      adapterVersion: 1,
+      productionStatus: 'active',
+      productionDetail: 'Canonical first-party persistence is active.',
+      serverOutbox: 'disabled'
+    }),
+    google: providerMapping({
+      support: 'supported',
+      eventName,
+      transport: {
+        browser: 'google_tag_manager',
+        server: 'google_data_manager'
+      },
+      requiredParameters: [
+        ...baseProviderParameters,
+        ...googleRequired
+      ],
+      dedupeField: input.commerce ? 'transaction_id' : 'event_id',
+      consentRequirement: 'analytics',
+      adapterVersion: 1,
+      productionStatus: 'active',
+      productionDetail:
+        'GTM/sGTM and Data Manager outbox are active.',
+      serverOutbox: 'active'
+    }),
+    meta:
+      input.meta ?
+        providerMapping({
+          support: 'supported',
+          eventName: input.meta.eventName,
+          transport: {
+            browser: null,
+            server: 'meta_conversions_api'
+          },
+          requiredParameters: [
+            ...baseProviderParameters,
+            'action_source',
+            'event_source_url',
+            'user_data',
+            ...(input.meta.requiredParameters ?? [])
+          ],
+          dedupeField: 'event_id',
+          consentRequirement: 'marketing',
+          adapterVersion: 1,
+          productionStatus: 'active',
+          productionDetail: 'Meta CAPI delivery is active.',
+          serverOutbox: 'active'
+        })
+      : notRelevantProvider(
+          'No v1 marketing use case justifies a Meta export.'
+        ),
+    microsoft_uet:
+      input.microsoft ?
+        providerMapping({
+          support: 'supported',
+          eventName: input.microsoft.eventName,
+          transport: {
+            browser: 'microsoft_uet',
+            server: 'microsoft_uet_capi'
+          },
+          requiredParameters: [
+            ...baseProviderParameters,
+            ...(input.microsoft.requiredParameters ?? [])
+          ],
+          dedupeField: 'event_id',
+          consentRequirement: 'marketing',
+          adapterVersion: 1,
+          productionStatus: 'active',
+          productionDetail:
+            'Browser UET is active; server delivery is blocked because no UET CAPI worker exists.',
+          serverOutbox: 'blocked_no_worker'
+        })
+      : notRelevantProvider(
+          'No v1 marketing use case justifies a Microsoft UET export.'
+        ),
+    posthog:
+      input.posthog === false ?
+        notRelevantProvider(
+          'The event is excluded from the v1 product-analytics scope.'
+        )
+      : providerMapping({
+          support: 'planned',
+          eventName,
+          transport: {
+            browser: 'posthog_browser',
+            server: 'posthog_server'
+          },
+          requiredParameters: baseProviderParameters,
+          dedupeField: 'event_id',
+          consentRequirement: 'analytics',
+          adapterVersion: 1,
+          productionStatus: 'not_implemented',
+          productionDetail:
+            'The storefront PostHog integration is currently removed.',
+          serverOutbox: 'disabled'
+        })
+  }
+}
+
 function dedupe(
   eventId: string,
   newEvent: string,
@@ -593,6 +726,368 @@ const viewItemProviders = {
   Record<ProviderId, ProviderCatalogEntry>
 >
 
+const addToCartProviders = {
+  supabase: providerMapping({
+    support: 'supported',
+    eventName: 'add_to_cart',
+    transport: { browser: null, server: 'first_party_api' },
+    requiredParameters: [
+      ...baseCanonicalParameters,
+      'currency',
+      'value',
+      'items'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'analytics_or_marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail: 'Canonical first-party persistence is active.',
+    serverOutbox: 'disabled'
+  }),
+  google: providerMapping({
+    support: 'supported',
+    eventName: 'add_to_cart',
+    transport: {
+      browser: 'google_tag_manager',
+      server: 'google_data_manager'
+    },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'client_id',
+      'transaction_id',
+      'currency',
+      'value',
+      'items'
+    ],
+    dedupeField: 'transaction_id',
+    consentRequirement: 'analytics',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'GTM/sGTM and Data Manager outbox are active for add_to_cart.',
+    serverOutbox: 'active'
+  }),
+  meta: providerMapping({
+    support: 'supported',
+    eventName: 'AddToCart',
+    transport: { browser: null, server: 'meta_conversions_api' },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'action_source',
+      'event_source_url',
+      'user_data',
+      'content_ids',
+      'currency',
+      'value'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail: 'Meta CAPI delivery is active for add_to_cart.',
+    serverOutbox: 'active'
+  }),
+  microsoft_uet: providerMapping({
+    support: 'supported',
+    eventName: 'add_to_cart',
+    transport: {
+      browser: 'microsoft_uet',
+      server: 'microsoft_uet_capi'
+    },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'items',
+      'currency',
+      'value'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'Browser UET is active; server delivery is blocked because no UET CAPI worker exists.',
+    serverOutbox: 'blocked_no_worker'
+  }),
+  posthog: providerMapping({
+    support: 'planned',
+    eventName: 'add_to_cart',
+    transport: {
+      browser: 'posthog_browser',
+      server: 'posthog_server'
+    },
+    requiredParameters: baseProviderParameters,
+    dedupeField: 'event_id',
+    consentRequirement: 'analytics',
+    adapterVersion: 1,
+    productionStatus: 'not_implemented',
+    productionDetail:
+      'The storefront PostHog integration is currently removed.',
+    serverOutbox: 'disabled'
+  })
+} as const satisfies Readonly<
+  Record<ProviderId, ProviderCatalogEntry>
+>
+
+const beginCheckoutProviders = {
+  supabase: providerMapping({
+    support: 'supported',
+    eventName: 'begin_checkout',
+    transport: { browser: null, server: 'first_party_api' },
+    requiredParameters: [
+      ...baseCanonicalParameters,
+      'currency',
+      'value',
+      'items'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'analytics_or_marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail: 'Canonical first-party persistence is active.',
+    serverOutbox: 'disabled'
+  }),
+  google: providerMapping({
+    support: 'supported',
+    eventName: 'begin_checkout',
+    transport: {
+      browser: 'google_tag_manager',
+      server: 'google_data_manager'
+    },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'client_id',
+      'transaction_id',
+      'currency',
+      'value',
+      'items'
+    ],
+    dedupeField: 'transaction_id',
+    consentRequirement: 'analytics',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'GTM/sGTM and Data Manager outbox are active for begin_checkout.',
+    serverOutbox: 'active'
+  }),
+  meta: providerMapping({
+    support: 'supported',
+    eventName: 'InitiateCheckout',
+    transport: { browser: null, server: 'meta_conversions_api' },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'action_source',
+      'event_source_url',
+      'user_data',
+      'content_ids',
+      'currency',
+      'value'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail: 'Meta CAPI delivery is active for begin_checkout.',
+    serverOutbox: 'active'
+  }),
+  microsoft_uet: providerMapping({
+    support: 'supported',
+    eventName: 'begin_checkout',
+    transport: {
+      browser: 'microsoft_uet',
+      server: 'microsoft_uet_capi'
+    },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'items',
+      'currency',
+      'value'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'Browser UET is active; server delivery is blocked because no UET CAPI worker exists.',
+    serverOutbox: 'blocked_no_worker'
+  }),
+  posthog: providerMapping({
+    support: 'planned',
+    eventName: 'begin_checkout',
+    transport: {
+      browser: 'posthog_browser',
+      server: 'posthog_server'
+    },
+    requiredParameters: baseProviderParameters,
+    dedupeField: 'event_id',
+    consentRequirement: 'analytics',
+    adapterVersion: 1,
+    productionStatus: 'not_implemented',
+    productionDetail:
+      'The storefront PostHog integration is currently removed.',
+    serverOutbox: 'disabled'
+  })
+} as const satisfies Readonly<
+  Record<ProviderId, ProviderCatalogEntry>
+>
+
+const purchaseProviders = {
+  supabase: providerMapping({
+    support: 'supported',
+    eventName: 'purchase',
+    transport: { browser: null, server: 'first_party_api' },
+    requiredParameters: [
+      ...baseCanonicalParameters,
+      'transaction_id',
+      'currency',
+      'value',
+      'items'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'operational',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'Operational ledger persistence via Shopify orders-paid webhook.',
+    serverOutbox: 'disabled'
+  }),
+  google: providerMapping({
+    support: 'supported',
+    eventName: 'purchase',
+    transport: {
+      browser: null,
+      server: 'google_data_manager'
+    },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'client_id',
+      'transaction_id',
+      'currency',
+      'value',
+      'items'
+    ],
+    dedupeField: 'transaction_id',
+    consentRequirement: 'analytics',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'Data Manager purchase outbox is active when checkout analytics consent was granted.',
+    serverOutbox: 'active'
+  }),
+  meta: providerMapping({
+    support: 'supported',
+    eventName: 'Purchase',
+    transport: { browser: null, server: 'meta_conversions_api' },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'action_source',
+      'content_ids',
+      'currency',
+      'value'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'Meta CAPI purchase outbox is active when checkout marketing consent was granted.',
+    serverOutbox: 'active'
+  }),
+  microsoft_uet: providerMapping({
+    support: 'supported',
+    eventName: 'purchase',
+    transport: {
+      browser: null,
+      server: 'microsoft_uet_capi'
+    },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'revenue_value',
+      'currency',
+      'items'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'Server UET CAPI is blocked because no UET CAPI worker exists.',
+    serverOutbox: 'blocked_no_worker'
+  }),
+  posthog: providerMapping({
+    support: 'planned',
+    eventName: 'purchase',
+    transport: {
+      browser: 'posthog_browser',
+      server: 'posthog_server'
+    },
+    requiredParameters: baseProviderParameters,
+    dedupeField: 'event_id',
+    consentRequirement: 'analytics',
+    adapterVersion: 1,
+    productionStatus: 'not_implemented',
+    productionDetail:
+      'The storefront PostHog integration is currently removed.',
+    serverOutbox: 'disabled'
+  })
+} as const satisfies Readonly<
+  Record<ProviderId, ProviderCatalogEntry>
+>
+
+const refundProviders = {
+  supabase: providerMapping({
+    support: 'supported',
+    eventName: 'refund',
+    transport: { browser: null, server: 'first_party_api' },
+    requiredParameters: [
+      ...baseCanonicalParameters,
+      'transaction_id',
+      'currency',
+      'value',
+      'items'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'operational',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'Operational ledger persistence via Shopify refunds-create webhook.',
+    serverOutbox: 'disabled'
+  }),
+  google: providerMapping({
+    support: 'supported',
+    eventName: 'refund',
+    transport: {
+      browser: null,
+      server: 'google_data_manager'
+    },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'transaction_id',
+      'currency',
+      'value',
+      'items'
+    ],
+    dedupeField: 'transaction_id',
+    consentRequirement: 'analytics',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'Data Manager refund outbox is active when analytics consent is available.',
+    serverOutbox: 'active'
+  }),
+  meta: notRelevantProvider(
+    'No v1 Meta refund mapping is approved.'
+  ),
+  microsoft_uet: notRelevantProvider(
+    'No v1 Microsoft UET refund mapping is approved.'
+  ),
+  posthog: notRelevantProvider(
+    'The event is excluded from the v1 product-analytics scope.'
+  )
+} as const satisfies Readonly<
+  Record<ProviderId, ProviderCatalogEntry>
+>
+
 export const eventCatalog = {
   page_view: {
     version: 1,
@@ -623,7 +1118,7 @@ export const eventCatalog = {
   view_item_list: {
     version: 1,
     name: 'view_item_list',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_product_list',
     trigger: {
       description:
@@ -645,8 +1140,10 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('view_item_list', {
+    providers: activeEventProviders('view_item_list', {
+      commerce: true,
       googleRequired: ['item_list_id', 'items'],
+      firstPartyRequired: ['page_view_id', 'item_list_id', 'items'],
       microsoft: {
         eventName: 'view_item_list',
         requiredParameters: ['items']
@@ -656,7 +1153,7 @@ export const eventCatalog = {
   select_item: {
     version: 1,
     name: 'select_item',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_product_link',
     trigger: {
       description:
@@ -677,7 +1174,8 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('select_item', {
+    providers: activeEventProviders('select_item', {
+      commerce: true,
       googleRequired: ['item_list_id', 'items'],
       posthog: true
     })
@@ -715,7 +1213,7 @@ export const eventCatalog = {
   add_to_wishlist: {
     version: 1,
     name: 'add_to_wishlist',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'wishlist_store',
     trigger: {
       description:
@@ -731,7 +1229,8 @@ export const eventCatalog = {
       retain90Days
     ),
     consent: mutationConsent,
-    providers: plannedProviders('add_to_wishlist', {
+    providers: activeEventProviders('add_to_wishlist', {
+      commerce: true,
       googleRequired: ['currency', 'value', 'items'],
       meta: {
         eventName: 'AddToWishlist',
@@ -746,7 +1245,7 @@ export const eventCatalog = {
   add_to_cart: {
     version: 1,
     name: 'add_to_cart',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'shopify_cart_service',
     trigger: {
       description:
@@ -768,22 +1267,12 @@ export const eventCatalog = {
       retain90Days
     ),
     consent: mutationConsent,
-    providers: plannedProviders('add_to_cart', {
-      googleRequired: ['currency', 'value', 'items'],
-      meta: {
-        eventName: 'AddToCart',
-        requiredParameters: ['content_ids', 'currency', 'value']
-      },
-      microsoft: {
-        eventName: 'add_to_cart',
-        requiredParameters: ['items', 'currency', 'value']
-      }
-    })
+    providers: addToCartProviders
   },
   remove_from_cart: {
     version: 1,
     name: 'remove_from_cart',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'shopify_cart_service',
     trigger: {
       description:
@@ -805,7 +1294,8 @@ export const eventCatalog = {
       retain90Days
     ),
     consent: mutationConsent,
-    providers: plannedProviders('remove_from_cart', {
+    providers: activeEventProviders('remove_from_cart', {
+      commerce: true,
       googleRequired: ['currency', 'value', 'items'],
       microsoft: {
         eventName: 'remove_from_cart',
@@ -816,7 +1306,7 @@ export const eventCatalog = {
   view_cart: {
     version: 1,
     name: 'view_cart',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_cart_surface',
     trigger: {
       description:
@@ -837,8 +1327,10 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('view_cart', {
+    providers: activeEventProviders('view_cart', {
+      commerce: true,
       googleRequired: ['currency', 'value', 'items'],
+      firstPartyRequired: ['page_view_id', 'currency', 'value', 'items'],
       microsoft: {
         eventName: 'view_cart',
         requiredParameters: ['items', 'currency', 'value']
@@ -848,7 +1340,7 @@ export const eventCatalog = {
   begin_checkout: {
     version: 1,
     name: 'begin_checkout',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'shopify_checkout_service',
     trigger: {
       description:
@@ -870,17 +1362,7 @@ export const eventCatalog = {
       retain90Days
     ),
     consent: mutationConsent,
-    providers: plannedProviders('begin_checkout', {
-      googleRequired: ['currency', 'value', 'items'],
-      meta: {
-        eventName: 'InitiateCheckout',
-        requiredParameters: ['content_ids', 'currency', 'value']
-      },
-      microsoft: {
-        eventName: 'begin_checkout',
-        requiredParameters: ['items', 'currency', 'value']
-      }
-    })
+    providers: beginCheckoutProviders
   },
   add_shipping_info: {
     version: 1,
@@ -955,7 +1437,7 @@ export const eventCatalog = {
   purchase: {
     version: 1,
     name: 'purchase',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'shopify_order_paid_webhook',
     trigger: {
       description:
@@ -982,23 +1464,12 @@ export const eventCatalog = {
       false
     ),
     consent: transactionConsent,
-    providers: plannedProviders('purchase', {
-      firstPartyConsentRequirement: 'operational',
-      googleRequired: ['transaction_id', 'currency', 'value', 'items'],
-      meta: {
-        eventName: 'Purchase',
-        requiredParameters: ['content_ids', 'currency', 'value']
-      },
-      microsoft: {
-        eventName: 'purchase',
-        requiredParameters: ['revenue_value', 'currency', 'items']
-      }
-    })
+    providers: purchaseProviders
   },
   refund: {
     version: 1,
     name: 'refund',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'shopify_refund_webhook',
     trigger: {
       description:
@@ -1023,16 +1494,12 @@ export const eventCatalog = {
       false
     ),
     consent: transactionConsent,
-    providers: plannedProviders('refund', {
-      firstPartyConsentRequirement: 'operational',
-      googleRequired: ['transaction_id', 'currency', 'value', 'items'],
-      posthog: false
-    })
+    providers: refundProviders
   },
   search: {
     version: 1,
     name: 'search',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_search_controller',
     trigger: {
       description:
@@ -1048,7 +1515,7 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('search', {
+    providers: activeEventProviders('search', {
       googleRequired: ['search_term'],
       meta: { eventName: 'Search', requiredParameters: ['search_string'] },
       microsoft: {
@@ -1060,7 +1527,7 @@ export const eventCatalog = {
   view_search_results: {
     version: 1,
     name: 'view_search_results',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_search_results',
     trigger: {
       description:
@@ -1081,14 +1548,14 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('view_search_results', {
+    providers: activeEventProviders('view_search_results', {
       googleRequired: ['search_term']
     })
   },
   view_promotion: {
     version: 1,
     name: 'view_promotion',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_promotion_observer',
     trigger: {
       description:
@@ -1109,14 +1576,15 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('view_promotion', {
+    providers: activeEventProviders('view_promotion', {
+      commerce: true,
       googleRequired: ['promotion_id', 'creative_name', 'items']
     })
   },
   select_promotion: {
     version: 1,
     name: 'select_promotion',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_promotion_link',
     trigger: {
       description:
@@ -1137,14 +1605,15 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('select_promotion', {
+    providers: activeEventProviders('select_promotion', {
+      commerce: true,
       googleRequired: ['promotion_id', 'creative_name', 'items']
     })
   },
   generate_lead: {
     version: 1,
     name: 'generate_lead',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'lead_submission_service',
     trigger: {
       description:
@@ -1165,7 +1634,7 @@ export const eventCatalog = {
       false
     ),
     consent: leadConsent,
-    providers: plannedProviders('generate_lead', {
+    providers: activeEventProviders('generate_lead', {
       googleRequired: ['currency', 'value'],
       meta: { eventName: 'Lead' },
       microsoft: { eventName: 'generate_lead' }
@@ -1174,7 +1643,7 @@ export const eventCatalog = {
   form_start: {
     version: 1,
     name: 'form_start',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_form_controller',
     trigger: {
       description:
@@ -1190,14 +1659,15 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('form_start', {
-      googleRequired: ['form_id', 'form_name']
+    providers: activeEventProviders('form_start', {
+      googleRequired: ['form_id', 'form_name'],
+      firstPartyRequired: ['form_id', 'page_view_id']
     })
   },
   form_submit: {
     version: 1,
     name: 'form_submit',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'form_submission_service',
     trigger: {
       description:
@@ -1214,14 +1684,14 @@ export const eventCatalog = {
       false
     ),
     consent: leadConsent,
-    providers: plannedProviders('form_submit', {
+    providers: activeEventProviders('form_submit', {
       googleRequired: ['form_id', 'form_name']
     })
   },
   form_error: {
     version: 1,
     name: 'form_error',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'form_submission_service',
     trigger: {
       description:
@@ -1242,7 +1712,7 @@ export const eventCatalog = {
       retain90Days
     ),
     consent: errorConsent,
-    providers: plannedProviders('form_error', {
+    providers: activeEventProviders('form_error', {
       firstPartyConsentRequirement: 'analytics_or_operational',
       googleRequired: ['form_id', 'error_category'],
       posthog: true
@@ -1251,7 +1721,7 @@ export const eventCatalog = {
   filter_apply: {
     version: 1,
     name: 'filter_apply',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_product_filter',
     trigger: {
       description:
@@ -1272,7 +1742,7 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('filter_apply', {
+    providers: activeEventProviders('filter_apply', {
       googleRequired: ['filter_name', 'filter_value'],
       posthog: true
     })
@@ -1280,7 +1750,7 @@ export const eventCatalog = {
   sort_apply: {
     version: 1,
     name: 'sort_apply',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_product_sort',
     trigger: {
       description:
@@ -1301,7 +1771,7 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('sort_apply', {
+    providers: activeEventProviders('sort_apply', {
       googleRequired: ['sort_key'],
       posthog: true
     })
@@ -1309,7 +1779,7 @@ export const eventCatalog = {
   variant_select: {
     version: 1,
     name: 'variant_select',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_variant_controller',
     trigger: {
       description:
@@ -1325,7 +1795,7 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('variant_select', {
+    providers: activeEventProviders('variant_select', {
       googleRequired: ['item_id', 'item_variant'],
       posthog: true
     })
@@ -1333,7 +1803,7 @@ export const eventCatalog = {
   size_guide_view: {
     version: 1,
     name: 'size_guide_view',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_size_guide',
     trigger: {
       description:
@@ -1349,8 +1819,9 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('size_guide_view', {
+    providers: activeEventProviders('size_guide_view', {
       googleRequired: ['guide_id'],
+      firstPartyRequired: ['page_view_id', 'guide_id'],
       posthog: true
     })
   },
@@ -1415,7 +1886,7 @@ export const eventCatalog = {
   scroll_depth: {
     version: 1,
     name: 'scroll_depth',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_scroll_observer',
     trigger: {
       description:
@@ -1431,15 +1902,16 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('scroll_depth', {
+    providers: activeEventProviders('scroll_depth', {
       googleRequired: ['percent_scrolled'],
+      firstPartyRequired: ['page_view_id', 'threshold'],
       posthog: true
     })
   },
   video_progress: {
     version: 1,
     name: 'video_progress',
-    lifecycle: 'planned',
+    lifecycle: 'active',
     owner: 'storefront_video_controller',
     trigger: {
       description:
@@ -1460,13 +1932,14 @@ export const eventCatalog = {
       retain30Days
     ),
     consent: behaviorConsent,
-    providers: plannedProviders('video_progress', {
+    providers: activeEventProviders('video_progress', {
       googleRequired: [
         'video_current_time',
         'video_duration',
         'video_percent',
         'video_title'
       ],
+      firstPartyRequired: ['page_view_id', 'video_id', 'milestone'],
       posthog: true
     })
   }

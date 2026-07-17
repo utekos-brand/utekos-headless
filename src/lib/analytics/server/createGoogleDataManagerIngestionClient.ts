@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs'
+import path from 'node:path'
+
 import {
   IngestionServiceClient,
   protos
@@ -5,22 +8,43 @@ import {
 import { getVercelOidcToken } from '@vercel/oidc'
 import {
   ExternalAccountClient,
+  JWT,
   type BaseExternalAccountClient,
   type IdentityPoolClientOptions
 } from 'google-auth-library'
+import { z } from 'zod'
 
 const DATA_MANAGER_SCOPES = [
   'https://www.googleapis.com/auth/datamanager',
   'https://www.googleapis.com/auth/cloud-platform'
 ] as const
 
+const LOCAL_DEV_DATA_MANAGER_SERVICE_ACCOUNT_PATH =
+  'src/api/lib/cloud-credentials/tag-manager-credentials.json'
+
+const localServiceAccountSchema = z.object({
+  project_id: z.string().optional(),
+  private_key: z.string().min(1),
+  client_email: z.string().email()
+})
+
 type Environment = Readonly<
   Record<string, string | undefined>
 >
 
+type LocalServiceAccountCredentials = {
+  clientEmail: string
+  privateKey: string
+  projectId?: string
+}
+
 type LocalAdcConfig = {
   mode: 'local_adc'
 }
+
+type LocalServiceAccountConfig = {
+  mode: 'local_service_account'
+} & LocalServiceAccountCredentials
 
 type VercelOidcConfig = {
   audience: string
@@ -31,6 +55,7 @@ type VercelOidcConfig = {
 
 export type GoogleDataManagerAuthConfig =
   | LocalAdcConfig
+  | LocalServiceAccountConfig
   | VercelOidcConfig
 
 type GoogleDataManagerCallOptions = {
@@ -69,6 +94,9 @@ export type GoogleDataManagerAuthDependencies = {
   getOidcToken: (
     options: OidcTokenOptions
   ) => Promise<string>
+  readLocalServiceAccountCredentials: () =>
+    | LocalServiceAccountCredentials
+    | undefined
 }
 
 const defaultDependencies:
@@ -90,8 +118,43 @@ const defaultDependencies:
       })
     },
 
-    getOidcToken: getVercelOidcToken
+    getOidcToken: getVercelOidcToken,
+
+    readLocalServiceAccountCredentials:
+      readLocalDevServiceAccountCredentials
   }
+
+function readLocalDevServiceAccountCredentials():
+  | LocalServiceAccountCredentials
+  | undefined {
+  const credentialsPath = path.join(
+    process.cwd(),
+    LOCAL_DEV_DATA_MANAGER_SERVICE_ACCOUNT_PATH
+  )
+
+  if (!existsSync(credentialsPath)) {
+    return undefined
+  }
+
+  const parsed = localServiceAccountSchema.safeParse(
+    JSON.parse(readFileSync(credentialsPath, 'utf8'))
+  )
+
+  if (!parsed.success) {
+    return undefined
+  }
+
+  return {
+    clientEmail: parsed.data.client_email,
+    privateKey: parsed.data.private_key.replace(
+      /\\n/g,
+      '\n'
+    ),
+    ...(parsed.data.project_id ?
+      { projectId: parsed.data.project_id }
+    : {})
+  }
+}
 
 function requiredEnvironmentValue(
   environment: Environment,
@@ -109,9 +172,23 @@ function requiredEnvironmentValue(
 }
 
 export function readGoogleDataManagerAuthConfig(
-  environment: Environment = process.env
+  environment: Environment = process.env,
+  dependencies: Pick<
+    GoogleDataManagerAuthDependencies,
+    'readLocalServiceAccountCredentials'
+  > = defaultDependencies
 ): GoogleDataManagerAuthConfig {
   if (environment.VERCEL !== '1') {
+    const serviceAccount =
+      dependencies.readLocalServiceAccountCredentials()
+
+    if (serviceAccount) {
+      return {
+        mode: 'local_service_account',
+        ...serviceAccount
+      }
+    }
+
     return {
       mode: 'local_adc'
     }
@@ -166,11 +243,27 @@ export function createGoogleDataManagerIngestionClient(
   dependencies: GoogleDataManagerAuthDependencies =
     defaultDependencies
 ): GoogleDataManagerIngestionClient {
-  const config =
-    readGoogleDataManagerAuthConfig(environment)
+  const config = readGoogleDataManagerAuthConfig(
+    environment,
+    dependencies
+  )
 
   if (config.mode === 'local_adc') {
     return dependencies.createIngestionClient()
+  }
+
+  if (config.mode === 'local_service_account') {
+    const authClient = new JWT({
+      email: config.clientEmail,
+      key: config.privateKey,
+      scopes: [...DATA_MANAGER_SCOPES]
+    })
+
+    return dependencies.createIngestionClient({
+      authClient:
+        authClient as unknown as BaseExternalAccountClient,
+      projectId: config.projectId ?? ''
+    })
   }
 
   const authClient =

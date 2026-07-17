@@ -41,7 +41,10 @@ test('uses local Application Default Credentials outside Vercel', () => {
         oidcTokenCount += 1
 
         return 'unexpected'
-      }
+      },
+
+      readLocalServiceAccountCredentials: () =>
+        undefined
     }
 
   const client =
@@ -95,7 +98,10 @@ test('builds a scoped external account client on Vercel', async () => {
         oidcAudience = options.audience
 
         return 'vercel-oidc-token'
-      }
+      },
+
+      readLocalServiceAccountCredentials: () =>
+        undefined
     }
 
   const client =

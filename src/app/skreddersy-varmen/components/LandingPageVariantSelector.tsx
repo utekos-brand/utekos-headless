@@ -30,7 +30,9 @@ export function LandingPageVariantSelector({
               key={key}
               value={key}
               className={cn(
-                'h-auto flex-1 whitespace-nowrap rounded-full border border-background/15 dark:border-dark-background/15 bg-transparent px-6 py-3 text-sm font-semibold tracking-normal text-background dark:text-dark-background transition-all duration-300 hover:bg-background/5 dark:hover:bg-dark-background/5 data-active:!border-background dark:data-active:!border-dark-background data-active:!bg-background dark:data-active:!bg-dark-background data-active:!text-foreground dark:data-active:!text-dark-foreground data-active:shadow-md dark:text-dark-background dark:data-active:!border-dark-background dark:data-active:!bg-dark-background dark:data-active:!text-dark-foreground md:flex-none md:text-base',
+                'h-auto flex-1 rounded-full border border-background/15 bg-transparent px-6 py-3 text-sm font-semibold tracking-normal whitespace-nowrap transition-all duration-300 md:flex-none md:text-base',
+                'text-background/80 hover:bg-background/8 hover:!text-background',
+                'data-active:border-background data-active:bg-background data-active:text-foreground data-active:shadow-md',
                 focusRing
               )}
             >

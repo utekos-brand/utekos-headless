@@ -16,7 +16,12 @@ import { useCartQuery } from '@/hooks/useCartQuery'
 import { cartStore } from '@/lib/state/cartStore'
 import { Root as VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import * as React from 'react'
-import { useTransition } from 'react'
+import { useEffect, useRef, useTransition } from 'react'
+import { reportCanonicalViewCart } from '@/lib/analytics/viewCartReporter'
+import {
+  mapShopifyViewCart,
+  nextViewCartSequence
+} from '@/lib/analytics/shopifyViewCartCommerce'
 import { createDrawerStateHandler } from './utils/createDrawerStateHandler'
 import { Activity } from 'react'
 
@@ -24,7 +29,25 @@ export function CartDrawer(): React.JSX.Element {
   const open = useCartOpen()
   const { data: cart } = useCartQuery()
   const [, startTransition] = useTransition()
+  const lastReportedCartRevision = useRef<string | null>(null)
   const baseHandleStateChange = createDrawerStateHandler(cartStore)
+
+  useEffect(() => {
+    if (!open || !cart?.id || cart.lines.length === 0) return
+
+    const revision = `${cart.id}:${cart.totalQuantity}:${cart.lines.length}`
+    if (lastReportedCartRevision.current === revision) return
+
+    lastReportedCartRevision.current = revision
+
+    try {
+      reportCanonicalViewCart({
+        customData: mapShopifyViewCart(cart, nextViewCartSequence())
+      })
+    } catch (error) {
+      console.error('view_cart reporting failed', error)
+    }
+  }, [cart, open])
 
   const handleStateChangeWithTransition = (isOpen: boolean) => {
     if ('requestIdleCallback' in window) {

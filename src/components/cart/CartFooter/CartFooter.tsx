@@ -49,6 +49,7 @@ export const CartFooter = ({ cart }: { cart: Cart | null | undefined }): React.J
         isPending={isPending > 0}
         disabled={hasUnavailableLines}
         {...(disabledReason === undefined ? {} : { disabledReason })}
+        cart={cart!}
         cartId={cartId}
         subtotalAmount={subtotalAmount}
         currency={currency}

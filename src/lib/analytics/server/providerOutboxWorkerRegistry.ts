@@ -1,12 +1,128 @@
 import { createPostgresProviderOutboxWorker } from './createPostgresProviderOutboxWorker'
 import type { RegisteredProviderAdapterKey } from './providerAdapterRegistry'
+import { googleDataManagerAddToCartProviderAdapter } from './providerAdapters/googleDataManagerAddToCartProviderAdapter'
+import { googleDataManagerAddToWishlistProviderAdapter } from './providerAdapters/googleDataManagerAddToWishlistProviderAdapter'
+import { googleDataManagerBeginCheckoutProviderAdapter } from './providerAdapters/googleDataManagerBeginCheckoutProviderAdapter'
+import { googleDataManagerFilterApplyProviderAdapter } from './providerAdapters/googleDataManagerFilterApplyProviderAdapter'
+import { googleDataManagerFormErrorProviderAdapter } from './providerAdapters/googleDataManagerFormErrorProviderAdapter'
+import { googleDataManagerFormStartProviderAdapter } from './providerAdapters/googleDataManagerFormStartProviderAdapter'
+import { googleDataManagerFormSubmitProviderAdapter } from './providerAdapters/googleDataManagerFormSubmitProviderAdapter'
+import { googleDataManagerGenerateLeadProviderAdapter } from './providerAdapters/googleDataManagerGenerateLeadProviderAdapter'
+import { googleDataManagerPurchaseProviderAdapter } from './providerAdapters/googleDataManagerPurchaseProviderAdapter'
+import { googleDataManagerRefundProviderAdapter } from './providerAdapters/googleDataManagerRefundProviderAdapter'
+import { googleDataManagerRemoveFromCartProviderAdapter } from './providerAdapters/googleDataManagerRemoveFromCartProviderAdapter'
+import { googleDataManagerScrollDepthProviderAdapter } from './providerAdapters/googleDataManagerScrollDepthProviderAdapter'
+import { googleDataManagerSearchProviderAdapter } from './providerAdapters/googleDataManagerSearchProviderAdapter'
+import { googleDataManagerSelectItemProviderAdapter } from './providerAdapters/googleDataManagerSelectItemProviderAdapter'
+import { googleDataManagerSelectPromotionProviderAdapter } from './providerAdapters/googleDataManagerSelectPromotionProviderAdapter'
+import { googleDataManagerSizeGuideViewProviderAdapter } from './providerAdapters/googleDataManagerSizeGuideViewProviderAdapter'
+import { googleDataManagerSortApplyProviderAdapter } from './providerAdapters/googleDataManagerSortApplyProviderAdapter'
+import { googleDataManagerVariantSelectProviderAdapter } from './providerAdapters/googleDataManagerVariantSelectProviderAdapter'
+import { googleDataManagerVideoProgressProviderAdapter } from './providerAdapters/googleDataManagerVideoProgressProviderAdapter'
+import { googleDataManagerViewCartProviderAdapter } from './providerAdapters/googleDataManagerViewCartProviderAdapter'
 import { googleDataManagerViewItemProviderAdapter } from './providerAdapters/googleDataManagerViewItemProviderAdapter'
+import { googleDataManagerViewItemListProviderAdapter } from './providerAdapters/googleDataManagerViewItemListProviderAdapter'
+import { googleDataManagerViewPromotionProviderAdapter } from './providerAdapters/googleDataManagerViewPromotionProviderAdapter'
+import { googleDataManagerViewSearchResultsProviderAdapter } from './providerAdapters/googleDataManagerViewSearchResultsProviderAdapter'
+import { metaAddToCartProviderAdapter } from './providerAdapters/metaAddToCartProviderAdapter'
+import { metaAddToWishlistProviderAdapter } from './providerAdapters/metaAddToWishlistProviderAdapter'
+import { metaBeginCheckoutProviderAdapter } from './providerAdapters/metaBeginCheckoutProviderAdapter'
+import { metaGenerateLeadProviderAdapter } from './providerAdapters/metaGenerateLeadProviderAdapter'
+import { metaPurchaseProviderAdapter } from './providerAdapters/metaPurchaseProviderAdapter'
+import { metaSearchProviderAdapter } from './providerAdapters/metaSearchProviderAdapter'
 import { metaViewItemProviderAdapter } from './providerAdapters/metaViewItemProviderAdapter'
 import type { ProviderOutboxBatchSummary } from './runProviderOutboxWorker'
 
 export const providerOutboxWorkerRegistry = {
+  'google:add_to_cart': createPostgresProviderOutboxWorker(
+    googleDataManagerAddToCartProviderAdapter
+  ),
+  'google:add_to_wishlist': createPostgresProviderOutboxWorker(
+    googleDataManagerAddToWishlistProviderAdapter
+  ),
+  'google:begin_checkout': createPostgresProviderOutboxWorker(
+    googleDataManagerBeginCheckoutProviderAdapter
+  ),
+  'google:filter_apply': createPostgresProviderOutboxWorker(
+    googleDataManagerFilterApplyProviderAdapter
+  ),
+  'google:form_error': createPostgresProviderOutboxWorker(
+    googleDataManagerFormErrorProviderAdapter
+  ),
+  'google:form_start': createPostgresProviderOutboxWorker(
+    googleDataManagerFormStartProviderAdapter
+  ),
+  'google:form_submit': createPostgresProviderOutboxWorker(
+    googleDataManagerFormSubmitProviderAdapter
+  ),
+  'google:generate_lead': createPostgresProviderOutboxWorker(
+    googleDataManagerGenerateLeadProviderAdapter
+  ),
+  'google:purchase': createPostgresProviderOutboxWorker(
+    googleDataManagerPurchaseProviderAdapter
+  ),
+  'google:refund': createPostgresProviderOutboxWorker(
+    googleDataManagerRefundProviderAdapter
+  ),
+  'google:remove_from_cart': createPostgresProviderOutboxWorker(
+    googleDataManagerRemoveFromCartProviderAdapter
+  ),
+  'google:scroll_depth': createPostgresProviderOutboxWorker(
+    googleDataManagerScrollDepthProviderAdapter
+  ),
+  'google:search': createPostgresProviderOutboxWorker(
+    googleDataManagerSearchProviderAdapter
+  ),
+  'google:select_item': createPostgresProviderOutboxWorker(
+    googleDataManagerSelectItemProviderAdapter
+  ),
+  'google:select_promotion': createPostgresProviderOutboxWorker(
+    googleDataManagerSelectPromotionProviderAdapter
+  ),
+  'google:size_guide_view': createPostgresProviderOutboxWorker(
+    googleDataManagerSizeGuideViewProviderAdapter
+  ),
+  'google:sort_apply': createPostgresProviderOutboxWorker(
+    googleDataManagerSortApplyProviderAdapter
+  ),
+  'google:variant_select': createPostgresProviderOutboxWorker(
+    googleDataManagerVariantSelectProviderAdapter
+  ),
+  'google:video_progress': createPostgresProviderOutboxWorker(
+    googleDataManagerVideoProgressProviderAdapter
+  ),
+  'google:view_cart': createPostgresProviderOutboxWorker(
+    googleDataManagerViewCartProviderAdapter
+  ),
   'google:view_item': createPostgresProviderOutboxWorker(
     googleDataManagerViewItemProviderAdapter
+  ),
+  'google:view_item_list': createPostgresProviderOutboxWorker(
+    googleDataManagerViewItemListProviderAdapter
+  ),
+  'google:view_promotion': createPostgresProviderOutboxWorker(
+    googleDataManagerViewPromotionProviderAdapter
+  ),
+  'google:view_search_results': createPostgresProviderOutboxWorker(
+    googleDataManagerViewSearchResultsProviderAdapter
+  ),
+  'meta:add_to_cart': createPostgresProviderOutboxWorker(
+    metaAddToCartProviderAdapter
+  ),
+  'meta:add_to_wishlist': createPostgresProviderOutboxWorker(
+    metaAddToWishlistProviderAdapter
+  ),
+  'meta:begin_checkout': createPostgresProviderOutboxWorker(
+    metaBeginCheckoutProviderAdapter
+  ),
+  'meta:generate_lead': createPostgresProviderOutboxWorker(
+    metaGenerateLeadProviderAdapter
+  ),
+  'meta:purchase': createPostgresProviderOutboxWorker(
+    metaPurchaseProviderAdapter
+  ),
+  'meta:search': createPostgresProviderOutboxWorker(
+    metaSearchProviderAdapter
   ),
   'meta:view_item': createPostgresProviderOutboxWorker(
     metaViewItemProviderAdapter

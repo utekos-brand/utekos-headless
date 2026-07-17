@@ -1,0 +1,45 @@
+import type { CanonicalBeginCheckout } from '../beginCheckoutEvent'
+import type { CanonicalEventStore } from './canonicalEventStore'
+import {
+  normalizeCanonicalBeginCheckout,
+  type CanonicalBeginCheckoutRequestContext
+} from './normalizeCanonicalBeginCheckout'
+import { planCanonicalEventDispatch } from './planCanonicalEventDispatch'
+
+export type CanonicalBeginCheckoutStore = CanonicalEventStore
+
+type AcceptCanonicalBeginCheckoutInput = {
+  payload: unknown
+  requestContext: CanonicalBeginCheckoutRequestContext
+  store: CanonicalBeginCheckoutStore
+}
+
+export type AcceptCanonicalBeginCheckoutResult =
+  | { event_id: string; status: 'accepted' | 'duplicate' }
+  | { reason: 'consent_denied'; status: 'rejected' }
+
+export async function acceptCanonicalBeginCheckout(
+  input: AcceptCanonicalBeginCheckoutInput
+): Promise<AcceptCanonicalBeginCheckoutResult> {
+  const event = normalizeCanonicalBeginCheckout(
+    input.payload,
+    input.requestContext
+  )
+  const hasPermittedPurpose =
+    event.consent.analytics === 'granted' ||
+    event.consent.marketing === 'granted'
+
+  if (!hasPermittedPurpose) {
+    return { reason: 'consent_denied', status: 'rejected' }
+  }
+
+  const result = await input.store.accept({
+    dispatches: planCanonicalEventDispatch(event),
+    event
+  })
+
+  return {
+    event_id: event.event_id,
+    status: result === 'inserted' ? 'accepted' : 'duplicate'
+  }
+}

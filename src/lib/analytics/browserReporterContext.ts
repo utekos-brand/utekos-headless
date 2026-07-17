@@ -1,0 +1,66 @@
+'use client'
+
+import {
+  extractBrowserIds,
+  extractClickIds,
+  getConsentSnapshot,
+  type CookiebotConsent
+} from './pageViewClientContext'
+import { resolveTrackingEnvironment } from './viewItemReporter'
+import type { ConsentSnapshot, TrackingEnvironment } from './pageViewEvent'
+
+export type BrowserReporterContext = {
+  browserId?: Record<string, string>
+  clickId?: Record<string, string>
+  consent: ConsentSnapshot
+  documentReferrer: string
+  environment: TrackingEnvironment
+  eventDeviceInfo: {
+    language: string
+    pixelRatio: number
+    platform: string
+    screenHeight: number
+    screenWidth: number
+    userAgent: string
+    viewportHeight: number
+    viewportWidth: number
+  }
+  pageTitle: string
+  pageUrl: string
+}
+
+type CookiebotWindow = Window & {
+  Cookiebot?: { consent?: CookiebotConsent }
+}
+
+export function readBrowserReporterContext(): BrowserReporterContext {
+  const pageUrl = window.location.href
+  const consent = getConsentSnapshot(
+    (window as CookiebotWindow).Cookiebot?.consent
+  )
+  const browserId = extractBrowserIds(document.cookie, consent)
+  const clickId = extractClickIds(pageUrl)
+
+  return {
+    pageUrl,
+    documentReferrer: document.referrer,
+    pageTitle: document.title || 'Utekos',
+    environment: resolveTrackingEnvironment(
+      pageUrl,
+      process.env.NODE_ENV
+    ),
+    consent,
+    ...(browserId ? { browserId } : {}),
+    ...(clickId ? { clickId } : {}),
+    eventDeviceInfo: {
+      language: navigator.language,
+      pixelRatio: window.devicePixelRatio,
+      platform: navigator.platform,
+      screenHeight: window.screen.height,
+      screenWidth: window.screen.width,
+      userAgent: navigator.userAgent,
+      viewportHeight: window.innerHeight,
+      viewportWidth: window.innerWidth
+    }
+  }
+}

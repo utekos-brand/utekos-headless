@@ -25,7 +25,10 @@ import type { Route } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { reportCanonicalRemoveFromCart } from '@/lib/analytics/removeFromCartReporter'
+import { mapShopifyRemoveFromCart } from '@/lib/analytics/shopifyRemoveFromCartCommerce'
 import type { Cart } from 'types/cart'
+import type { ShopifyProduct } from 'types/product'
 import { AlertDialogTitle } from './AlertDialogen'
 import { Activity } from 'react'
 
@@ -135,6 +138,22 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
 
     if (result.cart?.id) {
       queryClient.setQueryData(['cart', result.cart.id], result.cart)
+    }
+
+    const resolvedCartId = result.cart?.id ?? cartId
+    const product = line.merchandise.product as ShopifyProduct | undefined
+
+    if (resolvedCartId && product) {
+      const eventTime = new Date().toISOString()
+      reportCanonicalRemoveFromCart({
+        customData: mapShopifyRemoveFromCart({
+          cartId: resolvedCartId,
+          mutationTimestamp: eventTime,
+          product,
+          quantity: line.quantity,
+          variant: line.merchandise
+        })
+      })
     }
 
     if (cartId) {

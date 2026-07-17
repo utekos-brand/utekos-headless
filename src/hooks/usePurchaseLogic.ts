@@ -15,6 +15,8 @@ import type { UsePurchaseLogicProps } from 'types/product/PageProps'
 import type { ShopifyProduct, ShopifyProductVariant } from 'types/product'
 import type { Cart } from 'types/cart'
 import type { OptimisticItemInput } from '@/hooks/useOptimisticCartUpdate'
+import { reportCanonicalAddToCart } from '@/lib/analytics/addToCartReporter'
+import { reportCanonicalBeginCheckout } from '@/lib/analytics/beginCheckoutReporter'
 
 type ConfiguredSelectionCartResult = {
   cart: Cart | null
@@ -178,6 +180,15 @@ export function usePurchaseLogic({ products }: UsePurchaseLogicProps) {
         currentCartId = cart?.id ?? (await getCartIdFromCookie())
       }
 
+      if (currentCartId) {
+        reportCanonicalAddToCart({
+          cartId: currentCartId,
+          product,
+          quantity,
+          variant: selectedVariant
+        })
+      }
+
       return {
         cart,
         cartId: currentCartId ?? null,
@@ -217,6 +228,10 @@ export function usePurchaseLogic({ products }: UsePurchaseLogicProps) {
       setIsCheckoutRedirecting(false)
       toast.error('Kunne ikke åpne kassen. Prøv igjen.')
       return
+    }
+
+    if (result.cart) {
+      reportCanonicalBeginCheckout({ cart: result.cart })
     }
 
     window.location.assign(checkoutUrl)

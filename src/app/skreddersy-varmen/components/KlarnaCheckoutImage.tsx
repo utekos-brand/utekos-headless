@@ -1,24 +1,36 @@
 import { cn } from '@/lib/utils/className'
 
+const KLARNA_IMAGE_DESKTOP =
+  'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/728x90.png'
+const KLARNA_IMAGE_TABLET =
+  'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/300x100_e8687c32-1f9f-4e0d-9562-af1d6ad0c939.png'
+const KLARNA_IMAGE_MOBILE =
+  'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/320x50_0b8b051a-4eab-40b2-9a2c-0c610915afd4.png'
+
 export function KlarnaCheckoutImage({ className }: { className?: string }) {
   return (
-    <picture className={cn('block min-w-0 justify-self-end', className)}>
-      <source
-        media='(min-width: 1536px)'
-        srcSet='https://cdn.shopify.com/s/files/1/0634/2154/6744/files/970x90-Left.png?v=1780686568'
-      />
-      <source
-        media='(min-width: 900px)'
-        srcSet='https://cdn.shopify.com/s/files/1/0634/2154/6744/files/970x90_-_Left.png?v=1780686496'
-      />
-      <source media='(min-width: 640px)' srcSet='/klarna/pay-with-klarna/white-secondary/728x90-Center.png' />
+    <div className={cn('w-full min-w-0', className)}>
       <img
-        src='https://cdn.shopify.com/s/files/1/0634/2154/6744/files/320x50_cabfde75-63d1-4988-a8b4-af298c897004.png?v=1780686546'
+        src={KLARNA_IMAGE_MOBILE}
         alt='Velg Klarna i kassen'
         width={320}
         height={50}
-        className='ml-auto block h-auto w-full max-w-[20rem] sm:max-w-md min-[1536px]:max-w-120'
+        className='block h-auto w-full max-w-80 min-[640px]:hidden'
       />
-    </picture>
+      <img
+        src={KLARNA_IMAGE_TABLET}
+        alt='Velg Klarna i kassen'
+        width={300}
+        height={100}
+        className='hidden h-auto w-full max-w-75 min-[640px]:block min-[900px]:hidden'
+      />
+      <img
+        src={KLARNA_IMAGE_DESKTOP}
+        alt='Velg Klarna i kassen'
+        width={728}
+        height={90}
+        className='hidden h-auto w-full min-[900px]:block'
+      />
+    </div>
   )
 }

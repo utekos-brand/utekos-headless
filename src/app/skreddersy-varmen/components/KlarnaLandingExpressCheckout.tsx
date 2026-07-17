@@ -13,7 +13,7 @@ type KlarnaLandingExpressCheckoutProps = {
 }
 
 const klarnaButtonContainerClassName = cn(
-  'h-14 min-h-14 ring-foreground/20 dark:ring-dark-foreground/20',
+  'h-14 min-h-14 ring-card-foreground/50',
   'md:h-16 md:min-h-16'
 )
 

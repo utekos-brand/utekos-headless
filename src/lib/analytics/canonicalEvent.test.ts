@@ -4,6 +4,7 @@ import {
   parseCanonicalEvent,
   type ImplementedCanonicalEventName
 } from './canonicalEvent'
+import { activeCanonicalEventNames } from './eventCatalog'
 import { createCanonicalPageView } from './pageViewEvent'
 import { createCanonicalViewItem } from './viewItemEvent'
 
@@ -15,12 +16,44 @@ const consent = {
   version: '1'
 }
 
-const eventNames: ImplementedCanonicalEventName[] = [
-  'page_view',
-  'view_item'
-]
+test('implemented union covers every active catalog event', () => {
+  const implemented = new Set<ImplementedCanonicalEventName>([
+    'page_view',
+    'view_item',
+    'add_to_cart',
+    'begin_checkout',
+    'purchase',
+    'refund',
+    'view_item_list',
+    'select_item',
+    'add_to_wishlist',
+    'remove_from_cart',
+    'view_cart',
+    'search',
+    'view_search_results',
+    'view_promotion',
+    'select_promotion',
+    'generate_lead',
+    'form_start',
+    'form_submit',
+    'form_error',
+    'filter_apply',
+    'sort_apply',
+    'variant_select',
+    'size_guide_view',
+    'scroll_depth',
+    'video_progress'
+  ])
 
-test('parses every supported canonical event by event_name', () => {
+  for (const name of activeCanonicalEventNames) {
+    assert.ok(
+      implemented.has(name as ImplementedCanonicalEventName),
+      `active catalog event ${name} must be in the implemented union`
+    )
+  }
+})
+
+test('parses supported page_view and view_item events', () => {
   const pageView = createCanonicalPageView({
     environment: 'test',
     eventId: 'd8b18b30-9ce4-4a55-b40f-ffbc3bda9aa7',
@@ -68,14 +101,13 @@ test('parses every supported canonical event by event_name', () => {
     }
   })
 
-  assert.deepEqual(eventNames, ['page_view', 'view_item'])
   assert.deepEqual(parseCanonicalEvent(pageView), pageView)
   assert.deepEqual(parseCanonicalEvent(viewItem), viewItem)
 })
 
-test('rejects catalog events without an implemented schema', () => {
+test('rejects blocked_source events without an implemented schema', () => {
   assert.throws(
-    () => parseCanonicalEvent({ event_name: 'purchase' }),
+    () => parseCanonicalEvent({ event_name: 'add_shipping_info' }),
     /Invalid discriminator value/
   )
 })
