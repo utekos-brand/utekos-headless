@@ -143,6 +143,7 @@ test('maps a canonical view_item to a GA4 Data Manager event', () => {
 
   assert.deepEqual(mapped, {
     eventName: 'view_item',
+    transactionId: '61c2ef59-6e6f-4f56-a63a-567ca398f9de',
     eventTimestamp: {
       seconds: 1784196000,
       nanos: 123000000
@@ -170,7 +171,6 @@ test('maps a canonical view_item to a GA4 Data Manager event', () => {
       ]
     },
     eventDeviceInfo: {
-      ipAddress: '203.0.113.10',
       userAgent: 'Mozilla/5.0',
       languageCode: 'nb-NO',
       screenHeight: 1243,
@@ -279,6 +279,35 @@ test('maps a canonical view_item to a GA4 Data Manager event', () => {
       ]
     }
   })
+})
+
+test('omits IP matching for EEA and unknown locations', () => {
+  const eea = normalize(
+    mapCanonicalViewItemToGoogleDataManager(viewItem())
+  )
+  const unknown = normalize(
+    mapCanonicalViewItemToGoogleDataManager(
+      viewItem({ location: undefined })
+    )
+  )
+
+  assert.equal(eea.eventDeviceInfo?.ipAddress, undefined)
+  assert.equal(unknown.eventDeviceInfo?.ipAddress, undefined)
+})
+
+test('keeps request IP matching for a known non-restricted location', () => {
+  const mapped = normalize(
+    mapCanonicalViewItemToGoogleDataManager(
+      viewItem({
+        location: {
+          country_code: 'US',
+          source: 'server_request'
+        }
+      })
+    )
+  )
+
+  assert.equal(mapped.eventDeviceInfo?.ipAddress, '203.0.113.10')
 })
 
 test('deduplicates and caps provider identifiers without mutating the canonical event', () => {

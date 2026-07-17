@@ -1,6 +1,6 @@
 # Canonical events
 
-Status date: 2026-07-16
+Status date: 2026-07-17
 
 The application owns event meaning. GTM and sGTM are delivery
 adapters, not the event inventory or source of truth.
@@ -10,7 +10,7 @@ adapters, not the event inventory or source of truth.
 | Event       | Owner               | Detection                                                      | Delivery                                                                              | Status                                                                                  |
 | ----------- | ------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
 | `page_view` | Next.js application | Initial render and App Router URL change                       | `dataLayer` -> web GTM -> `/__sgtm` -> GA4, plus consent-aware first-party collection | Deployed; live browser contract verified without optional consent                        |
-| `view_item` | Next.js application | First resolved product and selected variant for a product page | `dataLayer` -> web GTM -> `/__sgtm`, plus canonical ledger and separate Meta/Google outbox rows | Deployed; live browser, `after()`, Meta and Google Data Manager validate-only paths verified |
+| `view_item` | Next.js application | Resolved product and selected variant context on a product page | `dataLayer` -> web GTM -> `/__sgtm`, plus canonical ledger and provider outbox rows | Deployed; browser, Meta and executed Data Manager acceptance verified, but cross-source Google dedupe is not live-verified |
 
 GA4 Enhanced Measurement page views, browser-history page views
 and the Google tag's automatic `send_page_view` must remain
@@ -60,7 +60,7 @@ At the server trust boundary:
 - events with both analytics and marketing consent denied are
   rejected before storage.
 
-The Postgres adapter persists the canonical event in
+The generic Postgres adapter persists the canonical event in
 `marketing.event_ledger` and its provider intents in
 `ops.provider_dispatch_attempts` within one transaction. Stable
 idempotency keys use the canonical event name and `event_id`; a
@@ -72,33 +72,40 @@ The Route Handler requires same-origin JSON, rejects bodies over
 and coarse location with `@vercel/functions`. Raw database errors
 and event payloads are not returned or logged.
 
-For `page_view` and `view_item`, marketing consent creates
-server-retry intents for Meta and Microsoft UET. A qualified
-`view_item` with analytics consent also creates a separate Google
-Data Manager server-retry intent in the same transaction. Meta and
-Google consume the same canonical payload but own independent rows,
-attempt counts, statuses and retry histories.
+The deployed planner can still create legacy Meta/Microsoft server rows for
+`page_view` and a Microsoft row for `view_item`; no approved worker may replay
+those rows. The local foundation changes routing so `page_view` creates no
+server-outbox rows and a qualified `view_item` creates only the catalog-owned
+Google Data Manager and Meta CAPI rows. Google and Meta consume the same
+canonical payload but retain independent attempt counts, statuses and retry
+histories.
 
-After a successful collection response, Next.js `after()` starts a
-combined Meta/Google claim batch. Delivery does not depend on
-`after()`: the authenticated
-`/api/cron/meta-view-item-dispatch` route invokes the same batch and
-can reclaim due, retry-scheduled or stale-processing Google rows.
+The deployed route currently starts the combined Meta/Google batch through
+Next.js `after()`. The local foundation replaces this with registered generic
+workers and configures the authenticated
+`/api/cron/provider-outbox-dispatch` route every five minutes. That schedule
+is not present in the currently deployed `vercel.json`; it becomes the durable
+retry path only after this foundation is shipped and verified.
 Google authenticates with Vercel OIDC and Google Workload Identity
 Federation, then sends to Data Manager with
-`GOOGLE_DATA_MANAGER_VALIDATE_ONLY=true`. A validated response is
+`GOOGLE_DATA_MANAGER_VALIDATE_ONLY=false`. An accepted response is
 stored as `accepted_unverified`, including request and validation
 metadata. The adapter caps `additionalItemParameters` at the live
 provider limit of 24; the canonical ledger retains every source
-field.
+field. The local patch maps canonical `event_id` to browser
+`transaction_id` and Data Manager's top-level `transactionId`, which Google
+documents as the cross-source deduplication field. It also omits request IP
+unless server-derived country is known and outside the EEA, UK and
+Switzerland. Neither local correction is deployed yet.
 
-The production validation event
-`5aaf2d4c-6f58-47f5-9ddd-a887baf49e8d` reached Meta and Google on
-their first independent attempts. Google returned request ID
-`v-0a11d206-0bc7-4d82-a190-b62d0446b7d4` with validate-only
-acceptance. Enabling executed Google ingestion remains a separate
-release gate because the existing web GTM/sGTM `view_item` path must
-not be double-counted.
+The production event
+`a28a8f3c-ba90-4006-9dd8-429072a3c772` reached Meta and Google on
+their first independent attempts after the executed-ingestion cutover.
+Google returned request ID
+`a9ebe80f-9c54-4bd9-9971-6c4c7bb1a43c` with
+`validate_only=false`; Meta returned `events_received=1`.
+This proves provider acceptance, not that the published GTM tag forwarded
+`transaction_id` or that GA4 counted the event only once.
 
 Microsoft UET CAPI maps `page_view_id` to `pageLoadId` and uses
 `event_id` for deduplication. Microsoft ID sync remains a
@@ -119,12 +126,42 @@ with Shopify product and variant ids, currency, net and gross
 values, tax data, availability, selected options and collection
 context.
 
-The product reporter emits once per product-page load after the
-owning `page_view` has been emitted. The collector re-evaluates
+The product reporter emits once for each resolved product/variant
+context after the owning `page_view` has been emitted. Re-rendering the
+same context is deduplicated; a committed variant change is a new
+legitimate `view_item`. The collector re-evaluates
 Cookiebot at send time, removes marketing identifiers without
 marketing consent and replaces browser-supplied IP, user-agent
 and coarse location with request-derived values at the server
 boundary.
+
+## Event foundation
+
+[`EVENT_CATALOG.md`](EVENT_CATALOG.md) and
+`src/lib/analytics/eventCatalog.ts` are the authoritative human- and
+machine-readable allowlists for all 29 v1 decisions. Only `page_view`
+and `view_item` currently have implemented schemas in the discriminated
+canonical union. Planned or source-blocked entries are decisions, not
+claims of runtime support.
+
+This foundation is implemented locally and is not deployed. Provider routing
+reads the catalog and can enqueue only an explicitly
+active provider/event pair. A registry invariant test requires the
+catalog's active outbox pairs, adapter keys and worker keys to be
+identical. Queue claim, retry, receipt, dead-letter and Postgres logic
+are generic; a new event therefore adds its detector, schema, provider
+mappings/adapters and tests without a new queue or retry architecture.
+The existing Supabase/Postgres outbox remains the durable queue;
+Vercel Workflow and Vercel Queues are deliberately not added as a
+second delivery system.
+
+Ledger insertion and provider-row creation are transactionally
+idempotent. Completion is guarded by the claimed attempt generation so a
+stale worker cannot commit over a newer claim. Provider transport remains
+at-least-once across the crash window after external acceptance and before
+the local receipt commit; retries preserve Meta `event_id` and Google
+`transactionId` for provider deduplication. Both active HTTP transports have
+a 10-second request deadline; timeout failures are retryable.
 
 ## Browser verification gate
 
@@ -141,3 +178,7 @@ Before publish, prove in GTM Preview and sGTM Preview that:
    pings may still use `/__sgtm` in Advanced Consent Mode.
 5. Meta, Microsoft and other non-Google adapters do not fire
    without their required consent.
+6. The actual browser/sGTM Google request for `view_item` contains
+   `transaction_id` equal to Data Manager `transactionId`. If this cannot be
+   proved, Data Manager must remain validate-only or one Google route must be
+   disabled before executed ingestion is approved.

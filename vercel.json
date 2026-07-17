@@ -1,4 +1,10 @@
 {
+  "crons": [
+    {
+      "path": "/api/cron/provider-outbox-dispatch",
+      "schedule": "*/5 * * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/__sgtm/:path*",

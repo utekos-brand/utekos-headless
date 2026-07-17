@@ -1,20 +1,9 @@
 import { z } from 'zod'
 import {
-  canonicalPageViewSchema,
-  type CanonicalPageView,
+  canonicalEventEnvelopeSchema,
+  type CanonicalEventEnvelope,
   type ConsentSnapshot
-} from './pageViewEvent'
-
-const canonicalEventContextSchema = canonicalPageViewSchema.omit(
-  {
-    event_name: true,
-    page_view_id: true,
-    page_url: true,
-    referrer_url: true,
-    page_title: true,
-    custom_data: true
-  }
-)
+} from './canonicalEventEnvelope'
 
 const selectedOptionSchema = z.strictObject({
   name: z.string().min(1),
@@ -73,8 +62,9 @@ export const canonicalViewItemCommerceSchema = z.strictObject({
 })
 
 export const canonicalViewItemSchema =
-  canonicalEventContextSchema.extend({
+  canonicalEventEnvelopeSchema.extend({
     event_name: z.literal('view_item'),
+    source: z.literal('web'),
     page_view_id: z.string().uuid(),
     page_url: z.string().url(),
     referrer_url: z.string().url().optional(),
@@ -111,13 +101,13 @@ type CreateCanonicalViewItemInput = {
   clickId?: Record<string, string>
   commerce: CanonicalViewItemCommerce
   consent: ConsentSnapshot
-  environment: CanonicalPageView['environment']
+  environment: CanonicalEventEnvelope['environment']
   eventDeviceInfo?: EventDeviceInfoInput
   eventId: string
   eventTime: string
   externalId?: string
   impressionId?: string
-  location?: NonNullable<CanonicalPageView['location']>
+  location?: NonNullable<CanonicalEventEnvelope['location']>
   pageTitle: string
   pageUrl: string
   pageViewId: string
@@ -131,6 +121,7 @@ export type ViewItemDataLayerEvent = {
   event_time: string
   page_view_id: string
   source: 'web'
+  transaction_id: string
   commerce: CanonicalViewItemCommerce
   canonical_event: CanonicalViewItem
 }
@@ -183,6 +174,7 @@ export function buildViewItemDataLayerEvent(
     event_time: event.event_time,
     page_view_id: event.page_view_id,
     source: event.source,
+    transaction_id: event.event_id,
     commerce: event.custom_data,
     canonical_event: event
   }

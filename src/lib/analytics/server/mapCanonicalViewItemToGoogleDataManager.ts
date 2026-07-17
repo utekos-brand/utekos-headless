@@ -14,6 +14,12 @@ const MAX_PAGE_LOCATION_LENGTH = 1000
 const MAX_PAGE_REFERRER_LENGTH = 420
 const MAX_PAGE_TITLE_LENGTH = 300
 const MAX_USER_IDENTIFIERS = 10
+const IP_MATCHING_RESTRICTED_COUNTRY_CODES = new Set([
+  'AT', 'BE', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES',
+  'FI', 'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI',
+  'LT', 'LU', 'LV', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SE',
+  'SI', 'SK', 'UK'
+])
 const SUBDIVISION_CODE = /^[A-Z]{2}-[A-Z0-9]{1,3}$/
 const REGION_PART = /^[A-Z0-9]{1,3}$/
 const {
@@ -309,9 +315,15 @@ function mapAdIdentifiers(event: CanonicalViewItem) {
 
 function mapDeviceInfo(event: CanonicalViewItem) {
   const source = event.event_device_info
+  const countryCode = event.location?.country_code?.toUpperCase()
+  const ipAddress =
+    countryCode &&
+    !IP_MATCHING_RESTRICTED_COUNTRY_CODES.has(countryCode) ?
+      event.client_ip_address
+    : undefined
   const deviceInfo = {
-    ...(event.client_ip_address ?
-      { ipAddress: event.client_ip_address }
+    ...(ipAddress ?
+      { ipAddress }
     : {}),
     ...(source?.user_agent ?
       { userAgent: source.user_agent }
@@ -406,6 +418,7 @@ export function mapCanonicalViewItemToGoogleDataManager(
 
   return DataManagerEvent.create({
     eventName: 'view_item',
+    transactionId: event.event_id,
     eventTimestamp: mapTimestamp(event.event_time),
     eventSource: EventSource.WEB,
     clientId: resolveClientId(event),

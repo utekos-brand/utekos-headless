@@ -28,17 +28,6 @@ test('does not queue advertising providers without marketing consent', () => {
   assert.deepEqual(planCanonicalPageViewDispatch(pageView('denied')), [])
 })
 
-test('queues Meta and Microsoft but not Google Data Manager for page_view', () => {
-  assert.deepEqual(planCanonicalPageViewDispatch(pageView('granted')), [
-    {
-      dispatch_mode: 'server_retry',
-      event_id: '61c2ef59-6e6f-4f56-a63a-567ca398f9de',
-      provider: 'meta'
-    },
-    {
-      dispatch_mode: 'server_retry',
-      event_id: '61c2ef59-6e6f-4f56-a63a-567ca398f9de',
-      provider: 'microsoft_uet'
-    }
-  ])
+test('keeps the legacy alias fail-closed for page_view server rows', () => {
+  assert.deepEqual(planCanonicalPageViewDispatch(pageView('granted')), [])
 })

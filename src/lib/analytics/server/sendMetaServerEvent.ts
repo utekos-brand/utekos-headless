@@ -1,9 +1,12 @@
 import {
   EventRequest,
+  type HttpServiceInterface,
   type ServerEvent
 } from 'facebook-nodejs-business-sdk'
+import { z } from 'zod'
 
 const META_PARTNER_AGENT = 'utekos-headless'
+const META_REQUEST_TIMEOUT_MS = 10_000
 
 type Environment = Readonly<Record<string, string | undefined>>
 
@@ -22,10 +25,77 @@ type MetaEventResponse = {
   num_processed_entries?: number
 }
 
+type MetaFetchResponse = Pick<
+  Response,
+  'json' | 'ok' | 'status'
+>
+
+type MetaFetch = (
+  input: string,
+  init: RequestInit
+) => Promise<MetaFetchResponse>
+
+const metaEventResponseSchema = z
+  .object({
+    events_received: z.number().int().nonnegative(),
+    fbtrace_id: z.string().optional(),
+    id: z.string().optional(),
+    messages: z.array(z.string()).optional(),
+    num_processed_entries: z
+      .number()
+      .int()
+      .nonnegative()
+      .optional()
+  })
+  .passthrough()
+
+const metaErrorResponseSchema = z
+  .object({
+    error: z
+      .object({
+        code: z.number().optional(),
+        error_subcode: z.number().optional(),
+        is_transient: z.boolean().optional()
+      })
+      .passthrough()
+  })
+  .passthrough()
+
+class MetaConversionsApiHttpError extends Error {
+  readonly response: Record<string, unknown> | undefined
+  readonly status: number
+
+  constructor(
+    status: number,
+    response?: Record<string, unknown>
+  ) {
+    super(
+      `Meta Conversions API request failed with HTTP ${status}`
+    )
+    this.name = 'MetaConversionsApiHttpError'
+    this.status = status
+    this.response = response
+  }
+}
+
+class MetaConversionsApiTimeoutError extends Error {
+  readonly code = 'ETIMEDOUT'
+
+  constructor(timeoutMs: number) {
+    super(
+      `Meta Conversions API request exceeded ${timeoutMs}ms`
+    )
+    this.name = 'MetaConversionsApiTimeoutError'
+  }
+}
+
 export type MetaEventRequest = {
   execute: () => Promise<MetaEventResponse>
   setAppSecret: (appSecret: string) => MetaEventRequest
   setEvents: (events: ServerEvent[]) => MetaEventRequest
+  setHttpService: (
+    httpService: HttpServiceInterface
+  ) => MetaEventRequest
   setPartnerAgent: (partnerAgent: string) => MetaEventRequest
   setTestEventCode: (testEventCode: string) => MetaEventRequest
 }
@@ -49,7 +119,76 @@ export type MetaSendResult = {
 
 const defaultDependencies: MetaSenderDependencies = {
   createRequest: (accessToken, pixelId) =>
-    new EventRequest(accessToken, pixelId)
+    new EventRequest(accessToken, pixelId).setHttpService(
+      createMetaHttpService()
+    )
+}
+
+export function createMetaHttpService(
+  fetchImplementation: MetaFetch = (input, init) =>
+    fetch(input, init),
+  timeoutMs = META_REQUEST_TIMEOUT_MS
+): HttpServiceInterface {
+  if (!Number.isInteger(timeoutMs) || timeoutMs <= 0) {
+    throw new Error(
+      'Meta request timeout must be a positive integer'
+    )
+  }
+
+  return {
+    async executeRequest(url, method, headers, params) {
+      const controller = new AbortController()
+      const timeout = setTimeout(
+        () => controller.abort(),
+        timeoutMs
+      )
+
+      try {
+        const response = await fetchImplementation(url, {
+          body: JSON.stringify(params),
+          headers,
+          method,
+          signal: controller.signal
+        })
+
+        let responseBody: unknown
+
+        try {
+          responseBody = await response.json()
+        } catch (error) {
+          if (!response.ok) {
+            throw new MetaConversionsApiHttpError(
+              response.status
+            )
+          }
+
+          throw error
+        }
+
+        if (!response.ok) {
+          const parsedError =
+            metaErrorResponseSchema.safeParse(responseBody)
+
+          throw new MetaConversionsApiHttpError(
+            response.status,
+            parsedError.success ?
+              parsedError.data.error
+            : undefined
+          )
+        }
+
+        return metaEventResponseSchema.parse(responseBody)
+      } catch (error) {
+        if (controller.signal.aborted) {
+          throw new MetaConversionsApiTimeoutError(timeoutMs)
+        }
+
+        throw error
+      } finally {
+        clearTimeout(timeout)
+      }
+    }
+  } as HttpServiceInterface
 }
 
 function requiredEnvironmentValue(

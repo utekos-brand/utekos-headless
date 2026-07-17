@@ -1,6 +1,6 @@
 # FLOW - tracking, observability og kommersiell innsikt
 
-Statusdato: 2026-07-16.
+Statusdato: 2026-07-17.
 
 Dette dokumentet er den operative flytbeskrivelsen for hvordan
 Utekos skal samle inn, lagre, levere og bruke analytics-,
@@ -27,7 +27,7 @@ kundechatbot ligger i
 Tracking ble bevisst nullstilt 2026-07-15. Den aktive appflaten etter
 resetten består kun av:
 
-- Cookiebot lastet direkte som minimal CMP.
+- Cookiebot lastet én gang av den publiserte GTM-taggen `126`.
 - Synkrone Consent Mode v2-defaults satt til `denied` før GTM.
 - Google Tag Manager via førstepartsruten `/__gtg`.
 - Google server-side tagging via førstepartsruten `/__sgtm`.
@@ -38,32 +38,35 @@ produksjonsverifisert 2026-07-16:
 - `POST /api/events/page-view` og `POST /api/events/view-item`
   validerer samtykkede events og lagrer kanonisk JSONB i
   `marketing.event_ledger`.
-- `view_item` oppretter separate provider-rader i
-  `ops.provider_dispatch_attempts`. Meta og Google Data Manager
-  deler kanonisk payload, men har uavhengig status, claim og retry.
-- Next.js `after()` starter Meta/Google-dispatch etter 202-responsen.
-  Den autoriserte `/api/cron/meta-view-item-dispatch`-ruten bruker
-  samme claim-batch og er den varige retry-garantien.
-- Google bruker Vercel OIDC/WIF og står fortsatt i
-  `GOOGLE_DATA_MANAGER_VALIDATE_ONLY=true`. Live browser-event
-  `5aaf2d4c-6f58-47f5-9ddd-a887baf49e8d` ble validert av Data
-  Manager og lagret som `accepted_unverified` med request-ID
-  `v-0a11d206-0bc7-4d82-a190-b62d0446b7d4`.
-- Microsoft UET-intentet lagres fortsatt, men workerstatusen var ikke
-  del av denne aktiveringen og live-raden står `pending`.
+- Dagens deployede planner kan opprette legacy Meta/Microsoft-rader for
+  `page_view` og Microsoft-rad for `view_item`; disse har ingen godkjent worker
+  og skal ikke replayes. Den lokale, upubliserte grunnmuren begrenser nye
+  rader til Google og Meta for `view_item` og ingen server-rader for
+  `page_view`.
+- Dagens deployede Next.js `after()` starter den kombinerte Meta/Google-
+  batchen. Den lokale grunnmuren innfører generiske providerworkere og
+  femminutters Vercel-cron på `/api/cron/provider-outbox-dispatch`; denne
+  schedule-konfigurasjonen er ennå ikke deployet.
+- Google bruker Vercel OIDC/WIF og kjører nå med
+  `GOOGLE_DATA_MANAGER_VALIDATE_ONLY=false`. Live browser-event
+  `a28a8f3c-ba90-4006-9dd8-429072a3c772` ble akseptert av Data
+  Manager med request-ID
+  `a9ebe80f-9c54-4bd9-9971-6c4c7bb1a43c`, og Meta mottok samme
+  `event_id` med `events_received=1`.
+- Lokal patch forbereder canonical `event_id` som samme Google
+  `transaction_id`/`transactionId` og utelater request-IP for EØS,
+  Storbritannia, Sveits og ukjent land. Publisert GTM er ikke bekreftet å
+  videresende feltet, så cross-source dedupe er ikke produksjonsverifisert.
 
 GTM får laste før samtykke for Advanced Consent Mode og cookieless
 pings. Meta, Microsoft, Clarity og øvrige ikke-Google-tagger skal
 fortsatt være blokkert av consent-gates i GTM. `/__sgtm` er alltid
 `no-store` og skal aldri returneres som `x-vercel-cache: HIT`.
 
-Den publiserte GTM-containeren inneholder fortsatt legacy Cookiebot-tag
-`126`. Appen bruker derfor Googles `gtm.blocklist` under containerens
-initialisering for å blokkere sandboxede custom templates, fjerner
-blokkeringen ved `window.load` og sender `cookie_consent_update` på
-nytt. Dette hindrer dobbel Cookiebot uten GTM-publisering, samtidig som
-samtykkede custom templates kan kjøre etterpå. Tag `126` skal fjernes i
-en separat, eksplisitt godkjent GTM-release.
+Den publiserte GTM-containerens Cookiebot-tag `126` er nå den eneste
+CMP-loaderen og skal beholdes. Live runtime viste nøyaktig én `uc.js`
+med `implementation=gtm`, Consent Mode fra `G100` til `G111` etter
+aksept og ingen app-eid duplikatloader.
 
 Følgende tidligere appimplementasjoner utover den avgrensede flyten
 over er fortsatt fjernet og skal behandles som åpne gap, ikke som
@@ -76,10 +79,10 @@ aktive eller verifiserte flater:
 - øvrige eventers provider-dispatch, ordre-/refund-webhooks og den
   tidligere generiske retry/dead-letter-runtime;
 - provider-adaptere utover aktiv Meta `ViewContent` og Google Data
-  Manager validate-only for `view_item`, inkludert direkte GA4
+  Manager executed ingestion for `view_item`, inkludert direkte GA4
   Measurement Protocol og Microsoft UET CAPI;
-- tracking-, katalog- og provider-crons utover den aktive
-  `view_item`-cronruten som tidligere var koblet til Vercel.
+- tracking-, katalog- og provider-crons; den generiske provider-outbox-cronen
+  finnes foreløpig bare i den lokale grunnmuren.
 
 Supabase er nå kanonisk lager for den reintroduserte `page_view`- og
 `view_item`-flaten. PostHog kan fortsatt være ønsket produktanalyse,

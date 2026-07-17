@@ -35,6 +35,7 @@ function succeededOutcome(): Extract<
   { status: 'succeeded' }
 > {
   return {
+    attemptCount: 1,
     attemptId: '7bcd24a4-190c-4eca-a834-5c9854bd54ea',
     latencyMs: 125,
     receipt: {
@@ -87,6 +88,7 @@ test('stores validateOnly acceptance separately as accepted_unverified', async (
     succeededOutcome().receipt.result,
     'google-request-1',
     { validate_only: true, validated: true },
-    125
+    125,
+    1
   ])
 })

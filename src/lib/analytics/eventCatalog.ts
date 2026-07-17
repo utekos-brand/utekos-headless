@@ -1,0 +1,1568 @@
+export type CatalogLifecycle =
+  | 'active'
+  | 'planned'
+  | 'blocked_source'
+
+export type ProviderId =
+  | 'supabase'
+  | 'google'
+  | 'meta'
+  | 'microsoft_uet'
+  | 'posthog'
+
+export type ServerOutboxStatus =
+  | 'active'
+  | 'disabled'
+  | 'blocked_no_worker'
+
+type ProviderSupport =
+  | 'supported'
+  | 'planned'
+  | 'not_relevant'
+  | 'blocked'
+
+type ProviderProductionStatus =
+  | 'active'
+  | 'planned'
+  | 'blocked'
+  | 'not_implemented'
+  | 'not_relevant'
+
+type BrowserTransport =
+  | 'google_tag_manager'
+  | 'meta_pixel'
+  | 'microsoft_uet'
+  | 'posthog_browser'
+
+type ServerTransport =
+  | 'first_party_api'
+  | 'server_side_gtm'
+  | 'google_data_manager'
+  | 'meta_conversions_api'
+  | 'microsoft_uet_capi'
+  | 'posthog_server'
+
+type ProviderConsentRequirement =
+  | 'analytics'
+  | 'marketing'
+  | 'analytics_or_marketing'
+  | 'analytics_or_operational'
+  | 'operational'
+  | 'none'
+
+type ProviderCatalogEntry = {
+  support: ProviderSupport
+  eventName: string | null
+  transport: {
+    browser: BrowserTransport | null
+    server: ServerTransport | null
+  }
+  requiredParameters: readonly string[]
+  dedupeField: string | null
+  consentRequirement: ProviderConsentRequirement
+  adapterVersion: number | null
+  productionStatus: ProviderProductionStatus
+  productionDetail: string
+  serverOutbox: ServerOutboxStatus
+}
+
+type ConsentBasis = 'analytics' | 'marketing' | 'operational'
+
+type EventConsentPolicy = {
+  browserCreation:
+    | 'local_ephemeral_allowed'
+    | 'after_authoritative_response'
+    | 'authoritative_server_source'
+  firstPartyCollection: readonly ConsentBasis[]
+  canonicalLedger: readonly ConsentBasis[]
+  analyticsExport: readonly ['analytics']
+  marketingExport: readonly ['marketing'] | readonly []
+  googleCookielessPing: 'allowed_by_consent_mode' | 'not_applicable'
+  operationalPurpose:
+    | 'none'
+    | 'commerce_mutation'
+    | 'order_accounting'
+    | 'lead_fulfilment'
+    | 'error_diagnostics'
+  piiPolicy: 'consent_gated_provider_identifiers_only'
+}
+
+type EventTrigger = {
+  description: string
+  sources: readonly ('browser' | 'server' | 'webhook')[]
+  repeatability: string
+  eventTime: string
+  prerequisites: readonly string[]
+}
+
+type EventDedupePolicy = {
+  eventId: string
+  reuse: string
+  newEvent: string
+  ledgerIdempotencyKey: string
+  providerIdempotencyKey: string
+  browserServerShareEventId: boolean
+  retention: {
+    value: number
+    unit: 'day' | 'month' | 'year'
+    scope: 'dedupe_key_only'
+  }
+}
+
+type EventCatalogEntry = {
+  version: 1
+  name: string
+  lifecycle: CatalogLifecycle
+  owner: string
+  trigger: EventTrigger
+  dedupe: EventDedupePolicy
+  consent: EventConsentPolicy
+  providers: Readonly<Record<ProviderId, ProviderCatalogEntry>>
+}
+
+export const technicalRetentionCaveat =
+  'Retention values apply only to minimal, non-PII dedupe keys. They are a technical proposal, not a legal retention conclusion for event payloads, consent snapshots, or provider data.'
+
+export const providerIdentifierPolicy =
+  'Direct contact fields and free text are forbidden. Hashed contact identifiers, external IDs, browser/click IDs, and request-context IP addresses may be present only when required by an approved provider mapping and gated by the documented consent policy.'
+
+const analyticsExport = ['analytics'] as const
+const marketingExport = ['marketing'] as const
+const noMarketingExport = [] as const
+
+const pageConsent = {
+  browserCreation: 'local_ephemeral_allowed',
+  firstPartyCollection: ['analytics', 'marketing'],
+  canonicalLedger: ['analytics', 'marketing'],
+  analyticsExport,
+  marketingExport,
+  googleCookielessPing: 'allowed_by_consent_mode',
+  operationalPurpose: 'none',
+  piiPolicy: 'consent_gated_provider_identifiers_only'
+} as const satisfies EventConsentPolicy
+
+const behaviorConsent = {
+  browserCreation: 'local_ephemeral_allowed',
+  firstPartyCollection: ['analytics', 'marketing'],
+  canonicalLedger: ['analytics', 'marketing'],
+  analyticsExport,
+  marketingExport,
+  googleCookielessPing: 'allowed_by_consent_mode',
+  operationalPurpose: 'none',
+  piiPolicy: 'consent_gated_provider_identifiers_only'
+} as const satisfies EventConsentPolicy
+
+const mutationConsent = {
+  browserCreation: 'after_authoritative_response',
+  firstPartyCollection: ['analytics', 'marketing'],
+  canonicalLedger: ['analytics', 'marketing'],
+  analyticsExport,
+  marketingExport,
+  googleCookielessPing: 'allowed_by_consent_mode',
+  operationalPurpose: 'commerce_mutation',
+  piiPolicy: 'consent_gated_provider_identifiers_only'
+} as const satisfies EventConsentPolicy
+
+const transactionConsent = {
+  browserCreation: 'authoritative_server_source',
+  firstPartyCollection: ['operational'],
+  canonicalLedger: ['operational'],
+  analyticsExport,
+  marketingExport,
+  googleCookielessPing: 'not_applicable',
+  operationalPurpose: 'order_accounting',
+  piiPolicy: 'consent_gated_provider_identifiers_only'
+} as const satisfies EventConsentPolicy
+
+const leadConsent = {
+  browserCreation: 'after_authoritative_response',
+  firstPartyCollection: ['analytics', 'marketing'],
+  canonicalLedger: ['analytics', 'marketing'],
+  analyticsExport,
+  marketingExport,
+  googleCookielessPing: 'allowed_by_consent_mode',
+  operationalPurpose: 'lead_fulfilment',
+  piiPolicy: 'consent_gated_provider_identifiers_only'
+} as const satisfies EventConsentPolicy
+
+const errorConsent = {
+  browserCreation: 'after_authoritative_response',
+  firstPartyCollection: ['analytics', 'operational'],
+  canonicalLedger: ['analytics', 'operational'],
+  analyticsExport,
+  marketingExport: noMarketingExport,
+  googleCookielessPing: 'allowed_by_consent_mode',
+  operationalPurpose: 'error_diagnostics',
+  piiPolicy: 'consent_gated_provider_identifiers_only'
+} as const satisfies EventConsentPolicy
+
+const baseCanonicalParameters = [
+  'event_id',
+  'event_name',
+  'event_time',
+  'consent'
+] as const
+
+const baseProviderParameters = ['event_id', 'event_time'] as const
+
+function providerMapping(
+  input: ProviderCatalogEntry
+): ProviderCatalogEntry {
+  return input
+}
+
+function notRelevantProvider(
+  detail: string
+): ProviderCatalogEntry {
+  return providerMapping({
+    support: 'not_relevant',
+    eventName: null,
+    transport: { browser: null, server: null },
+    requiredParameters: [],
+    dedupeField: null,
+    consentRequirement: 'none',
+    adapterVersion: null,
+    productionStatus: 'not_relevant',
+    productionDetail: detail,
+    serverOutbox: 'disabled'
+  })
+}
+
+type PlannedProviderInput = {
+  firstPartyConsentRequirement?: ProviderConsentRequirement
+  googleRequired?: readonly string[]
+  meta?: {
+    eventName: string
+    requiredParameters?: readonly string[]
+  }
+  microsoft?: {
+    eventName: string
+    requiredParameters?: readonly string[]
+  }
+  posthog?: boolean
+}
+
+function plannedProviders(
+  eventName: string,
+  input: PlannedProviderInput = {}
+): Readonly<Record<ProviderId, ProviderCatalogEntry>> {
+  return {
+    supabase: providerMapping({
+      support: 'planned',
+      eventName,
+      transport: { browser: null, server: 'first_party_api' },
+      requiredParameters: baseCanonicalParameters,
+      dedupeField: 'event_id',
+      consentRequirement:
+        input.firstPartyConsentRequirement ??
+        'analytics_or_marketing',
+      adapterVersion: 1,
+      productionStatus: 'planned',
+      productionDetail:
+        'Canonical schema, collector, and ledger mapping are not active yet.',
+      serverOutbox: 'disabled'
+    }),
+    google: providerMapping({
+      support: 'supported',
+      eventName,
+      transport: {
+        browser: 'google_tag_manager',
+        server: 'server_side_gtm'
+      },
+      requiredParameters: [
+        ...baseProviderParameters,
+        ...(input.googleRequired ?? [])
+      ],
+      dedupeField: 'event_id',
+      consentRequirement: 'analytics',
+      adapterVersion: 1,
+      productionStatus: 'planned',
+      productionDetail:
+        'Provider mapping is specified but canonical routing is not active.',
+      serverOutbox: 'disabled'
+    }),
+    meta:
+      input.meta ?
+        providerMapping({
+          support: 'supported',
+          eventName: input.meta.eventName,
+          transport: {
+            browser: null,
+            server: 'meta_conversions_api'
+          },
+          requiredParameters: [
+            ...baseProviderParameters,
+            'action_source',
+            'event_source_url',
+            'user_data',
+            ...(input.meta.requiredParameters ?? [])
+          ],
+          dedupeField: 'event_id',
+          consentRequirement: 'marketing',
+          adapterVersion: 1,
+          productionStatus: 'planned',
+          productionDetail:
+            'Marketing mapping is specified but canonical routing is not active.',
+          serverOutbox: 'disabled'
+        })
+      : notRelevantProvider(
+          'No v1 marketing use case justifies a Meta export.'
+        ),
+    microsoft_uet:
+      input.microsoft ?
+        providerMapping({
+          support: 'supported',
+          eventName: input.microsoft.eventName,
+          transport: {
+            browser: 'microsoft_uet',
+            server: 'microsoft_uet_capi'
+          },
+          requiredParameters: [
+            ...baseProviderParameters,
+            ...(input.microsoft.requiredParameters ?? [])
+          ],
+          dedupeField: 'event_id',
+          consentRequirement: 'marketing',
+          adapterVersion: 1,
+          productionStatus: 'planned',
+          productionDetail:
+            'Marketing mapping is specified but canonical routing is not active.',
+          serverOutbox: 'disabled'
+        })
+      : notRelevantProvider(
+          'No v1 marketing use case justifies a Microsoft UET export.'
+        ),
+    posthog:
+      input.posthog === false ?
+        notRelevantProvider(
+          'The event is excluded from the v1 product-analytics scope.'
+        )
+      : providerMapping({
+          support: 'planned',
+          eventName,
+          transport: {
+            browser: 'posthog_browser',
+            server: 'posthog_server'
+          },
+          requiredParameters: baseProviderParameters,
+          dedupeField: 'event_id',
+          consentRequirement: 'analytics',
+          adapterVersion: 1,
+          productionStatus: 'not_implemented',
+          productionDetail:
+            'The storefront PostHog integration is currently removed.',
+          serverOutbox: 'disabled'
+        })
+  }
+}
+
+function dedupe(
+  eventId: string,
+  newEvent: string,
+  retention: EventDedupePolicy['retention'],
+  browserServerShareEventId = true
+): EventDedupePolicy {
+  return {
+    eventId,
+    reuse:
+      'Reuse the same event_id for retries and every delivery of the same canonical occurrence.',
+    newEvent,
+    ledgerIdempotencyKey: 'event_name + event_id',
+    providerIdempotencyKey: 'provider + event_name + event_id',
+    browserServerShareEventId,
+    retention
+  }
+}
+
+const retain30Days = {
+  value: 30,
+  unit: 'day',
+  scope: 'dedupe_key_only'
+} as const
+
+const retain90Days = {
+  value: 90,
+  unit: 'day',
+  scope: 'dedupe_key_only'
+} as const
+
+const retain25Months = {
+  value: 25,
+  unit: 'month',
+  scope: 'dedupe_key_only'
+} as const
+
+const retain7Years = {
+  value: 7,
+  unit: 'year',
+  scope: 'dedupe_key_only'
+} as const
+
+const pageViewProviders = {
+  supabase: providerMapping({
+    support: 'supported',
+    eventName: 'page_view',
+    transport: { browser: null, server: 'first_party_api' },
+    requiredParameters: [
+      ...baseCanonicalParameters,
+      'page_view_id',
+      'page_url'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'analytics_or_marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail: 'Canonical first-party persistence is active.',
+    serverOutbox: 'disabled'
+  }),
+  google: providerMapping({
+    support: 'supported',
+    eventName: 'page_view',
+    transport: {
+      browser: 'google_tag_manager',
+      server: 'server_side_gtm'
+    },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'page_location',
+      'page_title'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'analytics',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'Canonical browser event is handled through GTM/sGTM; no server outbox is allowed.',
+    serverOutbox: 'disabled'
+  }),
+  meta: providerMapping({
+    support: 'blocked',
+    eventName: 'PageView',
+    transport: { browser: null, server: 'meta_conversions_api' },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'action_source',
+      'event_source_url',
+      'user_data'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'marketing',
+    adapterVersion: 1,
+    productionStatus: 'blocked',
+    productionDetail:
+      'Historical pending page_view rows exist, but no page_view worker is active. Do not replay them.',
+    serverOutbox: 'blocked_no_worker'
+  }),
+  microsoft_uet: providerMapping({
+    support: 'supported',
+    eventName: 'page_view',
+    transport: {
+      browser: 'microsoft_uet',
+      server: 'microsoft_uet_capi'
+    },
+    requiredParameters: baseProviderParameters,
+    dedupeField: 'event_id',
+    consentRequirement: 'marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'Browser UET is active. Historical server rows are pending without a worker and must not be replayed.',
+    serverOutbox: 'blocked_no_worker'
+  }),
+  posthog: providerMapping({
+    support: 'planned',
+    eventName: 'page_view',
+    transport: {
+      browser: 'posthog_browser',
+      server: 'posthog_server'
+    },
+    requiredParameters: baseProviderParameters,
+    dedupeField: 'event_id',
+    consentRequirement: 'analytics',
+    adapterVersion: 1,
+    productionStatus: 'not_implemented',
+    productionDetail:
+      'The storefront PostHog integration is currently removed.',
+    serverOutbox: 'disabled'
+  })
+} as const satisfies Readonly<
+  Record<ProviderId, ProviderCatalogEntry>
+>
+
+const viewItemProviders = {
+  supabase: providerMapping({
+    support: 'supported',
+    eventName: 'view_item',
+    transport: { browser: null, server: 'first_party_api' },
+    requiredParameters: [
+      ...baseCanonicalParameters,
+      'page_view_id',
+      'currency',
+      'value',
+      'items'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'analytics_or_marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail: 'Canonical first-party persistence is active.',
+    serverOutbox: 'disabled'
+  }),
+  google: providerMapping({
+    support: 'supported',
+    eventName: 'view_item',
+    transport: {
+      browser: 'google_tag_manager',
+      server: 'google_data_manager'
+    },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'client_id',
+      'transaction_id',
+      'currency',
+      'value',
+      'items'
+    ],
+    dedupeField: 'transaction_id',
+    consentRequirement: 'analytics',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'GTM/sGTM and executed Data Manager are active. Local application mappings use canonical event_id as transaction_id, but published GTM forwarding is not live-verified, so cross-source deduplication remains a release risk.',
+    serverOutbox: 'active'
+  }),
+  meta: providerMapping({
+    support: 'supported',
+    eventName: 'ViewContent',
+    transport: { browser: null, server: 'meta_conversions_api' },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'action_source',
+      'event_source_url',
+      'user_data',
+      'content_ids',
+      'content_type',
+      'currency',
+      'value'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail: 'Meta CAPI delivery is active in production.',
+    serverOutbox: 'active'
+  }),
+  microsoft_uet: providerMapping({
+    support: 'supported',
+    eventName: 'view_item',
+    transport: {
+      browser: 'microsoft_uet',
+      server: 'microsoft_uet_capi'
+    },
+    requiredParameters: [
+      ...baseProviderParameters,
+      'items',
+      'currency',
+      'value'
+    ],
+    dedupeField: 'event_id',
+    consentRequirement: 'marketing',
+    adapterVersion: 1,
+    productionStatus: 'active',
+    productionDetail:
+      'Browser UET is active; server delivery is blocked because no UET CAPI worker exists.',
+    serverOutbox: 'blocked_no_worker'
+  }),
+  posthog: providerMapping({
+    support: 'planned',
+    eventName: 'view_item',
+    transport: {
+      browser: 'posthog_browser',
+      server: 'posthog_server'
+    },
+    requiredParameters: baseProviderParameters,
+    dedupeField: 'event_id',
+    consentRequirement: 'analytics',
+    adapterVersion: 1,
+    productionStatus: 'not_implemented',
+    productionDetail:
+      'The storefront PostHog integration is currently removed.',
+    serverOutbox: 'disabled'
+  })
+} as const satisfies Readonly<
+  Record<ProviderId, ProviderCatalogEntry>
+>
+
+export const eventCatalog = {
+  page_view: {
+    version: 1,
+    name: 'page_view',
+    lifecycle: 'active',
+    owner: 'next_router',
+    trigger: {
+      description:
+        'Create after the initial canonical view is committed or a Next.js navigation has completed with its final URL.',
+      sources: ['browser'],
+      repeatability: 'Once per committed navigation.',
+      eventTime: 'The committed navigation timestamp.',
+      prerequisites: [
+        'final canonical URL',
+        'page title',
+        'page_view_id',
+        'consent snapshot'
+      ]
+    },
+    dedupe: dedupe(
+      'navigation_id',
+      'A later committed navigation receives a new event_id.',
+      retain30Days
+    ),
+    consent: pageConsent,
+    providers: pageViewProviders
+  },
+  view_item_list: {
+    version: 1,
+    name: 'view_item_list',
+    lifecycle: 'planned',
+    owner: 'storefront_product_list',
+    trigger: {
+      description:
+        'Create when a named product list and its resolved items are actually visible.',
+      sources: ['browser'],
+      repeatability:
+        'May repeat for a new list impression sequence on the same page.',
+      eventTime: 'The qualifying list-visibility timestamp.',
+      prerequisites: [
+        'page_view_id',
+        'item_list_id',
+        'impression_sequence',
+        'resolved items'
+      ]
+    },
+    dedupe: dedupe(
+      'page_view_id + item_list_id + impression_sequence',
+      'A new qualifying impression sequence receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('view_item_list', {
+      googleRequired: ['item_list_id', 'items'],
+      microsoft: {
+        eventName: 'view_item_list',
+        requiredParameters: ['items']
+      }
+    })
+  },
+  select_item: {
+    version: 1,
+    name: 'select_item',
+    lifecycle: 'planned',
+    owner: 'storefront_product_link',
+    trigger: {
+      description:
+        'Create when an accepted product selection initiates navigation from a resolved list.',
+      sources: ['browser'],
+      repeatability: 'Each accepted product-selection interaction is new.',
+      eventTime: 'The accepted interaction timestamp.',
+      prerequisites: [
+        'interaction_id',
+        'item_list_id',
+        'selected item',
+        'destination URL'
+      ]
+    },
+    dedupe: dedupe(
+      'interaction_id',
+      'A separate accepted product selection receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('select_item', {
+      googleRequired: ['item_list_id', 'items'],
+      posthog: true
+    })
+  },
+  view_item: {
+    version: 1,
+    name: 'view_item',
+    lifecycle: 'active',
+    owner: 'storefront_product_view',
+    trigger: {
+      description:
+        'Create when the product and selected variant are resolved and the product view is visible.',
+      sources: ['browser'],
+      repeatability:
+        'May repeat for a new product view or a newly resolved variant context.',
+      eventTime: 'The resolved product-view timestamp.',
+      prerequisites: [
+        'page_view_id',
+        'product_id',
+        'variant_id',
+        'currency',
+        'value',
+        'items',
+        'consent snapshot'
+      ]
+    },
+    dedupe: dedupe(
+      'page_view_id + product_id + variant_id + view_sequence',
+      'A new product view or resolved variant context receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: viewItemProviders
+  },
+  add_to_wishlist: {
+    version: 1,
+    name: 'add_to_wishlist',
+    lifecycle: 'planned',
+    owner: 'wishlist_store',
+    trigger: {
+      description:
+        'Create only after the wishlist store confirms that the item was persisted.',
+      sources: ['browser', 'server'],
+      repeatability: 'Each successful wishlist mutation is new.',
+      eventTime: 'The successful persistence timestamp.',
+      prerequisites: ['mutation_id', 'item', 'updated wishlist state']
+    },
+    dedupe: dedupe(
+      'wishlist_mutation_id',
+      'A separate successful wishlist mutation receives a new event_id.',
+      retain90Days
+    ),
+    consent: mutationConsent,
+    providers: plannedProviders('add_to_wishlist', {
+      googleRequired: ['currency', 'value', 'items'],
+      meta: {
+        eventName: 'AddToWishlist',
+        requiredParameters: ['content_ids', 'currency', 'value']
+      },
+      microsoft: {
+        eventName: 'add_to_wishlist',
+        requiredParameters: ['items']
+      }
+    })
+  },
+  add_to_cart: {
+    version: 1,
+    name: 'add_to_cart',
+    lifecycle: 'planned',
+    owner: 'shopify_cart_service',
+    trigger: {
+      description:
+        'Create after Shopify accepts the cart mutation and returns the updated cart containing the line.',
+      sources: ['browser', 'server'],
+      repeatability: 'Each successful Shopify cart mutation is new.',
+      eventTime: 'The successful Shopify response timestamp.',
+      prerequisites: [
+        'cart_mutation_id',
+        'updated cart id',
+        'accepted line',
+        'currency',
+        'value'
+      ]
+    },
+    dedupe: dedupe(
+      'cart_mutation_id',
+      'A separate successful Shopify mutation receives a new event_id; multiple clicks producing one mutation do not.',
+      retain90Days
+    ),
+    consent: mutationConsent,
+    providers: plannedProviders('add_to_cart', {
+      googleRequired: ['currency', 'value', 'items'],
+      meta: {
+        eventName: 'AddToCart',
+        requiredParameters: ['content_ids', 'currency', 'value']
+      },
+      microsoft: {
+        eventName: 'add_to_cart',
+        requiredParameters: ['items', 'currency', 'value']
+      }
+    })
+  },
+  remove_from_cart: {
+    version: 1,
+    name: 'remove_from_cart',
+    lifecycle: 'planned',
+    owner: 'shopify_cart_service',
+    trigger: {
+      description:
+        'Create after Shopify accepts removal and returns an updated cart without the targeted quantity.',
+      sources: ['browser', 'server'],
+      repeatability: 'Each successful Shopify removal mutation is new.',
+      eventTime: 'The successful Shopify response timestamp.',
+      prerequisites: [
+        'cart_mutation_id',
+        'updated cart id',
+        'removed item',
+        'currency',
+        'value'
+      ]
+    },
+    dedupe: dedupe(
+      'cart_mutation_id',
+      'A separate successful Shopify removal receives a new event_id.',
+      retain90Days
+    ),
+    consent: mutationConsent,
+    providers: plannedProviders('remove_from_cart', {
+      googleRequired: ['currency', 'value', 'items'],
+      microsoft: {
+        eventName: 'remove_from_cart',
+        requiredParameters: ['items']
+      }
+    })
+  },
+  view_cart: {
+    version: 1,
+    name: 'view_cart',
+    lifecycle: 'planned',
+    owner: 'storefront_cart_surface',
+    trigger: {
+      description:
+        'Create when the cart page or drawer and its resolved cart contents are actually visible.',
+      sources: ['browser'],
+      repeatability: 'May repeat for a new qualifying cart view sequence.',
+      eventTime: 'The qualifying cart-visibility timestamp.',
+      prerequisites: [
+        'page_view_id',
+        'cart_id',
+        'view_sequence',
+        'resolved items'
+      ]
+    },
+    dedupe: dedupe(
+      'page_view_id + cart_id + view_sequence',
+      'A new qualifying cart view sequence receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('view_cart', {
+      googleRequired: ['currency', 'value', 'items'],
+      microsoft: {
+        eventName: 'view_cart',
+        requiredParameters: ['items', 'currency', 'value']
+      }
+    })
+  },
+  begin_checkout: {
+    version: 1,
+    name: 'begin_checkout',
+    lifecycle: 'planned',
+    owner: 'shopify_checkout_service',
+    trigger: {
+      description:
+        'Create after Shopify returns a valid checkout token or URL for the resolved cart.',
+      sources: ['browser', 'server'],
+      repeatability: 'Each newly created checkout is new.',
+      eventTime: 'The successful checkout-creation response timestamp.',
+      prerequisites: [
+        'checkout_id or token',
+        'creation revision',
+        'currency',
+        'value',
+        'items'
+      ]
+    },
+    dedupe: dedupe(
+      'checkout_id + creation_revision',
+      'A separately created checkout receives a new event_id.',
+      retain90Days
+    ),
+    consent: mutationConsent,
+    providers: plannedProviders('begin_checkout', {
+      googleRequired: ['currency', 'value', 'items'],
+      meta: {
+        eventName: 'InitiateCheckout',
+        requiredParameters: ['content_ids', 'currency', 'value']
+      },
+      microsoft: {
+        eventName: 'begin_checkout',
+        requiredParameters: ['items', 'currency', 'value']
+      }
+    })
+  },
+  add_shipping_info: {
+    version: 1,
+    name: 'add_shipping_info',
+    lifecycle: 'blocked_source',
+    owner: 'shopify_checkout_event_source',
+    trigger: {
+      description:
+        'Create only after an authoritative Shopify checkout event confirms that the shipping choice was saved.',
+      sources: ['browser', 'server'],
+      repeatability: 'Each saved shipping revision is new.',
+      eventTime: 'The authoritative saved-shipping timestamp.',
+      prerequisites: [
+        'approved Shopify Customer Events or Web Pixels source',
+        'checkout_id',
+        'shipping revision',
+        'shipping tier',
+        'items'
+      ]
+    },
+    dedupe: dedupe(
+      'checkout_id + shipping_revision',
+      'A later saved shipping revision receives a new event_id.',
+      retain90Days
+    ),
+    consent: mutationConsent,
+    providers: plannedProviders('add_shipping_info', {
+      googleRequired: ['currency', 'value', 'shipping_tier', 'items'],
+      microsoft: {
+        eventName: 'add_shipping_info',
+        requiredParameters: ['shipping_tier']
+      }
+    })
+  },
+  add_payment_info: {
+    version: 1,
+    name: 'add_payment_info',
+    lifecycle: 'blocked_source',
+    owner: 'shopify_checkout_event_source',
+    trigger: {
+      description:
+        'Create only after an authoritative Shopify checkout event confirms an accepted payment step.',
+      sources: ['browser', 'server'],
+      repeatability: 'Each accepted payment revision is new.',
+      eventTime: 'The authoritative accepted-payment-step timestamp.',
+      prerequisites: [
+        'approved Shopify Customer Events or Web Pixels source',
+        'checkout_id',
+        'payment revision',
+        'payment type',
+        'items'
+      ]
+    },
+    dedupe: dedupe(
+      'checkout_id + payment_revision',
+      'A later accepted payment revision receives a new event_id.',
+      retain90Days
+    ),
+    consent: mutationConsent,
+    providers: plannedProviders('add_payment_info', {
+      googleRequired: ['currency', 'value', 'payment_type', 'items'],
+      meta: {
+        eventName: 'AddPaymentInfo',
+        requiredParameters: ['content_ids', 'currency', 'value']
+      },
+      microsoft: {
+        eventName: 'add_payment_info',
+        requiredParameters: ['payment_type']
+      }
+    })
+  },
+  purchase: {
+    version: 1,
+    name: 'purchase',
+    lifecycle: 'planned',
+    owner: 'shopify_order_paid_webhook',
+    trigger: {
+      description:
+        'Create from a verified Shopify order-paid webhook after the order reaches the accepted financial state.',
+      sources: ['webhook'],
+      repeatability:
+        'One event for each relevant order financial-state transition.',
+      eventTime: 'The authoritative Shopify paid timestamp.',
+      prerequisites: [
+        'verified webhook',
+        'order_id',
+        'financial state',
+        'transaction_id',
+        'currency',
+        'value',
+        'items',
+        'checkout consent snapshot'
+      ]
+    },
+    dedupe: dedupe(
+      'order_id + financial_state',
+      'Only a new relevant financial-state transition receives a new event_id.',
+      retain7Years,
+      false
+    ),
+    consent: transactionConsent,
+    providers: plannedProviders('purchase', {
+      firstPartyConsentRequirement: 'operational',
+      googleRequired: ['transaction_id', 'currency', 'value', 'items'],
+      meta: {
+        eventName: 'Purchase',
+        requiredParameters: ['content_ids', 'currency', 'value']
+      },
+      microsoft: {
+        eventName: 'purchase',
+        requiredParameters: ['revenue_value', 'currency', 'items']
+      }
+    })
+  },
+  refund: {
+    version: 1,
+    name: 'refund',
+    lifecycle: 'planned',
+    owner: 'shopify_refund_webhook',
+    trigger: {
+      description:
+        'Create from a verified Shopify refund webhook after the refund exists.',
+      sources: ['webhook'],
+      repeatability: 'Each Shopify refund record is new.',
+      eventTime: 'The authoritative Shopify refund created_at timestamp.',
+      prerequisites: [
+        'verified webhook',
+        'refund_id',
+        'transaction_id',
+        'currency',
+        'refunded value',
+        'refunded items',
+        'checkout consent snapshot'
+      ]
+    },
+    dedupe: dedupe(
+      'refund_id',
+      'A separate Shopify refund record receives a new event_id.',
+      retain7Years,
+      false
+    ),
+    consent: transactionConsent,
+    providers: plannedProviders('refund', {
+      firstPartyConsentRequirement: 'operational',
+      googleRequired: ['transaction_id', 'currency', 'value', 'items'],
+      posthog: false
+    })
+  },
+  search: {
+    version: 1,
+    name: 'search',
+    lifecycle: 'planned',
+    owner: 'storefront_search_controller',
+    trigger: {
+      description:
+        'Create after an explicit search request resolves to a result state.',
+      sources: ['browser', 'server'],
+      repeatability: 'Each explicit resolved search is new.',
+      eventTime: 'The resolved search-result timestamp.',
+      prerequisites: ['search_id', 'normalized search term', 'result state']
+    },
+    dedupe: dedupe(
+      'search_id',
+      'A separate explicit search receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('search', {
+      googleRequired: ['search_term'],
+      meta: { eventName: 'Search', requiredParameters: ['search_string'] },
+      microsoft: {
+        eventName: 'search',
+        requiredParameters: ['search_term']
+      }
+    })
+  },
+  view_search_results: {
+    version: 1,
+    name: 'view_search_results',
+    lifecycle: 'planned',
+    owner: 'storefront_search_results',
+    trigger: {
+      description:
+        'Create when the resolved search-result revision is actually visible.',
+      sources: ['browser'],
+      repeatability: 'Each visible result revision is new.',
+      eventTime: 'The qualifying result-visibility timestamp.',
+      prerequisites: [
+        'search_id',
+        'result_revision',
+        'normalized search term',
+        'result count'
+      ]
+    },
+    dedupe: dedupe(
+      'search_id + result_revision',
+      'A newly visible result revision receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('view_search_results', {
+      googleRequired: ['search_term']
+    })
+  },
+  view_promotion: {
+    version: 1,
+    name: 'view_promotion',
+    lifecycle: 'planned',
+    owner: 'storefront_promotion_observer',
+    trigger: {
+      description:
+        'Create when a promotion is at least 50 percent visible for at least one continuous second.',
+      sources: ['browser'],
+      repeatability: 'Each qualifying promotion impression on a page view is new.',
+      eventTime: 'The timestamp at which the visibility threshold is met.',
+      prerequisites: [
+        'page_view_id',
+        'promotion_id',
+        'creative identity',
+        'impression sequence'
+      ]
+    },
+    dedupe: dedupe(
+      'page_view_id + promotion_id + impression_sequence',
+      'A later qualifying impression sequence receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('view_promotion', {
+      googleRequired: ['promotion_id', 'creative_name', 'items']
+    })
+  },
+  select_promotion: {
+    version: 1,
+    name: 'select_promotion',
+    lifecycle: 'planned',
+    owner: 'storefront_promotion_link',
+    trigger: {
+      description:
+        'Create when an accepted promotion selection initiates its intended action or navigation.',
+      sources: ['browser'],
+      repeatability: 'Each accepted promotion interaction is new.',
+      eventTime: 'The accepted interaction timestamp.',
+      prerequisites: [
+        'interaction_id',
+        'promotion_id',
+        'creative identity',
+        'destination'
+      ]
+    },
+    dedupe: dedupe(
+      'interaction_id',
+      'A separate accepted promotion selection receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('select_promotion', {
+      googleRequired: ['promotion_id', 'creative_name', 'items']
+    })
+  },
+  generate_lead: {
+    version: 1,
+    name: 'generate_lead',
+    lifecycle: 'planned',
+    owner: 'lead_submission_service',
+    trigger: {
+      description:
+        'Create only after the lead or contact submission is accepted and persisted.',
+      sources: ['server'],
+      repeatability: 'Each accepted lead submission is new.',
+      eventTime: 'The authoritative acceptance timestamp.',
+      prerequisites: [
+        'submission_id',
+        'form_id',
+        'lead classification without PII'
+      ]
+    },
+    dedupe: dedupe(
+      'submission_id',
+      'A separate accepted lead submission receives a new event_id.',
+      retain25Months,
+      false
+    ),
+    consent: leadConsent,
+    providers: plannedProviders('generate_lead', {
+      googleRequired: ['currency', 'value'],
+      meta: { eventName: 'Lead' },
+      microsoft: { eventName: 'generate_lead' }
+    })
+  },
+  form_start: {
+    version: 1,
+    name: 'form_start',
+    lifecycle: 'planned',
+    owner: 'storefront_form_controller',
+    trigger: {
+      description:
+        'Create on the first meaningful value change in a form, never on focus alone.',
+      sources: ['browser'],
+      repeatability: 'Once per form and page view.',
+      eventTime: 'The first meaningful value-change timestamp.',
+      prerequisites: ['form_id', 'page_view_id', 'field category without value']
+    },
+    dedupe: dedupe(
+      'form_id + page_view_id',
+      'The same form on a new page view receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('form_start', {
+      googleRequired: ['form_id', 'form_name']
+    })
+  },
+  form_submit: {
+    version: 1,
+    name: 'form_submit',
+    lifecycle: 'planned',
+    owner: 'form_submission_service',
+    trigger: {
+      description:
+        'Create only after the submission service accepts the form submission.',
+      sources: ['server'],
+      repeatability: 'Each accepted submission is new.',
+      eventTime: 'The authoritative acceptance timestamp.',
+      prerequisites: ['submission_id', 'form_id', 'result without PII']
+    },
+    dedupe: dedupe(
+      'submission_id',
+      'A separate accepted submission receives a new event_id.',
+      retain25Months,
+      false
+    ),
+    consent: leadConsent,
+    providers: plannedProviders('form_submit', {
+      googleRequired: ['form_id', 'form_name']
+    })
+  },
+  form_error: {
+    version: 1,
+    name: 'form_error',
+    lifecycle: 'planned',
+    owner: 'form_submission_service',
+    trigger: {
+      description:
+        'Create when a definitive validation or server failure is presented for a submission attempt.',
+      sources: ['browser', 'server'],
+      repeatability: 'Each failed submission attempt is new.',
+      eventTime: 'The definitive failure timestamp.',
+      prerequisites: [
+        'attempt_id',
+        'form_id',
+        'safe error category',
+        'visible failure state'
+      ]
+    },
+    dedupe: dedupe(
+      'attempt_id',
+      'A separate failed attempt receives a new event_id.',
+      retain90Days
+    ),
+    consent: errorConsent,
+    providers: plannedProviders('form_error', {
+      firstPartyConsentRequirement: 'analytics_or_operational',
+      googleRequired: ['form_id', 'error_category'],
+      posthog: true
+    })
+  },
+  filter_apply: {
+    version: 1,
+    name: 'filter_apply',
+    lifecycle: 'planned',
+    owner: 'storefront_product_filter',
+    trigger: {
+      description:
+        'Create after the selected filters have produced and committed an updated product result revision.',
+      sources: ['browser'],
+      repeatability: 'Each committed filter result revision is new.',
+      eventTime: 'The result-commit timestamp.',
+      prerequisites: [
+        'interaction_id',
+        'result_revision',
+        'safe filter keys',
+        'result count'
+      ]
+    },
+    dedupe: dedupe(
+      'interaction_id + result_revision',
+      'A separate committed filter interaction receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('filter_apply', {
+      googleRequired: ['filter_name', 'filter_value'],
+      posthog: true
+    })
+  },
+  sort_apply: {
+    version: 1,
+    name: 'sort_apply',
+    lifecycle: 'planned',
+    owner: 'storefront_product_sort',
+    trigger: {
+      description:
+        'Create after the selected sort has produced and committed an updated product result revision.',
+      sources: ['browser'],
+      repeatability: 'Each committed sort result revision is new.',
+      eventTime: 'The result-commit timestamp.',
+      prerequisites: [
+        'interaction_id',
+        'result_revision',
+        'sort key',
+        'result count'
+      ]
+    },
+    dedupe: dedupe(
+      'interaction_id + result_revision',
+      'A separate committed sort interaction receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('sort_apply', {
+      googleRequired: ['sort_key'],
+      posthog: true
+    })
+  },
+  variant_select: {
+    version: 1,
+    name: 'variant_select',
+    lifecycle: 'planned',
+    owner: 'storefront_variant_controller',
+    trigger: {
+      description:
+        'Create after the selected variant is resolved and committed to the product state.',
+      sources: ['browser'],
+      repeatability: 'Each committed variant selection is new.',
+      eventTime: 'The variant-state commit timestamp.',
+      prerequisites: ['interaction_id', 'product_id', 'variant_id', 'availability']
+    },
+    dedupe: dedupe(
+      'interaction_id + variant_id',
+      'A separate committed variant selection receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('variant_select', {
+      googleRequired: ['item_id', 'item_variant'],
+      posthog: true
+    })
+  },
+  size_guide_view: {
+    version: 1,
+    name: 'size_guide_view',
+    lifecycle: 'planned',
+    owner: 'storefront_size_guide',
+    trigger: {
+      description:
+        'Create when the requested size-guide dialog or surface is actually visible.',
+      sources: ['browser'],
+      repeatability: 'Each qualifying open sequence is new.',
+      eventTime: 'The qualifying visibility timestamp.',
+      prerequisites: ['page_view_id', 'guide_id', 'open_sequence']
+    },
+    dedupe: dedupe(
+      'page_view_id + guide_id + open_sequence',
+      'A later qualifying guide-open sequence receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('size_guide_view', {
+      googleRequired: ['guide_id'],
+      posthog: true
+    })
+  },
+  checkout_error: {
+    version: 1,
+    name: 'checkout_error',
+    lifecycle: 'blocked_source',
+    owner: 'authoritative_checkout_error_source',
+    trigger: {
+      description:
+        'Create only when an approved authoritative checkout source reports a definitive checkout failure.',
+      sources: ['browser', 'server'],
+      repeatability: 'Each failed checkout attempt is new.',
+      eventTime: 'The authoritative failure timestamp.',
+      prerequisites: [
+        'approved authoritative source',
+        'checkout_attempt_id',
+        'safe error category'
+      ]
+    },
+    dedupe: dedupe(
+      'checkout_attempt_id',
+      'A separate failed checkout attempt receives a new event_id.',
+      retain90Days
+    ),
+    consent: errorConsent,
+    providers: plannedProviders('checkout_error', {
+      firstPartyConsentRequirement: 'analytics_or_operational',
+      googleRequired: ['error_category'],
+      posthog: true
+    })
+  },
+  payment_error: {
+    version: 1,
+    name: 'payment_error',
+    lifecycle: 'blocked_source',
+    owner: 'authoritative_payment_error_source',
+    trigger: {
+      description:
+        'Create only when an approved authoritative payment source reports a definitive payment failure.',
+      sources: ['browser', 'server'],
+      repeatability: 'Each failed payment attempt is new.',
+      eventTime: 'The authoritative failure timestamp.',
+      prerequisites: [
+        'approved authoritative source',
+        'payment_attempt_id',
+        'safe error category'
+      ]
+    },
+    dedupe: dedupe(
+      'payment_attempt_id',
+      'A separate failed payment attempt receives a new event_id.',
+      retain90Days
+    ),
+    consent: errorConsent,
+    providers: plannedProviders('payment_error', {
+      firstPartyConsentRequirement: 'analytics_or_operational',
+      googleRequired: ['error_category'],
+      posthog: true
+    })
+  },
+  scroll_depth: {
+    version: 1,
+    name: 'scroll_depth',
+    lifecycle: 'planned',
+    owner: 'storefront_scroll_observer',
+    trigger: {
+      description:
+        'Create once as each explicit 25, 50, 75, or 90 percent depth threshold is crossed.',
+      sources: ['browser'],
+      repeatability: 'Once per page view and threshold.',
+      eventTime: 'The first threshold-crossing timestamp.',
+      prerequisites: ['page_view_id', 'threshold', 'document height']
+    },
+    dedupe: dedupe(
+      'page_view_id + threshold',
+      'A new page view or newly crossed threshold receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('scroll_depth', {
+      googleRequired: ['percent_scrolled'],
+      posthog: true
+    })
+  },
+  video_progress: {
+    version: 1,
+    name: 'video_progress',
+    lifecycle: 'planned',
+    owner: 'storefront_video_controller',
+    trigger: {
+      description:
+        'Create once as each explicit 10, 25, 50, 75, 90, or 100 percent video milestone is crossed.',
+      sources: ['browser'],
+      repeatability: 'Once per page view, video, and milestone.',
+      eventTime: 'The first milestone-crossing timestamp.',
+      prerequisites: [
+        'page_view_id',
+        'video_id',
+        'video duration',
+        'milestone'
+      ]
+    },
+    dedupe: dedupe(
+      'page_view_id + video_id + milestone',
+      'A new page view, video, or newly crossed milestone receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: plannedProviders('video_progress', {
+      googleRequired: [
+        'video_current_time',
+        'video_duration',
+        'video_percent',
+        'video_title'
+      ],
+      posthog: true
+    })
+  }
+} as const satisfies Record<string, EventCatalogEntry>
+
+export type CatalogEventName = keyof typeof eventCatalog
+
+export const canonicalEventNames = Object.freeze(
+  Object.keys(eventCatalog) as CatalogEventName[]
+)
+
+export const activeCanonicalEventNames = Object.freeze(
+  canonicalEventNames.filter(
+    (name) => eventCatalog[name].lifecycle === 'active'
+  )
+)
+
+export function getEventCatalogEntry(
+  name: CatalogEventName
+): (typeof eventCatalog)[CatalogEventName] {
+  return eventCatalog[name]
+}
+
+export const gaAutomaticEventDecisions = {
+  automatic_page_view: {
+    gaEvents: ['page_view'],
+    decision: 'disabled_canonical_owner',
+    canonicalReplacement: ['page_view'],
+    rationale:
+      'The canonical Next.js page_view is the only page-view owner.'
+  },
+  history_pageviews: {
+    gaEvents: ['page_view'],
+    decision: 'disabled_canonical_owner',
+    canonicalReplacement: ['page_view'],
+    rationale:
+      'History-state pageviews would duplicate the canonical router event.'
+  },
+  enhanced_measurement_scroll: {
+    gaEvents: ['scroll'],
+    decision: 'keep_until_canonical_active_then_disable',
+    canonicalReplacement: ['scroll_depth'],
+    rationale:
+      'Keep the GA-derived 90 percent signal only until canonical threshold tracking is active.'
+  },
+  outbound_click: {
+    gaEvents: ['click'],
+    decision: 'keep_ga_derived_non_canonical',
+    canonicalReplacement: [],
+    rationale:
+      'The v1 catalog has no canonical outbound-click event, so this remains GA-derived and cannot enter the canonical ledger.'
+  },
+  site_search: {
+    gaEvents: ['view_search_results'],
+    decision: 'keep_until_canonical_active_then_disable',
+    canonicalReplacement: ['search', 'view_search_results'],
+    rationale:
+      'Disable URL-query inference when the resolved canonical search events are active.'
+  },
+  form_interactions: {
+    gaEvents: ['form_start', 'form_submit'],
+    decision: 'keep_until_canonical_active_then_disable',
+    canonicalReplacement: ['form_start', 'form_submit'],
+    rationale:
+      'Disable DOM-derived form events when success-aware canonical form events are active.'
+  },
+  video_engagement: {
+    gaEvents: ['video_start', 'video_progress', 'video_complete'],
+    decision: 'keep_until_canonical_active_then_disable',
+    canonicalReplacement: ['video_progress'],
+    rationale:
+      'Disable the YouTube-only automatic detector when canonical milestone tracking is active.'
+  },
+  file_downloads: {
+    gaEvents: ['file_download'],
+    decision: 'keep_ga_derived_non_canonical',
+    canonicalReplacement: [],
+    rationale:
+      'The v1 catalog has no canonical file-download event, so this remains GA-derived and cannot enter the canonical ledger.'
+  },
+  session_start: {
+    gaEvents: ['session_start'],
+    decision: 'keep_ga_derived_system_event',
+    canonicalReplacement: [],
+    rationale: 'GA owns session derivation; this is not a canonical event.'
+  },
+  first_visit: {
+    gaEvents: ['first_visit'],
+    decision: 'keep_ga_derived_system_event',
+    canonicalReplacement: [],
+    rationale: 'GA owns first-visit derivation; this is not a canonical event.'
+  },
+  user_engagement: {
+    gaEvents: ['user_engagement'],
+    decision: 'keep_ga_derived_system_event',
+    canonicalReplacement: [],
+    rationale: 'GA owns engagement derivation; this is not a canonical event.'
+  }
+} as const

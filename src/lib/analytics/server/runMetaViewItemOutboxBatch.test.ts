@@ -1,92 +1,50 @@
-import type {
-  ClaimedMetaViewItemAttempt,
-  MetaViewItemOutboxStore
-} from './createMetaViewItemOutboxStore'
-import { postgresMetaViewItemOutboxStore } from './postgresMetaViewItemOutboxStore'
-import {
-  processMetaViewItemAttempt,
-  type MetaViewItemAttemptOutcome
-} from './processMetaViewItemAttempt'
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import type { CanonicalViewItem } from '../viewItemEvent'
+import type { ClaimedMetaViewItemAttempt } from './createMetaViewItemOutboxStore'
+import { runMetaViewItemOutboxBatch } from './runMetaViewItemOutboxBatch'
 
-const MAX_BATCH_SIZE = 100
+const attempt = {
+  attemptCount: 1,
+  attemptId: 'attempt-1',
+  event: {
+    event_id: 'c3289453-e760-43ab-aaf5-10c3d233843a'
+  } as CanonicalViewItem
+} satisfies ClaimedMetaViewItemAttempt
 
-type RunMetaViewItemOutboxBatchInput = { maxItems: number }
+test('keeps the legacy Meta batch API on the generic worker core', async () => {
+  let available = true
+  const completed: string[] = []
+  const result = await runMetaViewItemOutboxBatch(
+    { maxItems: 2 },
+    {
+      processAttempt: async current => ({
+        attemptCount: current.attemptCount,
+        attemptId: current.attemptId,
+        errorMessage: 'temporary',
+        latencyMs: 4,
+        nextAttemptAt: '2026-07-17T12:01:00.000Z',
+        status: 'retry_scheduled'
+      }),
+      store: {
+        claimNext: async () => {
+          if (!available) return null
+          available = false
+          return attempt
+        },
+        complete: async outcome => {
+          completed.push(outcome.status)
+        }
+      }
+    }
+  )
 
-export type MetaViewItemBatchSummary = {
-  acceptedUnverified: number
-  claimed: number
-  deadLettered: number
-  limitReached: boolean
-  retryScheduled: number
-}
-
-export type MetaViewItemBatchDependencies = {
-  processAttempt: (
-    attempt: ClaimedMetaViewItemAttempt
-  ) => Promise<MetaViewItemAttemptOutcome>
-  store: MetaViewItemOutboxStore
-}
-
-const defaultDependencies: MetaViewItemBatchDependencies = {
-  processAttempt: processMetaViewItemAttempt,
-  store: postgresMetaViewItemOutboxStore
-}
-
-function validateBatchSize(maxItems: number) {
-  if (
-    !Number.isInteger(maxItems) ||
-    maxItems < 1 ||
-    maxItems > MAX_BATCH_SIZE
-  ) {
-    throw new Error(
-      `Meta outbox maxItems must be between 1 and ${MAX_BATCH_SIZE}`
-    )
-  }
-}
-
-function countOutcome(
-  summary: MetaViewItemBatchSummary,
-  outcome: MetaViewItemAttemptOutcome
-) {
-  switch (outcome.status) {
-    case 'succeeded':
-      summary.acceptedUnverified += 1
-      break
-    case 'retry_scheduled':
-      summary.retryScheduled += 1
-      break
-    case 'dead_lettered':
-      summary.deadLettered += 1
-      break
-  }
-}
-
-export async function runMetaViewItemOutboxBatch(
-  input: RunMetaViewItemOutboxBatchInput,
-  dependencies: MetaViewItemBatchDependencies = defaultDependencies
-): Promise<MetaViewItemBatchSummary> {
-  validateBatchSize(input.maxItems)
-
-  const summary: MetaViewItemBatchSummary = {
+  assert.deepEqual(result, {
     acceptedUnverified: 0,
-    claimed: 0,
+    claimed: 1,
     deadLettered: 0,
     limitReached: false,
-    retryScheduled: 0
-  }
-
-  while (summary.claimed < input.maxItems) {
-    const attempt = await dependencies.store.claimNext()
-
-    if (!attempt) return summary
-
-    summary.claimed += 1
-
-    const outcome = await dependencies.processAttempt(attempt)
-    await dependencies.store.complete(outcome)
-    countOutcome(summary, outcome)
-  }
-
-  summary.limitReached = true
-  return summary
-}
+    retryScheduled: 1
+  })
+  assert.deepEqual(completed, ['retry_scheduled'])
+})

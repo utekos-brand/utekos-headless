@@ -26,6 +26,7 @@ test('returns a separately persistable accepted receipt', async () => {
   )
 
   assert.deepEqual(outcome, {
+    attemptCount: 1,
     attemptId: 'google-attempt-1',
     latencyMs: 125,
     receipt: {
@@ -56,6 +57,7 @@ test('schedules missing WIF configuration for cron retry', async () => {
   )
 
   assert.deepEqual(outcome, {
+    attemptCount: 1,
     attemptId: 'google-attempt-1',
     errorMessage:
       'Error: Missing required Google Data Manager auth configuration: GCP_AUDIENCE',

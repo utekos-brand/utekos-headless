@@ -1,0 +1,45 @@
+import type { ZodType } from 'zod'
+import type {
+  CanonicalEvent,
+  ImplementedCanonicalEventName
+} from '../canonicalEvent'
+
+export type ProviderId =
+  | 'google'
+  | 'meta'
+  | 'microsoft_uet'
+
+export type ProviderAdapterKey =
+  `${ProviderId}:${ImplementedCanonicalEventName}`
+
+export type ProviderReceiptProjection = {
+  requestId: string | null
+  response: unknown
+  validationResult: unknown
+}
+
+export type ProviderRetryPolicy = {
+  delaysMs: readonly number[]
+  maxAttempts: number
+  positiveJitterRatio: number
+}
+
+export type ProviderAdapter<
+  E extends CanonicalEvent,
+  R
+> = {
+  deadLetterReasons: {
+    attemptsExhausted: string
+    invalidPayload: string
+    permanentError: string
+  }
+  dispatch: (event: E) => Promise<R>
+  eventName: E['event_name']
+  isRetryable: (error: unknown) => boolean
+  key: ProviderAdapterKey
+  projectReceipt: (receipt: R) => ProviderReceiptProjection
+  provider: ProviderId
+  retryPolicy: ProviderRetryPolicy
+  schema: ZodType<E>
+  summarizeError: (error: unknown) => string
+}

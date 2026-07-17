@@ -3,7 +3,7 @@ import {
   normalizeCanonicalPageView,
   type CanonicalPageViewRequestContext
 } from './normalizeCanonicalPageView'
-import { planCanonicalPageViewDispatch } from './planCanonicalPageViewDispatch'
+import { planCanonicalEventDispatch } from './planCanonicalEventDispatch'
 import type {
   CanonicalEventStore,
   CanonicalEventStoreInput
@@ -40,7 +40,7 @@ export async function acceptCanonicalPageView(
   }
 
   const result = await input.store.accept({
-    dispatches: planCanonicalPageViewDispatch(event),
+    dispatches: planCanonicalEventDispatch(event),
     event
   })
 

@@ -1,10 +1,7 @@
-import type { CanonicalPageView } from '../pageViewEvent'
-import type { CanonicalViewItem } from '../viewItemEvent'
-import type { ProviderDispatchIntent } from './planCanonicalPageViewDispatch'
+import type { CanonicalEvent } from '../canonicalEvent'
+import type { ProviderDispatchIntent } from './planCanonicalEventDispatch'
 
-export type CanonicalStoredEvent =
-  | CanonicalPageView
-  | CanonicalViewItem
+export type CanonicalStoredEvent = CanonicalEvent
 
 export type CanonicalEventStoreInput = {
   dispatches: ProviderDispatchIntent[]

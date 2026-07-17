@@ -26,14 +26,20 @@ create table if not exists ops.provider_dispatch_attempts (
   event_id text,
   event_name text,
   payload jsonb not null default '{}'::jsonb,
+  payload_summary jsonb not null default '{}'::jsonb,
 
   status text not null default 'pending'
-    check (status in ('pending', 'processing', 'succeeded', 'retry_scheduled', 'failed', 'dead_lettered', 'skipped_unqualified')),
+    check (status in ('pending', 'processing', 'succeeded', 'accepted_unverified', 'retry_scheduled', 'failed', 'dead_lettered', 'skipped_unqualified')),
   attempt_count integer not null default 0
     check (attempt_count >= 0),
   next_attempt_at timestamptz,
   last_error text,
   response jsonb not null default '{}'::jsonb,
+  request_id text,
+  http_status integer
+    check (http_status is null or http_status between 100 and 599),
+  validation_result jsonb not null default '{}'::jsonb,
+  response_semantics text,
   consent_basis jsonb not null default '{}'::jsonb,
   data_quality jsonb not null default '{}'::jsonb,
   dispatch_mode text not null default 'server_retry'

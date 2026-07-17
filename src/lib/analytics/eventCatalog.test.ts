@@ -1,0 +1,313 @@
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import {
+  activeCanonicalEventNames,
+  canonicalEventNames,
+  eventCatalog,
+  gaAutomaticEventDecisions,
+  getEventCatalogEntry,
+  providerIdentifierPolicy,
+  technicalRetentionCaveat,
+  type ProviderId
+} from './eventCatalog'
+
+const expectedCanonicalEventNames = [
+  'page_view',
+  'view_item_list',
+  'select_item',
+  'view_item',
+  'add_to_wishlist',
+  'add_to_cart',
+  'remove_from_cart',
+  'view_cart',
+  'begin_checkout',
+  'add_shipping_info',
+  'add_payment_info',
+  'purchase',
+  'refund',
+  'search',
+  'view_search_results',
+  'view_promotion',
+  'select_promotion',
+  'generate_lead',
+  'form_start',
+  'form_submit',
+  'form_error',
+  'filter_apply',
+  'sort_apply',
+  'variant_select',
+  'size_guide_view',
+  'checkout_error',
+  'payment_error',
+  'scroll_depth',
+  'video_progress'
+] as const
+
+const providerIds = [
+  'supabase',
+  'google',
+  'meta',
+  'microsoft_uet',
+  'posthog'
+] as const satisfies readonly ProviderId[]
+
+test('contains exactly the 29 v1 canonical events', () => {
+  assert.equal(canonicalEventNames.length, 29)
+  assert.deepEqual(
+    [...canonicalEventNames],
+    expectedCanonicalEventNames
+  )
+})
+
+test('keeps every catalog key, entry name, and lookup aligned', () => {
+  for (const name of canonicalEventNames) {
+    const entry = getEventCatalogEntry(name)
+
+    assert.equal(entry.name, name)
+    assert.equal(eventCatalog[name], entry)
+  }
+})
+
+test('defines the required owner, trigger, dedupe, consent, and provider contract for every event', () => {
+  for (const name of canonicalEventNames) {
+    const entry = eventCatalog[name]
+
+    assert.equal(entry.version, 1)
+    assert.ok(entry.owner.length > 0, `${name}: owner`)
+    assert.ok(
+      ['active', 'planned', 'blocked_source'].includes(
+        entry.lifecycle
+      ),
+      `${name}: lifecycle`
+    )
+
+    assert.ok(entry.trigger.description.length > 0, `${name}: trigger`)
+    assert.ok(entry.trigger.sources.length > 0, `${name}: sources`)
+    assert.ok(
+      entry.trigger.repeatability.length > 0,
+      `${name}: repeatability`
+    )
+    assert.ok(
+      entry.trigger.eventTime.length > 0,
+      `${name}: event time`
+    )
+    assert.ok(
+      entry.trigger.prerequisites.length > 0,
+      `${name}: prerequisites`
+    )
+
+    assert.ok(entry.dedupe.eventId.length > 0, `${name}: event id`)
+    assert.ok(entry.dedupe.reuse.length > 0, `${name}: reuse`)
+    assert.ok(entry.dedupe.newEvent.length > 0, `${name}: new event`)
+    assert.equal(
+      entry.dedupe.ledgerIdempotencyKey,
+      'event_name + event_id'
+    )
+    assert.equal(
+      entry.dedupe.providerIdempotencyKey,
+      'provider + event_name + event_id'
+    )
+    assert.equal(typeof entry.dedupe.browserServerShareEventId, 'boolean')
+    assert.ok(entry.dedupe.retention.value > 0, `${name}: retention`)
+    assert.equal(entry.dedupe.retention.scope, 'dedupe_key_only')
+
+    assert.ok(entry.consent.browserCreation.length > 0)
+    assert.ok(entry.consent.firstPartyCollection.length > 0)
+    assert.ok(entry.consent.canonicalLedger.length > 0)
+    assert.deepEqual(entry.consent.analyticsExport, ['analytics'])
+    assert.equal(
+      entry.consent.piiPolicy,
+      'consent_gated_provider_identifiers_only'
+    )
+
+    assert.deepEqual(
+      Object.keys(entry.providers),
+      providerIds,
+      `${name}: provider allowlist`
+    )
+
+    for (const providerId of providerIds) {
+      const provider = entry.providers[providerId]
+
+      assert.ok(provider.support.length > 0)
+      assert.ok('browser' in provider.transport)
+      assert.ok('server' in provider.transport)
+      assert.ok(Array.isArray(provider.requiredParameters))
+      assert.ok(provider.consentRequirement.length > 0)
+      assert.ok(provider.productionStatus.length > 0)
+      assert.ok(provider.productionDetail.length > 0)
+      assert.ok(
+        ['active', 'disabled', 'blocked_no_worker'].includes(
+          provider.serverOutbox
+        )
+      )
+
+      if (provider.support !== 'not_relevant') {
+        assert.ok(provider.eventName)
+        assert.ok(
+          provider.dedupeField === 'event_id' ||
+            provider.dedupeField === 'transaction_id'
+        )
+        assert.equal(provider.adapterVersion, 1)
+        assert.ok(provider.requiredParameters.length > 0)
+      }
+    }
+  }
+})
+
+test('marks only authoritative-source gaps as blocked_source', () => {
+  const blockedSources = canonicalEventNames.filter(
+    (name) => eventCatalog[name].lifecycle === 'blocked_source'
+  )
+
+  assert.deepEqual(blockedSources, [
+    'add_shipping_info',
+    'add_payment_info',
+    'checkout_error',
+    'payment_error'
+  ])
+})
+
+test('keeps the production lifecycle limited to page_view and view_item', () => {
+  assert.deepEqual([...activeCanonicalEventNames], [
+    'page_view',
+    'view_item'
+  ])
+})
+
+test('allows only Google and Meta view_item server outboxes to be active', () => {
+  const activeOutboxes = canonicalEventNames.flatMap((eventName) =>
+    providerIds.flatMap((providerId) =>
+      eventCatalog[eventName].providers[providerId].serverOutbox ===
+      'active' ?
+        [`${providerId}:${eventName}`]
+      : []
+    )
+  )
+
+  assert.deepEqual(activeOutboxes, [
+    'google:view_item',
+    'meta:view_item'
+  ])
+  assert.equal(
+    Object.values(eventCatalog.page_view.providers).some(
+      (provider) => provider.serverOutbox === 'active'
+    ),
+    false
+  )
+})
+
+test('records current mixed Microsoft delivery and historical page_view backlog truth', () => {
+  assert.equal(
+    eventCatalog.view_item.providers.google.productionStatus,
+    'active'
+  )
+  assert.match(
+    eventCatalog.view_item.providers.google.productionDetail,
+    /executed Data Manager/
+  )
+  assert.match(
+    eventCatalog.view_item.providers.google.productionDetail,
+    /not live-verified/
+  )
+  assert.equal(
+    eventCatalog.view_item.providers.google.transport.browser,
+    'google_tag_manager'
+  )
+  assert.equal(
+    eventCatalog.view_item.providers.google.dedupeField,
+    'transaction_id'
+  )
+  assert.ok(
+    eventCatalog.view_item.providers.google.requiredParameters.includes(
+      'transaction_id'
+    )
+  )
+  assert.equal(
+    eventCatalog.view_item.providers.microsoft_uet.transport.browser,
+    'microsoft_uet'
+  )
+  assert.equal(
+    eventCatalog.view_item.providers.microsoft_uet.serverOutbox,
+    'blocked_no_worker'
+  )
+  assert.equal(
+    eventCatalog.page_view.providers.meta.serverOutbox,
+    'blocked_no_worker'
+  )
+  assert.equal(
+    eventCatalog.page_view.providers.microsoft_uet.serverOutbox,
+    'blocked_no_worker'
+  )
+  assert.match(
+    eventCatalog.page_view.providers.meta.productionDetail,
+    /Historical pending page_view rows/
+  )
+  assert.match(
+    eventCatalog.page_view.providers.microsoft_uet.productionDetail,
+    /must not be replayed/
+  )
+})
+
+test('classifies every GA automatic-event decision explicitly', () => {
+  assert.deepEqual(
+    Object.fromEntries(
+      Object.entries(gaAutomaticEventDecisions).map(
+        ([feature, decision]) => [feature, decision.decision]
+      )
+    ),
+    {
+      automatic_page_view: 'disabled_canonical_owner',
+      history_pageviews: 'disabled_canonical_owner',
+      enhanced_measurement_scroll:
+        'keep_until_canonical_active_then_disable',
+      outbound_click: 'keep_ga_derived_non_canonical',
+      site_search: 'keep_until_canonical_active_then_disable',
+      form_interactions:
+        'keep_until_canonical_active_then_disable',
+      video_engagement:
+        'keep_until_canonical_active_then_disable',
+      file_downloads: 'keep_ga_derived_non_canonical',
+      session_start: 'keep_ga_derived_system_event',
+      first_visit: 'keep_ga_derived_system_event',
+      user_engagement: 'keep_ga_derived_system_event'
+    }
+  )
+
+  assert.deepEqual(
+    gaAutomaticEventDecisions.site_search.canonicalReplacement,
+    ['search', 'view_search_results']
+  )
+  assert.deepEqual(
+    gaAutomaticEventDecisions.form_interactions.canonicalReplacement,
+    ['form_start', 'form_submit']
+  )
+
+  const canonicalNameSet = new Set<string>(canonicalEventNames)
+
+  assert.equal(canonicalNameSet.has('session_start'), false)
+  assert.equal(canonicalNameSet.has('first_visit'), false)
+  assert.equal(canonicalNameSet.has('user_engagement'), false)
+})
+
+test('states that retention is technical and limited to dedupe keys', () => {
+  assert.match(technicalRetentionCaveat, /dedupe keys/)
+  assert.match(technicalRetentionCaveat, /not a legal retention conclusion/)
+})
+
+test('keeps operational first-party persistence separate from provider export consent', () => {
+  assert.equal(
+    eventCatalog.purchase.providers.supabase.consentRequirement,
+    'operational'
+  )
+  assert.equal(
+    eventCatalog.refund.providers.supabase.consentRequirement,
+    'operational'
+  )
+  assert.equal(
+    eventCatalog.form_error.providers.supabase.consentRequirement,
+    'analytics_or_operational'
+  )
+  assert.match(providerIdentifierPolicy, /Direct contact fields/)
+  assert.match(providerIdentifierPolicy, /request-context IP/)
+})

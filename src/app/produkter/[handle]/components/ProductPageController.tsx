@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react'
 import { useProductPage } from '@/hooks/useProductPage'
 import { ProductPageView } from '@/app/produkter/[handle]/components/ProductPageView'
 import { reportCanonicalViewItem } from '@/lib/analytics/viewItemReporter'
+import { createViewItemReportKey } from '@/lib/analytics/viewItemReportKey'
 import { ProductPageSkeleton } from './ProductPageSkeleton'
 import { ProductPageErrorState } from './ProductPageErrorState'
 import type { ShopifyProduct } from 'types/product'
@@ -21,7 +22,7 @@ export function ProductPageController({
   initialVariantId = null,
   initialRelatedProducts
 }: ProductPageControllerProps) {
-  const reportedProductId = useRef<string | null>(null)
+  const reportedViewItemKey = useRef<string | null>(null)
 
   const {
     productData,
@@ -42,19 +43,22 @@ export function ProductPageController({
   )
 
   useEffect(() => {
-    if (
-      !productData ||
-      !selectedVariant ||
-      reportedProductId.current === productData.id
-    ) {
+    if (!productData || !selectedVariant) {
       return
     }
+
+    const reportKey = createViewItemReportKey(
+      productData.id,
+      selectedVariant.id
+    )
+
+    if (reportedViewItemKey.current === reportKey) return
 
     return reportCanonicalViewItem({
       product: productData,
       variant: selectedVariant,
       onEmitted: () => {
-        reportedProductId.current = productData.id
+        reportedViewItemKey.current = reportKey
       }
     })
   }, [productData, selectedVariant])

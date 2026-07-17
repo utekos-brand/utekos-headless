@@ -36,6 +36,7 @@ function succeededOutcome(): Extract<
   { status: 'succeeded' }
 > {
   return {
+    attemptCount: 1,
     attemptId: '7bcd24a4-190c-4eca-a834-5c9854bd54ea',
     latencyMs: 125,
     receipt: {
@@ -112,7 +113,8 @@ test('stores Meta acceptance as accepted_unverified', async () => {
     succeededOutcome().receipt.result,
     'meta-trace-1',
     { events_received: 1, processed_entries: 1 },
-    125
+    125,
+    1
   ])
 })
 
@@ -127,6 +129,7 @@ test('stores retry timing without marking the row processed', async () => {
     MetaViewItemAttemptOutcome,
     { status: 'retry_scheduled' }
   > = {
+    attemptCount: 2,
     attemptId: '7bcd24a4-190c-4eca-a834-5c9854bd54ea',
     errorMessage: 'FacebookRequestError: unavailable',
     latencyMs: 125,
@@ -148,7 +151,8 @@ test('stores retry timing without marking the row processed', async () => {
     outcome.attemptId,
     outcome.nextAttemptAt,
     outcome.errorMessage,
-    outcome.latencyMs
+    outcome.latencyMs,
+    outcome.attemptCount
   ])
 })
 
@@ -163,6 +167,7 @@ test('dead-letters by reference without duplicating canonical payload', async ()
     MetaViewItemAttemptOutcome,
     { status: 'dead_lettered' }
   > = {
+    attemptCount: 3,
     attemptId: '7bcd24a4-190c-4eca-a834-5c9854bd54ea',
     errorMessage: 'FacebookRequestError: invalid parameter',
     latencyMs: 125,
@@ -180,7 +185,9 @@ test('dead-letters by reference without duplicating canonical payload', async ()
     outcome.attemptId,
     outcome.errorMessage,
     outcome.latencyMs,
-    'meta_permanent_error'
+    'meta_permanent_error',
+    'meta',
+    outcome.attemptCount
   ])
 })
 

@@ -1,6 +1,6 @@
 # Deployment And Migration Checklist
 
-Status date: 2026-07-15
+Status date: 2026-07-17
 
 This is the mandatory release checklist for Utekos Headless. Use it
 before every deploy, production mutation, provider change, GTM publish,
@@ -26,6 +26,56 @@ known and completed in the correct order.
   whenever they are active.
 - Treat row counts as evidence only when source, status, reason,
   unresolved/resolved state, and replay policy are visible.
+
+### Canonical event foundation and `view_item` cutover 2026-07-17
+
+The remaining Google Data Manager identifier-limit/retry-jitter patch
+was committed directly to `main` as
+`2239f30a161da30228d4a5792f31822ef982fd26`. Git-triggered production
+deployment `dpl_FMi3yX1D4ASAAP5BNBf8t9bZoY52` reached `READY`.
+
+Production `GOOGLE_DATA_MANAGER_VALIDATE_ONLY` was then changed to
+`false`, followed by an exact-SHA redeploy. The first redeploy failed
+closed on a transient Shopify prerender timeout without moving the
+production aliases; retry deployment
+`dpl_JCXHqKaFBHY9r6tEwwU6VNM8mo2K` reached `READY` and owns
+`utekos.no`/`www.utekos.no`.
+
+Live consented event `a28a8f3c-ba90-4006-9dd8-429072a3c772` returned
+HTTP 202. Its Google row is `accepted_unverified` with request ID
+`a9ebe80f-9c54-4bd9-9971-6c4c7bb1a43c` and
+`validate_only=false`; its Meta row is `accepted_unverified` with
+`events_received=1`. This proves provider acceptance, not that the published
+GTM tag forwarded `transaction_id` or that GA4 deduplicated the two sources.
+No GTM publish or Supabase mutation was performed.
+
+The local, unreleased foundation adds the 29-event catalog, implemented-event
+union, generic provider router/store/worker registry and Vercel cron at
+`/api/cron/provider-outbox-dispatch`. `supabase/schemas/40_ops.sql` is
+only synchronized to the already-applied migration shape; this release
+must not run a new production schema mutation. Before shipping it,
+verify `CRON_SECRET`, typecheck, lint, build, linked Supabase lint and
+the registry/idempotency contracts. The cron claims one row per registered
+provider per invocation; Google and Meta both have abortable 10-second request
+deadlines inside the 60-second function budget. Before executed Google
+ingestion can remain approved, prove through the published GTM/sGTM request
+that browser `transaction_id` equals Data Manager `transactionId`. If that
+read-only proof is unavailable, set Data Manager back to validate-only before
+shipping. That environment change and redeploy require explicit approval.
+After shipping, prove the scheduled route
+exists, a consented `view_item` creates only Google and Meta server rows,
+browser and Data Manager both carry the same Google `transaction_id`, and
+Meta preserves the same `event_id`. Verify that an EEA event sends no request
+IP to Data Manager.
+
+Pre-foundation gate 2026-07-17: production browser smoke did not prove
+published GTM/sGTM `transaction_id` forwarding. The live dataLayer event on
+`utekos.no` lacked `transaction_id` before this foundation release. Production
+`GOOGLE_DATA_MANAGER_VALIDATE_ONLY` was set back to `true` before shipping.
+An exact-SHA redeploy of `dpl_JCXHqKaFBHY9r6tEwwU6VNM8mo2K` failed on a
+transient Shopify prerender timeout; the foundation Git deploy must pick up the
+validate-only env change. Re-enable executed ingestion only after post-deploy
+proof that browser `transaction_id` equals Data Manager `transactionId`.
 
 ### Local integration audit 2026-07-14
 
@@ -262,12 +312,11 @@ Production acceptance requires all of the following:
 
 The currently published GTM loader already contains
 `server_container_url=https://utekos.no/__sgtm`. No GTM publish belongs
-to this release. Legacy Cookiebot tag `126` is temporarily suppressed
-during container initialization with Google's `gtm.blocklist`; the
-block is cleared at `window.load` and `cookie_consent_update` is emitted
-again. Removing tag `126` remains a separate GTM release requiring
-explicit approval. A failing container consent gate requires an app
-rollback through Git; any GTM mutation needs separate approval.
+to this release. Cookiebot tag `126` is the current sole CMP loader and
+must remain. Live runtime has exactly one `uc.js` request with
+`implementation=gtm`; any future GTM mutation still needs separate
+approval. A failing container consent gate requires an app rollback
+through Git.
 
 The removed commerce-tracking MCP doctor and provider/Supabase runtime
 checks are not gates for this reset release. They become mandatory

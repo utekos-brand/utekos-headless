@@ -33,6 +33,7 @@
     "sync": "f() { git add . && git commit -m \"$1\" && git push; }; f",
     "knip": "knip",
     "tracking:gateway:smoke": "node scripts/tracking/verify-tracking-gateway.mjs",
+    "tracking:view-item:transaction-id": "node scripts/tracking/verify-view-item-transaction-id.mjs",
     "ops:provider-dispatch-report": "node scripts/ops/provider-dispatch-feedback-report.mjs",
     "ops:dead-letter-replay-plan": "node scripts/ops/dead-letter-replay-plan.mjs",
     "ops:identifier-coverage-report": "node scripts/ops/identifier-coverage-report.mjs",

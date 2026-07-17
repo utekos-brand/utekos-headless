@@ -1,11 +1,6 @@
-import {
-  runGoogleDataManagerViewItemOutboxBatch,
-  type GoogleDataManagerViewItemBatchSummary
-} from './runGoogleDataManagerViewItemOutboxBatch'
-import {
-  runMetaViewItemOutboxBatch,
-  type MetaViewItemBatchSummary
-} from './runMetaViewItemOutboxBatch'
+import type { GoogleDataManagerViewItemBatchSummary } from './runGoogleDataManagerViewItemOutboxBatch'
+import type { MetaViewItemBatchSummary } from './runMetaViewItemOutboxBatch'
+import { runRegisteredProviderOutboxBatch } from './runRegisteredProviderOutboxBatch'
 
 type RunViewItemOutboxBatchInput = { maxItems: number }
 
@@ -15,19 +10,27 @@ export type ViewItemOutboxBatchSummary = {
 }
 
 export type ViewItemOutboxBatchDependencies = {
-  runGoogleBatch: typeof runGoogleDataManagerViewItemOutboxBatch
-  runMetaBatch: typeof runMetaViewItemOutboxBatch
-}
-
-const defaultDependencies: ViewItemOutboxBatchDependencies = {
-  runGoogleBatch: runGoogleDataManagerViewItemOutboxBatch,
-  runMetaBatch: runMetaViewItemOutboxBatch
+  runGoogleBatch: (
+    input: RunViewItemOutboxBatchInput
+  ) => Promise<GoogleDataManagerViewItemBatchSummary>
+  runMetaBatch: (
+    input: RunViewItemOutboxBatchInput
+  ) => Promise<MetaViewItemBatchSummary>
 }
 
 export async function runViewItemOutboxBatch(
   input: RunViewItemOutboxBatchInput,
-  dependencies: ViewItemOutboxBatchDependencies = defaultDependencies
+  dependencies?: ViewItemOutboxBatchDependencies
 ): Promise<ViewItemOutboxBatchSummary> {
+  if (!dependencies) {
+    const summaries = await runRegisteredProviderOutboxBatch(input)
+
+    return {
+      google: summaries['google:view_item'],
+      meta: summaries['meta:view_item']
+    }
+  }
+
   const [meta, google] = await Promise.all([
     dependencies.runMetaBatch(input),
     dependencies.runGoogleBatch(input)

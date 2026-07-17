@@ -28,14 +28,14 @@ function dependencies(secret: string | undefined): {
         calls.push(input.maxItems)
 
         return {
-          google: {
+          'google:view_item': {
             acceptedUnverified: 1,
             claimed: 1,
             deadLettered: 0,
             limitReached: false,
             retryScheduled: 0
           },
-          meta: {
+          'meta:view_item': {
             acceptedUnverified: 2,
             claimed: 3,
             deadLettered: 0,
@@ -82,16 +82,16 @@ test('awaits a bounded batch for an authorized cron request', async () => {
 
   assert.equal(response.status, 200)
   assert.equal(response.headers.get('cache-control'), 'no-store')
-  assert.deepEqual(fake.calls, [10])
+  assert.deepEqual(fake.calls, [1])
   assert.deepEqual(await response.json(), {
-    google: {
+    'google:view_item': {
       acceptedUnverified: 1,
       claimed: 1,
       deadLettered: 0,
       limitReached: false,
       retryScheduled: 0
     },
-    meta: {
+    'meta:view_item': {
       acceptedUnverified: 2,
       claimed: 3,
       deadLettered: 0,

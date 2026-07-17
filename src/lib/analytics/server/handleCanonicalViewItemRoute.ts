@@ -1,10 +1,8 @@
-import type { ViewItemOutboxBatchSummary } from './runViewItemOutboxBatch'
-
 const IMMEDIATE_BATCH_SIZE = 1
 
 type RunBatch = (input: {
   maxItems: number
-}) => Promise<ViewItemOutboxBatchSummary>
+}) => Promise<unknown>
 
 export type CanonicalViewItemRouteDependencies = {
   collect: (request: Request) => Promise<Response>

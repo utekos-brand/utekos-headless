@@ -78,6 +78,7 @@ function rawAttempt(
 
 function succeededOutcome(): MetaViewItemAttemptOutcome {
   return {
+    attemptCount: 1,
     attemptId: '7bcd24a4-190c-4eca-a834-5c9854bd54ea',
     latencyMs: 125,
     receipt: {
@@ -99,13 +100,18 @@ function fakeDatabase(attempts: RawMetaViewItemAttempt[]): {
   accepted: MetaViewItemAttemptOutcome[]
   database: MetaViewItemOutboxDatabase
   deadLettered: MetaViewItemAttemptOutcome[]
-  invalid: Array<{ attemptId: string; errorMessage: string }>
+  invalid: Array<{
+    attemptCount: number
+    attemptId: string
+    errorMessage: string
+  }>
   retries: MetaViewItemAttemptOutcome[]
 } {
   const queue = [...attempts]
   const accepted: MetaViewItemAttemptOutcome[] = []
   const deadLettered: MetaViewItemAttemptOutcome[] = []
   const invalid: Array<{
+    attemptCount: number
     attemptId: string
     errorMessage: string
   }> = []
@@ -184,6 +190,7 @@ test('persists a scheduled retry', async () => {
   const fake = fakeDatabase([])
   const store = createMetaViewItemOutboxStore(fake.database)
   const outcome: MetaViewItemAttemptOutcome = {
+    attemptCount: 1,
     attemptId: '7bcd24a4-190c-4eca-a834-5c9854bd54ea',
     errorMessage: 'FacebookRequestError: unavailable',
     latencyMs: 125,
@@ -200,6 +207,7 @@ test('persists a terminal failure as dead_lettered', async () => {
   const fake = fakeDatabase([])
   const store = createMetaViewItemOutboxStore(fake.database)
   const outcome: MetaViewItemAttemptOutcome = {
+    attemptCount: 1,
     attemptId: '7bcd24a4-190c-4eca-a834-5c9854bd54ea',
     errorMessage: 'FacebookRequestError: invalid parameter',
     latencyMs: 125,

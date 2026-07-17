@@ -1,9 +1,9 @@
 import 'server-only'
 import postgres from 'postgres'
 import {
-  createCanonicalPageViewStore,
-  type CanonicalPageViewTransactionRunner
-} from './createCanonicalPageViewStore'
+  createCanonicalEventStore,
+  type CanonicalEventTransactionRunner
+} from './createCanonicalEventStore'
 
 let trackingSql: ReturnType<typeof postgres> | undefined
 
@@ -27,7 +27,7 @@ function getTrackingSql() {
   return trackingSql
 }
 
-const runPostgresTransaction: CanonicalPageViewTransactionRunner =
+const runPostgresTransaction: CanonicalEventTransactionRunner =
   work =>
     getTrackingSql().begin(async sql =>
       work({
@@ -48,7 +48,7 @@ const runPostgresTransaction: CanonicalPageViewTransactionRunner =
               ${row.event_name},
               ${row.idempotency_key},
               ${row.external_id ?? null},
-              ${row.source_url},
+              ${row.source_url ?? null},
               ${sql.json(row.consent)},
               ${sql.json(row.user_data_quality)},
               ${sql.json(row.payload as postgres.JSONValue)},
@@ -92,7 +92,7 @@ const runPostgresTransaction: CanonicalPageViewTransactionRunner =
     )
 
 export const postgresCanonicalEventStore =
-  createCanonicalPageViewStore(runPostgresTransaction)
+  createCanonicalEventStore(runPostgresTransaction)
 
 export const postgresCanonicalPageViewStore =
   postgresCanonicalEventStore

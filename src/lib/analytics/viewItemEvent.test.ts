@@ -103,6 +103,7 @@ test('keeps the dataLayer payload provider-neutral', () => {
   const dataLayerEvent = buildViewItemDataLayerEvent(event)
 
   assert.equal(dataLayerEvent.event, 'view_item')
+  assert.equal(dataLayerEvent.transaction_id, event.event_id)
   assert.equal(dataLayerEvent.commerce, event.custom_data)
   assert.equal(dataLayerEvent.canonical_event, event)
   assert.equal('ecommerce' in dataLayerEvent, false)

@@ -1,141 +1,214 @@
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import type { ServerEvent } from 'facebook-nodejs-business-sdk'
 import {
-  EventRequest,
-  type ServerEvent
-} from 'facebook-nodejs-business-sdk'
+  createMetaHttpService,
+  readMetaConversionsApiConfig,
+  sendMetaServerEvent,
+  type MetaEventRequest
+} from './sendMetaServerEvent'
 
-const META_PARTNER_AGENT = 'utekos-headless'
+test('reads required and optional Meta configuration without leaking values', () => {
+  assert.deepEqual(
+    readMetaConversionsApiConfig({
+      META_ACCESS_TOKEN: ' token ',
+      META_APP_SECRET: ' secret ',
+      META_PIXEL_ID: ' pixel ',
+      META_TEST_EVENT_CODE: ' test '
+    }),
+    {
+      accessToken: 'token',
+      appSecret: 'secret',
+      pixelId: 'pixel',
+      testEventCode: 'test'
+    }
+  )
+  assert.throws(
+    () => readMetaConversionsApiConfig({ META_PIXEL_ID: 'pixel' }),
+    /META_ACCESS_TOKEN/
+  )
+})
 
-type Environment = Readonly<Record<string, string | undefined>>
-
-export type MetaConversionsApiConfig = {
-  accessToken: string
-  appSecret?: string
-  pixelId: string
-  testEventCode?: string
-}
-
-type MetaEventResponse = {
-  events_received: number
-  fbtrace_id?: string
-  id?: string
-  messages?: string[]
-  num_processed_entries?: number
-}
-
-export type MetaEventRequest = {
-  execute: () => Promise<MetaEventResponse>
-  setAppSecret: (appSecret: string) => MetaEventRequest
-  setEvents: (events: ServerEvent[]) => MetaEventRequest
-  setPartnerAgent: (partnerAgent: string) => MetaEventRequest
-  setTestEventCode: (testEventCode: string) => MetaEventRequest
-}
-
-export type MetaEventRequestFactory = (
-  accessToken: string,
-  pixelId: string
-) => MetaEventRequest
-
-type MetaSenderDependencies = {
-  createRequest: MetaEventRequestFactory
-}
-
-export type MetaSendResult = {
-  datasetId?: string
-  eventsReceived: number
-  fbTraceId?: string
-  messages: string[]
-  processedEntries?: number
-}
-
-const defaultDependencies: MetaSenderDependencies = {
-  createRequest: (accessToken, pixelId) =>
-    new EventRequest(accessToken, pixelId)
-}
-
-function requiredEnvironmentValue(
-  environment: Environment,
-  name: string
-) {
-  const value = environment[name]?.trim()
-
-  if (!value) {
-    throw new Error(
-      `Missing required Meta configuration: ${name}`
-    )
+test('configures one Meta request and projects its receipt', async () => {
+  const calls: string[] = []
+  const request: MetaEventRequest = {
+    execute: async () => ({
+      events_received: 1,
+      fbtrace_id: 'trace-1',
+      id: 'dataset-1',
+      messages: ['accepted'],
+      num_processed_entries: 1
+    }),
+    setAppSecret: value => {
+      calls.push(`secret:${value}`)
+      return request
+    },
+    setEvents: events => {
+      calls.push(`events:${events.length}`)
+      return request
+    },
+    setHttpService: () => request,
+    setPartnerAgent: value => {
+      calls.push(`partner:${value}`)
+      return request
+    },
+    setTestEventCode: value => {
+      calls.push(`test:${value}`)
+      return request
+    }
   }
-
-  return value
-}
-
-function optionalEnvironmentValue(
-  environment: Environment,
-  name: string
-) {
-  return environment[name]?.trim() || undefined
-}
-
-export function readMetaConversionsApiConfig(
-  environment: Environment = process.env
-): MetaConversionsApiConfig {
-  const accessToken = requiredEnvironmentValue(
-    environment,
-    'META_ACCESS_TOKEN'
-  )
-  const pixelId = requiredEnvironmentValue(
-    environment,
-    'META_PIXEL_ID'
-  )
-  const appSecret = optionalEnvironmentValue(
-    environment,
-    'META_APP_SECRET'
-  )
-  const testEventCode = optionalEnvironmentValue(
-    environment,
-    'META_TEST_EVENT_CODE'
+  const result = await sendMetaServerEvent(
+    {} as ServerEvent,
+    {
+      accessToken: 'token',
+      appSecret: 'secret',
+      pixelId: 'pixel',
+      testEventCode: 'test-code'
+    },
+    {
+      createRequest: (accessToken, pixelId) => {
+        calls.push(`create:${accessToken}:${pixelId}`)
+        return request
+      }
+    }
   )
 
-  return {
-    accessToken,
-    pixelId,
-    ...(appSecret ? { appSecret } : {}),
-    ...(testEventCode ? { testEventCode } : {})
-  }
-}
+  assert.deepEqual(calls, [
+    'create:token:pixel',
+    'events:1',
+    'partner:utekos-headless',
+    'secret:secret',
+    'test:test-code'
+  ])
+  assert.deepEqual(result, {
+    datasetId: 'dataset-1',
+    eventsReceived: 1,
+    fbTraceId: 'trace-1',
+    messages: ['accepted'],
+    processedEntries: 1
+  })
+})
 
-export async function sendMetaServerEvent(
-  event: ServerEvent,
-  config: MetaConversionsApiConfig,
-  dependencies: MetaSenderDependencies = defaultDependencies
-): Promise<MetaSendResult> {
-  const request = dependencies
-    .createRequest(config.accessToken, config.pixelId)
-    .setEvents([event])
-    .setPartnerAgent(META_PARTNER_AGENT)
+test('rejects a provider response that did not accept exactly one event', async () => {
+  const request = {
+    execute: async () => ({ events_received: 0 }),
+    setAppSecret() { return this },
+    setEvents() { return this },
+    setHttpService() { return this },
+    setPartnerAgent() { return this },
+    setTestEventCode() { return this }
+  } satisfies MetaEventRequest
 
-  if (config.appSecret) {
-    request.setAppSecret(config.appSecret)
-  }
-  if (config.testEventCode) {
-    request.setTestEventCode(config.testEventCode)
-  }
+  await assert.rejects(
+    sendMetaServerEvent(
+      {} as ServerEvent,
+      { accessToken: 'token', pixelId: 'pixel' },
+      { createRequest: () => request }
+    ),
+    /received 0 events; expected 1/
+  )
+})
 
-  const response = await request.execute()
+test('uses the SDK HTTP override to send one validated request', async () => {
+  let captured:
+    | { body: string; method: string; url: string }
+    | undefined
+  const service = createMetaHttpService(
+    async (url, init) => {
+      captured = {
+        body: String(init.body),
+        method: String(init.method),
+        url
+      }
 
-  if (response.events_received !== 1) {
-    throw new Error(
-      `Meta Conversions API received ${response.events_received} events; expected 1`
-    )
-  }
+      return {
+        json: async () => ({
+          events_received: 1,
+          fbtrace_id: 'trace-1'
+        }),
+        ok: true,
+        status: 200
+      }
+    }
+  )
 
-  return {
-    eventsReceived: response.events_received,
-    messages: response.messages ?? [],
-    ...(response.id ? { datasetId: response.id } : {}),
-    ...(response.fbtrace_id ?
-      { fbTraceId: response.fbtrace_id }
-    : {}),
-    ...(response.num_processed_entries === undefined ?
-      {}
-    : { processedEntries: response.num_processed_entries })
-  }
-}
+  const response = await service.executeRequest(
+    'https://graph.facebook.com/v24.0/pixel/events',
+    'POST',
+    { 'Content-Type': 'application/json' },
+    { access_token: 'token', data: [{ event_id: 'event-1' }] }
+  )
+
+  assert.deepEqual(captured, {
+    body: JSON.stringify({
+      access_token: 'token',
+      data: [{ event_id: 'event-1' }]
+    }),
+    method: 'POST',
+    url: 'https://graph.facebook.com/v24.0/pixel/events'
+  })
+  assert.deepEqual(response, {
+    events_received: 1,
+    fbtrace_id: 'trace-1'
+  })
+})
+
+test('aborts a Meta transport that exceeds its deadline', async () => {
+  const service = createMetaHttpService(
+    (_url, init) =>
+      new Promise((_resolve, reject) => {
+        init.signal?.addEventListener(
+          'abort',
+          () => reject(new DOMException('Aborted', 'AbortError')),
+          { once: true }
+        )
+      }),
+    5
+  )
+
+  await assert.rejects(
+    service.executeRequest(
+      'https://graph.facebook.com/v24.0/pixel/events',
+      'POST',
+      { 'Content-Type': 'application/json' },
+      { data: [] }
+    ),
+    {
+      code: 'ETIMEDOUT',
+      name: 'MetaConversionsApiTimeoutError'
+    }
+  )
+})
+
+test('preserves retryable HTTP status and Meta error fields', async () => {
+  const service = createMetaHttpService(async () => ({
+    json: async () => ({
+      error: {
+        code: 2,
+        is_transient: true
+      }
+    }),
+    ok: false,
+    status: 503
+  }))
+
+  await assert.rejects(
+    service.executeRequest(
+      'https://graph.facebook.com/v24.0/pixel/events',
+      'POST',
+      {},
+      { data: [] }
+    ),
+    error => {
+      assert.equal(
+        (error as { status?: number }).status,
+        503
+      )
+      assert.deepEqual(
+        (error as { response?: unknown }).response,
+        { code: 2, is_transient: true }
+      )
+      return true
+    }
+  )
+})
