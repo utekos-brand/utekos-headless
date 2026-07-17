@@ -13,16 +13,10 @@ import Header from '@/components/header/Header'
 import { SiteChrome } from '@/components/layout/SiteChrome'
 import { OnlineStoreJsonLd } from './OnlineStoreJsonLd'
 import { CartProviderLoader } from '@/components/providers/CartProviderLoader'
-import { CONSENT_MODE_DEFAULTS } from '@/components/layout/CookieScript'
-import {
-  COOKIEBOT_DOMAIN_GROUP_ID,
-  COOKIEBOT_SCRIPT_URL
-} from '@/components/cookie-consent/cookiebotConfig'
 import { PageViewObserver } from '@/components/analytics/PageViewObserver'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { GoogleTagManager } from '@next/third-parties/google'
 import { SITE_URL } from '@/constants'
-import Script from 'next/script'
 import type { Metadata } from 'next'
 import type { TrackingEnvironment } from '@/lib/analytics/pageViewEvent'
 
@@ -119,27 +113,11 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${utekosText.variable} ${utekosTextMedium.variable} ${googleSans.variable}`}
     >
-      <head>
-        <Script
-          id='consent-mode-defaults'
-          strategy='beforeInteractive'
-          data-cookieconsent='ignore'
-        >
-          {CONSENT_MODE_DEFAULTS}
-        </Script>
-        <Script
-          id='Cookiebot'
-          src={COOKIEBOT_SCRIPT_URL}
-          data-cbid={COOKIEBOT_DOMAIN_GROUP_ID}
-          strategy='beforeInteractive'
-        />
-      </head>
+      <GoogleTagManager
+        gtmId='GTM-5TWMJQFP'
+        gtmScriptUrl={googleTagGatewayUrl}
+      />
       <body className='scroll-smooth bg-background text-foreground antialiased dark:bg-background dark:text-foreground'>
-        <GoogleTagManager
-          gtmId='GTM-5TWMJQFP'
-          gtmScriptUrl={googleTagGatewayUrl}
-        />
-
         <Suspense fallback={null}>
           <PageViewObserver environment={getTrackingEnvironment()} />
         </Suspense>

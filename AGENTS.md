@@ -240,6 +240,18 @@ active storefront data flow. Do not report those surfaces as active or
 healthy until they are intentionally reintroduced and production-
 verified.
 
+### Root layout and consent ownership
+
+- Never hardcode `<head>` in `src/app/layout.tsx`; use the Next.js
+  Metadata API and documented script components.
+- Web-GTM tag `126` is the sole owner of the Cookiebot loader and its
+  Consent Initialization defaults. The app must not also load `uc.js`
+  or inject a separate `consent-mode-defaults` script. Do not remove
+  tag `126` while GTM owns this responsibility.
+- Any consent-loader change must prove exactly one `uc.js` request,
+  exactly one GTM-generated Cookiebot script with `implementation=gtm`,
+  and default-denied Consent Mode before user choice.
+
 - Supabase is the canonical tracking, audit, and provider-status
   warehouse. PostHog is product analytics, not the canonical
   financial or provider-audit ledger.
