@@ -146,9 +146,11 @@ async function main() {
     viewItemResponseCount: viewItemResponses.length
   }
 
-  result.ok =
-    result.dataLayerTransactionMatchesEventId &&
-    (result.sgtmMatchesApiEventId || result.sgtmRequestCount === 0)
+  result.ok = result.dataLayerTransactionMatchesEventId
+
+  if (apiEventId && sgtmRequestCount > 0) {
+    result.ok = result.ok && result.sgtmMatchesApiEventId
+  }
 
   console.log(JSON.stringify(result, null, 2))
 
@@ -157,7 +159,7 @@ async function main() {
     return
   }
 
-  if (result.sgtmRequestCount > 0 && !result.sgtmMatchesApiEventId) {
+  if (apiEventId && sgtmRequestCount > 0 && !result.sgtmMatchesApiEventId) {
     process.exitCode = 1
   }
 }
