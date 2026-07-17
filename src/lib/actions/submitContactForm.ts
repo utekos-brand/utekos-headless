@@ -2,18 +2,16 @@
 'use server'
 import 'server-only'
 
-import { ContactSubmissionEmail } from '@/components/emails/contact-submission-email'
+import crypto from 'node:crypto'
+
 import {
   ServerContactFormSchema,
   type ServerContactFormData
 } from '@/db/zod/schemas/ServerContactFormSchema'
-import { Resend } from 'resend'
-import { z } from 'zod'
 import { forwardContactSubmissionToAtlas } from '@/lib/actions/forwardContactSubmissionToAtlas'
+import { sendContactNotification } from '@/lib/email/sendContactNotification'
 import { logToAppLogs } from '@/lib/utils/logToAppLogs'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
-const sendToEmail = process.env.CONTACT_FORM_SEND_TO_EMAIL
+import { z } from 'zod'
 
 export interface ContactFormState {
   message: string
@@ -37,7 +35,6 @@ export async function submitContactForm(
     ...Object.fromEntries(formData.entries()),
     privacy: formData.get('privacy') === 'on'
   }
-  console.log('Mottatt skjemadata på serveren:', rawFormData)
 
   if ('phone' in rawFormData && rawFormData.phone === '')
     delete (rawFormData as Record<string, unknown>).phone
@@ -54,35 +51,19 @@ export async function submitContactForm(
     }
   }
 
-  if (!sendToEmail) {
-    console.error('CONTACT_FORM_SEND_TO_EMAIL er ikke definert i .env.local')
-
-    await logToAppLogs('ERROR', 'Contact Form Config Error', {
-      error: 'Missing CONTACT_FORM_SEND_TO_EMAIL env var'
-    })
-
-    return {
-      message:
-        'Serverkonfigurasjonsfeil. Innsending er midlertidig utilgjengelig.'
-    }
-  }
+  const submissionId = crypto.randomUUID()
 
   try {
-    const { data, error } = await resend.emails.send({
-      from: 'Utekos Kontaktskjema <onboarding@resend.dev>',
-      to: sendToEmail,
-      replyTo: result.data.email,
-      subject: `Ny henvendelse fra ${result.data.name}`,
-      react: ContactSubmissionEmail({
-        ...result.data
-      })
+    const sendResult = await sendContactNotification({
+      submission: result.data,
+      submissionId
     })
 
-    if (error) {
-      console.error('Resend API Error:', error)
+    if (!sendResult.ok) {
+      console.error('Resend API Error:', sendResult.message)
       await logToAppLogs('ERROR', 'Contact Form Send Failed', {
-        error: error.message,
-        name: result.data.name // Logger hvem som prøvde, nyttig for debugging
+        error: sendResult.message,
+        name: result.data.name
       })
 
       return { message: 'Noe gikk galt under sending av e-post. Prøv igjen.' }
@@ -96,7 +77,7 @@ export async function submitContactForm(
         email: result.data.email,
         country: result.data.country,
         orderNumber: result.data.orderNumber || 'N/A',
-        resendId: data?.id
+        resendId: sendResult.id
       },
       {
         source: 'Server Action: submitContactForm'
@@ -105,16 +86,25 @@ export async function submitContactForm(
 
     await forwardContactSubmissionToAtlas({
       submission: result.data,
-      ...(data?.id ? { resendNotificationId: data.id } : {})
+      resendNotificationId: sendResult.id
     })
 
     return { message: 'Takk for din henvendelse!', data: result.data }
-  } catch (exception: any) {
+  } catch (exception: unknown) {
+    const message =
+      exception instanceof Error ? exception.message : 'Unknown error'
     console.error('Submit Error:', exception)
 
     await logToAppLogs('ERROR', 'Contact Form Exception', {
-      error: exception.message || 'Unknown error'
+      error: message
     })
+
+    if (message.includes('CONTACT_FORM_SEND_TO_EMAIL')) {
+      return {
+        message:
+          'Serverkonfigurasjonsfeil. Innsending er midlertidig utilgjengelig.'
+      }
+    }
 
     return {
       message: 'En uventet feil oppstod. Vennligst prøv igjen senere.'

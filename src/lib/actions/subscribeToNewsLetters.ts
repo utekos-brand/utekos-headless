@@ -30,8 +30,8 @@ export async function subscribeToNewsletter(
 
   try {
     const results = await Promise.allSettled([
-      sendWelcomeEmail(email), // 0: E-post
-      syncSubscriberToShopify(email) // 1: Shopify
+      sendWelcomeEmail(email),
+      syncSubscriberToShopify(email)
     ])
 
     const emailResult = results[0]
@@ -42,11 +42,17 @@ export async function subscribeToNewsletter(
         error: String(shopifyResult.reason)
       })
     }
+    if (emailResult.status === 'fulfilled' && !emailResult.value.ok) {
+      console.warn('Welcome Email failed:', emailResult.value.message)
+      await logToAppLogs('ERROR', 'Newsletter Welcome Email Failed', {
+        error: emailResult.value.message
+      })
+    }
     if (emailResult.status === 'rejected') {
-      console.warn(
-        'Welcome Email failed (likely DNS pending):',
-        emailResult.reason
-      )
+      console.warn('Welcome Email failed:', emailResult.reason)
+      await logToAppLogs('ERROR', 'Newsletter Welcome Email Failed', {
+        error: String(emailResult.reason)
+      })
     }
 
     await logToAppLogs('INFO', 'Newsletter Subscription Flow Completed', {

@@ -20,3 +20,19 @@ test('protects structural directives and permits the consent-aware tag gateways'
   assert.doesNotMatch(csp, /facebook/)
   assert.doesNotMatch(csp, /nonce-/)
 })
+
+test('permits the third-party scripts and frames observed during report-only rollout', () => {
+  const csp = buildReportOnlyCsp()
+
+  assert.match(csp, /script-src[^;]*https:\/\/consentcdn\.cookiebot\.eu/)
+  assert.match(csp, /script-src[^;]*https:\/\/x\.klarnacdn\.net/)
+  assert.match(csp, /script-src[^;]*https:\/\/\*\.clarity\.ms/)
+  assert.match(csp, /script-src[^;]*https:\/\/bat\.bing\.com/)
+  assert.match(csp, /script-src[^;]*https:\/\/googleads\.g\.doubleclick\.net/)
+  assert.match(csp, /connect-src[^;]*https:\/\/consentcdn\.cookiebot\.eu/)
+  assert.match(csp, /connect-src[^;]*https:\/\/x\.klarnacdn\.net/)
+  assert.match(csp, /connect-src[^;]*https:\/\/\*\.clarity\.ms/)
+  assert.match(csp, /connect-src[^;]*https:\/\/bat\.bing\.com/)
+  assert.match(csp, /connect-src[^;]*https:\/\/googleads\.g\.doubleclick\.net/)
+  assert.match(csp, /frame-src[^;]*https:\/\/vercel\.live/)
+})

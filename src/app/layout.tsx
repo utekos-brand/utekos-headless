@@ -113,11 +113,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${utekosText.variable} ${utekosTextMedium.variable} ${googleSans.variable}`}
     >
-      <GoogleTagManager
+  
+      <body className='scroll-smooth bg-background text-foreground antialiased dark:bg-background dark:text-foreground'>
+     <GoogleTagManager
         gtmId='GTM-5TWMJQFP'
         gtmScriptUrl={googleTagGatewayUrl}
       />
-      <body className='scroll-smooth bg-background text-foreground antialiased dark:bg-background dark:text-foreground'>
         <Suspense fallback={null}>
           <PageViewObserver environment={getTrackingEnvironment()} />
         </Suspense>

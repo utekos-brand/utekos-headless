@@ -6,7 +6,8 @@ import {
   ProductWaitlistSchema,
   type ProductWaitlistData
 } from '@/db/zod/schemas/ProductWaitlistSchema'
-import { Resend } from 'resend'
+import { sendProductWaitlistNotification } from '@/lib/email/sendProductWaitlistNotification'
+import { logToAppLogs } from '@/lib/utils/logToAppLogs'
 import { z } from 'zod'
 
 export type ProductWaitlistActionState = {
@@ -45,41 +46,41 @@ export async function submitProductWaitlist(
     }
   }
 
-  const apiKey = process.env.RESEND_API_KEY
-  const sendToEmail = process.env.CONTACT_FORM_SEND_TO_EMAIL
-
-  if (!apiKey || !sendToEmail) {
-    return {
-      status: 'error',
-      message:
-        'Ventelisten er midlertidig utilgjengelig. Prøv igjen litt senere.'
-    }
-  }
-
   try {
-    const resend = new Resend(apiKey)
-    const { error } = await resend.emails.send({
-      from: 'Utekos Venteliste <onboarding@resend.dev>',
-      to: sendToEmail,
-      replyTo: result.data.email,
-      subject: `Ny ventelistepåmelding: Utekos Dun – ${result.data.name}`,
-      text: [
-        'Ny påmelding til produktventeliste',
-        '',
-        'Produkt: Utekos Dun',
-        `Navn: ${result.data.name}`,
-        `Telefon: ${result.data.phone}`,
-        `E-post: ${result.data.email}`,
-        '',
-        'Kunden har godtatt kontakt om denne produktventelisten.',
-        'Dette er ikke et generelt markedsføringssamtykke.'
-      ].join('\n')
+    const sendResult = await sendProductWaitlistNotification(result.data)
+
+    if (!sendResult.ok) {
+      throw new Error(sendResult.message)
+    }
+
+    await logToAppLogs(
+      'INFO',
+      'Product Waitlist Submitted',
+      {
+        productHandle: result.data.productHandle,
+        email: result.data.email,
+        resendId: sendResult.id
+      },
+      {
+        source: 'Server Action: submitProductWaitlist'
+      }
+    )
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+
+    await logToAppLogs('ERROR', 'Product Waitlist Send Failed', {
+      error: message,
+      productHandle: result.data.productHandle
     })
 
-    if (error) {
-      throw new Error('Resend rejected waitlist submission')
+    if (message.includes('CONTACT_FORM_SEND_TO_EMAIL')) {
+      return {
+        status: 'error',
+        message:
+          'Ventelisten er midlertidig utilgjengelig. Prøv igjen litt senere.'
+      }
     }
-  } catch {
+
     return {
       status: 'error',
       message:

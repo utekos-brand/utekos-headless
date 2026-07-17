@@ -14,10 +14,8 @@ import {
 import * as React from 'react'
 import type { ServerContactFormData } from '@/db/zod/schemas/ServerContactFormSchema'
 
-const UTK_BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?
-    process.env.NEXT_PUBLIC_SITE_URL
-  : 'https://utekos.no'
+const siteBaseUrl =
+  process.env.NEXT_PUBLIC_APP_URL ?? 'https://utekos.no'
 
 export function ContactSubmissionEmail(
   props: ServerContactFormData
@@ -27,14 +25,14 @@ export function ContactSubmissionEmail(
   const previewText = `Ny henvendelse fra ${name} via kontaktskjemaet`
 
   return (
-    <Html>
+    <Html lang='nb'>
       <Head />
       <Preview>{previewText}</Preview>
       <Body style={main}>
         <Container style={container}>
           <article style={header}>
             <Img
-              src={`${UTK_BASE_URL}/icon.png`} // Full URL til logoen
+              src={`${siteBaseUrl}/icon.png`}
               width='48' // Juster bredde etter behov
               height='48' // Juster høyde etter behov
               alt='Utekos Logo'
@@ -43,7 +41,7 @@ export function ContactSubmissionEmail(
           </article>
 
           <article style={content}>
-            <Heading as='h2' style={title}>
+            <Heading as='h1' style={title}>
               Ny henvendelse fra kontaktskjema
             </Heading>
             <Text style={paragraph}>
@@ -53,7 +51,7 @@ export function ContactSubmissionEmail(
           </article>
 
           <article style={detailsSection}>
-            <Heading as='h3' style={subTitle}>
+            <Heading as='h2' style={subTitle}>
               Innsenders detaljer
             </Heading>
             <Text style={detailText}>
@@ -81,7 +79,7 @@ export function ContactSubmissionEmail(
           </article>
 
           <article style={messageSection}>
-            <Heading as='h3' style={subTitle}>
+            <Heading as='h2' style={subTitle}>
               Melding
             </Heading>
             <Text style={messageText}>{message}</Text>
@@ -169,14 +167,14 @@ const messageText = {
   whiteSpace: 'pre-wrap' as const
 }
 
-const link = { color: '#007bff', textDecoration: 'underline' }
+const link = { color: '#2a4234', textDecoration: 'underline' }
 
 const hr = { borderColor: '#e6ebf1', margin: '40px 0' }
 
 const footer = { padding: '0 40px' }
 
 const footerText = {
-  color: '#8898aa',
+  color: '#666666',
   fontSize: '12px',
   lineHeight: '16px'
 }
