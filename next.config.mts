@@ -218,6 +218,16 @@ const nextConfig: NextConfig = {
         {
           source: `${SERVER_TAG_MANAGER_PATH}/:path*`,
           destination: `${SERVER_TAG_MANAGER_ORIGIN}/:path*`
+        },
+        {
+          source: '/',
+          has: [{ type: 'host', value: 'feed.utekos.no' }],
+          destination: '/klarna-feed.xml'
+        },
+        {
+          source: '/',
+          has: [{ type: 'host', value: 'www.feed.utekos.no' }],
+          destination: '/klarna-feed.xml'
         }
       ],
       afterFiles: [],

@@ -2,6 +2,7 @@
 
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { isKlarnaFeedHost } from '@/lib/merchant-feeds/klarna/klarnaFeedHost'
 import { isBlockedUserAgent } from '@/lib/security/isBlockedUserAgent'
 import { buildReportOnlyCsp } from '@/lib/security/buildReportOnlyCsp'
 
@@ -11,6 +12,7 @@ const NBCC_DESTINATION_PATH = '/nbcc'
 
 const MAGASINET_UPGRADE_ENABLED = true
 const MAGASINET_UPGRADE_PATH = '/magasinet/oppgradering'
+const KLARNA_FEED_PATH = '/klarna-feed.xml'
 
 function isAllowedNboccReferrer(request: NextRequest) {
   const referer = request.headers.get('referer')
@@ -38,12 +40,34 @@ function withReportOnlyCsp<T extends NextResponse>(response: T): T {
   return response
 }
 
+function rewriteKlarnaFeedRoot(request: NextRequest): NextResponse {
+  const feedUrl = request.nextUrl.clone()
+  feedUrl.pathname = KLARNA_FEED_PATH
+
+  return withReportOnlyCsp(NextResponse.rewrite(feedUrl))
+}
+
 export async function proxy(request: NextRequest) {
   const userAgent = request.headers.get('user-agent') || ''
   const pathname = request.nextUrl.pathname
+  const hostname = request.nextUrl.hostname
 
   if (isBlockedUserAgent(userAgent)) {
     return withReportOnlyCsp(new NextResponse(null, { status: 403, statusText: 'Forbidden' }))
+  }
+
+  if (isKlarnaFeedHost(hostname)) {
+    if (pathname === '/' || pathname === '') {
+      return rewriteKlarnaFeedRoot(request)
+    }
+
+    if (pathname === KLARNA_FEED_PATH) {
+      return continueDocumentRequest()
+    }
+
+    return withReportOnlyCsp(
+      new NextResponse(null, { status: 404, statusText: 'Not Found' })
+    )
   }
 
   if (pathname === '/' && isAllowedNboccReferrer(request)) {
