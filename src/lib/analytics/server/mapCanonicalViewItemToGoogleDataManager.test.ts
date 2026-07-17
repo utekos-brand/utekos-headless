@@ -313,6 +313,7 @@ test('caps optional item parameters for every item in an event', () => {
 })
 
 test('normalizes the observed 529-character referrer without mutating the canonical event', () => {
+  const syntheticFbclid = 'x'.repeat(195)
   const referrerUrl = [
     'https://utekos.no/skreddersy-varmen?utm_campaign=Sales+Campaign',
     'utm_source=facebook',
@@ -325,7 +326,7 @@ test('normalizes the observed 529-character referrer without mutating the canoni
     'hsa_src=fb',
     'hsa_net=facebook',
     'hsa_ver=3',
-    'fbclid=IwcGRvZgNmZGlkFlCqq5wNEOPlO8uW0HWyK5bsUmHLrnBleHRuA2FlbQEwAGFkaWQBqzOMqNaLVHNydGMGYXBwX2lkCjY2Mjg1NjgzNzkAAR5oK2c2vK6yD8ylw-4pB9IEqTMMVnw4NUb5wHk4yeirsC1SwpaRt5gL06rpXA_aem_TdoHEa1uTQZEmbN3JZ_p4A',
+    `fbclid=${syntheticFbclid}`,
     'utm_content=120246491016410788',
     'utm_term=120246491016400788'
   ].join('&')
@@ -446,11 +447,16 @@ test('enforces documented GA4 parameter value limits', () => {
   assert.equal(canonicalEvent.page_title, longTitle)
 })
 
-test('counts encoded URLs and Unicode parameter values safely', () => {
-  const pageUrl = `https://utekos.no/produkter/${'å'.repeat(400)}`
-  const pageTitle = `${'T'.repeat(299)}🏕️mer`
+test('truncates encoded URLs only between complete Unicode code points', () => {
+  const pageUrl = [
+    'https://utekos.no/produkter/kategori%2Fvariant/å/😀/',
+    'å'.repeat(400)
+  ].join('')
+  const referrerUrl = `${pageUrl}?source=test#details`
+  const pageTitle = `${'T'.repeat(298)}å😀mer`
   const canonicalEvent = viewItem({
     page_url: pageUrl,
+    referrer_url: referrerUrl,
     page_title: pageTitle
   })
 
@@ -462,20 +468,44 @@ test('counts encoded URLs and Unicode parameter values safely', () => {
     (candidate: { parameterName?: string }) =>
       candidate.parameterName === 'page_location'
   )
+  const pageReferrer = eventParameters.find(
+    (candidate: { parameterName?: string }) =>
+      candidate.parameterName === 'page_referrer'
+  )
   const mappedPageTitle = eventParameters.find(
     (candidate: { parameterName?: string }) =>
       candidate.parameterName === 'page_title'
   )
 
-  assert.ok(String(pageLocation?.value).length <= 1000)
-  assert.ok(!String(pageLocation?.value).endsWith('%'))
-  assert.ok(!/%[0-9A-F]$/i.test(String(pageLocation?.value)))
+  const boundedUrls = [
+    { value: String(pageLocation?.value), maxLength: 1000 },
+    { value: String(pageReferrer?.value), maxLength: 420 }
+  ]
+
+  for (const { value, maxLength } of boundedUrls) {
+    assert.ok(value.length <= maxLength)
+    assert.doesNotMatch(value, /%(?![0-9A-F]{2})/i)
+    assert.doesNotThrow(() => decodeURI(value))
+    assert.ok(value.includes('%2F'))
+    assert.ok(!value.includes('%252F'))
+
+    const decoded = decodeURI(value)
+
+    assert.ok(decoded.includes('å'))
+    assert.ok(decoded.includes('😀'))
+    assert.ok(decoded.includes('%2F'))
+  }
+
   assert.equal(
     Array.from(String(mappedPageTitle?.value)).length,
     300
   )
-  assert.ok(!String(mappedPageTitle?.value).endsWith('\uFFFD'))
+  assert.equal(
+    mappedPageTitle?.value,
+    `${'T'.repeat(298)}å😀`
+  )
   assert.equal(canonicalEvent.page_url, pageUrl)
+  assert.equal(canonicalEvent.referrer_url, referrerUrl)
   assert.equal(canonicalEvent.page_title, pageTitle)
 })
 

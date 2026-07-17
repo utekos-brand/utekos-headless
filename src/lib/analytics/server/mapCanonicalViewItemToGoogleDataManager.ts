@@ -88,6 +88,22 @@ function identifierParameter(
   return { parameterName, value }
 }
 
+function encodePathnameUnits(pathname: string) {
+  const units: string[] = []
+
+  for (const [index, segment] of pathname.split('/').entries()) {
+    if (index > 0) units.push('/')
+
+    for (const codePoint of Array.from(
+      decodeURIComponent(segment)
+    )) {
+      units.push(encodeURIComponent(codePoint))
+    }
+  }
+
+  return units
+}
+
 function truncateUrlToOriginAndPathname(
   url: URL,
   maxLength: number
@@ -96,14 +112,17 @@ function truncateUrlToOriginAndPathname(
 
   if (availablePathLength < 1) return undefined
 
-  let pathname = url.pathname.slice(0, availablePathLength)
-  const lastPercent = pathname.lastIndexOf('%')
+  const pathname: string[] = []
+  let pathnameLength = 0
 
-  if (lastPercent >= pathname.length - 2) {
-    pathname = pathname.slice(0, lastPercent)
+  for (const unit of encodePathnameUnits(url.pathname)) {
+    if (pathnameLength + unit.length > availablePathLength) break
+
+    pathname.push(unit)
+    pathnameLength += unit.length
   }
 
-  return `${url.origin}${pathname}`
+  return `${url.origin}${pathname.join('')}`
 }
 
 function normalizeReferrerUrl(value: string | undefined) {
