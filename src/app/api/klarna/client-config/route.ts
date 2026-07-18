@@ -1,4 +1,5 @@
 import { getKlarnaPublicConfig } from '@/lib/klarna/getKlarnaPublicConfig'
+import { getKlarnaServerConfig } from '@/lib/klarna/config'
 import { connection } from 'next/server'
 
 const RESPONSE_HEADERS = {
@@ -10,7 +11,10 @@ export async function GET(): Promise<Response> {
   await connection()
 
   try {
-    return Response.json(getKlarnaPublicConfig(), {
+    const publicConfig = getKlarnaPublicConfig()
+    getKlarnaServerConfig()
+
+    return Response.json(publicConfig, {
       headers: RESPONSE_HEADERS
     })
   } catch {
