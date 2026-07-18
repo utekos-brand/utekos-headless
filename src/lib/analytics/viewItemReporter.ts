@@ -113,8 +113,11 @@ export function createViewItemReporter(
       cancelled = true
       unsubscribe?.()
       unsubscribe = undefined
-      stopCollector?.()
-      stopCollector = undefined
+
+      if (!completed) {
+        stopCollector?.()
+        stopCollector = undefined
+      }
     }
 
     const emitForPageView = (pageView: PageViewContext) => {

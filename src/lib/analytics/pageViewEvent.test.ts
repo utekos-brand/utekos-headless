@@ -116,3 +116,25 @@ test('deduplicates the same canonical URL', () => {
     previousUrl: 'https://utekos.no/produkter'
   }), null)
 })
+
+test('deduplicates query-state changes on the same page resource', () => {
+  assert.equal(resolvePageViewNavigation({
+    currentUrl:
+      'https://utekos.no/produkter/utekos-techdown?fbclid=click-1&farge=havdyp&storrelse=middels',
+    documentReferrer: '',
+    previousUrl:
+      'https://utekos.no/produkter/utekos-techdown?fbclid=click-1'
+  }), null)
+})
+
+test('keeps the full URL for an initial paid landing', () => {
+  assert.deepEqual(resolvePageViewNavigation({
+    currentUrl:
+      'https://utekos.no/produkter/utekos-techdown?fbclid=click-1',
+    documentReferrer: '',
+    previousUrl: null
+  }), {
+    pageUrl:
+      'https://utekos.no/produkter/utekos-techdown?fbclid=click-1'
+  })
+})

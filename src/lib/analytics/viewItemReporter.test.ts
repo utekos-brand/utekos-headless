@@ -227,7 +227,7 @@ test('cancels a stale product report before page_view is emitted', () => {
   assert.equal(emitted.length, 0)
 })
 
-test('stops the first-party collector when the product effect is cleaned up', () => {
+test('keeps an emitted collector alive when the product effect is cleaned up', () => {
   const session = createPageViewSession(
     () => '0c955d6b-5e9c-47d0-b304-046df7f4bf7f'
   )
@@ -256,7 +256,7 @@ test('stops the first-party collector when the product effect is cleaned up', ()
   const stop = report({ product, variant })
   stop()
 
-  assert.equal(collectorStopped, 1)
+  assert.equal(collectorStopped, 0)
 })
 
 test('resolves development, preview, production and test environments', () => {

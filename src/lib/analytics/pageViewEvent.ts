@@ -130,10 +130,24 @@ export function resolvePageViewNavigation(
 ): PageViewNavigation | null {
   if (input.currentUrl === input.previousUrl) return null
 
+  if (
+    input.previousUrl &&
+    pageResource(input.currentUrl) ===
+      pageResource(input.previousUrl)
+  ) {
+    return null
+  }
+
   const referrerUrl = input.previousUrl || input.documentReferrer
 
   return {
     pageUrl: input.currentUrl,
     ...(referrerUrl ? { referrerUrl } : {})
   }
+}
+
+function pageResource(value: string) {
+  const url = new URL(value)
+
+  return `${url.origin}${url.pathname}`
 }
