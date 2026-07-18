@@ -16,8 +16,12 @@ Use Meta Dataset Quality as a read-only quality signal for the configured Pixel/
 The former storefront sync in
 `src/lib/tracking/meta/insights/syncMetaInsightsAndQuality.ts` and the former
 commerce-tracking MCP probe were removed in the 2026-07-15 reset. Do not cite
-them as active runtime. `marketing.meta_quality_snapshots` is historical until
-an intentionally approved collector is reintroduced.
+them as active runtime. A deliberately scoped replacement is now active:
+`src/app/api/cron/meta-dataset-quality/route.ts` reads Dataset Quality through
+`src/lib/analytics/server/fetchMetaDatasetQuality.ts` and stores one validated,
+idempotent batch per UTC day in `marketing.meta_quality_snapshots`. Vercel runs
+the route daily at `17 3 * * *`; see [`DEPLOYMENT.md`](../../DEPLOYMENT.md) and
+[`FLOW.md`](../../FLOW.md) for the production artifact and verification gates.
 
 ## Required Access
 
@@ -41,15 +45,16 @@ Required result before "Meta OK":
 - event match quality and dedupe/freshness diagnostics are reviewed
 - browser Pixel and CAPI are verified separately through commerce smoke and Supabase provider rows
 
-Current verified production snapshot, 2026-07-18:
+Frozen production baseline, `2026-07-18T21:21:27.253Z`:
 
 | Event | EMQ | Important coverage |
 | --- | ---: | --- |
-| `PageView` | 6.6 | IP/UA/`fbp`/`external_id`/country 100 %, `fbc` 87.5 % |
-| `ViewContent` | 5.1 | IP 99.3 %, UA 100 %, `fbp` 14.2 %, `external_id` 21.3 %, `fbc` 80.2 % |
-| `AddToCart` | 3.6 | IP/UA 100 %, browser and location identifiers 25 % |
-| `InitiateCheckout` | 5.5 | IP/UA 100 %, `fbp` 40 %, remaining browser/location identifiers 20 % |
-| `Purchase` | 9.3 | customer match keys 100 %, `fbp`/`fbc` 75 % |
+| `PageView` | 6.6 | IP/UA/country 100 %, `fbp` 95.4 %, `external_id` 98.2 %, `fbc` 68.8 % |
+| `ViewContent` | 5.5 | IP 99.4 %, UA 100 %, `fbp` 35.1 %, `external_id` 40.7 %, `fbc` 77.3 % |
+| `AddToCart` | 6.3 | IP/UA 100 %, `fbp`/`external_id` 75 %, `fbc` 66.7 % |
+| `InitiateCheckout` | 5.9 | IP/UA 100 %, `fbp` 57.1 %, `external_id`/`fbc` 42.9 % |
+| `Purchase` | 9.3 | Customer match keys/`fbp`/`external_id` 100 %, `fbc` 50 % |
+| `Lead` | 7.4 | Email/phone/IP/UA/`fbp`/`external_id`/country 100 %; no `fbc` row yet |
 
 The 7- and 14-day follow-up must preserve event-level denominators. Do not
 infer improvement for lower-funnel events from one smoke event.
