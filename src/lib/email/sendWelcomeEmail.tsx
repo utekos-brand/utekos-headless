@@ -20,8 +20,9 @@ export async function sendWelcomeEmail(
   return sendTransactionalEmail({
     from: formatFromAddress(fromName, fromEmail),
     to: email,
-    subject: 'Velkommen til Utekos!',
+    subject: 'Velkommen inn i varmen',
     idempotencyKey: `newsletter-welcome/${email}`,
+    replyTo: 'kundeservice@utekos.no',
     html: emailHtml,
     text: emailText
   })

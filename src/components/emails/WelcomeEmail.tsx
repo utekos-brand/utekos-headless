@@ -1,157 +1,189 @@
-/* eslint-disable quotes */
+import * as React from 'react'
 import {
   Body,
   Button,
-  Container,
   Column,
+  Container,
   Head,
   Heading,
   Hr,
+  Html,
   Img,
   Link,
   Preview,
   Row,
   Section,
+  Tailwind,
   Text,
-  Tailwind
+  pixelBasedPreset
 } from 'react-email'
-import * as React from 'react'
 
 interface WelcomeEmailProps {
   email?: string
-  discountCode?: string
 }
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_APP_URL ?
-    process.env.NEXT_PUBLIC_APP_URL
-  : ''
+const siteUrl = (
+  process.env.NEXT_PUBLIC_APP_URL ?? 'https://utekos.no'
+).replace(/\/$/, '')
 
-export const WelcomeEmail = ({
-  email,
-  discountCode = 'VELKOMMEN10'
-}: WelcomeEmailProps) => {
-  const previewText = `Velkommen til Utekos! Her er din rabattkode.`
+const unsubscribeHref =
+  'mailto:kundeservice@utekos.no?subject=Avmelding%20fra%20nyhetsbrev'
+
+export function WelcomeEmail({ email }: WelcomeEmailProps) {
+  const previewText =
+    'Inspirasjon, produktnyheter og gode tips for mer tid ute.'
 
   return (
-    <Tailwind
-      config={{
-        theme: {
-          extend: {
-            colors: {
-              brand: {
-                DEFAULT: '#3c5e4b',
-                light: '#e8edea',
-                dark: '#2a4234'
-              },
-              text: { DEFAULT: '#333333', muted: '#666666' }
-            }
-          }
-        }
-      }}
-    >
-      <Head />
-      <Preview>{previewText}</Preview>
-      <Body className='mx-auto my-auto bg-gray-100 font-sans'>
-        <Container className='mx-auto my-[40px] max-w-[600px] rounded border border-solid border-[#eaeaea] bg-white p-[20px]'>
-          <article className='mt-[32px]'>
-            <Img
-              src={`${baseUrl}/icon.png`}
-              width='60'
-              height='60'
-              alt='Utekos Logo'
-              className='mx-auto my-0'
-            />
-          </article>
-          <Heading className='text-text mx-0 my-[30px] p-0 text-center text-[24px] font-normal'>
-            Velkommen til{' '}
-            <span className='text-brand font-bold'>Utekos</span>
-            -familien!
-          </Heading>
-
-          <Text className='text-text text-center text-[16px] leading-[24px]'>
-            Vi er utrolig glade for at du vil følge oss. Nå er du
-            den første til å få vite om produktnyheter,
-            inspirasjon til uteplassen og eksklusive tilbud.
-          </Text>
-          <article className='bg-brand-light mx-auto my-8 rounded-lg p-6 text-center'>
-            <Text className='text-brand-dark m-0 mb-2 text-[16px] font-medium'>
-              Som en takk for at du meldte deg på, får du 10%
-              rabatt på ditt første kjøp:
-            </Text>
-            <Heading
-              as='h2'
-              className='text-brand border-brand-dark/30 mx-0 my-4 inline-block rounded border-2 border-dashed bg-white px-6 py-2 text-[32px] font-bold tracking-wider'
-            >
-              {discountCode}
-            </Heading>
-            <Text className='text-text-muted m-0 mt-2 text-[14px]'>
-              Bruk koden i kassen. Gyldig i 30 dager.
-            </Text>
-          </article>
-          <article className='my-[32px] text-center'>
-            <Button
-              className='bg-brand hover:bg-brand-dark w-full rounded-md px-8 py-4 text-center text-[16px] font-semibold text-white no-underline sm:w-auto'
-              href={`${baseUrl}/collections/all`}
-            >
-              Utforsk nettbutikken
-            </Button>
-          </article>
-
-          <Hr className='mx-0 my-[26px] w-full border border-solid border-[#eaeaea]' />
-
-          <article>
-            <Row>
-              <Column className='w-1/2 border-r border-gray-200 pr-4 pl-4 align-top'>
-                <Heading
-                  as='h3'
-                  className='text-brand-dark m-0 mb-2 text-[16px] font-bold'
-                >
-                  Inspirasjon
-                </Heading>
-                <Text className='text-text-muted m-0 text-[14px]'>
-                  Tips og triks for å skape den perfekte
-                  uteplassen, uansett årstid.
-                </Text>
-              </Column>
-              <Column className='w-1/2 pl-4 align-top'>
-                <Heading
-                  as='h3'
-                  className='text-brand-dark m-0 mb-2 text-[16px] font-bold'
-                >
-                  Eksklusiv tilgang
-                </Heading>
-                <Text className='text-text-muted m-0 text-[14px]'>
-                  Våre abonnenter får ofte tilgang til salg og
-                  nyheter før alle andre.
-                </Text>
-              </Column>
-            </Row>
-          </article>
-
-          <Hr className='mx-0 my-[26px] w-full border border-solid border-[#eaeaea]' />
-          <article className='text-center'>
-            <Text className='text-text-muted text-[12px] leading-[20px]'>
-              Du mottar denne e-posten fordi du meldte deg på
-              nyhetsbrevet vårt på Utekos.no.
-            </Text>
-            <Text className='text-text-muted text-[12px] leading-[20px]'>
-              <Link
-                href={`${baseUrl}/privacy-policy`}
-                className='text-text-muted underline'
+    <Html lang='nb'>
+      <Tailwind
+        config={{
+          presets: [pixelBasedPreset]
+        }}
+      >
+        <Head />
+        <Preview>{previewText}</Preview>
+        <Body className='m-0 bg-[#e7efee] px-[12px] py-[32px] font-sans text-[#173d3a]'>
+          <Container className='mx-auto max-w-[600px] overflow-hidden rounded-[24px] bg-white'>
+            <Section className='bg-[#00343e] px-[36px] py-[40px] text-center'>
+              <Img
+                src={`${siteUrl}/icon.png`}
+                width='88'
+                height='88'
+                alt='Utekos'
+                className='mx-auto mb-[26px] block'
+              />
+              <Text className='m-0 mb-[12px] text-[13px] font-bold leading-[18px] tracking-[1.5px] text-[#8dd8d0]'>
+                HYGGELIG Å HA DEG MED
+              </Text>
+              <Heading
+                as='h1'
+                className='m-0 text-[38px] font-bold leading-[42px] tracking-[-1px] text-[#f0eee9]'
               >
-                Personvernerklæring
-              </Link>
-            </Text>
-            <Text className='text-text-muted mt-4 text-[12px] leading-[20px]'>
-              © {new Date().getFullYear()} Utekos AS. Alle
-              rettigheter reservert.
-            </Text>
-          </article>
-        </Container>
-      </Body>
-    </Tailwind>
+                Velkommen inn i varmen
+              </Heading>
+              <Text className='mx-auto mt-[18px] mb-[28px] max-w-[440px] text-[17px] leading-[27px] text-[#f0eee9]'>
+                Du får inspirasjon, produktnyheter og nyttige tips
+                som gjør det enklere å nyte mer tid ute.
+              </Text>
+              <Button
+                href={`${siteUrl}/produkter`}
+                className='box-border block w-full rounded-[12px] bg-[#007a74] px-[24px] py-[15px] text-center text-[16px] font-bold leading-[22px] text-white no-underline'
+              >
+                Finn din Utekos
+              </Button>
+            </Section>
+
+            <Img
+              src={`${siteUrl}/email/welcome-hero.jpg`}
+              width='600'
+              height='315'
+              alt='To venner som nyter en varm stund ute i Utekos'
+              className='block h-auto w-full'
+            />
+
+            <Section className='px-[36px] py-[40px]'>
+              <Heading
+                as='h2'
+                className='m-0 mb-[10px] text-[26px] font-bold leading-[32px] tracking-[-0.4px] text-[#00343e]'
+              >
+                Dette kan du glede deg til
+              </Heading>
+              <Text className='m-0 mb-[28px] text-[16px] leading-[25px] text-[#365c58]'>
+                Vi sender bare innhold som gir deg noe nyttig,
+                inspirerende eller relevant fra Utekos.
+              </Text>
+
+              <Row>
+                <Column className='w-[48px] align-top'>
+                  <Text className='m-0 text-[20px] font-bold leading-[28px] text-[#007a74]'>
+                    01
+                  </Text>
+                </Column>
+                <Column className='align-top'>
+                  <Text className='m-0 text-[16px] font-bold leading-[24px] text-[#00343e]'>
+                    Inspirasjon til flere stunder ute
+                  </Text>
+                  <Text className='m-0 mt-[4px] text-[15px] leading-[23px] text-[#365c58]'>
+                    Ideer for terrasse, hytte, båtliv, bobil og
+                    hverdager med frisk luft.
+                  </Text>
+                </Column>
+              </Row>
+
+              <Hr className='my-[22px] border-0 border-t border-solid border-[#d6e3e1]' />
+
+              <Row>
+                <Column className='w-[48px] align-top'>
+                  <Text className='m-0 text-[20px] font-bold leading-[28px] text-[#007a74]'>
+                    02
+                  </Text>
+                </Column>
+                <Column className='align-top'>
+                  <Text className='m-0 text-[16px] font-bold leading-[24px] text-[#00343e]'>
+                    Nyheter og gode produktråd
+                  </Text>
+                  <Text className='m-0 mt-[4px] text-[15px] leading-[23px] text-[#365c58]'>
+                    Enklere valg, bedre bruk og nytt fra sortimentet.
+                  </Text>
+                </Column>
+              </Row>
+            </Section>
+
+            <Section className='bg-[#f0eee9] px-[36px] py-[32px]'>
+              <Heading
+                as='h2'
+                className='m-0 text-[22px] font-bold leading-[28px] text-[#00343e]'
+              >
+                Lurer du på noe?
+              </Heading>
+              <Text className='m-0 mt-[8px] text-[15px] leading-[24px] text-[#365c58]'>
+                Vi hjelper deg gjerne. Svar på denne e-posten eller{' '}
+                <Link
+                  href={`${siteUrl}/kontaktskjema`}
+                  className='font-bold text-[#005f5a] underline'
+                >
+                  kontakt kundeservice
+                </Link>
+                .
+              </Text>
+            </Section>
+
+            <Section className='px-[36px] py-[28px] text-center'>
+              <Text className='m-0 text-[12px] leading-[19px] text-[#526b68]'>
+                Du mottar denne e-posten fordi du meldte deg på
+                nyhetsbrevet vårt
+                {email ? ` med ${email}` : ''}.
+              </Text>
+              <Text className='m-0 mt-[10px] text-[12px] leading-[19px]'>
+                <Link
+                  href={`${siteUrl}/personvern`}
+                  className='text-[#365c58] underline'
+                >
+                  Personvern
+                </Link>
+                <span className='text-[#8aa09d]'> · </span>
+                <Link
+                  href={unsubscribeHref}
+                  className='text-[#365c58] underline'
+                >
+                  Meld meg av
+                </Link>
+              </Text>
+              <Text className='m-0 mt-[14px] text-[11px] leading-[18px] text-[#6b817e]'>
+                KELC AS · Lille Damsgårdsveien 25 · 5162 Laksevåg
+                <br />© {new Date().getFullYear()} Utekos. Alle
+                rettigheter forbeholdt.
+              </Text>
+            </Section>
+          </Container>
+        </Body>
+      </Tailwind>
+    </Html>
   )
 }
+
+WelcomeEmail.PreviewProps = {
+  email: 'kunde@eksempel.no'
+} satisfies WelcomeEmailProps
 
 export default WelcomeEmail

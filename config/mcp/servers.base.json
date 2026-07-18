@@ -264,8 +264,8 @@
     },
     "google-analytics": {
       "type": "stdio",
-      "command": "analytics-mcp",
-      "args": [],
+      "command": "pipx",
+      "args": ["run", "analytics-mcp"],
       "env": {
         "GOOGLE_APPLICATION_CREDENTIALS": "${GOOGLE_ANALYTICS_APPLICATION_CREDENTIALS}",
         "GOOGLE_PROJECT_ID": "${GOOGLE_PROJECT_ID}"
@@ -545,7 +545,7 @@
       "autoApprove": []
     },
     "microsoft-learn-mcp": {
-      "url": "https://learn.microsoft.com/mcp",
+      "url": "https://learn.microsoft.com/api/mcp",
       "type": "http",
       "tools": ["microsoft_code_sample_search", "microsoft_docs_fetch", "microsoft_docs_search"],
       "autoApprove": []

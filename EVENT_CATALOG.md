@@ -82,37 +82,37 @@ samtykkepolicyen tillater det.
 
 ## Canonical event-kontrakt
 
-| Event | Lifecycle | Eier og etterprøvbar trigger | Primær event-ID / når ny | Samtykke | Retention |
-| --- | --- | --- | --- | --- | --- |
-| `page_view` | active | Next-router etter initial canonical view eller fullført navigasjon med endelig URL | `navigation_id`; ny ved neste fullførte navigasjon | C1 | R30 |
-| `view_item_list` | active | Produktliste når navngitt liste og løste items faktisk er synlige | `page_view_id + item_list_id + impression_sequence`; ny synlig sekvens | C2 | R30 |
-| `select_item` | active | Produktlenken når et akseptert valg starter navigasjon | `interaction_id`; ny akseptert interaksjon | C2 | R30 |
-| `view_item` | active | Produktvisningen når produkt og valgt variant er løst og synlig | `page_view_id + product_id + variant_id + view_sequence`; ny visning eller variantkontekst | C2 | R30 |
-| `add_to_wishlist` | active | Wishlist-store etter bekreftet persistens | `wishlist_mutation_id`; ny vellykket mutasjon | C3 | R90 |
-| `add_to_cart` | active | Shopify cart-service etter akseptert mutasjon og oppdatert cart med linjen | `cart_mutation_id`; ny vellykket Shopify-mutasjon | C3 | R90 |
-| `remove_from_cart` | active | Shopify cart-service etter akseptert fjerning og oppdatert cart | `cart_mutation_id`; ny vellykket fjerning | C3 | R90 |
-| `view_cart` | active | Cart-side eller drawer når løst cart-innhold faktisk er synlig | `page_view_id + cart_id + view_sequence`; ny synlig sekvens | C2 | R30 |
-| `begin_checkout` | active | Shopify checkout-service etter gyldig checkout-token eller URL | `checkout_id + creation_revision`; ny checkout | C3 | R90 |
-| `add_shipping_info` | blocked_source | Shopify checkout-event etter bekreftet lagret fraktvalg | `checkout_id + shipping_revision`; ny lagret revisjon | C3 | R90 |
-| `add_payment_info` | blocked_source | Shopify checkout-event etter bekreftet betalingssteg | `checkout_id + payment_revision`; ny akseptert revisjon | C3 | R90 |
-| `purchase` | active | Verifisert Shopify order-paid webhook etter relevant financial state | `order_id + financial_state`; ny relevant state-overgang | C4 | R7Y |
-| `refund` | active | Verifisert Shopify refund webhook etter opprettet refund | `refund_id`; ny Shopify-refund | C4 | R7Y |
-| `search` | active | Search-controller etter eksplisitt søk og løst resultat | `search_id`; nytt eksplisitt søk | C2 | R30 |
-| `view_search_results` | active | Search-results når løst resultatrevisjon faktisk er synlig | `search_id + result_revision`; ny synlig revisjon | C2 | R30 |
-| `view_promotion` | active | Promotion-observer ved minst 50 % synlighet i ett sammenhengende sekund | `page_view_id + promotion_id + impression_sequence`; ny kvalifiserende sekvens | C2 | R30 |
-| `select_promotion` | active | Promotion-lenke når akseptert valg starter handling eller navigasjon | `interaction_id`; ny akseptert interaksjon | C2 | R30 |
-| `generate_lead` | active | Lead-service etter akseptert og lagret innsending | `submission_id`; ny akseptert lead | C5 | R25M |
-| `form_start` | active | Form-controller ved første meningsfulle verdiendring, aldri fokus alene | `form_id + page_view_id`; ny sidevisning | C2 | R30 |
-| `form_submit` | active | Form-service etter serverakseptert innsending | `submission_id`; ny akseptert innsending | C5 | R25M |
-| `form_error` | active | Form-service når definitiv validerings- eller serverfeil vises | `attempt_id`; nytt feilet forsøk | C6 | R90 |
-| `filter_apply` | active | Produktfilter etter at oppdatert resultat er committet | `interaction_id + result_revision`; ny committet interaksjon | C2 | R30 |
-| `sort_apply` | active | Produktsortering etter at sortert resultat er committet | `interaction_id + result_revision`; ny committet interaksjon | C2 | R30 |
-| `variant_select` | active | Variant-controller etter at valgt variant er løst og committet | `interaction_id + variant_id`; nytt committet valg | C2 | R30 |
-| `size_guide_view` | active | Størrelsesguide når guideflaten faktisk er synlig | `page_view_id + guide_id + open_sequence`; ny synlig åpning | C2 | R30 |
-| `checkout_error` | blocked_source | Godkjent autoritativ kilde ved definitiv checkout-feil | `checkout_attempt_id`; nytt feilet forsøk | C6 | R90 |
-| `payment_error` | blocked_source | Godkjent autoritativ kilde ved definitiv betalingsfeil | `payment_attempt_id`; nytt feilet forsøk | C6 | R90 |
-| `scroll_depth` | active | Scroll-observer ved første passering av 25/50/75/90 % per sidevisning | `page_view_id + threshold`; ny side eller terskel | C2 | R30 |
-| `video_progress` | active | Video-controller ved første passering av 10/25/50/75/90/100 % | `page_view_id + video_id + milestone`; ny side, video eller milepæl | C2 | R30 |
+| Event                 | Lifecycle      | Eier og etterprøvbar trigger                                                       | Primær event-ID / når ny                                                                   | Samtykke | Retention |
+| -----------------------| ----------------| ------------------------------------------------------------------------------------| --------------------------------------------------------------------------------------------| ----------| -----------|
+| `page_view`           | active         | Next-router etter initial canonical view eller fullført navigasjon med endelig URL | `navigation_id`; ny ved neste fullførte navigasjon                                         | C1       | R30       |
+| `view_item_list`      | active         | Produktliste når navngitt liste og løste items faktisk er synlige                  | `page_view_id + item_list_id + impression_sequence`; ny synlig sekvens                     | C2       | R30       |
+| `select_item`         | active         | Produktlenken når et akseptert valg starter navigasjon                             | `interaction_id`; ny akseptert interaksjon                                                 | C2       | R30       |
+| `view_item`           | active         | Produktvisningen når produkt og valgt variant er løst og synlig                    | `page_view_id + product_id + variant_id + view_sequence`; ny visning eller variantkontekst | C2       | R30       |
+| `add_to_wishlist`     | active         | Wishlist-store etter bekreftet persistens                                          | `wishlist_mutation_id`; ny vellykket mutasjon                                              | C3       | R90       |
+| `add_to_cart`         | active         | Shopify cart-service etter akseptert mutasjon og oppdatert cart med linjen         | `cart_mutation_id`; ny vellykket Shopify-mutasjon                                          | C3       | R90       |
+| `remove_from_cart`    | active         | Shopify cart-service etter akseptert fjerning og oppdatert cart                    | `cart_mutation_id`; ny vellykket fjerning                                                  | C3       | R90       |
+| `view_cart`           | active         | Cart-side eller drawer når løst cart-innhold faktisk er synlig                     | `page_view_id + cart_id + view_sequence`; ny synlig sekvens                                | C2       | R30       |
+| `begin_checkout`      | active         | Shopify checkout-service etter gyldig checkout-token eller URL                     | `checkout_id + creation_revision`; ny checkout                                             | C3       | R90       |
+| `add_shipping_info`   | blocked_source | Shopify checkout-event etter bekreftet lagret fraktvalg                            | `checkout_id + shipping_revision`; ny lagret revisjon                                      | C3       | R90       |
+| `add_payment_info`    | blocked_source | Shopify checkout-event etter bekreftet betalingssteg                               | `checkout_id + payment_revision`; ny akseptert revisjon                                    | C3       | R90       |
+| `purchase`            | active         | Verifisert Shopify order-paid webhook etter relevant financial state               | `order_id + financial_state`; ny relevant state-overgang                                   | C4       | R7Y       |
+| `refund`              | active         | Verifisert Shopify refund webhook etter opprettet refund                           | `refund_id`; ny Shopify-refund                                                             | C4       | R7Y       |
+| `search`              | active         | Search-controller etter eksplisitt søk og løst resultat                            | `search_id`; nytt eksplisitt søk                                                           | C2       | R30       |
+| `view_search_results` | active         | Search-results når løst resultatrevisjon faktisk er synlig                         | `search_id + result_revision`; ny synlig revisjon                                          | C2       | R30       |
+| `view_promotion`      | active         | Promotion-observer ved minst 50 % synlighet i ett sammenhengende sekund            | `page_view_id + promotion_id + impression_sequence`; ny kvalifiserende sekvens             | C2       | R30       |
+| `select_promotion`    | active         | Promotion-lenke når akseptert valg starter handling eller navigasjon               | `interaction_id`; ny akseptert interaksjon                                                 | C2       | R30       |
+| `generate_lead`       | active         | Lead-service etter akseptert og lagret innsending                                  | `submission_id`; ny akseptert lead                                                         | C5       | R25M      |
+| `form_start`          | active         | Form-controller ved første meningsfulle verdiendring, aldri fokus alene            | `form_id + page_view_id`; ny sidevisning                                                   | C2       | R30       |
+| `form_submit`         | active         | Form-service etter serverakseptert innsending                                      | `submission_id`; ny akseptert innsending                                                   | C5       | R25M      |
+| `form_error`          | active         | Form-service når definitiv validerings- eller serverfeil vises                     | `attempt_id`; nytt feilet forsøk                                                           | C6       | R90       |
+| `filter_apply`        | active         | Produktfilter etter at oppdatert resultat er committet                             | `interaction_id + result_revision`; ny committet interaksjon                               | C2       | R30       |
+| `sort_apply`          | active         | Produktsortering etter at sortert resultat er committet                            | `interaction_id + result_revision`; ny committet interaksjon                               | C2       | R30       |
+| `variant_select`      | active         | Variant-controller etter at valgt variant er løst og committet                     | `interaction_id + variant_id`; nytt committet valg                                         | C2       | R30       |
+| `size_guide_view`     | active         | Størrelsesguide når guideflaten faktisk er synlig                                  | `page_view_id + guide_id + open_sequence`; ny synlig åpning                                | C2       | R30       |
+| `checkout_error`      | blocked_source | Godkjent autoritativ kilde ved definitiv checkout-feil                             | `checkout_attempt_id`; nytt feilet forsøk                                                  | C6       | R90       |
+| `payment_error`       | blocked_source | Godkjent autoritativ kilde ved definitiv betalingsfeil                             | `payment_attempt_id`; nytt feilet forsøk                                                   | C6       | R90       |
+| `scroll_depth`        | active         | Scroll-observer ved første passering av 25/50/75/90 % per sidevisning              | `page_view_id + threshold`; ny side eller terskel                                          | C2       | R30       |
+| `video_progress`      | active         | Video-controller ved første passering av 10/25/50/75/90/100 %                      | `page_view_id + video_id + milestone`; ny side, video eller milepæl                        | C2       | R30       |
 
 `add_shipping_info` og `add_payment_info` forblir `blocked_source` til en
 autoritativ Shopify Customer Events/Web Pixels-kilde er valgt.
