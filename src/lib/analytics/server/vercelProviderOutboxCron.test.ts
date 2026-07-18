@@ -7,7 +7,7 @@ type VercelConfiguration = {
   crons?: Array<{ path: string; schedule: string }>
 }
 
-test('schedules only the generic provider outbox retry route', () => {
+test('schedules provider dispatch and Data Manager status reconciliation', () => {
   const configuration = JSON.parse(
     readFileSync(resolve(process.cwd(), 'vercel.json'), 'utf8')
   ) as VercelConfiguration
@@ -15,6 +15,10 @@ test('schedules only the generic provider outbox retry route', () => {
   assert.deepEqual(configuration.crons, [
     {
       path: '/api/cron/provider-outbox-dispatch',
+      schedule: '*/5 * * * *'
+    },
+    {
+      path: '/api/cron/google-data-manager-status',
       schedule: '*/5 * * * *'
     }
   ])

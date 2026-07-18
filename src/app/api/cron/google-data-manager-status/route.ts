@@ -1,30 +1,31 @@
 import {
-  runRegisteredProviderOutboxBatch,
-  type RegisteredProviderOutboxBatchSummary
-} from '../../../../lib/analytics/server/runRegisteredProviderOutboxBatch'
+  runGoogleDataManagerStatusReconciliation,
+  type GoogleDataManagerStatusBatchSummary
+} from '../../../../lib/analytics/server/runGoogleDataManagerStatusReconciliation'
 import { hasValidCronAuthorization } from '../../../../lib/security/hasValidCronAuthorization'
 
-const CRON_BATCH_SIZE = 1
+const CRON_BATCH_SIZE = 20
 
 export const maxDuration = 60
 
 type RunBatch = (input: {
   maxItems: number
-}) => Promise<RegisteredProviderOutboxBatchSummary>
+}) => Promise<GoogleDataManagerStatusBatchSummary>
 
-export type ProviderOutboxCronDependencies = {
+export type GoogleDataManagerStatusCronDependencies = {
   getCronSecret: () => string | undefined
   runBatch: RunBatch
 }
 
-const defaultDependencies: ProviderOutboxCronDependencies = {
-  getCronSecret: () => process.env.CRON_SECRET,
-  runBatch: runRegisteredProviderOutboxBatch
-}
+const defaultDependencies: GoogleDataManagerStatusCronDependencies =
+  {
+    getCronSecret: () => process.env.CRON_SECRET,
+    runBatch: runGoogleDataManagerStatusReconciliation
+  }
 
-export async function handleProviderOutboxCron(
+export async function handleGoogleDataManagerStatusCron(
   request: Request,
-  dependencies: ProviderOutboxCronDependencies = defaultDependencies
+  dependencies: GoogleDataManagerStatusCronDependencies = defaultDependencies
 ) {
   const authorized = hasValidCronAuthorization(
     request.headers.get('authorization'),
@@ -49,5 +50,5 @@ export async function handleProviderOutboxCron(
 }
 
 export function GET(request: Request) {
-  return handleProviderOutboxCron(request)
+  return handleGoogleDataManagerStatusCron(request)
 }

@@ -170,6 +170,59 @@ transient Shopify prerender timeout; the foundation Git deploy must pick up the
 validate-only env change. Re-enable executed ingestion only after post-deploy
 proof that browser `transaction_id` equals Data Manager `transactionId`.
 
+### Google Data Manager executed ingestion and status reconciliation 2026-07-18
+
+Web-GTM version `119`, `Canonical GA4 transaction_id parity - 2026-07-18`,
+was created and published through the official Tag Manager API. It adds only
+`DLV - transaction_id` and the matching `transaction_id` event setting to
+canonical ecommerce tag `118`. Quick Preview and the created/published version
+reported no compiler error, the existing firing trigger `146` and exact
+`view_item` exception `144` were preserved, and live browser traffic proved
+that canonical `event_id`, dataLayer `transaction_id`, and sGTM
+`ep.transaction_id` use the same UUID.
+
+Production `GOOGLE_DATA_MANAGER_VALIDATE_ONLY` is now `false`. Exact-source
+redeploy `dpl_BmrcpEQwaaxhZUFLFNHHv8odzetG` is `READY`, owns `utekos.no`, and
+retains Git SHA `4346106d9d3c8afbe5927e46a1dcd4fc678008a7`. Consented
+`view_item` event `66d872a9-7a59-4421-a347-2cc12ff4759d` produced Google
+request ID `6cae59f5-7c95-41d8-ba55-ed4c03284aef` with
+`validate_only=false`; the same canonical event preserved `external_id`,
+`fbp`, `fbc`, `fbclid`, client IP, user agent and Vercel-derived Norwegian
+location, while Meta returned `events_received=1`.
+
+`IngestEvents` returning a request ID is only provider acceptance. The release
+therefore adds `/api/cron/google-data-manager-status`, scheduled every five
+minutes separately from provider dispatch. It claims only executed Google rows
+with `accepted_unverified`, uses a per-claim UUID lease, calls the documented
+`RetrieveRequestStatus`, and projects the result as follows:
+
+- `SUCCESS` -> `succeeded` and `provider_confirmed_success`;
+- `PROCESSING` or unknown -> remains `accepted_unverified` for another poll;
+- transient status-call errors -> remains retryable with the error audited;
+- `FAILED` or `PARTIAL_SUCCESS` -> `dead_lettered` with provider error and
+  warning details retained.
+
+No Supabase migration is required. A production-store dry run claimed five
+executed requests and stored five verified `PROCESSING` responses as JSON
+objects with no dangling lease. Final success must not be reported until
+Data Manager changes the relevant destination status to `SUCCESS`.
+
+The implementation is checked against the repository's official local Google
+snapshots in
+[`docs/data-manager/Best Practices for Using the Data Manager API.md`](docs/data-manager/Best%20Practices%20for%20Using%20the%20Data%20Manager%20API.md),
+[`IngestEventsRequest`](docs/google.ads.datamanager.v1/IngestEventsRequest.md),
+[`Event`](docs/google.ads.datamanager.v1/Event.md),
+[`RetrieveRequestStatusResponse`](docs/google.ads.datamanager.v1/RetrieveRequestStatusResponse.md),
+[`RequestStatusPerDestination`](docs/google.ads.datamanager.v1/RequestStatusPerDestination.md),
+and [`RequestStatus`](docs/google.ads.datamanager.v1/RequestStatus.md). These
+sources require retaining every `request_id`, reviewing per-destination errors
+and warnings, and treating `PROCESSING` as non-terminal. The status worker uses
+five concurrent calls, below Google's recommendation of up to ten. Event
+ingestion currently preserves one canonical event per provider request for
+exact event-level audit and retry ownership; request batching remains a
+documented efficiency optimization to evaluate against that idempotency model
+before traffic approaches Data Manager request limits.
+
 ### Local integration audit 2026-07-14
 
 The isolated Git operations, Microsoft Merchant, PostHog SDK, Klarna

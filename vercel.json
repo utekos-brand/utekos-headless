@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/provider-outbox-dispatch",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/google-data-manager-status",
+      "schedule": "*/5 * * * *"
     }
   ],
   "headers": [
@@ -24,5 +28,7 @@
       ]
     }
   ],
-  "regions": ["arn1"]
+  "regions": [
+    "arn1"
+  ]
 }

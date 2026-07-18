@@ -28,9 +28,7 @@ const localServiceAccountSchema = z.object({
   client_email: z.string().email()
 })
 
-type Environment = Readonly<
-  Record<string, string | undefined>
->
+type Environment = Readonly<Record<string, string | undefined>>
 
 type LocalServiceAccountCredentials = {
   clientEmail: string
@@ -38,9 +36,7 @@ type LocalServiceAccountCredentials = {
   projectId?: string
 }
 
-type LocalAdcConfig = {
-  mode: 'local_adc'
-}
+type LocalAdcConfig = { mode: 'local_adc' }
 
 type LocalServiceAccountConfig = {
   mode: 'local_service_account'
@@ -58,18 +54,24 @@ export type GoogleDataManagerAuthConfig =
   | LocalServiceAccountConfig
   | VercelOidcConfig
 
-type GoogleDataManagerCallOptions = {
-  timeout: number
-}
+type GoogleDataManagerCallOptions = { timeout: number }
 
 export type GoogleDataManagerIngestionClient = {
   ingestEvents: (
-    request:
-      protos.google.ads.datamanager.v1.IIngestEventsRequest,
+    request: protos.google.ads.datamanager.v1.IIngestEventsRequest,
     options: GoogleDataManagerCallOptions
   ) => Promise<
     readonly [
       protos.google.ads.datamanager.v1.IIngestEventsResponse,
+      ...unknown[]
+    ]
+  >
+  retrieveRequestStatus: (
+    request: protos.google.ads.datamanager.v1.IRetrieveRequestStatusRequest,
+    options: GoogleDataManagerCallOptions
+  ) => Promise<
+    readonly [
+      protos.google.ads.datamanager.v1.IRetrieveRequestStatusResponse,
       ...unknown[]
     ]
   >
@@ -80,9 +82,7 @@ type IngestionClientOptions = {
   projectId: string
 }
 
-type OidcTokenOptions = {
-  audience: string
-}
+type OidcTokenOptions = { audience: string }
 
 export type GoogleDataManagerAuthDependencies = {
   createExternalAccountClient: (
@@ -91,38 +91,35 @@ export type GoogleDataManagerAuthDependencies = {
   createIngestionClient: (
     options?: IngestionClientOptions
   ) => GoogleDataManagerIngestionClient
-  getOidcToken: (
-    options: OidcTokenOptions
-  ) => Promise<string>
+  getOidcToken: (options: OidcTokenOptions) => Promise<string>
   readLocalServiceAccountCredentials: () =>
     | LocalServiceAccountCredentials
     | undefined
 }
 
-const defaultDependencies:
-  GoogleDataManagerAuthDependencies = {
-    createExternalAccountClient: options =>
-      ExternalAccountClient.fromJSON(options),
+const defaultDependencies: GoogleDataManagerAuthDependencies = {
+  createExternalAccountClient: options =>
+    ExternalAccountClient.fromJSON(options),
 
-    createIngestionClient: options => {
-      if (!options) {
-        return new IngestionServiceClient()
-      }
+  createIngestionClient: options => {
+    if (!options) {
+      return new IngestionServiceClient()
+    }
 
-      return new IngestionServiceClient({
-        // google-gax og appen kan resolve ulike
-        // patchversjoner av google-auth-library.
-        // Runtime-kontrakten er AuthClient.
-        authClient: options.authClient as never,
-        projectId: options.projectId
-      })
-    },
+    return new IngestionServiceClient({
+      // google-gax og appen kan resolve ulike
+      // patchversjoner av google-auth-library.
+      // Runtime-kontrakten er AuthClient.
+      authClient: options.authClient as never,
+      projectId: options.projectId
+    })
+  },
 
-    getOidcToken: getVercelOidcToken,
+  getOidcToken: getVercelOidcToken,
 
-    readLocalServiceAccountCredentials:
-      readLocalDevServiceAccountCredentials
-  }
+  readLocalServiceAccountCredentials:
+    readLocalDevServiceAccountCredentials
+}
 
 function readLocalDevServiceAccountCredentials():
   | LocalServiceAccountCredentials
@@ -146,10 +143,7 @@ function readLocalDevServiceAccountCredentials():
 
   return {
     clientEmail: parsed.data.client_email,
-    privateKey: parsed.data.private_key.replace(
-      /\\n/g,
-      '\n'
-    ),
+    privateKey: parsed.data.private_key.replace(/\\n/g, '\n'),
     ...(parsed.data.project_id ?
       { projectId: parsed.data.project_id }
     : {})
@@ -183,15 +177,10 @@ export function readGoogleDataManagerAuthConfig(
       dependencies.readLocalServiceAccountCredentials()
 
     if (serviceAccount) {
-      return {
-        mode: 'local_service_account',
-        ...serviceAccount
-      }
+      return { mode: 'local_service_account', ...serviceAccount }
     }
 
-    return {
-      mode: 'local_adc'
-    }
+    return { mode: 'local_adc' }
   }
 
   const projectId = requiredEnvironmentValue(
@@ -199,11 +188,10 @@ export function readGoogleDataManagerAuthConfig(
     'GCP_PROJECT_ID'
   )
 
-  const serviceAccountEmail =
-    requiredEnvironmentValue(
-      environment,
-      'GCP_SERVICE_ACCOUNT_EMAIL'
-    )
+  const serviceAccountEmail = requiredEnvironmentValue(
+    environment,
+    'GCP_SERVICE_ACCOUNT_EMAIL'
+  )
 
   const audience = requiredEnvironmentValue(
     environment,
@@ -240,8 +228,7 @@ export function readGoogleDataManagerAuthConfig(
 
 export function createGoogleDataManagerIngestionClient(
   environment: Environment = process.env,
-  dependencies: GoogleDataManagerAuthDependencies =
-    defaultDependencies
+  dependencies: GoogleDataManagerAuthDependencies = defaultDependencies
 ): GoogleDataManagerIngestionClient {
   const config = readGoogleDataManagerAuthConfig(
     environment,
@@ -266,24 +253,18 @@ export function createGoogleDataManagerIngestionClient(
     })
   }
 
-  const authClient =
-    dependencies.createExternalAccountClient({
-      type: 'external_account',
-      audience: config.audience,
-      subject_token_type:
-        'urn:ietf:params:oauth:token-type:jwt',
-      token_url:
-        'https://sts.googleapis.com/v1/token',
-      service_account_impersonation_url:
-        `https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${config.serviceAccountEmail}:generateAccessToken`,
-      scopes: [...DATA_MANAGER_SCOPES],
-      subject_token_supplier: {
-        getSubjectToken: () =>
-          dependencies.getOidcToken({
-            audience: config.audience
-          })
-      }
-    })
+  const authClient = dependencies.createExternalAccountClient({
+    type: 'external_account',
+    audience: config.audience,
+    subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
+    token_url: 'https://sts.googleapis.com/v1/token',
+    service_account_impersonation_url: `https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${config.serviceAccountEmail}:generateAccessToken`,
+    scopes: [...DATA_MANAGER_SCOPES],
+    subject_token_supplier: {
+      getSubjectToken: () =>
+        dependencies.getOidcToken({ audience: config.audience })
+    }
+  })
 
   if (!authClient) {
     throw new Error(
