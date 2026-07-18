@@ -14,16 +14,19 @@ const consent = {
 function request(
   body: unknown,
   origin = 'http://localhost:3000',
-  requestOrigin = 'http://localhost:3000'
+  requestOrigin = 'http://localhost:3000',
+  fbclid?: string
 ) {
-  return new NextRequest(
-    `${requestOrigin}/api/meta/parameter-context`,
-    {
-      body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json', origin },
-      method: 'POST'
-    }
+  const requestUrl = new URL(
+    `${requestOrigin}/api/meta/parameter-context`
   )
+  if (fbclid) requestUrl.searchParams.set('fbclid', fbclid)
+
+  return new NextRequest(requestUrl, {
+    body: JSON.stringify(body),
+    headers: { 'Content-Type': 'application/json', origin },
+    method: 'POST'
+  })
 }
 
 test('sets first-party Meta cookies for a same-origin landing page', async () => {
@@ -49,6 +52,30 @@ test('sets first-party Meta cookies for a same-origin landing page', async () =>
   assert.equal(
     response.headers.get('cache-control'),
     'no-store, max-age=0'
+  )
+})
+
+test('reads fbclid from the parameter-context request query string', async () => {
+  const fbclid = 'IwAR-ServerQuery_MixedCase'
+  const response = await POST(
+    request(
+      {
+        consent,
+        fbclid: 'body-fallback',
+        page_url: 'http://localhost:3000/produkter'
+      },
+      undefined,
+      undefined,
+      fbclid
+    )
+  )
+  const body = (await response.json()) as { fbc: string }
+
+  assert.equal(response.status, 200)
+  assert.equal(body.fbc.split('.')[3], fbclid)
+  assert.match(
+    body.fbc,
+    /^fb\.0\.\d+\.IwAR-ServerQuery_MixedCase\..{8}$/
   )
 })
 

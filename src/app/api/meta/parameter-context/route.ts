@@ -85,8 +85,20 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const parsed =
-    metaParameterContextRequestSchema.safeParse(input)
+  const requestFbclid =
+    request.nextUrl.searchParams.get('fbclid')
+  const inputWithRequestFbclid =
+    (
+      requestFbclid === null ||
+      typeof input !== 'object' ||
+      input === null ||
+      Array.isArray(input)
+    ) ?
+      input
+    : { ...input, fbclid: requestFbclid }
+  const parsed = metaParameterContextRequestSchema.safeParse(
+    inputWithRequestFbclid
+  )
   if (!parsed.success) {
     return NextResponse.json(
       { error: 'invalid_context' },

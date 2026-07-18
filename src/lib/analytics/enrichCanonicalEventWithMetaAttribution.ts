@@ -1,6 +1,7 @@
 'use client'
 
 import { captureException } from '@sentry/nextjs'
+import { buildMetaParameterContextRequestUrl } from './buildMetaParameterContextRequestUrl'
 import type { ConsentSnapshot } from './canonicalEventEnvelope'
 import { browserFirstPartyExternalIdStore } from './firstPartyExternalId'
 import { metaParameterContextResponseSchema } from './metaParameterContextContract'
@@ -70,8 +71,7 @@ async function requestMetaParameterContext(
   }
 
   return enqueueContextRequest(async () => {
-    const queuedPersisted =
-      readPersistedMetaIdentifiers(fbclid)
+    const queuedPersisted = readPersistedMetaIdentifiers(fbclid)
     if (
       completedContextKeys.has(contextKey) &&
       queuedPersisted
@@ -79,27 +79,30 @@ async function requestMetaParameterContext(
       return queuedPersisted
     }
 
-    const response = await fetch('/api/meta/parameter-context', {
-      body: JSON.stringify({
-        consent: event.consent,
-        ...(fbclid ? { fbclid } : {}),
-        page_url: pageUrl,
-        ...(event.referrer_url ?
-          { referrer_url: event.referrer_url }
-        : {})
-      }),
-      cache: 'no-store',
-      credentials: 'same-origin',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      keepalive: true,
-      method: 'POST',
-      signal: AbortSignal.timeout(
-        META_PARAMETER_CONTEXT_TIMEOUT_MS
-      )
-    })
+    const response = await fetch(
+      buildMetaParameterContextRequestUrl(fbclid),
+      {
+        body: JSON.stringify({
+          consent: event.consent,
+          ...(fbclid ? { fbclid } : {}),
+          page_url: pageUrl,
+          ...(event.referrer_url ?
+            { referrer_url: event.referrer_url }
+          : {})
+        }),
+        cache: 'no-store',
+        credentials: 'same-origin',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        keepalive: true,
+        method: 'POST',
+        signal: AbortSignal.timeout(
+          META_PARAMETER_CONTEXT_TIMEOUT_MS
+        )
+      }
+    )
 
     if (!response.ok) {
       throw new Error(
