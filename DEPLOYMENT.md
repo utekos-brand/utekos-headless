@@ -231,15 +231,14 @@ with `accepted_unverified`, uses a per-claim UUID lease, calls the documented
   warning details retained.
 
 No Supabase migration is required. Controlled production status polling uses
-20-row batches and five concurrent calls. Ten initial batches moved 65
-executed requests to `provider_confirmed_success` with 0 dead-lettered, 0
-retried and 0 unknown outcomes. At 2026-07-18T20:51Z, 205 executed requests
-were provider-confirmed `SUCCESS`; 151 remained non-terminal and 111 of those
-were last confirmed `PROCESSING`. The 987 historical `validate_only=true`
-rows are deliberately excluded. The paid order `1866` request remained
-`PROCESSING` at 2026-07-18T20:47:54Z and therefore stays
-`accepted_unverified/provider_processing`. Final success must not be reported
-until Data Manager changes the relevant destination status to `SUCCESS`.
+20-row batches and five concurrent calls. At 2026-07-18T21:32Z, 340 executed
+requests were provider-confirmed `SUCCESS`; 116 remained non-terminal and 60
+of those were last confirmed `PROCESSING`. The 987 historical
+`validate_only=true` rows are deliberately excluded. The paid order `1866`
+request remained `PROCESSING` at 2026-07-18T20:47:54Z. Status attempt 4 then
+returned terminal `SUCCESS` at 2026-07-18T21:31:06Z, so the same row is now
+`succeeded` with `provider_confirmed_success`, no error and the original
+request ID retained.
 
 The implementation is checked against the repository's official local Google
 snapshots in
@@ -286,19 +285,17 @@ insert into `marketing.meta_quality_snapshots`. A UTC-day existence check
 makes retries idempotent per dataset and event. The token is sent in the
 authorization header and is never included in the request URL or response.
 
-Pre-deploy production-credential verification inserted six event snapshots at
+Production-credential verification inserted six event snapshots at
 `2026-07-18T21:21:27.253Z`; Supabase readback confirmed all six rows and a
-second run inserted zero duplicates. After the Git-triggered production
-deployment:
-
-1. Confirm the deployment is `READY` and the route appears in the build.
-2. Confirm an unauthenticated request returns 401 and `Cache-Control: no-store`.
-3. Run the deployed cron once with Vercel Cron tooling or the approved bearer
-   request and confirm HTTP 200.
-4. Read back the dated rows in `marketing.meta_quality_snapshots`; a repeat on
-   the same UTC day must return `insertedCount=0`.
-5. Compare event-level denominators and Meta source split after 7 and 14 days;
-   one daily snapshot is not a trend.
+second run inserted zero duplicates. Git deployment
+`dpl_EtXm5e58YNqzx4E2xVFvXwr14u76` for SHA
+`da2e3191a947589a084d15b6d794211bbb3dd1a3` is `READY` and owns the production
+aliases. Vercel lists the cron as enabled with no undeployed or modified
+definition. Production returned 401 without credentials and 200 with the
+approved bearer token, both with `Cache-Control: no-store`; the authorized
+same-day run reported six events and zero duplicate inserts. Compare
+event-level denominators and Meta source split after 7 and 14 days; one daily
+snapshot is not a trend.
 
 ### Local integration audit 2026-07-14
 

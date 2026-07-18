@@ -210,13 +210,21 @@ diagnostikk, event coverage, dedupliseringsfeedback, freshness og ACR i
 idempotent per dataset/event/UTC-dag; ingen migrasjon eller provider-mutasjon
 er nødvendig.
 
-Før deploy ble den nye koden kjørt med produksjonslegitimasjon. Den hentet
-seks eventtyper og skrev seks snapshots med felles måletid
+Den nye koden ble kjørt med produksjonslegitimasjon. Den hentet seks
+eventtyper og skrev seks snapshots med felles måletid
 `2026-07-18T21:21:27.253Z`; readback viste korrekt EMQ og 7–13 match keys per
 event. Umiddelbar ny kjøring ga `insertedCount=0`. Meta returnerte foreløpig
 ikke event coverage eller dedupliseringsfeedback for dette datasettet, og
 samleren lagrer derfor disse feltene som ikke returnert fremfor å tolke dem
 som 0.
+
+Git-deployment `dpl_EtXm5e58YNqzx4E2xVFvXwr14u76` for SHA
+`da2e3191a947589a084d15b6d794211bbb3dd1a3` er `READY` og eier
+produksjonsaliasene. Vercel viser cron-definisjonen som aktiv uten ventende
+eller endrede definisjoner. Produksjonsruten returnerte 401 uten legitimasjon
+og 200 med godkjent bearer-token, begge med `Cache-Control: no-store`; den
+autoriserte samme-dagskjøringen fant seks eventtyper og satte inn null
+duplikater.
 
 Read-only kildefordeling for perioden etter cutover,
 `2026-07-18T20:20Z–21:12Z`, var:
@@ -252,13 +260,13 @@ aksepterte dead-letter-auditrader løst. Google har 0 failed/dead-lettered og
 0 uløste dead letters.
 
 `IngestEvents`-svarene er i tillegg rekonsilert asynkront med den offisielle
-`request_id`-kontrakten. Ti kontrollerte 20-raders statusbatcher flyttet 65
-utførte requests til `provider_confirmed_success` uten dead letters, retries
-eller ukjent status. Ved kontroll 2026-07-18T20:51Z var 205 requests
-providerbekreftet `SUCCESS`, mens 151 utførte requests fortsatt var
-ikke-terminale; 111 av dem var sist bekreftet `PROCESSING`. De 987 historiske
-`validate_only=true`-radene er valideringskall og er med hensikt ikke
-statuskandidater. Ingen `PROCESSING`-rad rapporteres som levert.
+`request_id`-kontrakten. Kontrollerte statusbatcher flyttet utførte requests
+til `provider_confirmed_success` uten dead letters eller ukjent status. Ved
+kontroll 2026-07-18T21:32Z var 340 requests providerbekreftet `SUCCESS`, mens
+116 utførte requests fortsatt var ikke-terminale; 60 av dem var sist
+bekreftet `PROCESSING`. De 987 historiske `validate_only=true`-radene er
+valideringskall og er med hensikt ikke statuskandidater. Ingen
+`PROCESSING`-rad rapporteres som levert.
 
 ## Hvorfor ikke Vercel Queue eller Runtime Cache
 
@@ -273,9 +281,10 @@ statuskandidater. Ingen `PROCESSING`-rad rapporteres som levert.
 
 ## Verifikasjon
 
-- 218/218 analysetester, målrettet ESLint og `tsc --noEmit`: grønt.
+- Tidligere full analyticsuite med 218/218 tester og snapshot-samlerens nye
+  målrettede 7/7 tester: grønt. Målrettet ESLint og `tsc --noEmit`: grønt.
 - Next.js route typegen, MCP build med 52 servere og MCP doctor: grønt.
-- Produksjonsbuild: grønt med 119/119 statiske/PPR-sider.
+- Produksjonsbuild: grønt med 120 sider/ruter.
 - Kontrollert Playwright-smoke med provider-rutene blokkert viste at
   landingssidens `fbclid` ble beholdt i fanens besøkskontekst, men ingen
   `_fbc`, `_fbp`, `external_id` eller kanonisk Meta-dispatch ble opprettet før
@@ -317,9 +326,10 @@ statuskandidater. Ingen `PROCESSING`-rad rapporteres som levert.
   `SALE/SUCCESS` med `test=false`, og Meta mottok Purchase på første forsøk med
   `eventsReceived=1`, tom `messages` og trace-ID.
 - Google Data Manager mottok samme Purchase med `validate_only=false` og en
-  lagret `request_id`. Ved siste kontroll 2026-07-18T20:47:54Z var
-  destinasjonsstatus fortsatt `PROCESSING`; den er derfor korrekt beholdt som
-  `accepted_unverified/provider_processing`, ikke fremstilt som `SUCCESS`.
+  lagret `request_id`. Den var fortsatt `PROCESSING` ved kontroll
+  2026-07-18T20:47:54Z, men statusforsøk 4 returnerte terminal `SUCCESS` kl.
+  21:31:06Z. Raden er nå `succeeded/provider_confirmed_success`, uten feil og
+  med den opprinnelige request-ID-en beholdt.
 - Klarna production Client ID og serverlegitimasjon ble validert fail-closed.
   Live Express-knappen åpnet den ekte Klarna/BankID-flaten uten å miste
   merchant-URL-en. En full betaling ble ikke gjennomført fordi den ville ha
