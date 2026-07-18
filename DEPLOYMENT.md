@@ -58,6 +58,11 @@ published tag source has SHA-256
 `d9a4186f1bd50804217b8fed91f849f89c6656158e03542f07be1e796101f79e`.
 No Supabase schema or environment mutation was required.
 
+The final runtime follow-up is `main` commit
+`647e0b7efa1222be67cbb39be0e5588c17ef989e`. Vercel deployment
+`dpl_CRYYmnj5D2xRxxodENqBWhsXRiL4` is `READY`, has that exact Git SHA and
+owns `utekos.no`, `www.utekos.no`, and `feed.utekos.no`.
+
 After deploy, verify all of the following:
 
 - no `_fbp`, `_fbc` or `utekos_external_id` before marketing consent;
@@ -73,8 +78,11 @@ After deploy, verify all of the following:
   `fbc`; Pixel `/tr` and OpenBridge both return 200 after consent;
 - Meta automatic event setup remains disabled and the browser produces no
   inferred or unexpected Pixel events;
-- standard Shopify checkout and Klarna Express carry the attribution snapshot
-  into the paid-order webhook and resulting purchase provider payload;
+- standard Shopify checkout carries the attribution snapshot into the
+  paid-order webhook and resulting purchase provider payload; this is closed
+  by the paid order `1866` evidence below;
+- Klarna Express carries the same snapshot through a separately approved paid
+  order; opening the production auth/BankID surface is not payment proof;
 - Dataset Quality is compared with the documented pre-release baseline after
   sufficient traffic, not inferred from one smoke event.
 
@@ -99,9 +107,12 @@ The 594 length-rejected attempts were requeued after the runtime reached
 payload-incompatible because it lacked canonical `cart_id`. The 29
 missing-client rows and 5 expired rows were closed fail-closed without replay.
 Two subsequent clock-skew failures were accepted after the timestamp clamp.
-Current provider evidence: 0 active queue rows, 0 failed/dead-lettered rows
-and 0 unresolved dead letters. The Microsoft skipped-rate warning remains
-intentional because no Microsoft server adapter is registered after reset.
+Current provider evidence: 0 failed/dead-lettered rows and 0 unresolved Google
+or Meta dead letters. Executed Data Manager requests with a non-terminal
+`PROCESSING` status remain status-reconciliation candidates and are not
+reported as failures or confirmed delivery. The Microsoft skipped-rate warning
+remains intentional because no Microsoft server adapter is registered after
+reset.
 
 ### Klarna Express production gate 2026-07-18
 
@@ -117,7 +128,9 @@ Do not complete a synthetic live payment merely to smoke-test tracking: it
 creates a real Shopify order and production provider events. Use Klarna
 Playground for a full controlled payment, or verify the next separately
 approved live purchase. A visible button and opened auth frame prove client
-configuration and origin continuity, not final payment capture.
+configuration and origin continuity, not final payment capture. A read-only
+scan of the post-release paid orders found no Klarna gateway/tag match, so this
+gate remains open without manufacturing an order.
 
 ### Vercel Web Analytics restoration 2026-07-18
 
@@ -217,14 +230,24 @@ with `accepted_unverified`, uses a per-claim UUID lease, calls the documented
 - `FAILED` or `PARTIAL_SUCCESS` -> `dead_lettered` with provider error and
   warning details retained.
 
-No Supabase migration is required. A production-store dry run claimed five
-executed requests and stored five verified `PROCESSING` responses as JSON
-objects with no dangling lease. Final success must not be reported until
-Data Manager changes the relevant destination status to `SUCCESS`.
+No Supabase migration is required. Controlled production status polling uses
+20-row batches and five concurrent calls. Ten initial batches moved 65
+executed requests to `provider_confirmed_success` with 0 dead-lettered, 0
+retried and 0 unknown outcomes. At 2026-07-18T20:51Z, 205 executed requests
+were provider-confirmed `SUCCESS`; 151 remained non-terminal and 111 of those
+were last confirmed `PROCESSING`. The 987 historical `validate_only=true`
+rows are deliberately excluded. The paid order `1866` request remained
+`PROCESSING` at 2026-07-18T20:47:54Z and therefore stays
+`accepted_unverified/provider_processing`. Final success must not be reported
+until Data Manager changes the relevant destination status to `SUCCESS`.
 
 The implementation is checked against the repository's official local Google
 snapshots in
 [`docs/data-manager/Best Practices for Using the Data Manager API.md`](docs/data-manager/Best%20Practices%20for%20Using%20the%20Data%20Manager%20API.md),
+[`docs/data-manager/Both the Destination concept and request headers.md`](docs/data-manager/Both%20the%20Destination%20concept%20and%20request%20headers.md),
+[`docs/data-manager/format-user-data.md`](docs/data-manager/format-user-data.md),
+[`docs/data-manager/examples/ingestion_service.ingest_events.js`](docs/data-manager/examples/ingestion_service.ingest_events.js),
+[`docs/data-manager/examples/ingestion_service.retrieve_request_status.js`](docs/data-manager/examples/ingestion_service.retrieve_request_status.js),
 [`IngestEventsRequest`](docs/google.ads.datamanager.v1/IngestEventsRequest.md),
 [`Event`](docs/google.ads.datamanager.v1/Event.md),
 [`RetrieveRequestStatusResponse`](docs/google.ads.datamanager.v1/RetrieveRequestStatusResponse.md),
@@ -237,6 +260,15 @@ ingestion currently preserves one canonical event per provider request for
 exact event-level audit and retry ownership; request batching remains a
 documented efficiency optimization to evaluate against that idempotency model
 before traffic approaches Data Manager request limits.
+
+The standard checkout-to-purchase gate is closed by paid Shopify order `1866`.
+The canonical `begin_checkout` and webhook `purchase` were 36 seconds apart;
+checkout payload, Shopify custom attributes and Purchase reused the same
+`external_id`, `_fbp`, `_fbc`, and `fbclid`. The Shopify transaction was
+`SALE/SUCCESS` with `test=false`. Meta returned `eventsReceived=1`, no messages
+and a trace ID on the first attempt. This proves the standard Shopify path for
+a consented Facebook click. It does not close the separate paid Klarna Express
+gate.
 
 ### Local integration audit 2026-07-14
 
@@ -601,7 +633,7 @@ provider OK without provider-specific proof.
 | Meta | Pixel browser evidence, CAPI/provider row, Dataset Quality read-only probe when credentials permit. |
 | Microsoft UET | Browser network or queue evidence, UET CAPI purchase row/status for purchase flows. |
 | Microsoft UET CAPI env | UET tag ApiToken env set in Vercel Production; not `MICROSOFT_ADS_ACCESS_TOKEN`. |
-| Dead-letter replay | `/api/cron/replay-dead-letter` deployed (`401` without secret); optional approved replay run; `ops.dead_letter_summary` unresolved count trends down when replay succeeds. |
+| Dead-letter replay | Historical only after the 2026-07-15 telemetry reset; no active storefront replay route. Any reintroduction requires a new approved release gate. |
 | Microsoft Ads | OAuth `msads.manage`, developer token, CustomerId, AccountId, account/campaign/Ad Insight read-only probes. |
 | Microsoft Shopping | Merchant Center store/catalog/product read-only status. |
 | Microsoft Clarity | Advertising Dashboard/UET linkage readiness and Consent API V2 `ad_Storage`/`analytics_Storage`. |
@@ -610,9 +642,10 @@ provider OK without provider-specific proof.
 
 ## sGTM Remediation Release Gate
 
-This gate applies to the two-stage remediation described in
-[`PLAN.md`](PLAN.md) and
-[`src/lib/tracking/server-side-tagging.md`](src/lib/tracking/server-side-tagging.md).
+This historical gate applies to the two-stage remediation described in
+[`PLAN.md`](PLAN.md). The former runtime guide
+`src/lib/tracking/server-side-tagging.md` was removed in the 2026-07-15
+telemetry reset and is not an active release surface.
 Approval from an earlier telemetry release does not authorize these provider,
 database, deployment, GTM, Shopify, or Cloud Run mutations.
 
@@ -827,19 +860,19 @@ as `Authorization: Bearer …` in `sendMicrosoftUetPurchase`. It is **not**
 
 | Credential | Typical env keys | Used for |
 | --- | --- | --- |
-| **UET tag ApiToken** (Conversions API auth) | `MICROSOFT_UET_CAPI_ACCESS_TOKEN`, `MICROSOFT_UET_CAPI_TOKEN`, `UTEKOS_MICROSOFT_UET_CAPI_TOKEN`, `MICROSOFT_ADS_UET_CAPI_TOKEN` | `sendMicrosoftUetPurchase` → `capi.uet.microsoft.com` |
+| **UET tag ApiToken** (Conversions API auth) | `MICROSOFT_UET_CAPI_ACCESS_TOKEN`, `MICROSOFT_UET_CAPI_TOKEN`, `UTEKOS_MICROSOFT_UET_CAPI_TOKEN`, `MICROSOFT_ADS_UET_CAPI_TOKEN` | Historical `sendMicrosoftUetPurchase` → `capi.uet.microsoft.com`; adapter removed in reset |
 | **Microsoft Ads OAuth** | `MICROSOFT_ADS_ACCESS_TOKEN`, `MICROSOFT_ADS_REFRESH_TOKEN` | Ads API, MCP campaign probes |
 | **Ads API developer token** | `MICROSOFT_ADS_DEVELOPER_TOKEN` | Ads API request header only |
 
-Runtime resolution:
-[`microsoftUetCapiTokenEnvKeys.ts`](src/lib/tracking/microsoft-uet/microsoftUetCapiTokenEnvKeys.ts).
+Historical runtime resolution, removed in the telemetry reset:
+`src/lib/tracking/microsoft-uet/microsoftUetCapiTokenEnvKeys.ts`.
 `MICROSOFT_ADS_ACCESS_TOKEN` is intentionally **excluded** — OAuth
 does not substitute for the UET tag ApiToken on the Conversions API
 endpoint.
 
 ### Obtain UET tag ApiToken
 
-**Runtime (production):** when OAuth env is complete, `sendMicrosoftUetPurchase`
+**Historical runtime:** when OAuth env was complete, `sendMicrosoftUetPurchase`
 refreshes OAuth and calls `GetUetTagAuthKey` on each dispatch window (short
 in-memory cache; forced refresh on 401/403). Rotated `refresh_token` values are
 kept in-process for the serverless instance lifetime.
@@ -877,11 +910,12 @@ Prod evidence on 2026-07-07: order `shopify_order_6946151268600` was
 were present in local env — confirms `MICROSOFT_ADS_ACCESS_TOKEN` is
 not the UET tag ApiToken Microsoft documents for Conversions API auth.
 
-## Dead-Letter Replay Release Gate
+## Historical Dead-Letter Replay Release Gate
 
-Applies when deploying
-[`replay-dead-letter`](src/app/api/cron/replay-dead-letter/route.ts) and
-Microsoft UET `server_retry` enqueue/dispatch.
+The former `src/app/api/cron/replay-dead-letter/route.ts` and Microsoft UET
+`server_retry` runtime were removed in the 2026-07-15 telemetry reset. The
+following commands are retained only as historical release evidence; they are
+not current gates unless the surfaces are deliberately reintroduced.
 
 Preflight:
 
@@ -894,10 +928,10 @@ node --import tsx --test src/lib/tracking/microsoft-uet/shouldEnqueueMicrosoftUe
 pnpm exec tsc --noEmit
 ```
 
-`/api/cron/replay-dead-letter` is manual-only. It must not be listed in
-`vercel.json` under `crons`; the route remains available for a separately
-approved one-time invocation. Never leave `DEAD_LETTER_REPLAY_ENABLED=1`
-as the normal production state.
+`/api/cron/replay-dead-letter` is not active. If it is deliberately
+reintroduced, it must remain manual-only, must not be listed in `vercel.json`
+under `crons`, and requires a separately approved one-time invocation. Never
+leave `DEAD_LETTER_REPLAY_ENABLED=1` as the normal production state.
 
 Post-deploy (no secret):
 

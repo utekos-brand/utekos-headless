@@ -64,7 +64,10 @@ Web-GTM versjon `121` er publisert med kanonisk Meta Pixel-paritet.
 De lokale, offisielle Google-snapshotene i `docs/data-manager/*`,
 `docs/data-manager/examples/*` og `docs/google.ads.datamanager.v1/*` ble brukt
 for ingest-, request-ID-, statusrekonsiliering- og Measurement
-Protocol-migreringskontrakten.
+Protocol-migreringskontrakten. Kontrollen omfattet også destinasjons-/header-
+scenariene, fast-fail-feilmodellen, normalisering og hashing av `UserData`,
+Googles grense på 2 000 events per `IngestEvents`-kall og de genererte
+Node-eksemplene for både `ingestEvents` og `retrieveRequestStatus`.
 
 Den installerte Parameter Builder-versjonen er `1.3.1`. Den legger et
 versjonert appendix på nye og oppdaterte Meta-parametere. `fbclid` beholdes
@@ -192,12 +195,11 @@ Sammenlignet med forrige read-only kontroll er `PageView` uendret på 6.6,
 Quality er en rullerende providerflate; dette kan ikke tilskrives de fem nye
 smoke-eventene alene.
 
-Metas 24-timers kildeuttrekk viste ved samme kontroll tre browser-`Purchase`
-og fem server-`Purchase`, men ennå ingen browser-`PageView` eller
-`ViewContent`. Den direkte nettverkskontrollen hadde allerede fått 200 fra
-både `facebook.com/tr` og Metas OpenBridge for disse eventene. Kildeuttrekket
-behandles derfor som et etterslepende provider-øyeblikksbilde, ikke som bevis
-mot den ferskere runtimekontrollen.
+Metas oppdaterte 24-timers kildeuttrekk viser nå to browser-`PageView` og to
+browser-`ViewContent` i 12:00 PT-bøtten. Det tidligere kildeetterslepet er
+dermed løst i providerflaten og samsvarer med 200-svarene fra både Pixel
+`/tr` og Metas OpenBridge. Servervolumet dominerer fortsatt, og kilde- og
+Dataset Quality-tallene skal leses som rullerende providerøyeblikksbilder.
 
 ## Data Manager og Measurement Protocol
 
@@ -215,8 +217,17 @@ etter mapperfixen. 593 ble akseptert av Data Manager; én historisk
 `historical_payload_incompatible`. De 29 uten client ID og de 5 utenfor vinduet
 ble lukket fail-closed uten providerkall. To nye browser-clock-skew-rader ble
 deretter requeue-et etter timestamp-clamp og akseptert. Totalt ble 595
-aksepterte dead-letter-auditrader løst, og Google har nå 0 aktive rader, 0
-failed/dead-lettered og 0 uløste dead letters.
+aksepterte dead-letter-auditrader løst. Google har 0 failed/dead-lettered og
+0 uløste dead letters.
+
+`IngestEvents`-svarene er i tillegg rekonsilert asynkront med den offisielle
+`request_id`-kontrakten. Ti kontrollerte 20-raders statusbatcher flyttet 65
+utførte requests til `provider_confirmed_success` uten dead letters, retries
+eller ukjent status. Ved kontroll 2026-07-18T20:51Z var 205 requests
+providerbekreftet `SUCCESS`, mens 151 utførte requests fortsatt var
+ikke-terminale; 111 av dem var sist bekreftet `PROCESSING`. De 987 historiske
+`validate_only=true`-radene er valideringskall og er med hensikt ikke
+statuskandidater. Ingen `PROCESSING`-rad rapporteres som levert.
 
 ## Hvorfor ikke Vercel Queue eller Runtime Cache
 
@@ -267,18 +278,26 @@ failed/dead-lettered og 0 uløste dead letters.
   av Meta med `events_received=1`. Claimant-cutoveren hindret historisk
   PageView-replay.
 - Standard Shopify checkout beholdt `_fbp`, `_fbc`, `fbclid` og `external_id`
-  byte-for-byte fra browser til cart attributes. En etterfølgende ekte betalt
-  ordre bekreftet at `purchase` gjenbrukte samme `external_id` og `_fbp` som
-  kundens `begin_checkout`; denne reisen hadde ingen Meta-klikk og derfor
-  korrekt ingen `_fbc`/`fbclid`.
+  byte-for-byte fra browser til cart attributes. Ekte, betalt ordre `1866`
+  kom fra en samtykket Facebook-landing og gikk fra kanonisk
+  `begin_checkout` til webhook-`purchase` på 36 sekunder. Shopify-ordrens
+  custom attributes, checkout-eventet og Purchase-eventet hadde identiske
+  `external_id`, `_fbp`, `_fbc` og `fbclid`. Shopify Payments rapporterte
+  `SALE/SUCCESS` med `test=false`, og Meta mottok Purchase på første forsøk med
+  `eventsReceived=1`, tom `messages` og trace-ID.
+- Google Data Manager mottok samme Purchase med `validate_only=false` og en
+  lagret `request_id`. Ved siste kontroll 2026-07-18T20:47:54Z var
+  destinasjonsstatus fortsatt `PROCESSING`; den er derfor korrekt beholdt som
+  `accepted_unverified/provider_processing`, ikke fremstilt som `SUCCESS`.
 - Klarna production Client ID og serverlegitimasjon ble validert fail-closed.
   Live Express-knappen åpnet den ekte Klarna/BankID-flaten uten å miste
   merchant-URL-en. En full betaling ble ikke gjennomført fordi den ville ha
   opprettet en reell ordre; full betalingssmoke skal bruke Klarna Playground
-  eller en godkjent reell handel.
-- Provider-rapporten etter opprydding viser 0 aktive kø-rader, 0
-  failed/dead-lettered og 0 uløste dead letters. Den ferske Meta-kontrollen
-  viste også 0 uløste Meta dead letters. Microsoft-varselet er
+  eller en godkjent reell handel. En read-only kontroll av post-releaseordrene
+  fant ingen Klarna-betaling som kunne lukke denne gaten.
+- Provider-rapporten etter opprydding viser 0 failed/dead-lettered og 0 uløste
+  Google/Meta dead letters. Utførte Data Manager-requests med `PROCESSING`
+  står separat som statuskandidater og er ikke dispatch-feil. Microsoft-varselet er
   bevisst: serveradapteren er ikke aktiv etter resetten, og historiske rader er
   lukket som `skipped_unqualified`, ikke fremstilt som levert.
 
