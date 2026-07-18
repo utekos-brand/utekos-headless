@@ -35,6 +35,14 @@ test('permits the third-party scripts and frames observed during report-only rol
   assert.match(csp, /connect-src[^;]*https:\/\/bat\.bing\.com/)
   assert.match(csp, /connect-src[^;]*https:\/\/connect\.facebook\.net/)
   assert.match(csp, /connect-src[^;]*https:\/\/www\.facebook\.com/)
+  assert.match(
+    csp,
+    /connect-src[^;]*https:\/\/mpc2-prod-25-is5qnl632q-wl\.a\.run\.app/
+  )
+  assert.match(
+    csp,
+    /connect-src[^;]*https:\/\/5z-2b6b7616f94640c2840d1841e1ac24c3\.ecs\.us-east-1\.on\.aws/
+  )
   assert.match(csp, /connect-src[^;]*https:\/\/googleads\.g\.doubleclick\.net/)
   assert.match(csp, /connect-src[^;]*https:\/\/ad\.doubleclick\.net/)
   assert.match(csp, /connect-src[^;]*https:\/\/\*\.klarnaevt\.com/)

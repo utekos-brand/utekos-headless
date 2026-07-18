@@ -103,9 +103,13 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
   vm.runInContext(script, runtime.context)
 
   const calls = queuedCalls(runtime.window)
+  const configCalls = calls.filter(call => call[0] === 'set')
   const initCalls = calls.filter(call => call[0] === 'init')
   const eventCalls = calls.filter(call => call[0] === 'trackSingle')
 
+  assert.deepEqual(configCalls, [
+    ['set', 'autoConfig', false, '1092362672918571']
+  ])
   assert.equal(initCalls.length, 1)
   assert.deepEqual(initCalls[0], [
     'init',

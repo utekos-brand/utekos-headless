@@ -28,7 +28,9 @@ const META_PIXEL_SCRIPT_ORIGINS = [
 ] as const
 
 const META_PIXEL_EVENT_ORIGINS = [
-  'https://www.facebook.com'
+  'https://www.facebook.com',
+  'https://mpc2-prod-25-is5qnl632q-wl.a.run.app',
+  'https://5z-2b6b7616f94640c2840d1841e1ac24c3.ecs.us-east-1.on.aws'
 ] as const
 
 const GOOGLE_ADS_ORIGINS = [
