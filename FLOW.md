@@ -1,6 +1,6 @@
 # FLOW - tracking, observability og kommersiell innsikt
 
-Statusdato: 2026-07-17.
+Statusdato: 2026-07-18.
 
 Dette dokumentet er den operative flytbeskrivelsen for hvordan
 Utekos skal samle inn, lagre, levere og bruke analytics-,
@@ -85,6 +85,13 @@ Supabase er nå kanonisk lager for den reintroduserte `page_view`- og
 men må ikke omtales som aktiv storefront-tracking før den er innført
 på nytt, samtykkeverifisert og produksjonstestet.
 
+Vercel Web Analytics ble aktivert på prosjektet 2026-07-18. Pakken og
+`<Analytics />` er gjeninnført lokalt etter at den tidligere
+analytics-klienten ble fjernet i resetten 2026-07-15. Vercels
+førstepartsskript på `utekos.no` svarer 200, og produksjonsbygget er
+grønt. Endringen er ikke produksjonsdeployert ennå og kan ikke fylle
+tilbake perioden uten innsamling.
+
 ## 1. Målbildet: komplett end-to-end-flyt
 
 ```mermaid
@@ -165,7 +172,7 @@ kapitalallokering.
 | Microsoft Ads / UET / Clarity | Bing/Microsoft attribusjon, UET CAPI, Clarity          | UET browser/CAPI, consent, Clarity state                                                | Ads readiness, campaign/ad insight, Clarity diagnose                              | Kun en "UET endpoint" uten Ads-kontekst                     | Ads/account/campaign/ad-insight prober er OK; nyeste UET purchase-skip er `missing_attribution`, mens `missing_capi_token` er historisk radgjeld |
 | Google Merchant Center        | Produktfeed og Shopping-kvalitet                       | Shopify-katalog, GTIN, bilder, kategorier                                               | Product status, Shopping eligibility, feedkvalitet                                | Tracking-lager                                              | Merchant API og API source er OK; kontopolicy må fortsatt verifiseres                                                                            |
 | Sentry                        | Feilsporing og teknisk årsak                           | Server/edge/global/client errors                                                        | Issues, request errors, stack traces                                              | Produktanalyse eller session replay uten consent-oppsett    | Server/edge aktiv; Replay er ikke aktivert; Sentry MCP-probe fail-closed                                                                         |
-| Vercel                        | Deploy, runtime og produksjonsstatus                   | Deployment metadata, runtime status                                                     | Deploy-verifikasjon og produksjonsdiagnostikk                                     | Provider-fasit                                              | Commerce doctor-verifisert; produksjons-HTML viser deployment-id                                                                                 |
+| Vercel                        | Deploy, runtime, produksjonsstatus og egen Web Analytics | Deployment metadata, runtime status og førsteparts sidevisninger                       | Deploy-verifikasjon, produksjonsdiagnostikk og uavhengig trafikksjekk              | Provider-fasit eller erstatning for GA4/Supabase-eventer     | Web Analytics er prosjektaktivert; lokal `<Analytics />`-integrasjon og build er grønn, men runtimeendringen er ikke produksjonsdeployert ennå      |
 | MCP/agentflater               | Lesbar operasjonell kontrollflate                      | Supabase, PostHog, provider-prober, docs                                                | Diagnose, gapregister, prioritering                                               | Skjulte provider-mutasjoner                                 | 28 commerce/tracking-verktøy OK; flere credential-gated prober fail-closed                                                                       |
 
 ## 3. Ønsket flyt steg for steg

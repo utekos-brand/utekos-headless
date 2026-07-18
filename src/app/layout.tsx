@@ -17,6 +17,7 @@ import { PageViewObserver } from '@/components/analytics/PageViewObserver'
 import { ScrollDepthObserver } from '@/components/analytics/ScrollDepthObserver'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { GoogleTagManager } from '@next/third-parties/google'
+import { Analytics } from '@vercel/analytics/next'
 import { SITE_URL } from '@/constants'
 import type { Metadata } from 'next'
 import type { TrackingEnvironment } from '@/lib/analytics/pageViewEvent'
@@ -145,6 +146,7 @@ export default function RootLayout({
             </CartProviderLoader>
           </Suspense>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )

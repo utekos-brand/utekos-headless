@@ -1,6 +1,6 @@
 # Deployment And Migration Checklist
 
-Status date: 2026-07-17
+Status date: 2026-07-18
 
 This is the mandatory release checklist for Utekos Headless. Use it
 before every deploy, production mutation, provider change, GTM publish,
@@ -26,6 +26,22 @@ known and completed in the correct order.
   whenever they are active.
 - Treat row counts as evidence only when source, status, reason,
   unresolved/resolved state, and replay policy are visible.
+
+### Vercel Web Analytics restoration 2026-07-18
+
+Web Analytics is enabled on Vercel project
+`prj_MpZN3Z0PDp8rfwpdzAeplGe4Di0s`, and the first-party production script
+at `https://utekos.no/_vercel/insights/script.js` returns HTTP 200.
+The local release adds `@vercel/analytics@2.0.1` and renders
+`<Analytics />` from the root App Router layout. Lint, TypeScript and the
+full production build pass with 117/117 generated pages.
+
+This is a Vercel runtime change. It requires an explicitly approved push to
+`main`, the resulting production deployment must reach `READY`, and the
+post-deploy page source/network evidence must show the Web Analytics script
+and a successful first-party page-view request. Vercel does not backfill the
+missing interval from 2026-07-15. No Supabase migration, GTM publish or
+provider mutation is required for this release.
 
 ### Canonical event foundation and `view_item` cutover 2026-07-17
 
