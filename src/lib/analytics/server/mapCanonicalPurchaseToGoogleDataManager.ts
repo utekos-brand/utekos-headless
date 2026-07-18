@@ -19,7 +19,6 @@ type DataManagerItem =
   protos.google.ads.datamanager.v1.IItem
 
 const MAX_ADDITIONAL_ITEM_PARAMETERS = 24
-const MAX_PAGE_TITLE_LENGTH = 300
 const {
   Event: DataManagerEvent,
   EventSource
@@ -30,7 +29,8 @@ function mapPurchaseItem(
 ): DataManagerItem {
   const additionalItemParameters = compactGoogleDataManagerParameters([
     googleDataManagerParameter('item_name', item.item_name),
-    googleDataManagerIdentifierParameter('sku', item.sku)
+    googleDataManagerIdentifierParameter('sku', item.sku),
+    googleDataManagerParameter('discount', item.discount)
   ]).slice(0, MAX_ADDITIONAL_ITEM_PARAMETERS)
 
   return {
@@ -100,7 +100,8 @@ export function mapCanonicalPurchaseToGoogleDataManager(
       { userId: event.external_id }
     : {}),
     currency: event.custom_data.currency,
-    conversionValue: event.custom_data.value,
+    conversionValue:
+      event.custom_data.item_revenue ?? event.custom_data.value,
     consent: mapGoogleDataManagerConsent(event.consent),
     ...(adIdentifiers ?
       { adIdentifiers }
@@ -116,6 +117,15 @@ export function mapCanonicalPurchaseToGoogleDataManager(
     : {}),
     additionalEventParameters: mapPurchaseEventParameters(event),
     cartData: {
+      ...(event.custom_data.transaction_discount === undefined ?
+        {}
+      : {
+          transactionDiscount:
+            event.custom_data.transaction_discount
+        }),
+      ...(event.custom_data.coupon_codes?.[0] ?
+        { couponCodes: [event.custom_data.coupon_codes[0]] }
+      : {}),
       items: event.custom_data.items.map(mapPurchaseItem)
     }
   })

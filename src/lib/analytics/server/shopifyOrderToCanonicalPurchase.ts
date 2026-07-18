@@ -9,15 +9,10 @@ import {
 import { hashCustomerMatchIdentifier } from '@/lib/google/data-manager/hashCustomerMatchIdentifier'
 import { normalizeCustomerMatchEmail } from '@/lib/google/data-manager/normalizeCustomerMatchEmail'
 import { normalizeCustomerMatchPhone } from '@/lib/google/data-manager/normalizeCustomerMatchPhone'
+import { mapShopifyOrderPurchasePricing } from './mapShopifyOrderPurchasePricing'
 import { parseAbsoluteHttpUrl } from './parseAbsoluteHttpUrl'
+import { readShopifyMoneyAmount } from './readShopifyMoneyAmount'
 import { resolveCanonicalEnvironment } from './resolveCanonicalEnvironment'
-
-function parseDecimal(
-  value: string | number | null | undefined
-) {
-  const parsed = Number(value)
-  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0
-}
 
 function hashEmail(email: string | null | undefined) {
   if (!email) return undefined
@@ -50,25 +45,6 @@ function readClientUserAgent(order: OrderPaid) {
   }
 
   return undefined
-}
-
-function mapPurchaseItems(order: OrderPaid) {
-  return order.line_items
-    .map(lineItem => {
-      const itemId =
-        lineItem.variant_id !== null ?
-          String(lineItem.variant_id)
-        : String(lineItem.id)
-
-      return {
-        item_id: itemId,
-        item_name: lineItem.name || lineItem.title,
-        quantity: lineItem.quantity,
-        unit_price: parseDecimal(lineItem.price),
-        ...(lineItem.sku ? { sku: lineItem.sku } : {})
-      }
-    })
-    .filter(item => item.quantity > 0)
 }
 
 function mapOrderLocation(order: OrderPaid) {
@@ -115,13 +91,10 @@ export function shopifyOrderToCanonicalPurchase(
     attribution.consent.marketing === 'granted' ?
       mapOrderLocation(order)
     : undefined
-  const items = mapPurchaseItems(order)
-
-  if (items.length === 0) {
-    throw new Error(
-      'Shopify order purchase mapping requires at least one line item'
-    )
-  }
+  const currency = (
+    order.presentment_currency || order.currency
+  ).toUpperCase()
+  const pricing = mapShopifyOrderPurchasePricing(order, currency)
 
   const userData = {
     ...(emailHash ? { email_sha256: [emailHash] } : {}),
@@ -160,18 +133,33 @@ export function shopifyOrderToCanonicalPurchase(
       { user_data: userData }
     : {}),
     custom_data: {
-      currency: (
-        order.presentment_currency || order.currency
-      ).toUpperCase(),
-      value: parseDecimal(order.total_price),
-      tax_value: parseDecimal(order.total_tax),
-      shipping_value: parseDecimal(
-        order.total_shipping_price_set?.shop_money?.amount
+      currency,
+      value: readShopifyMoneyAmount(
+        order.total_price_set,
+        currency,
+        'total price'
       ),
+      item_revenue: pricing.itemRevenue,
+      tax_value: readShopifyMoneyAmount(
+        order.total_tax_set,
+        currency,
+        'total tax'
+      ),
+      shipping_value: readShopifyMoneyAmount(
+        order.total_shipping_price_set,
+        currency,
+        'total shipping price'
+      ),
+      ...(pricing.transactionDiscount === undefined ?
+        {}
+      : { transaction_discount: pricing.transactionDiscount }),
+      ...(pricing.couponCodes ?
+        { coupon_codes: pricing.couponCodes }
+      : {}),
       transaction_id:
         shopifyPurchaseTransactionId(orderLegacyId),
       order_name: order.name ?? String(order.order_number),
-      items
+      items: pricing.items
     }
   })
 }

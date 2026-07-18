@@ -12,7 +12,7 @@ function buildPurchaseContent(
   return new Content()
     .setId(item.item_id)
     .setQuantity(item.quantity)
-    .setItemPrice(item.unit_price)
+    .setItemPrice(item.final_unit_price ?? item.unit_price)
     .setTitle(item.item_name)
 }
 

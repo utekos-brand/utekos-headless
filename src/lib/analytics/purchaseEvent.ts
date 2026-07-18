@@ -7,14 +7,19 @@ const purchaseItemSchema = z.strictObject({
   item_name: z.string().min(1),
   quantity: z.number().int().positive(),
   unit_price: z.number().finite().nonnegative(),
+  final_unit_price: z.number().finite().nonnegative().optional(),
+  discount: z.number().finite().nonnegative().optional(),
   sku: z.string().min(1).optional()
 })
 
 export const canonicalPurchaseCommerceSchema = z.strictObject({
   currency: z.string().regex(/^[A-Z]{3}$/),
   value: z.number().finite().nonnegative(),
+  item_revenue: z.number().finite().nonnegative().optional(),
   tax_value: z.number().finite().nonnegative().optional(),
   shipping_value: z.number().finite().nonnegative().optional(),
+  transaction_discount: z.number().finite().nonnegative().optional(),
+  coupon_codes: z.array(z.string().min(1).max(100)).max(10).optional(),
   transaction_id: z.string().min(1),
   order_name: z.string().min(1),
   items: z.array(purchaseItemSchema).min(1)

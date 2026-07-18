@@ -125,3 +125,36 @@ test('requires granted analytics consent', () => {
     /granted analytics consent/
   )
 })
+
+test('maps documented cart discounts, coupon and item revenue', () => {
+  const event = purchase()
+  event.custom_data.item_revenue = 0
+  event.custom_data.transaction_discount = 1592
+  event.custom_data.coupon_codes = ['FULLDISCOUNT']
+  event.custom_data.items[0] = {
+    item_id: '43959919051000',
+    item_name: 'Utekos TechDown™',
+    quantity: 1,
+    unit_price: 0,
+    final_unit_price: 0,
+    discount: 1592,
+    sku: 'TECHDOWN-HAVDYP-L'
+  }
+
+  const mapped = normalize(
+    mapCanonicalPurchaseToGoogleDataManager(event)
+  )
+
+  assert.equal(mapped.conversionValue, 0)
+  assert.equal(mapped.cartData?.transactionDiscount, 1592)
+  assert.deepEqual(mapped.cartData?.couponCodes, ['FULLDISCOUNT'])
+  assert.equal(mapped.cartData?.items?.[0]?.unitPrice, 0)
+  assert.deepEqual(
+    mapped.cartData?.items?.[0]?.additionalItemParameters,
+    [
+      { parameterName: 'item_name', value: 'Utekos TechDown™' },
+      { parameterName: 'sku', value: 'TECHDOWN-HAVDYP-L' },
+      { parameterName: 'discount', value: '1592' }
+    ]
+  )
+})

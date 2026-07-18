@@ -49,8 +49,17 @@ function orderPaid(): OrderPaid {
         id: 1,
         name: 'Utekos TechDown',
         price: '1990.00',
+        price_set: {
+          shop_money: { amount: '1990.00', currency_code: 'NOK' },
+          presentment_money: {
+            amount: '1990.00',
+            currency_code: 'NOK'
+          }
+        },
         quantity: 1,
         sku: 'UTEKOS-1',
+        tax_lines: [{ rate: 0.25 }],
+        discount_allocations: [],
         title: 'Utekos TechDown',
         variant_id: 48249962135800
       }
@@ -76,8 +85,22 @@ function orderPaid(): OrderPaid {
       province_code: '03',
       zip: '0150'
     },
+    discount_applications: [],
+    discount_codes: [],
+    taxes_included: true,
     total_price: '1990.00',
-    total_shipping_price_set: { shop_money: { amount: '0.00' } },
+    total_price_set: {
+      shop_money: { amount: '1990.00', currency_code: 'NOK' },
+      presentment_money: { amount: '1990.00', currency_code: 'NOK' }
+    },
+    total_shipping_price_set: {
+      shop_money: { amount: '0.00', currency_code: 'NOK' },
+      presentment_money: { amount: '0.00', currency_code: 'NOK' }
+    },
+    total_tax_set: {
+      shop_money: { amount: '398.00', currency_code: 'NOK' },
+      presentment_money: { amount: '398.00', currency_code: 'NOK' }
+    },
     total_tax: '398.00'
   } as unknown as OrderPaid
 }
@@ -111,6 +134,16 @@ test('restores checkout attribution for the purchase webhook', () => {
   })
   assert.equal(event.consent.marketing, 'granted')
   assert.equal(event.consent.analytics, 'granted')
+  assert.equal(event.custom_data.value, 1990)
+  assert.equal(event.custom_data.item_revenue, 1592)
+  assert.deepEqual(event.custom_data.items[0], {
+    item_id: '48249962135800',
+    item_name: 'Utekos TechDown',
+    quantity: 1,
+    unit_price: 1592,
+    final_unit_price: 1990,
+    sku: 'UTEKOS-1'
+  })
 })
 
 test('uses a namespaced Shopify customer id only without first-party external_id', () => {
@@ -123,4 +156,112 @@ test('uses a namespaced Shopify customer id only without first-party external_id
     shopifyOrderToCanonicalPurchase(order).external_id,
     'shopify_customer_999'
   )
+})
+
+test('maps item-scoped Shopify discounts to net item revenue', () => {
+  const order = orderPaid()
+  const lineItem = order.line_items[0]!
+
+  order.discount_applications = [
+    {
+      allocation_method: 'each',
+      code: 'FULLDISCOUNT',
+      target_type: 'line_item'
+    }
+  ] as OrderPaid['discount_applications']
+  order.discount_codes = [
+    { code: 'FULLDISCOUNT', amount: '1990.00', type: 'percentage' }
+  ]
+  order.total_price_set = {
+    shop_money: { amount: '0.00', currency_code: 'NOK' },
+    presentment_money: { amount: '0.00', currency_code: 'NOK' }
+  }
+  order.total_tax_set = {
+    shop_money: { amount: '0.00', currency_code: 'NOK' },
+    presentment_money: { amount: '0.00', currency_code: 'NOK' }
+  }
+  lineItem.discount_allocations = [
+    {
+      amount: '1990.00',
+      amount_set: {
+        shop_money: { amount: '1990.00', currency_code: 'NOK' },
+        presentment_money: {
+          amount: '1990.00',
+          currency_code: 'NOK'
+        }
+      },
+      discount_application_index: 0
+    }
+  ]
+
+  const event = shopifyOrderToCanonicalPurchase(order)
+
+  assert.equal(event.custom_data.value, 0)
+  assert.equal(event.custom_data.item_revenue, 0)
+  assert.equal(event.custom_data.transaction_discount, 1592)
+  assert.deepEqual(event.custom_data.coupon_codes, ['FULLDISCOUNT'])
+  assert.deepEqual(event.custom_data.items[0], {
+    item_id: '48249962135800',
+    item_name: 'Utekos TechDown',
+    quantity: 1,
+    unit_price: 0,
+    final_unit_price: 0,
+    discount: 1592,
+    sku: 'UTEKOS-1'
+  })
+})
+
+test('keeps presentment currency and transaction-level discounts coherent', () => {
+  const order = orderPaid()
+  const lineItem = order.line_items[0]!
+
+  order.presentment_currency = 'EUR'
+  order.taxes_included = false
+  order.discount_applications = [
+    {
+      allocation_method: 'across',
+      code: 'EURO20',
+      target_type: 'line_item'
+    }
+  ] as OrderPaid['discount_applications']
+  order.discount_codes = [
+    { code: 'EURO20', amount: '20.00', type: 'fixed_amount' }
+  ]
+  order.total_price_set = {
+    shop_money: { amount: '920.00', currency_code: 'NOK' },
+    presentment_money: { amount: '80.00', currency_code: 'EUR' }
+  }
+  order.total_tax_set = {
+    shop_money: { amount: '0.00', currency_code: 'NOK' },
+    presentment_money: { amount: '0.00', currency_code: 'EUR' }
+  }
+  order.total_shipping_price_set = {
+    shop_money: { amount: '0.00', currency_code: 'NOK' },
+    presentment_money: { amount: '0.00', currency_code: 'EUR' }
+  }
+  lineItem.price_set = {
+    shop_money: { amount: '1150.00', currency_code: 'NOK' },
+    presentment_money: { amount: '100.00', currency_code: 'EUR' }
+  }
+  lineItem.tax_lines = []
+  lineItem.discount_allocations = [
+    {
+      amount: '230.00',
+      amount_set: {
+        shop_money: { amount: '230.00', currency_code: 'NOK' },
+        presentment_money: { amount: '20.00', currency_code: 'EUR' }
+      },
+      discount_application_index: 0
+    }
+  ]
+
+  const event = shopifyOrderToCanonicalPurchase(order)
+
+  assert.equal(event.custom_data.currency, 'EUR')
+  assert.equal(event.custom_data.value, 80)
+  assert.equal(event.custom_data.item_revenue, 80)
+  assert.equal(event.custom_data.transaction_discount, 20)
+  assert.equal(event.custom_data.items[0]?.unit_price, 100)
+  assert.equal(event.custom_data.items[0]?.final_unit_price, 80)
+  assert.equal(event.custom_data.items[0]?.discount, undefined)
 })
