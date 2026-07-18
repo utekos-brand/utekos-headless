@@ -27,11 +27,14 @@ Den aktive produksjonsløsningen gjør nå følgende etter marketing-samtykke:
 5. `page_view` oppretter en Meta CAPI `PageView`-outboxrad med samme
    `event_id`. En tidsbasert claimant-cutover hindrer automatisk replay av
    historiske, blokkerte PageView-rader.
-6. Standard Shopify checkout venter på et validert attribusjonssnapshot i
+6. Web-GTM sender de samtykkede kanoniske browser-eventene med nøyaktig samme
+   `event_id` som CAPI. Automatisk Meta-eventoppsett er deaktivert, slik at
+   Smart Setup eller inferred events ikke lager en parallell eventtaksonomi.
+7. Standard Shopify checkout venter på et validert attribusjonssnapshot i
    cart attributes før redirect, men har en fail-open-frist slik at tracking
    aldri kan låse betalingen. Purchase-webhooken gjenoppretter `external_id`,
    `_fbp`, `_fbc`, klikk-ID-er, GA-klient/session og samtykke.
-7. Klarna Express sender den samme snapshotkontrakten til serveren og lagrer
+8. Klarna Express sender den samme snapshotkontrakten til serveren og lagrer
    attribusjonen på Shopify-draftordren. Klarna-godkjenningstokenet brukes bare
    mot Klarna og lagres ikke som ordreattributt.
 
@@ -39,6 +42,7 @@ Releasen brukte eksisterende Supabase-skjema og outbox. Runtime Cache og Vercel
 Queues ble ikke innført. Vercel-runtime er deployert fra `main`, Google Data
 Manager-radgjelden er behandlet etter eksplisitt godkjenning, og server-GTM
 versjon `29` er publisert uten legacy Measurement Protocol-taggen.
+Web-GTM versjon `121` er publisert med kanonisk Meta Pixel-paritet.
 
 ## Verifiserte kilder
 
@@ -49,11 +53,18 @@ versjon `29` er publisert uten legacy Measurement Protocol-taggen.
 - [Meta Parameter Builder workflow](https://developers.facebook.com/documentation/ads-commerce/conversions-api/parameter-builder-library/workflow-and-examples)
 - [Meta end-to-end implementation](https://developers.facebook.com/documentation/ads-commerce/conversions-api/guides/end-to-end-implementation)
 - [Meta Dataset Quality API](https://developers.facebook.com/documentation/ads-commerce/conversions-api/dataset-quality-api)
+- [Meta Pixel Advanced Matching](https://developers.facebook.com/documentation/meta-pixel/advanced/advanced-matching)
 - [facebook/capi-param-builder](https://github.com/facebook/capi-param-builder)
+- [Google Tag Manager data layer](https://developers.google.com/tag-platform/tag-manager/datalayer)
 - [Next.js Route Handlers](https://nextjs.org/docs/app/getting-started/route-handlers)
 - [Next.js after](https://nextjs.org/docs/app/api-reference/functions/after)
 - [Vercel geolocation and ipAddress](https://vercel.com/docs/functions/functions-api-reference/vercel-functions-package)
 - [Shopify cartAttributesUpdate](https://shopify.dev/docs/api/storefront/latest/mutations/cartAttributesUpdate)
+
+De lokale, offisielle Google-snapshotene i `docs/data-manager/*`,
+`docs/data-manager/examples/*` og `docs/google.ads.datamanager.v1/*` ble brukt
+for ingest-, request-ID-, statusrekonsiliering- og Measurement
+Protocol-migreringskontrakten.
 
 Den installerte Parameter Builder-versjonen er `1.3.1`. Den legger et
 versjonert appendix på nye og oppdaterte Meta-parametere. `fbclid` beholdes
@@ -75,6 +86,7 @@ flowchart LR
   route --> trusted["Vercel IP + UA + geolocation"]
   trusted --> ledger["Supabase ledger + provider outbox"]
   ledger --> meta["Meta CAPI"]
+  event --> pixel["Meta Pixel med samme event_id"]
   event --> checkout["Shopify/Klarna attribusjonssnapshot"]
   checkout --> purchase["Order paid webhook"]
   purchase --> ledger
@@ -130,11 +142,24 @@ Produksjonsaktive serveradaptere etter remedieringen:
 - `search` → `Search`
 - `generate_lead` → `Lead`
 
-Meta bruker `event_id` fra den kanoniske eventen. Den publiserte web-GTM-
-containeren har per auditdato ingen Meta Pixel-tag. Dermed finnes ingen aktiv
-browser/server-dedupekonflikt for disse eventene. Dersom Pixel gjeninnføres,
-må browser-eventet bruke nøyaktig samme `event_id`; dette er en egen GTM-
-publisering med eksplisitt godkjenning.
+Web-GTM versjon `121` har i tillegg Meta Pixel-tag `153` og kanonisk trigger
+`152`. Pixel-pariteten omfatter `PageView`, `ViewContent`, `AddToCart`,
+`InitiateCheckout`, `Search` og `Lead`. Browser-`Purchase` er bevisst ikke
+aktivert; betalt ordre eies fortsatt av den idempotente Shopify-webhooken.
+
+Pixel-taggen venter på `fbp`, eventuell `fbc` og stabil `external_id`, bruker
+kanonisk `event_id` som Metas `eventID`, og sender bare eventet som tilhører
+gjeldende pathname. `fbq('set', 'autoConfig', false, PIXEL_ID)` kjøres før
+`init`, og produksjonssmoken viste `AutomaticSetup=false` og ingen uventede
+Meta-events. Dette opprettholder kanonisk event tracking og gir Meta samme ID
+for browser/server-deduplisering.
+
+Parameter Builder oppretter `_fbp`/`_fbc` med prosjektets dokumenterte
+førstepartskontrakt. Etter at Metas offisielle SDK initialiseres, ble de aktive
+Meta-cookieverdiene observert med domene/path og `SameSite=Lax`, men
+`Secure=false`; `utekos_external_id` beholdt `Secure`. Auditverktøyet krever
+derfor korrekt verdi, levetid og scope for Meta-cookieverdiene uten å påstå at
+SDK-en beholder `Secure`-attributtet.
 
 ## Dataset Quality før og etter release
 
@@ -151,21 +176,28 @@ Historisk Shopify-rapport for 804 ordre viste `fbp` 45,1 %, `fbc` 26,5 % og
 minst én betalt klikk-ID 1,0 %. De ni historiske checkout-snapshotene hadde
 `fbp` 100 %, `fbc` 44,4 % og `external_id` 100 %.
 
-Read-only Dataset Quality etter produksjonsrelease:
+Siste read-only Dataset Quality-øyeblikksbilde etter produksjonsrelease:
 
-| Meta-event | EMQ etter release | Identifikatordekning etter release | Etterreleasevolum ved kontroll |
+| Meta-event | EMQ | Identifikatordekning | Events siste 24 timer |
 | --- | ---: | --- | ---: |
-| `PageView` | 6.6 | IP/UA/`fbp`/`external_id`/land 100 %, `fbc` 87,5 %, postnummer/by 83,3 % | 24 |
-| `AddToCart` | 3.6 | IP/UA 100 %, `fbp`/`external_id`/postnummer/land/by 25 % | 1 |
-| `InitiateCheckout` | 5.5 | IP/UA 100 %, `fbp` 40 %, `external_id`/postnummer/land/by/`fbc` 20 % | 1 |
-| `ViewContent` | 5.1 | IP 99,3 %, UA 100 %, `fbp` 14,2 %, `external_id` 21,3 %, `fbc` 80,2 % | 56 |
-| `Purchase` | 9.3 | e-post/IP/UA/telefon/`external_id`/adresse/navn 100 %, `fbp`/`fbc` 75 % | 3 |
+| `PageView` | 6.6 | IP/UA/land 100 %, `fbp` 95,4 %, `external_id` 98,2 %, `fbc` 68,8 %, postnummer/by 76,2 % | 156 |
+| `AddToCart` | 6.3 | IP/UA 100 %, `fbp`/`external_id`/postnummer/land/by 75 %, `fbc` 66,7 % | 15 |
+| `InitiateCheckout` | 5.9 | IP/UA 100 %, `fbp` 57,1 %, `external_id`/postnummer/land/by/`fbc` 42,9 % | 7 |
+| `ViewContent` | 5.5 | IP 99,4 %, UA 100 %, `fbp` 35,1 %, `external_id` 40,7 %, `fbc` 77,3 % | 309 |
+| `Purchase` | 9.3 | e-post/IP/UA/telefon/`fbp`/`external_id`/adresse/navn 100 %, `fbc` 50 % | 8 |
 
-`ViewContent` har nok nye events til å vise en reell positiv bevegelse fra EMQ
-4.9 til 5.1 og bedre `fbp`/`fbc`-dekning. `PageView` etablerer en sterk ny
-baseline. Ett `AddToCart`- og ett `InitiateCheckout`-event er ikke nok til en
-trendkonklusjon; de skal måles på nytt etter 7 og 14 dager. `Purchase` er
-uendret på 9.3 og har fortsatt sterk kundematch.
+Sammenlignet med forrige read-only kontroll er `PageView` uendret på 6.6,
+`ViewContent` økt fra 5.1 til 5.5, `AddToCart` fra 3.6 til 6.3 og
+`InitiateCheckout` fra 5.5 til 5.9. `Purchase` er uendret på 9.3. Dataset
+Quality er en rullerende providerflate; dette kan ikke tilskrives de fem nye
+smoke-eventene alene.
+
+Metas 24-timers kildeuttrekk viste ved samme kontroll tre browser-`Purchase`
+og fem server-`Purchase`, men ennå ingen browser-`PageView` eller
+`ViewContent`. Den direkte nettverkskontrollen hadde allerede fått 200 fra
+både `facebook.com/tr` og Metas OpenBridge for disse eventene. Kildeuttrekket
+behandles derfor som et etterslepende provider-øyeblikksbilde, ikke som bevis
+mot den ferskere runtimekontrollen.
 
 ## Data Manager og Measurement Protocol
 
@@ -201,7 +233,7 @@ failed/dead-lettered og 0 uløste dead letters.
 
 - 218/218 analysetester, målrettet ESLint og `tsc --noEmit`: grønt.
 - Next.js route typegen, MCP build med 52 servere og MCP doctor: grønt.
-- Produksjonsbuild: grønt med 118/118 statiske/PPR-sider.
+- Produksjonsbuild: grønt med 119/119 statiske/PPR-sider.
 - Kontrollert Playwright-smoke med provider-rutene blokkert viste at
   landingssidens `fbclid` ble beholdt i fanens besøkskontekst, men ingen
   `_fbc`, `_fbp`, `external_id` eller kanonisk Meta-dispatch ble opprettet før
@@ -218,6 +250,19 @@ failed/dead-lettered og 0 uløste dead letters.
 - Produksjonssmoke bekreftet ingen Meta-cookies før marketing-samtykke. Etter
   samtykke ble én `_fbp`, én `_fbc` med test-`fbclid` og stabil
   `utekos_external_id` opprettet med 90-dagers Meta-cookielevetid.
+- Den reproducerbare produksjonsgaten `npm run tracking:meta-pixel:smoke`
+  passerte på forside, `/produkter/utekos-dun` og `/skreddersy-varmen`. Hver
+  flate beviste null Meta før samtykke, korrekt cookie-/hashparitet, samme
+  kanoniske `event_id`, 200-svar fra både Pixel `/tr` og OpenBridge, ingen
+  Meta-CSP-brudd, `AutomaticSetup=false` og ingen uventede Meta-events.
+  Meta SDK-ens kontroll/fallback kan logge en avbrutt OpenBridge-duplikat etter
+  at samme kall allerede har svart 200; gaten krever det observerte 200-svaret
+  og Pixel `/tr` 200, og klassifiserer ikke dette som providerfeil.
+- De fem PageView/ViewContent-ID-ene fra den siste browser-smoken finnes
+  nøyaktig én gang i `marketing.event_ledger` og én gang i Meta-outboxen. Alle
+  fem CAPI-radene hadde `attempt_count=1`, ingen feil, `eventsReceived=1`, tom
+  `messages` og `fbTraceId`; payloadens `external_id`, `fbp`, `fbc`, `fbclid`
+  og `event_id` matchet ledgeren.
 - Live PageView og ViewContent inneholdt betrodd IP/UA/geodata og ble akseptert
   av Meta med `events_received=1`. Claimant-cutoveren hindret historisk
   PageView-replay.
@@ -232,7 +277,8 @@ failed/dead-lettered og 0 uløste dead letters.
   opprettet en reell ordre; full betalingssmoke skal bruke Klarna Playground
   eller en godkjent reell handel.
 - Provider-rapporten etter opprydding viser 0 aktive kø-rader, 0
-  failed/dead-lettered og 0 uløste dead letters. Microsoft-varselet er
+  failed/dead-lettered og 0 uløste dead letters. Den ferske Meta-kontrollen
+  viste også 0 uløste Meta dead letters. Microsoft-varselet er
   bevisst: serveradapteren er ikke aktiv etter resetten, og historiske rader er
   lukket som `skipped_unqualified`, ikke fremstilt som levert.
 

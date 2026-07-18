@@ -47,6 +47,17 @@ The runtime was released through commits `8eb0db2a53`, `375f68070`,
 changed-file lint, `next typegen`, TypeScript, production build, MCP
 build/doctor and tracking gateway smoke were green.
 
+The consent-gated Meta browser-parity follow-up was released through commits
+`76e535dd9` and `74c269061`. Exact-SHA Vercel deployment
+`dpl_2B5VwzkG4xg4BFPVRNMhfV9oApan` reached `READY` and was validated on the
+production aliases. Web-GTM version `121` is live with Meta Pixel tag `153`,
+canonical event trigger `152`, and `autoConfig=false`; version `120` is the
+immediate rollback. The isolated GTM workspace diff contained only tag `153`,
+compiled without errors and was published after explicit approval. The exact
+published tag source has SHA-256
+`d9a4186f1bd50804217b8fed91f849f89c6656158e03542f07be1e796101f79e`.
+No Supabase schema or environment mutation was required.
+
 After deploy, verify all of the following:
 
 - no `_fbp`, `_fbc` or `utekos_external_id` before marketing consent;
@@ -58,6 +69,10 @@ After deploy, verify all of the following:
   and create only the catalog-approved provider rows;
 - Meta accepts the new PageView with `events_received=1`, while no historical
   PageView row is claimed;
+- Pixel and CAPI use the same canonical `event_id`, `external_id`, `fbp` and
+  `fbc`; Pixel `/tr` and OpenBridge both return 200 after consent;
+- Meta automatic event setup remains disabled and the browser produces no
+  inferred or unexpected Pixel events;
 - standard Shopify checkout and Klarna Express carry the attribution snapshot
   into the paid-order webhook and resulting purchase provider payload;
 - Dataset Quality is compared with the documented pre-release baseline after
@@ -66,7 +81,7 @@ After deploy, verify all of the following:
 The source runtime has no direct GA4 Measurement Protocol transport. The
 legacy `GA4 - MP Purchase` tag was removed under explicit approval and
 server-GTM version `29` was published. ADC readback verifies server live v29
-and web live v118. See `META_ATTRIBUTION_AUDIT_2026-07-18.md`.
+and web live v121. See `META_ATTRIBUTION_AUDIT_2026-07-18.md`.
 
 The classified production set contained 628 Google Data Manager
 dead-lettered attempts: 594 parameter values longer than the documented

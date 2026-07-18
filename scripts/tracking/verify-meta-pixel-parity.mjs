@@ -42,6 +42,20 @@ function isMetaTransport(rawUrl) {
   )
 }
 
+function isMetaCspViolation(message) {
+  const blockedUrl = message.match(
+    /'(https:\/\/[^']+)' violates/
+  )?.[1]
+
+  if (!blockedUrl) return false
+
+  try {
+    return isMetaTransport(blockedUrl)
+  } catch {
+    return false
+  }
+}
+
 function parseMultipartBody(body) {
   if (!body?.startsWith('--')) return {}
 
@@ -235,11 +249,7 @@ async function verifySurface(browser, userAgent, surface) {
     if (message.type() === 'error') consoleErrors.push(text)
     if (
       text.includes('Content Security Policy') &&
-      (
-        text.includes('facebook') ||
-        text.includes('mpc2-prod') ||
-        text.includes('.ecs.us-east-1.on.aws')
-      )
+      isMetaCspViolation(text)
     ) {
       metaCspViolations.push(text)
     }
