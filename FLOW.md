@@ -45,6 +45,11 @@ ikke-blokkerte katalogevents:
   consent-gated provider-export.
 - Provider-outbox for aktive Google/Meta-par kjøres via registrerte
   workere og `/api/cron/provider-outbox-dispatch`.
+- `generate_lead` produseres server-side etter akseptert
+  produktventeliste (`product_waitlist_utekos_dun`) og nyhetsbrev
+  (`newsletter_signup`): rad i `marketing.leads`, deretter ledger +
+  Meta/Google-outbox (samtykkegatet). Microsoft UET for lead går via
+  browser `dataLayer` (server-outbox fortsatt `blocked_no_worker`).
 - Fire events forblir `blocked_source`:
   `add_shipping_info`, `add_payment_info`, `checkout_error`,
   `payment_error`.

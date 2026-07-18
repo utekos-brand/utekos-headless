@@ -2,11 +2,21 @@
 
 import 'server-only'
 
+import crypto from 'node:crypto'
+
 import {
   ProductWaitlistSchema,
   type ProductWaitlistData
 } from '@/db/zod/schemas/ProductWaitlistSchema'
+import type { GenerateLeadDataLayerEvent } from '@/lib/analytics/generateLeadEvent'
+import { parseLeadFormTrackingContext } from '@/lib/analytics/leadFormTrackingContext'
 import { sendProductWaitlistNotification } from '@/lib/email/sendProductWaitlistNotification'
+import {
+  LEAD_FORM_IDS,
+  LEAD_SOURCES,
+  LEAD_TYPES
+} from '@/lib/leads/leadFormIds'
+import { recordLeadSubmission } from '@/lib/leads/recordLeadSubmission'
 import { logToAppLogs } from '@/lib/utils/logToAppLogs'
 import { z } from 'zod'
 
@@ -14,6 +24,8 @@ export type ProductWaitlistActionState = {
   status: 'idle' | 'success' | 'error'
   message: string
   errors?: Partial<Record<keyof ProductWaitlistData, string[]>>
+  eventId?: string
+  dataLayerEvent?: GenerateLeadDataLayerEvent
 }
 
 export async function submitProductWaitlist(
@@ -46,6 +58,11 @@ export async function submitProductWaitlist(
     }
   }
 
+  const trackingContext = parseLeadFormTrackingContext(
+    formData.get('leadTrackingContext')
+  )
+  const leadId = crypto.randomUUID()
+
   try {
     const sendResult = await sendProductWaitlistNotification(result.data)
 
@@ -59,7 +76,8 @@ export async function submitProductWaitlist(
       {
         productHandle: result.data.productHandle,
         email: result.data.email,
-        resendId: sendResult.id
+        resendId: sendResult.id,
+        leadId
       },
       {
         source: 'Server Action: submitProductWaitlist'
@@ -91,9 +109,25 @@ export async function submitProductWaitlist(
     }
   }
 
+  const leadResult = await recordLeadSubmission({
+    leadId,
+    email: result.data.email,
+    firstName: result.data.name,
+    phone: result.data.phone,
+    formId: LEAD_FORM_IDS.productWaitlistUtekosDun,
+    leadType: LEAD_TYPES.productWaitlist,
+    source: LEAD_SOURCES.productWaitlistUtekosDun,
+    productHandle: result.data.productHandle,
+    ...(trackingContext ? { trackingContext } : {})
+  })
+
   return {
     status: 'success',
     message:
-      'Takk! Du står nå på ventelisten. Vi kontakter deg når Utekos Dun er tilbake.'
+      'Takk! Du står nå på ventelisten. Vi kontakter deg når Utekos Dun er tilbake.',
+    ...(leadResult.eventId ? { eventId: leadResult.eventId } : {}),
+    ...(leadResult.dataLayerEvent ?
+      { dataLayerEvent: leadResult.dataLayerEvent }
+    : {})
   }
 }

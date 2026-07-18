@@ -1,17 +1,29 @@
 'use server'
 
+import crypto from 'node:crypto'
+
 import { z } from 'zod'
-import { logToAppLogs } from '@/lib/utils/logToAppLogs'
-import { syncSubscriberToShopify } from '@/lib/shopify/syncSubscriberToShopify'
+import type { GenerateLeadDataLayerEvent } from '@/lib/analytics/generateLeadEvent'
+import { parseLeadFormTrackingContext } from '@/lib/analytics/leadFormTrackingContext'
 import { sendWelcomeEmail } from '@/lib/email/sendWelcomeEmail'
+import {
+  LEAD_FORM_IDS,
+  LEAD_SOURCES,
+  LEAD_TYPES
+} from '@/lib/leads/leadFormIds'
+import { recordLeadSubmission } from '@/lib/leads/recordLeadSubmission'
+import { syncSubscriberToShopify } from '@/lib/shopify/syncSubscriberToShopify'
+import { logToAppLogs } from '@/lib/utils/logToAppLogs'
 
 export type ActionState = {
   status: 'success' | 'error' | 'idle'
   message: string
+  eventId?: string
+  dataLayerEvent?: GenerateLeadDataLayerEvent
 }
 
 export async function subscribeToNewsletter(
-  prevState: ActionState,
+  _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
   const emailSchema = z.string().email({
@@ -27,6 +39,10 @@ export async function subscribeToNewsletter(
   }
 
   const email = result.data
+  const trackingContext = parseLeadFormTrackingContext(
+    formData.get('leadTrackingContext')
+  )
+  const leadId = crypto.randomUUID()
 
   try {
     const results = await Promise.allSettled([
@@ -56,12 +72,26 @@ export async function subscribeToNewsletter(
     }
 
     await logToAppLogs('INFO', 'Newsletter Subscription Flow Completed', {
-      emailPresent: true
+      emailPresent: true,
+      leadId
+    })
+
+    const leadResult = await recordLeadSubmission({
+      leadId,
+      email,
+      formId: LEAD_FORM_IDS.newsletterSignup,
+      leadType: LEAD_TYPES.newsletter,
+      source: LEAD_SOURCES.newsletterSignup,
+      ...(trackingContext ? { trackingContext } : {})
     })
 
     return {
       status: 'success',
-      message: 'Takk! Velkomstmail er på vei til din innboks.'
+      message: 'Takk! Velkomstmail er på vei til din innboks.',
+      ...(leadResult.eventId ? { eventId: leadResult.eventId } : {}),
+      ...(leadResult.dataLayerEvent ?
+        { dataLayerEvent: leadResult.dataLayerEvent }
+      : {})
     }
   } catch (error: unknown) {
     console.error('Critical Newsletter Error:', error)

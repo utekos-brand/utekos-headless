@@ -1,4 +1,6 @@
 // Path: src/app/skreddersy-varmen/components/ShippingAndReturnComponent.tsx
+'use client'
+
 import Link from 'next/link'
 import type { Route } from 'next'
 import {
@@ -7,6 +9,7 @@ import {
   Store,
   ArrowRight
 } from 'lucide-react'
+import { reportLandingSelectPromotion } from '@/app/skreddersy-varmen/utils/reportLandingSelectPromotion'
 
 export function ShippingAndReturnComponent() {
   return (
@@ -63,6 +66,9 @@ export function ShippingAndReturnComponent() {
           <Link
             href={'/frakt-og-retur' as Route}
             data-track='SkreddersyVarmenFraktOgReturLink'
+            onClick={() =>
+              reportLandingSelectPromotion('shippingReturns')
+            }
             className='group /60 dark:hover:text-dark-accent inline-flex items-center gap-1.5 text-xs font-medium text-foreground/60 transition-colors hover:text-accent'
           >
             Alt om frakt og retur

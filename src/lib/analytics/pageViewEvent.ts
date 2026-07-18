@@ -35,6 +35,7 @@ type CreateCanonicalPageViewInput = {
   clickId?: Record<string, string>
   environment: CanonicalPageView['environment']
   eventId: string
+  externalId?: string
   impressionId?: string
   pageViewId: string
   eventTime: string
@@ -102,6 +103,7 @@ export function createCanonicalPageView(
     consent: input.consent,
     ...(input.browserId ? { browser_id: input.browserId } : {}),
     ...(input.clickId ? { click_id: input.clickId } : {}),
+    ...(input.externalId ? { external_id: input.externalId } : {}),
     ...(input.impressionId ? { impression_id: input.impressionId } : {}),
     ...(eventDeviceInfo ? { event_device_info: eventDeviceInfo } : {})
   })

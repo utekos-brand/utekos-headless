@@ -1,21 +1,11 @@
 import type { ConsentSnapshot } from './pageViewEvent'
+import { resolveClickIds } from './clickIdSessionStore'
 
 export type CookiebotConsent = {
   marketing?: boolean
   preferences?: boolean
   statistics?: boolean
 }
-
-const CLICK_ID_PARAMETERS = [
-  'dclid',
-  'fbclid',
-  'gbraid',
-  'gclid',
-  'msclkid',
-  'ttclid',
-  'twclid',
-  'wbraid'
-] as const
 
 function granted(value: boolean | undefined) {
   return value === true ? 'granted' : 'denied'
@@ -49,15 +39,7 @@ export function getConsentSnapshot(
 }
 
 export function extractClickIds(pageUrl: string) {
-  const searchParams = new URL(pageUrl).searchParams
-  const identifiers: Record<string, string> = {}
-
-  for (const parameter of CLICK_ID_PARAMETERS) {
-    const value = searchParams.get(parameter)?.trim()
-    if (value) identifiers[parameter] = value
-  }
-
-  return Object.keys(identifiers).length > 0 ? identifiers : undefined
+  return resolveClickIds(pageUrl)
 }
 
 export function extractBrowserIds(

@@ -7,6 +7,7 @@ import {
   getConsentSnapshot,
   type CookiebotConsent
 } from './pageViewClientContext'
+import { browserFirstPartyExternalIdStore } from './firstPartyExternalId'
 import {
   browserPageViewSession,
   type PageViewContext
@@ -44,6 +45,7 @@ type ViewItemClientContext = {
   documentReferrer: string
   environment: TrackingEnvironment
   eventDeviceInfo?: ViewItemDeviceInfo
+  externalId?: string
   impressionId?: string
   pageTitle: string
   pageUrl: string
@@ -158,6 +160,9 @@ export function createViewItemReporter(
           ...(clientContext.clickId ?
             { clickId: clientContext.clickId }
           : {}),
+          ...(clientContext.externalId ?
+            { externalId: clientContext.externalId }
+          : {}),
           ...(clientContext.impressionId ?
             { impressionId: clientContext.impressionId }
           : {}),
@@ -257,6 +262,8 @@ function readBrowserClientContext(): ViewItemClientContext {
   const browserId = extractBrowserIds(document.cookie, consent)
 
   const clickId = extractClickIds(pageUrl)
+  const externalId =
+    browserFirstPartyExternalIdStore.getOrCreate(consent)
 
   const searchParams = new URL(pageUrl).searchParams
 
@@ -276,6 +283,7 @@ function readBrowserClientContext(): ViewItemClientContext {
     consent,
     ...(browserId ? { browserId } : {}),
     ...(clickId ? { clickId } : {}),
+    ...(externalId ? { externalId } : {}),
     ...(impressionId ? { impressionId } : {}),
     eventDeviceInfo: {
       language: navigator.language,

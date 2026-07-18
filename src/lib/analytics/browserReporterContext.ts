@@ -6,6 +6,7 @@ import {
   getConsentSnapshot,
   type CookiebotConsent
 } from './pageViewClientContext'
+import { browserFirstPartyExternalIdStore } from './firstPartyExternalId'
 import { resolveTrackingEnvironment } from './viewItemReporter'
 import type { ConsentSnapshot, TrackingEnvironment } from './pageViewEvent'
 
@@ -25,6 +26,7 @@ export type BrowserReporterContext = {
     viewportHeight: number
     viewportWidth: number
   }
+  externalId?: string
   pageTitle: string
   pageUrl: string
 }
@@ -40,6 +42,8 @@ export function readBrowserReporterContext(): BrowserReporterContext {
   )
   const browserId = extractBrowserIds(document.cookie, consent)
   const clickId = extractClickIds(pageUrl)
+  const externalId =
+    browserFirstPartyExternalIdStore.getOrCreate(consent)
 
   return {
     pageUrl,
@@ -52,6 +56,7 @@ export function readBrowserReporterContext(): BrowserReporterContext {
     consent,
     ...(browserId ? { browserId } : {}),
     ...(clickId ? { clickId } : {}),
+    ...(externalId ? { externalId } : {}),
     eventDeviceInfo: {
       language: navigator.language,
       pixelRatio: window.devicePixelRatio,

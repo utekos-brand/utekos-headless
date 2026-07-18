@@ -51,6 +51,9 @@ export function reportCanonicalViewSearchResults(
       ...(clientContext.clickId ?
         { clickId: clientContext.clickId }
       : {}),
+      ...(clientContext.externalId ?
+        { externalId: clientContext.externalId }
+      : {}),
       eventDeviceInfo: clientContext.eventDeviceInfo
     })
 

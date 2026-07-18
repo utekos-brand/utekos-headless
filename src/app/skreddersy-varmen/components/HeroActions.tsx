@@ -5,6 +5,7 @@
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { scrollToElement } from '@/lib/motion/scrollToElement'
+import { reportLandingSelectPromotion } from '@/app/skreddersy-varmen/utils/reportLandingSelectPromotion'
 
 const SCROLL_TARGETS = {
   purchase: 'purchase-section',
@@ -32,9 +33,10 @@ export function HeroActions() {
         >
           <button
             type='button'
-            onClick={() =>
+            onClick={() => {
+              reportLandingSelectPromotion('heroCta')
               smoothScrollTo(SCROLL_TARGETS.purchase)
-            }
+            }}
             data-track='HeroCtaSkreddersyVarmen'
             className='group inline-flex items-center gap-2 leading-none'
           >
@@ -56,9 +58,10 @@ export function HeroActions() {
         >
           <button
             type='button'
-            onClick={() =>
+            onClick={() => {
+              reportLandingSelectPromotion('heroSecondary')
               smoothScrollTo(SCROLL_TARGETS.solution)
-            }
+            }}
             data-track='HeroSecondaryCtaSkreddersyVarmen'
             className='group inline-flex items-center gap-2 leading-none'
           >

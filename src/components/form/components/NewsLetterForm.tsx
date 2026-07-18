@@ -3,7 +3,12 @@
 'use client'
 
 import { useActionState, useEffect, useRef } from 'react'
-import { subscribeToNewsletter } from '@/lib/actions/subscribeToNewsLetters'
+import {
+  subscribeToNewsletter,
+  type ActionState
+} from '@/lib/actions/subscribeToNewsLetters'
+import { appendLeadTrackingContext } from '@/lib/analytics/collectLeadFormTrackingContext'
+import { pushGenerateLeadToDataLayer } from '@/lib/analytics/pushGenerateLeadToDataLayer'
 import { Input } from '@/components/ui/input'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { ArrowRight, Mail } from 'lucide-react'
@@ -11,8 +16,8 @@ import { toast } from 'sonner'
 import { H2 } from '@/components/typography/TypographyH2'
 import { P } from '@/components/typography/TypographyP'
 
-const initialState = {
-  status: 'idle' as 'success' | 'error' | 'idle',
+const initialState: ActionState = {
+  status: 'idle',
   message: ''
 }
 
@@ -25,6 +30,9 @@ export function NewsletterForm() {
 
   useEffect(() => {
     if (state.status === 'success') {
+      if (state.dataLayerEvent) {
+        pushGenerateLeadToDataLayer(state.dataLayerEvent)
+      }
       toast.success(state.message)
       formRef.current?.reset()
     } else if (state.status === 'error') {
@@ -33,6 +41,7 @@ export function NewsletterForm() {
   }, [state])
 
   const handleSubmit = (formData: FormData) => {
+    appendLeadTrackingContext(formData)
     formAction(formData)
   }
 

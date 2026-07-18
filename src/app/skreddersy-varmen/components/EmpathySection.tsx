@@ -6,6 +6,7 @@ import { ArrowRight } from 'lucide-react'
 import * as m from 'motion/react-m'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { scrollToElement } from '@/lib/motion/scrollToElement'
+import { reportLandingSelectPromotion } from '@/app/skreddersy-varmen/utils/reportLandingSelectPromotion'
 import { SkreddersyMotionProvider } from './SkreddersyMotionProvider'
 import {
   revealGroup,
@@ -21,6 +22,7 @@ import {
 const HEADLINE = 'Når øyeblikket er for godt til å avsluttes.'
 
 function scrollToModel() {
+  reportLandingSelectPromotion('empathyCta')
   void scrollToElement('section-solution', { offsetY: 80 })
 }
 

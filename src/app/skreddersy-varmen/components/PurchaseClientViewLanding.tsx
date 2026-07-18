@@ -29,6 +29,7 @@ import { LandingProductHighlightsPanel } from './LandingProductHighlightsPanel'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
 import { ShippingAndReturnComponent } from './ShippingAndReturnComponent'
 import { KlarnaLandingExpressCheckout } from './KlarnaLandingExpressCheckout'
+import { reportLandingSelectPromotion } from '@/app/skreddersy-varmen/utils/reportLandingSelectPromotion'
 import type { ModelKey, PRODUCT_VARIANTS } from '@/api/constants'
 import type { ShopifyProduct } from 'types/product/ShopifyProduct'
 import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
@@ -195,6 +196,9 @@ export function PurchaseClientViewLanding({
                       '/handlehjelp/storrelsesguide' as Route
                     }
                     data-track='SizeGuideSkreddersyVarmen'
+                    onClick={() =>
+                      reportLandingSelectPromotion('sizeGuide')
+                    }
                     className='text-sm text-background underline transition-colors hover:text-primary'
                   >
                     Se størrelsesguide

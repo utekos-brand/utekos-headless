@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils/className'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import UtekosWordmark from '@/components/BrandComponents/utils/UtekosWordmark'
 import { scrollToElement } from '@/lib/motion/scrollToElement'
+import { reportLandingSelectPromotion } from '@/app/skreddersy-varmen/utils/reportLandingSelectPromotion'
 
 const DISMISS_KEY = 'utekos:sticky-mobile-dismissed'
 
@@ -83,7 +84,8 @@ export function StickyMobileAction() {
     }
   }, [isDismissed])
 
-  const scrollToPurchase = () => {
+  const scrollToPurchase = (promotion: 'stickyCta' | 'stickyOrder') => {
+    reportLandingSelectPromotion(promotion)
     void scrollToElement('purchase-section', {
       offsetY: 72,
       reducedMotion: reduced
@@ -91,6 +93,7 @@ export function StickyMobileAction() {
   }
 
   const handleDismiss = () => {
+    reportLandingSelectPromotion('stickyClose')
     setIsDismissed(true)
     setIsVisible(false)
     try {
@@ -140,7 +143,7 @@ export function StickyMobileAction() {
 
             <button
               type='button'
-              onClick={scrollToPurchase}
+              onClick={() => scrollToPurchase('stickyCta')}
               data-track='SkreddersyVarmenStickyCta'
               className={cn(
                 'group flex min-w-0 flex-1 flex-col justify-center rounded-3xl px-1.5 py-1 text-left transition-[opacity,transform] hover:opacity-90 active:scale-[0.99]',
@@ -175,7 +178,7 @@ export function StickyMobileAction() {
             >
               <button
                 type='button'
-                onClick={scrollToPurchase}
+                onClick={() => scrollToPurchase('stickyOrder')}
                 data-track='SkreddersyVarmenTilBestilling'
               >
                 <span className='whitespace-nowrap'>

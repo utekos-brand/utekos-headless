@@ -3,6 +3,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import { LandingPromotionImpression } from './LandingPromotionImpression'
 
 function ThreeInOneFallback() {
   return (
@@ -76,9 +77,27 @@ const SectionSocialProof = dynamic(
 export function DeferredLandingSections() {
   return (
     <>
-      <SectionThreeInOne />
-      <TechDownSlider />
-      <SectionSocialProof />
+      <LandingPromotionImpression
+        promotionId='skreddersy-varmen-three-in-one'
+        creativeName='Three in one'
+        className='w-full'
+      >
+        <SectionThreeInOne />
+      </LandingPromotionImpression>
+      <LandingPromotionImpression
+        promotionId='skreddersy-varmen-techdown'
+        creativeName='TechDown slider'
+        className='w-full'
+      >
+        <TechDownSlider />
+      </LandingPromotionImpression>
+      <LandingPromotionImpression
+        promotionId='skreddersy-varmen-social-proof'
+        creativeName='Social proof'
+        className='w-full'
+      >
+        <SectionSocialProof />
+      </LandingPromotionImpression>
     </>
   )
 }

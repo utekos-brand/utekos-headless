@@ -24,6 +24,11 @@ export const canonicalGenerateLeadSchema = canonicalEventEnvelopeSchema.extend({
 
 export type CanonicalGenerateLead = z.infer<typeof canonicalGenerateLeadSchema>
 
+type UserDataInput = {
+  emailSha256?: string[]
+  phoneSha256?: string[]
+}
+
 type CreateCanonicalGenerateLeadInput = {
   browserId?: Record<string, string>
   clickId?: Record<string, string>
@@ -35,10 +40,9 @@ type CreateCanonicalGenerateLeadInput = {
   eventTime: string
   externalId?: string
   impressionId?: string
-  pageTitle?: string
   pageUrl?: string
   pageViewId?: string
-  referrerUrl?: string
+  userData?: UserDataInput
 }
 
 export type GenerateLeadDataLayerEvent = {
@@ -51,10 +55,26 @@ export type GenerateLeadDataLayerEvent = {
   canonical_event: CanonicalGenerateLead
 }
 
+function mapUserData(input: UserDataInput | undefined) {
+  if (!input) return undefined
+
+  const userData = {
+    ...(input.emailSha256 ?
+      { email_sha256: input.emailSha256 }
+    : {}),
+    ...(input.phoneSha256 ?
+      { phone_sha256: input.phoneSha256 }
+    : {})
+  }
+
+  return Object.keys(userData).length > 0 ? userData : undefined
+}
+
 export function createCanonicalGenerateLead(
   input: CreateCanonicalGenerateLeadInput
 ): CanonicalGenerateLead {
   const eventDeviceInfo = mapEventDeviceInfo(input.eventDeviceInfo)
+  const userData = mapUserData(input.userData)
 
   return canonicalGenerateLeadSchema.parse({
     schema_version: 1,
@@ -65,15 +85,14 @@ export function createCanonicalGenerateLead(
     environment: input.environment,
     ...(input.pageUrl ? { page_url: input.pageUrl } : {}),
     ...(input.pageViewId ? { page_view_id: input.pageViewId } : {}),
-    ...(input.referrerUrl ? { referrer_url: input.referrerUrl } : {}),
-    ...(input.pageTitle ? { page_title: input.pageTitle } : {}),
     consent: input.consent,
     custom_data: input.customData,
     ...(input.browserId ? { browser_id: input.browserId } : {}),
     ...(input.clickId ? { click_id: input.clickId } : {}),
     ...(input.externalId ? { external_id: input.externalId } : {}),
     ...(input.impressionId ? { impression_id: input.impressionId } : {}),
-    ...(eventDeviceInfo ? { event_device_info: eventDeviceInfo } : {})
+    ...(eventDeviceInfo ? { event_device_info: eventDeviceInfo } : {}),
+    ...(userData ? { user_data: userData } : {})
   })
 }
 

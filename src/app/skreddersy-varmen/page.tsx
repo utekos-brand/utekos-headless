@@ -6,6 +6,7 @@ import { HeroAndEmpathy } from './components/HeroEmpathy'
 import { LandingPurchaseFallback } from './components/LandingPurchaseFallback'
 import { LandingPurchaseSection } from './components/LandingPurchaseSection'
 import { StickyMobileAction } from './components/StickyMobileAction'
+import { LandingPromotionImpression } from './components/LandingPromotionImpression'
 import { PreFooterNavigation } from './components/PreFooterNavigation'
 import { SkreddersyVarmenBreadcrumbs } from './components/SkreddersyVarmenBreadcrumbs'
 import type { Metadata } from 'next'
@@ -73,9 +74,15 @@ export default function LandingPage() {
         id='purchase-section'
         className='w-full scroll-mt-17.5 xl:scroll-mt-21.5'
       >
-        <Suspense fallback={<LandingPurchaseFallback />}>
-          <LandingPurchaseSection />
-        </Suspense>
+        <LandingPromotionImpression
+          promotionId='skreddersy-varmen-purchase'
+          creativeName='Purchase'
+          className='w-full'
+        >
+          <Suspense fallback={<LandingPurchaseFallback />}>
+            <LandingPurchaseSection />
+          </Suspense>
+        </LandingPromotionImpression>
       </div>
 
       <PreFooterNavigation />

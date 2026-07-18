@@ -1,7 +1,7 @@
 // Path: src/app/skreddersy-varmen/components/useLandingPurchaseLogic.ts
 'use client'
 
-import { useContext, useMemo, useState, useTransition } from 'react'
+import { useContext, useMemo, useRef, useState, useTransition } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { CartIdContext } from '@/lib/context/CartIdContext'
@@ -10,6 +10,8 @@ import { cartStore } from '@/lib/state/cartStore'
 import { useCartMutations } from '@/hooks/useCartMutations'
 import { useOptimisticCartUpdate } from '@/hooks/useOptimisticCartUpdate'
 import { getCartIdFromCookie } from '@/lib/actions/getCartIdFromCookie'
+import { reportCanonicalAddToCart } from '@/lib/analytics/addToCartReporter'
+import { reportCanonicalVariantSelect } from '@/lib/analytics/variantSelectReporter'
 import { getVariants } from '@/app/skreddersy-varmen/utekos-orginal/utils/getVariants'
 import { getSelectableSizes, PRODUCT_VARIANTS } from '@/api/constants'
 import type { ModelKey } from '@/api/constants'
@@ -25,12 +27,31 @@ function normalizeSelectedSize(size: string, selectableSizes: readonly string[])
   return selectableSizes.includes(size) ? size : (selectableSizes[0] ?? size)
 }
 
+function findLandingVariant(input: {
+  product: ShopifyProduct
+  colorName: string
+  size: string
+}): ShopifyProductVariant | null {
+  return (
+    getVariants(input.product).find((variant: ShopifyProductVariant) => {
+      const hasSize = variant.selectedOptions.some(
+        option => option.value.toLowerCase() === input.size.toLowerCase()
+      )
+      const hasColor = variant.selectedOptions.some(
+        option => option.value.toLowerCase() === input.colorName.toLowerCase()
+      )
+      return hasSize && hasColor
+    }) ?? null
+  )
+}
+
 export function useLandingPurchaseLogic({ products }: UseLandingPurchaseLogicProps) {
   const [selectedModel, setSelectedModelState] = useState<ModelKey>('utekos-techdown')
   const [quantity, setQuantityState] = useState(1)
   const [selectedColorIndex, setSelectedColorIndexState] = useState(0)
   const [selectedSize, setSelectedSizeState] = useState('Middels')
   const [isTransitioning, startTransition] = useTransition()
+  const lastReportedVariantId = useRef<string | null>(null)
 
   const { addLines } = useCartMutations()
   const { updateCartCache } = useOptimisticCartUpdate()
@@ -50,25 +71,89 @@ export function useLandingPurchaseLogic({ products }: UseLandingPurchaseLogicPro
 
   const currentColor = currentConfig.colors[safeColorIndex] as ColorVariant | undefined
 
+  const reportVariantSelect = (
+    product: ShopifyProduct,
+    variant: ShopifyProductVariant
+  ) => {
+    if (lastReportedVariantId.current === variant.id) return
+    lastReportedVariantId.current = variant.id
+
+    reportCanonicalVariantSelect({
+      customData: {
+        interaction_id: globalThis.crypto.randomUUID(),
+        product_id: product.id,
+        variant_id: variant.id,
+        item_id: variant.id,
+        item_variant: variant.title,
+        availability:
+          variant.availableForSale ? 'available' : 'unavailable'
+      }
+    })
+  }
+
   const setQuantity = (nextQuantity: number) => {
     setQuantityState(Math.max(1, nextQuantity))
   }
 
   const setSelectedColorIndex = (index: number) => {
-    setSelectedColorIndexState(index >= 0 && index < currentConfig.colors.length ? index : 0)
+    const nextIndex =
+      index >= 0 && index < currentConfig.colors.length ? index : 0
+    setSelectedColorIndexState(nextIndex)
+
+    const nextColor = currentConfig.colors[nextIndex] as ColorVariant | undefined
+    if (!currentShopifyProduct || !nextColor) return
+
+    const nextVariant = findLandingVariant({
+      product: currentShopifyProduct,
+      colorName: nextColor.name,
+      size: safeSelectedSize
+    })
+    if (nextVariant) {
+      reportVariantSelect(currentShopifyProduct, nextVariant)
+    }
   }
 
   const setSelectedSize = (size: string) => {
-    setSelectedSizeState(normalizeSelectedSize(size, selectableSizes))
+    const nextSize = normalizeSelectedSize(size, selectableSizes)
+    setSelectedSizeState(nextSize)
+
+    if (!currentShopifyProduct || !currentColor) return
+
+    const nextVariant = findLandingVariant({
+      product: currentShopifyProduct,
+      colorName: currentColor.name,
+      size: nextSize
+    })
+    if (nextVariant) {
+      reportVariantSelect(currentShopifyProduct, nextVariant)
+    }
   }
 
   const setSelectedModel = (model: ModelKey) => {
     const nextConfig = PRODUCT_VARIANTS[model]
     const nextSelectableSizes = getSelectableSizes(model, nextConfig)
+    const nextColorIndex =
+      selectedColorIndex >= 0 && selectedColorIndex < nextConfig.colors.length
+        ? selectedColorIndex
+        : 0
+    const nextSize = normalizeSelectedSize(selectedSize, nextSelectableSizes)
+    const nextColor = nextConfig.colors[nextColorIndex] as ColorVariant | undefined
+    const nextProduct = products[nextConfig.id]
 
     setSelectedModelState(model)
-    setSelectedColorIndexState(index => (index >= 0 && index < nextConfig.colors.length ? index : 0))
-    setSelectedSizeState(size => normalizeSelectedSize(size, nextSelectableSizes))
+    setSelectedColorIndexState(nextColorIndex)
+    setSelectedSizeState(nextSize)
+
+    if (!nextProduct || !nextColor) return
+
+    const nextVariant = findLandingVariant({
+      product: nextProduct,
+      colorName: nextColor.name,
+      size: nextSize
+    })
+    if (nextVariant) {
+      reportVariantSelect(nextProduct, nextVariant)
+    }
   }
 
   const resolveSelectedVariant = (
@@ -93,18 +178,10 @@ export function useLandingPurchaseLogic({ products }: UseLandingPurchaseLogicPro
       return null
     }
 
-    const variants = getVariants(currentShopifyProduct)
-
-    const selectedVariant = variants.find((variant: ShopifyProductVariant) => {
-      const hasSize = variant.selectedOptions.some(
-        option => option.value.toLowerCase() === safeSelectedSize.toLowerCase()
-      )
-
-      const hasColor = variant.selectedOptions.some(
-        option => option.value.toLowerCase() === currentColor.name.toLowerCase()
-      )
-
-      return hasSize && hasColor
+    const selectedVariant = findLandingVariant({
+      product: currentShopifyProduct,
+      colorName: currentColor.name,
+      size: safeSelectedSize
     })
 
     if (!selectedVariant) {
@@ -195,6 +272,15 @@ export function useLandingPurchaseLogic({ products }: UseLandingPurchaseLogicPro
         if (cart?.id) {
           cartId = cart.id
           queryClient.setQueryData(['cart', cart.id], cart)
+        }
+
+        if (cartId && selectedVariant) {
+          reportCanonicalAddToCart({
+            cartId,
+            product,
+            quantity,
+            variant: selectedVariant
+          })
         }
       } catch (error) {
         console.error('Kunne ikke legge til vare:', error)

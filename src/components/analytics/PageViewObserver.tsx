@@ -8,6 +8,7 @@ import {
   extractClickIds,
   getConsentSnapshot
 } from '@/lib/analytics/pageViewClientContext'
+import { browserFirstPartyExternalIdStore } from '@/lib/analytics/firstPartyExternalId'
 import {
   browserPageViewCollectorTransport,
   type CookiebotState
@@ -75,6 +76,8 @@ export function PageViewObserver({
     )
     const browserId = extractBrowserIds(document.cookie, consent)
     const clickId = extractClickIds(navigation.pageUrl)
+    const externalId =
+      browserFirstPartyExternalIdStore.getOrCreate(consent)
     const searchParams = new URL(navigation.pageUrl).searchParams
     const impressionId =
       searchParams.get('impression_id') ??
@@ -94,6 +97,7 @@ export function PageViewObserver({
       consent,
       ...(browserId ? { browserId } : {}),
       ...(clickId ? { clickId } : {}),
+      ...(externalId ? { externalId } : {}),
       ...(impressionId ? { impressionId } : {}),
       eventDeviceInfo: {
         language: navigator.language,

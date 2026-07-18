@@ -13,6 +13,8 @@ import {
   submitProductWaitlist,
   type ProductWaitlistActionState
 } from '@/lib/actions/submitProductWaitlist'
+import { appendLeadTrackingContext } from '@/lib/analytics/collectLeadFormTrackingContext'
+import { pushGenerateLeadToDataLayer } from '@/lib/analytics/pushGenerateLeadToDataLayer'
 import { Check, Clock3, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useActionState, useEffect, useState } from 'react'
@@ -39,6 +41,17 @@ export function SoldOutWaitlistDialog() {
 
     return () => window.clearTimeout(timer)
   }, [])
+
+  useEffect(() => {
+    if (state.status === 'success' && state.dataLayerEvent) {
+      pushGenerateLeadToDataLayer(state.dataLayerEvent)
+    }
+  }, [state])
+
+  const handleSubmit = (formData: FormData) => {
+    appendLeadTrackingContext(formData)
+    formAction(formData)
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -91,7 +104,7 @@ export function SoldOutWaitlistDialog() {
               </div>
             </div>
           : <form
-              action={formAction}
+              action={handleSubmit}
               className='space-y-5 bg-popover px-6 py-7 text-popover-foreground sm:px-8'
               noValidate
             >
