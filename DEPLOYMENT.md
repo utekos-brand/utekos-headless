@@ -270,6 +270,36 @@ and a trace ID on the first attempt. This proves the standard Shopify path for
 a consented Facebook click. It does not close the separate paid Klarna Express
 gate.
 
+### Daily Meta Dataset Quality snapshots 2026-07-18
+
+The former combined campaign-insights/quality cron remains removed. This
+release adds only a read-only Dataset Quality collector at
+`/api/cron/meta-dataset-quality`, scheduled in `vercel.json` at `17 3 * * *`.
+Vercel sends the existing `CRON_SECRET` bearer authorization; the provider
+read uses the existing `META_ACCESS_TOKEN` and `META_PIXEL_ID`. No new
+environment value or Supabase migration is required.
+
+The collector requests the documented Meta `v25.0` event-level EMQ,
+match-key coverage, diagnostics, event coverage, deduplication feedback,
+freshness and ACR fields. Provider data is Zod-validated before an atomic
+insert into `marketing.meta_quality_snapshots`. A UTC-day existence check
+makes retries idempotent per dataset and event. The token is sent in the
+authorization header and is never included in the request URL or response.
+
+Pre-deploy production-credential verification inserted six event snapshots at
+`2026-07-18T21:21:27.253Z`; Supabase readback confirmed all six rows and a
+second run inserted zero duplicates. After the Git-triggered production
+deployment:
+
+1. Confirm the deployment is `READY` and the route appears in the build.
+2. Confirm an unauthenticated request returns 401 and `Cache-Control: no-store`.
+3. Run the deployed cron once with Vercel Cron tooling or the approved bearer
+   request and confirm HTTP 200.
+4. Read back the dated rows in `marketing.meta_quality_snapshots`; a repeat on
+   the same UTC day must return `insertedCount=0`.
+5. Compare event-level denominators and Meta source split after 7 and 14 days;
+   one daily snapshot is not a trend.
+
 ### Local integration audit 2026-07-14
 
 The isolated Git operations, Microsoft Merchant, PostHog SDK, Klarna

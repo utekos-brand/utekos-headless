@@ -74,6 +74,14 @@ requests rekonsileres separat via `request_id`: ved kontroll
 ikke-terminale og 111 av disse sist var `PROCESSING`. Historiske
 `validate_only=true`-rader er ikke kandidater.
 
+Meta Dataset Quality har igjen en aktiv, avgrenset snapshot-flyt uten
+provider-skriverett. `/api/cron/meta-dataset-quality` leser Meta `v25.0`
+daglig kl. 03:17 UTC, validerer providerresponsen med Zod og lagrer eventnivåets
+EMQ, match-key coverage, diagnostikk, event coverage, dedupliseringsfeedback,
+freshness og ACR i `marketing.meta_quality_snapshots`. Før deploy skrev den
+første produksjonsverifiserte kjøringen seks rader med måletid
+`2026-07-18T21:21:27.253Z`; samme-dags retry skrev 0 duplikater.
+
 GTM får laste før samtykke for Advanced Consent Mode og cookieless
 pings. Meta, Microsoft, Clarity og øvrige ikke-Google-tagger skal
 fortsatt være blokkert av consent-gates i GTM. `/__sgtm` er alltid
@@ -213,6 +221,7 @@ skjemaendring eller provider-replay ble utført.
 | Område                | Funn                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Meta browser/server-paritet | Web-GTM v121 er live med kanonisk Meta Pixel-tag `153`, trigger `152` og `autoConfig=false`. Produksjonssmoken passerte forside, produkt- og kampanjelanding: null Meta før marketing-samtykke, korrekte/stabile `fbclid`/`fbc`/`fbp`/`external_id`, samme `event_id` i Pixel og CAPI, 200 fra `/tr` og OpenBridge, ingen uventede Pixel-events og ingen Meta-CSP-brudd. Fem korrelerte PageView/ViewContent-rader finnes nøyaktig én gang i ledger/outbox med `eventsReceived=1`, tom provider-`messages`, trace-ID og 0 uløste Meta dead letters. Metas kildeuttrekk viser nå også to browser-PageView og to browser-ViewContent; det tidligere provider-etterslepet er løst. |
+| Meta Dataset Quality | Første nye read-only Supabase-snapshot er lagret for seks eventtyper. Full providerrespons valideres før lagring; samme-dags retry er idempotent. Post-cutover-kildefordelingen 20:20Z–21:12Z var PageView 75 server/51 browser, ViewContent 75/38 og 2/1 for AddToCart, InitiateCheckout og Purchase. Dette er baseline, ikke ferdig trend. |
 | Produksjons-CMP       | `https://utekos.no` returnerte 200 med normal browser headers. HTML inneholdt Cookiebot og ingen Usercentrics-runtime-treff i sjekken.                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | Produksjonsdeploy     | Vercel production deployment `dpl_CRYYmnj5D2xRxxodENqBWhsXRiL4` fra `main` SHA `647e0b7efa1222be67cbb39be0e5588c17ef989e` er `READY` og eier `utekos.no`, `www.utekos.no` og `feed.utekos.no`. `origin/main`, lokal `main` og deploymentens Git-kilde er samme commit. |
 | Release-preview       | Vercel deployment `dpl_2kJH2QCPpsaaxx5oDBKD9SuhUt6j` er `READY`. Smoken beviste at Klarna SDK-en initialiserte og rendret en knapp i den gamle produktsideplasseringen; den beviste ikke den tilsiktede flyttingen til produktkort. Preview-domenet er ikke autorisert i Cookiebot og gir derfor forventet preview-varsel; ingen CMP-konfigurasjon ble endret. |
@@ -370,7 +379,7 @@ coverage og purchase match rate, ikke radtall.
 | P1        | Commercial intelligence-plan            | Ny styringsplan er opprettet, men read models, agentfunn og workflows er ikke implementert                               | Følg [COMMERCIAL_INTELLIGENCE_PLAN.md](COMMERCIAL_INTELLIGENCE_PLAN.md) og bygg ett verifisert spor av gangen                               | Supabase/PostHog/MCP-flater viser konkrete beslutninger, ikke bare datainnsamling                        |
 | P1        | GA4 BigQuery -> Supabase                | `npm run ops:ga4-bigquery-readiness` bekrefter `ga4_bigquery_dataset_missing`; `analytics_489598217` finnes ikke ennå     | Rerun readiness-gaten til dataset og `events_*` finnes; først da bygg read-only wrapper/read models                                          | Kuraterte read models finnes; rå GA4-dump er ikke app-avhengighet                                        |
 | P1        | Google Ads API read-only prober         | GA4, public sGTM og GTM API workspace er grønne, men flere Google Ads-spørringer returnerer fortsatt strukturerte credential/scope-feil | Rett credentials/scopes eller dokumenter blokkering | Prober skiller tydelig mellom teknisk feil og manglende tilgang |
-| P1        | Identifier coverage                     | Siste Meta-øyeblikksbilde: PageView EMQ 6.6, ViewContent 5.5, AddToCart 6.3, InitiateCheckout 5.9 og Purchase 9.3. Pixel-pariteten er direkte bevist, og Metas kildeuttrekk viser nå to browser-PageView og to browser-ViewContent. | Mål `client_id`, `fbp`, `fbc`, `external_id` og betalt klikk-ID per event etter 7 og 14 dager; les kildefordelingen og DQ på nytt med større etterreleasevolum. | Coverage-rapport per eventtype og consent state med tilstrekkelig denominator. |
+| P1        | Identifier coverage                     | Siste Meta-øyeblikksbilde: PageView EMQ 6.6, ViewContent 5.5, AddToCart 6.3, InitiateCheckout 5.9 og Purchase 9.3. Pixel-pariteten er direkte bevist. Daglig Dataset Quality-snapshot er reintrodusert og første seks-raders baseline er lagret; post-cutover-kildefordelingen er fortsatt lav for lower funnel. | La snapshot-cronen samle 7 og 14 dager; mål `client_id`, `fbp`, `fbc`, `external_id` og betalt klikk-ID per event og les kildefordelingen på nytt med større etterreleasevolum. | Coverage-rapport per eventtype og consent state med tilstrekkelig denominator. |
 | P2        | Sentry Replay                           | Sentry server/edge aktiv, Replay ikke aktivert                                                                           | Beslutning: aktivere med Cookiebot statistics gate eller eksplisitt parkere                                                                 | Replay status dokumentert; ingen antatt dekning                                                          |
 | P2        | Underbrukte tabeller                    | Flere partner-/analytics-/lead-tabeller står tomme                                                                       | Fjern, parker eller koble til konkret bruk                                                                                                  | Ingen schema-only dataløfter uten eier                                                                   |
 
@@ -448,15 +457,16 @@ Punkter som fortsatt ikke kan markeres løst uten ny kontroll:
 - En godkjent betalt Klarna Express-reise gjennom Shopify-webhooken.
 - Sentry issue-probe og eventuell Sentry Replay.
 - Microsoft UET CAPI purchase etter at serveradapteren er reintrodusert.
-- Dataset Quality-trend for events med lavt etterreleasevolum.
+- Dataset Quality-trend etter 7 og 14 daglige snapshots for events med lavt
+  etterreleasevolum; første baseline er lagret.
 - PostHog-dashboards/funnels som faktisk brukes til CRO og
   kundeinnsikt.
 
 ## 10. Neste praktiske rekkefølge
 
 1. La Data Manager-statuscronen verifisere Purchase til `SUCCESS`, observer en
-   godkjent betalt Klarna Express-reise og følg Meta Dataset Quality etter 7 og
-   14 dager.
+   godkjent betalt Klarna Express-reise og følg den aktive Meta Dataset
+   Quality-snapshotserien etter 7 og 14 dager.
 2. Vent på og verifiser GA4 BigQuery-datasettet, deretter bygg
    kuraterte Supabase read models.
 3. Verifiser Merchant Center policy og kildeeierskap.

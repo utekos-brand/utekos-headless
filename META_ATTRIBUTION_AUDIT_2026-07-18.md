@@ -201,6 +201,37 @@ dermed løst i providerflaten og samsvarer med 200-svarene fra både Pixel
 `/tr` og Metas OpenBridge. Servervolumet dominerer fortsatt, og kilde- og
 Dataset Quality-tallene skal leses som rullerende providerøyeblikksbilder.
 
+En ny avgrenset kvalitetssamler gjør oppfølgingen reproducerbar uten å gi
+Meta-skriverett. `/api/cron/meta-dataset-quality` leser `v25.0` daglig kl.
+03:17 UTC, sender tokenet i `Authorization`-headeren, validerer hele den
+eksterne responsen med Zod og lagrer eventnivåets EMQ, match-key coverage,
+diagnostikk, event coverage, dedupliseringsfeedback, freshness og ACR i
+`marketing.meta_quality_snapshots`. Innsettingen er én transaksjon og
+idempotent per dataset/event/UTC-dag; ingen migrasjon eller provider-mutasjon
+er nødvendig.
+
+Før deploy ble den nye koden kjørt med produksjonslegitimasjon. Den hentet
+seks eventtyper og skrev seks snapshots med felles måletid
+`2026-07-18T21:21:27.253Z`; readback viste korrekt EMQ og 7–13 match keys per
+event. Umiddelbar ny kjøring ga `insertedCount=0`. Meta returnerte foreløpig
+ikke event coverage eller dedupliseringsfeedback for dette datasettet, og
+samleren lagrer derfor disse feltene som ikke returnert fremfor å tolke dem
+som 0.
+
+Read-only kildefordeling for perioden etter cutover,
+`2026-07-18T20:20Z–21:12Z`, var:
+
+| Meta-event | Server | Browser |
+| --- | ---: | ---: |
+| `PageView` | 75 | 51 |
+| `ViewContent` | 75 | 38 |
+| `AddToCart` | 2 | 1 |
+| `InitiateCheckout` | 2 | 1 |
+| `Purchase` | 2 | 1 |
+
+Dette er en startmåling, ikke en 7-/14-dagers trend. Særlig de tre
+lower-funnel-radene har for lav denominator til konklusjon.
+
 ## Data Manager og Measurement Protocol
 
 Aktiv kildekode inneholder ingen direkte GA4 Measurement Protocol-transport;
@@ -303,9 +334,9 @@ statuskandidater. Ingen `PROCESSING`-rad rapporteres som levert.
 
 ## Gjenstående observasjon
 
-1. Les Dataset Quality på nytt etter 7 og 14 dager for `AddToCart`,
-   `InitiateCheckout` og `Purchase`; nåværende etterreleasevolum er for lavt
-   til en sikker trendkonklusjon.
+1. Bruk de daglige Supabase-snapshotene og les Metas kildefordeling på nytt
+   etter 7 og 14 dager for `AddToCart`, `InitiateCheckout` og `Purchase`;
+   nåværende etterreleasevolum er for lavt til en sikker trendkonklusjon.
 2. Kjør en full Klarna Playground-betaling eller observer neste godkjente
    livebetaling for å bevise hele Klarna → Shopify → purchase-webhook-kjeden.
 3. Microsoft UET CAPI må fortsatt reintroduseres med en registrert

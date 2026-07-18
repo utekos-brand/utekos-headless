@@ -7,7 +7,7 @@ type VercelConfiguration = {
   crons?: Array<{ path: string; schedule: string }>
 }
 
-test('schedules provider dispatch and Data Manager status reconciliation', () => {
+test('schedules provider dispatch and quality reconciliation', () => {
   const configuration = JSON.parse(
     readFileSync(resolve(process.cwd(), 'vercel.json'), 'utf8')
   ) as VercelConfiguration
@@ -20,6 +20,10 @@ test('schedules provider dispatch and Data Manager status reconciliation', () =>
     {
       path: '/api/cron/google-data-manager-status',
       schedule: '*/5 * * * *'
+    },
+    {
+      path: '/api/cron/meta-dataset-quality',
+      schedule: '17 3 * * *'
     }
   ])
 })
