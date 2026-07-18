@@ -34,9 +34,7 @@ const commerce: CanonicalViewItemCommerce = {
       available_for_sale: true,
       currently_not_in_stock: false,
       quantity_available: 10,
-      selected_options: [
-        { name: 'Størrelse', value: 'M' }
-      ],
+      selected_options: [{ name: 'Størrelse', value: 'M' }],
       collection_ids: [],
       collection_titles: []
     }
@@ -94,7 +92,7 @@ function request(
     body,
     headers: {
       'content-type': 'application/json',
-      origin: 'https://utekos.no',
+      'origin': 'https://utekos.no',
       ...headers
     },
     method: 'POST'
@@ -222,7 +220,7 @@ test('preserves identifiers and replaces client network context', async () => {
   assert.equal(storedEvent.region_code, '03')
   assert.deepEqual(
     storedInput.dispatches.map(dispatch => dispatch.provider),
-    ['google', 'meta', 'microsoft_uet']
+    ['google', 'meta']
   )
 })
 

@@ -28,6 +28,7 @@ import { metaAddToCartProviderAdapter } from './providerAdapters/metaAddToCartPr
 import { metaAddToWishlistProviderAdapter } from './providerAdapters/metaAddToWishlistProviderAdapter'
 import { metaBeginCheckoutProviderAdapter } from './providerAdapters/metaBeginCheckoutProviderAdapter'
 import { metaGenerateLeadProviderAdapter } from './providerAdapters/metaGenerateLeadProviderAdapter'
+import { metaPageViewProviderAdapter } from './providerAdapters/metaPageViewProviderAdapter'
 import { metaPurchaseProviderAdapter } from './providerAdapters/metaPurchaseProviderAdapter'
 import { metaSearchProviderAdapter } from './providerAdapters/metaSearchProviderAdapter'
 import { metaViewItemProviderAdapter } from './providerAdapters/metaViewItemProviderAdapter'
@@ -117,6 +118,9 @@ export const providerOutboxWorkerRegistry = {
   ),
   'meta:generate_lead': createPostgresProviderOutboxWorker(
     metaGenerateLeadProviderAdapter
+  ),
+  'meta:page_view': createPostgresProviderOutboxWorker(
+    metaPageViewProviderAdapter
   ),
   'meta:purchase': createPostgresProviderOutboxWorker(
     metaPurchaseProviderAdapter

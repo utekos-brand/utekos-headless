@@ -3,7 +3,9 @@ import test from 'node:test'
 import type { CanonicalPageView } from '../pageViewEvent'
 import { planCanonicalPageViewDispatch } from './planCanonicalPageViewDispatch'
 
-function pageView(marketing: 'denied' | 'granted'): CanonicalPageView {
+function pageView(
+  marketing: 'denied' | 'granted'
+): CanonicalPageView {
   return {
     schema_version: 1,
     event_name: 'page_view',
@@ -25,9 +27,21 @@ function pageView(marketing: 'denied' | 'granted'): CanonicalPageView {
 }
 
 test('does not queue advertising providers without marketing consent', () => {
-  assert.deepEqual(planCanonicalPageViewDispatch(pageView('denied')), [])
+  assert.deepEqual(
+    planCanonicalPageViewDispatch(pageView('denied')),
+    []
+  )
 })
 
-test('keeps the legacy alias fail-closed for page_view server rows', () => {
-  assert.deepEqual(planCanonicalPageViewDispatch(pageView('granted')), [])
+test('queues newly accepted page_view events for Meta after marketing consent', () => {
+  assert.deepEqual(
+    planCanonicalPageViewDispatch(pageView('granted')),
+    [
+      {
+        dispatch_mode: 'server_retry',
+        event_id: '61c2ef59-6e6f-4f56-a63a-567ca398f9de',
+        provider: 'meta'
+      }
+    ]
+  )
 })

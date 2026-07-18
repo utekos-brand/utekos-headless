@@ -118,6 +118,81 @@ test('waits for page_view and emits view_item with the actual page_view_id', () 
   assert.equal(completed, 1)
 })
 
+test('follows product query normalization on the same page resource', () => {
+  const session = createPageViewSession(
+    () => '0c955d6b-5e9c-47d0-b304-046df7f4bf7f'
+  )
+  const initialPageUrl =
+    'https://utekos.no/produkter/utekos-techdown?fbclid=click-1'
+  const normalizedPageUrl = `${initialPageUrl}&farge=havdyp&storrelse=middels`
+  let currentContext = {
+    ...clientContext,
+    pageUrl: initialPageUrl
+  }
+  const emitted: CanonicalViewItem[] = []
+  const report = createViewItemReporter({
+    pageViewSession: session,
+    readClientContext: () => currentContext,
+    mapCommerce: () => commerce,
+    createEvent: createCanonicalViewItem,
+    createEventId: () => '72b6c4d3-cf47-493b-844c-147e237fcf45',
+    getEventTime: () => '2026-07-15T12:34:57.000Z',
+    emitEvent: event => {
+      emitted.push(event)
+    },
+    reportError: error => {
+      throw error
+    }
+  })
+
+  report({ product, variant })
+  currentContext = {
+    ...currentContext,
+    pageUrl: normalizedPageUrl
+  }
+  session.recordEmitted({
+    pageUrl: normalizedPageUrl,
+    pageViewId: 'd8b18b30-9ce4-4a55-b40f-ffbc3bda9aa7'
+  })
+
+  assert.equal(emitted.length, 1)
+  assert.equal(emitted[0]?.page_url, normalizedPageUrl)
+})
+
+test('does not attach a product report to another page resource', () => {
+  const session = createPageViewSession(
+    () => '0c955d6b-5e9c-47d0-b304-046df7f4bf7f'
+  )
+  let currentContext = clientContext
+  const emitted: CanonicalViewItem[] = []
+  const report = createViewItemReporter({
+    pageViewSession: session,
+    readClientContext: () => currentContext,
+    mapCommerce: () => commerce,
+    createEvent: createCanonicalViewItem,
+    createEventId: () => '72b6c4d3-cf47-493b-844c-147e237fcf45',
+    getEventTime: () => '2026-07-15T12:34:57.000Z',
+    emitEvent: event => {
+      emitted.push(event)
+    },
+    reportError: error => {
+      throw error
+    }
+  })
+
+  report({ product, variant })
+  currentContext = {
+    ...clientContext,
+    pageUrl: 'https://utekos.no/produkter/comfyrobe'
+  }
+  session.recordEmitted({
+    pageUrl: currentContext.pageUrl,
+    pageViewId: 'd8b18b30-9ce4-4a55-b40f-ffbc3bda9aa7'
+  })
+
+  assert.equal(emitted.length, 0)
+})
+
 test('cancels a stale product report before page_view is emitted', () => {
   const session = createPageViewSession(
     () => '0c955d6b-5e9c-47d0-b304-046df7f4bf7f'

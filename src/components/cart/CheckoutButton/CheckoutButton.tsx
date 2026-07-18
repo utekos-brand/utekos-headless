@@ -44,7 +44,7 @@ export const CheckoutButton = ({
   const disabledAttrs =
     isDisabled ? { 'aria-disabled': true, 'tabIndex': -1 } : {}
 
-  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleClick = async (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (isDisabled) {
       event.preventDefault()
       event.stopPropagation()
@@ -65,7 +65,7 @@ export const CheckoutButton = ({
     event.preventDefault()
 
     if (cart) {
-      reportCanonicalBeginCheckout({ cart })
+      await reportCanonicalBeginCheckout({ cart })
     }
 
     window.location.assign(checkoutUrl)

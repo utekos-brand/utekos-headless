@@ -1,6 +1,7 @@
 'use client'
 
 import { sendGTMEvent } from '@next/third-parties/google'
+import { captureException } from '@sentry/nextjs'
 import { readBrowserReporterContext } from './browserReporterContext'
 import { browserPageViewSession } from './pageViewSession'
 import {
@@ -8,20 +9,41 @@ import {
   createCanonicalBeginCheckout,
   type CanonicalBeginCheckout
 } from './beginCheckoutEvent'
-import { startBeginCheckoutCollectorTransport } from './beginCheckoutCollectorTransport'
-import { persistCheckoutConsentSnapshot } from './checkoutConsentSnapshot'
+import { collectCanonicalBeginCheckout } from './beginCheckoutCollectorTransport'
+import { createCheckoutAttributionSnapshot } from './checkoutAttributionSnapshot'
+import { enrichCanonicalEventWithMetaAttribution } from './enrichCanonicalEventWithMetaAttribution'
+import { enrichCanonicalEventWithGoogleAnalyticsIds } from './googleAnalyticsBrowserIds'
+import { persistCheckoutAttributionSnapshot } from './persistCheckoutAttributionSnapshot'
 import { mapShopifyBeginCheckout } from './shopifyBeginCheckoutCommerce'
 import type { Cart } from 'types/cart'
 
-export type ReportCanonicalBeginCheckoutInput = {
-  cart: Cart
+const CHECKOUT_TASK_DEADLINE_MS = 1500
+
+export type ReportCanonicalBeginCheckoutInput = { cart: Cart }
+
+async function settleCheckoutTasks(tasks: Promise<unknown>[]) {
+  let timeout: ReturnType<typeof setTimeout> | undefined
+
+  try {
+    return await Promise.race([
+      Promise.allSettled(tasks),
+      new Promise<undefined>(resolve => {
+        timeout = setTimeout(
+          () => resolve(undefined),
+          CHECKOUT_TASK_DEADLINE_MS
+        )
+      })
+    ])
+  } finally {
+    if (timeout) clearTimeout(timeout)
+  }
 }
 
-export function reportCanonicalBeginCheckout(
+export async function reportCanonicalBeginCheckout(
   input: ReportCanonicalBeginCheckoutInput
-): () => void {
+): Promise<void> {
   if (typeof window === 'undefined') {
-    return () => {}
+    return
   }
 
   try {
@@ -33,12 +55,10 @@ export function reportCanonicalBeginCheckout(
       : {})
     })
 
-    persistCheckoutConsentSnapshot(input.cart.id, clientContext.consent)
-
     const eventTime = new Date().toISOString()
     const commerce = mapShopifyBeginCheckout(input.cart)
 
-    const event = createCanonicalBeginCheckout({
+    const initialEvent = createCanonicalBeginCheckout({
       environment: clientContext.environment,
       eventId: globalThis.crypto.randomUUID(),
       eventTime,
@@ -61,14 +81,60 @@ export function reportCanonicalBeginCheckout(
       : {}),
       eventDeviceInfo: clientContext.eventDeviceInfo
     })
+    const metaEnrichedEvent =
+      await enrichCanonicalEventWithMetaAttribution(initialEvent)
+    const event =
+      await enrichCanonicalEventWithGoogleAnalyticsIds(
+        metaEnrichedEvent
+      )
+    const snapshot = createCheckoutAttributionSnapshot(
+      event,
+      eventTime
+    )
 
     sendGTMEvent(buildBeginCheckoutDataLayerEvent(event))
-    return startBeginCheckoutCollectorTransport(event)
+    const tasks: Promise<unknown>[] = [
+      persistCheckoutAttributionSnapshot(input.cart.id, snapshot)
+    ]
+
+    if (
+      event.consent.analytics === 'granted' ||
+      event.consent.marketing === 'granted'
+    ) {
+      tasks.push(collectCanonicalBeginCheckout(event))
+    }
+
+    const results = await settleCheckoutTasks(tasks)
+    if (!results) {
+      captureException(
+        new Error('Checkout attribution handoff timed out'),
+        {
+          tags: {
+            analytics_event: 'begin_checkout',
+            analytics_stage: 'checkout_handoff_timeout'
+          }
+        }
+      )
+      return
+    }
+
+    for (const result of results) {
+      if (result.status === 'rejected') {
+        captureException(result.reason, {
+          tags: {
+            analytics_event: 'begin_checkout',
+            analytics_stage: 'checkout_handoff'
+          }
+        })
+      }
+    }
   } catch (error) {
-    queueMicrotask(() => {
-      throw error
+    captureException(error, {
+      tags: {
+        analytics_event: 'begin_checkout',
+        analytics_stage: 'checkout_handoff'
+      }
     })
-    return () => {}
   }
 }
 

@@ -231,7 +231,7 @@ export function usePurchaseLogic({ products }: UsePurchaseLogicProps) {
     }
 
     if (result.cart) {
-      reportCanonicalBeginCheckout({ cart: result.cart })
+      await reportCanonicalBeginCheckout({ cart: result.cart })
     }
 
     window.location.assign(checkoutUrl)

@@ -473,7 +473,7 @@ test('normalizes the observed 529-character referrer without mutating the canoni
         candidate.parameterName === 'page_referrer'
     )
 
-  assert.equal(String(boundedReferrer?.value).length, 420)
+  assert.equal(String(boundedReferrer?.value).length, 100)
   assert.equal(
     longPathCanonicalEvent.referrer_url,
     longPathReferrer
@@ -529,8 +529,8 @@ test('enforces documented GA4 parameter value limits', () => {
       candidate.parameterName === 'sku'
   )
 
-  assert.ok(String(pageLocation?.value).length <= 1000)
-  assert.equal(String(pageTitle?.value).length, 300)
+  assert.ok(String(pageLocation?.value).length <= 100)
+  assert.equal(String(pageTitle?.value).length, 100)
   assert.equal(String(itemName?.value).length, 100)
   assert.equal(sku, undefined)
   assert.equal(canonicalEvent.page_url, longLocation)
@@ -568,8 +568,8 @@ test('truncates encoded URLs only between complete Unicode code points', () => {
   )
 
   const boundedUrls = [
-    { value: String(pageLocation?.value), maxLength: 1000 },
-    { value: String(pageReferrer?.value), maxLength: 420 }
+    { value: String(pageLocation?.value), maxLength: 100 },
+    { value: String(pageReferrer?.value), maxLength: 100 }
   ]
 
   for (const { value, maxLength } of boundedUrls) {
@@ -588,11 +588,11 @@ test('truncates encoded URLs only between complete Unicode code points', () => {
 
   assert.equal(
     Array.from(String(mappedPageTitle?.value)).length,
-    300
+    100
   )
   assert.equal(
     mappedPageTitle?.value,
-    `${'T'.repeat(298)}å😀`
+    'T'.repeat(100)
   )
   assert.equal(canonicalEvent.page_url, pageUrl)
   assert.equal(canonicalEvent.referrer_url, referrerUrl)

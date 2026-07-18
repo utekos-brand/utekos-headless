@@ -27,6 +27,67 @@ known and completed in the correct order.
 - Treat row counts as evidence only when source, status, reason,
   unresolved/resolved state, and replay policy are visible.
 
+### Meta identifier and checkout attribution release 2026-07-18
+
+The local release adds a consent-gated Meta Parameter Builder route,
+first-party `_fbp`/`_fbc` persistence, dispatch-time `external_id`, trusted
+Vercel location matching, a Meta CAPI PageView worker and checkout attribution
+for standard Shopify checkout and Klarna Express. It uses the existing
+canonical ledger/outbox schema. Do not apply a Supabase migration for this
+release.
+
+The Meta PageView adapter has a fixed
+`claimNotBefore=2026-07-18T13:13:10.000Z`. Preserve this gate during release:
+it allows rows created by the new runtime while preventing blind delivery of
+historical blocked PageView rows. Any historical replay remains a separate,
+explicitly approved operation.
+
+This is a Vercel runtime deployment and requires explicit approval. Before
+deploy, run targeted analytics tests, changed-file lint, `next typegen`,
+TypeScript, production build, MCP build/doctor and tracking gateway smoke. No
+GTM publish or provider mutation belongs to the Vercel release.
+
+After deploy, verify all of the following:
+
+- no `_fbp`, `_fbc` or `utekos_external_id` before marketing consent;
+- homepage, product and campaign landings preserve the latest `fbclid`, refresh
+  `_fbc` for a new click and retain stable `_fbp`/`external_id`;
+- direct product landing creates `page_view` and `view_item` with the same
+  `page_view_id`, including after product-query normalization;
+- `page_view` and `view_item` ledger rows use trusted Vercel IP/UA/geolocation
+  and create only the catalog-approved provider rows;
+- Meta accepts the new PageView with `events_received=1`, while no historical
+  PageView row is claimed;
+- standard Shopify checkout and Klarna Express carry the attribution snapshot
+  into the paid-order webhook and resulting purchase provider payload;
+- Dataset Quality is compared with the documented pre-release baseline after
+  sufficient traffic, not inferred from one smoke event.
+
+The source runtime has no direct GA4 Measurement Protocol transport. The live
+server-GTM container still exposes a legacy `GA4 - MP Purchase` tag as of the
+read-only audit. Removing or disabling it and publishing sGTM is a separate
+provider mutation that requires explicit approval and its own preview/live
+verification. See
+`META_ATTRIBUTION_AUDIT_2026-07-18.md`.
+
+The pre-deploy provider snapshot at `2026-07-18T14:34:57Z` contained 625
+Google Data Manager dead-lettered attempts: 594 parameter values longer than
+the documented 100-character limit, 29 events without a valid GA client ID,
+and 2 events outside the accepted timestamp window. This release bounds every
+additional event parameter to 100 characters and persists future consented
+Google events without a valid client ID as
+`skipped_unqualified/missing_client_id` instead of dispatching them. No schema
+migration is required: the linked production history matches all 18 local
+migrations, and the existing outbox already exposes `status`, `skip_reason`,
+`processed_at`, and `response_semantics`.
+
+After the runtime deployment is `READY`, requeue only the exact 594
+length-rejected attempts still inside Google's documented ingestion window.
+Do not replay the 29 missing-client rows or the 2 expired rows; classify and
+resolve those fail-closed. Resolve each dead-letter audit row only after its
+joined provider attempt is accepted, or after its non-replay disposition has
+been recorded.
+
 ### Vercel Web Analytics restoration 2026-07-18
 
 Web Analytics is enabled on Vercel project

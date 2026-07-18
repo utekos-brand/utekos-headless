@@ -26,6 +26,7 @@ import { metaAddToCartProviderAdapter } from './providerAdapters/metaAddToCartPr
 import { metaAddToWishlistProviderAdapter } from './providerAdapters/metaAddToWishlistProviderAdapter'
 import { metaBeginCheckoutProviderAdapter } from './providerAdapters/metaBeginCheckoutProviderAdapter'
 import { metaGenerateLeadProviderAdapter } from './providerAdapters/metaGenerateLeadProviderAdapter'
+import { metaPageViewProviderAdapter } from './providerAdapters/metaPageViewProviderAdapter'
 import { metaPurchaseProviderAdapter } from './providerAdapters/metaPurchaseProviderAdapter'
 import { metaSearchProviderAdapter } from './providerAdapters/metaSearchProviderAdapter'
 import { metaViewItemProviderAdapter } from './providerAdapters/metaViewItemProviderAdapter'
@@ -62,6 +63,7 @@ export const providerAdapterRegistry = {
   'meta:add_to_wishlist': metaAddToWishlistProviderAdapter,
   'meta:begin_checkout': metaBeginCheckoutProviderAdapter,
   'meta:generate_lead': metaGenerateLeadProviderAdapter,
+  'meta:page_view': metaPageViewProviderAdapter,
   'meta:purchase': metaPurchaseProviderAdapter,
   'meta:search': metaSearchProviderAdapter,
   'meta:view_item': metaViewItemProviderAdapter

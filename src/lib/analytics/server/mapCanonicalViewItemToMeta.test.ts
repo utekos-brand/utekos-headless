@@ -1,10 +1,15 @@
 import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
 import test from 'node:test'
 import type { CanonicalViewItem } from '../viewItemEvent'
 import { mapCanonicalViewItemToMeta } from './mapCanonicalViewItemToMeta'
 
 const emailHash = 'a'.repeat(64)
 const phoneHash = 'b'.repeat(64)
+
+function sha256(value: string) {
+  return createHash('sha256').update(value).digest('hex')
+}
 
 function viewItem(
   overrides: Partial<CanonicalViewItem> = {}
@@ -41,6 +46,13 @@ function viewItem(
     event_name: 'view_item',
     event_time: '2026-07-16T10:00:00.000Z',
     external_id: 'anon_550e8400-e29b-41d4-a716-446655440000',
+    location: {
+      city: 'Oslo',
+      country_code: 'NO',
+      postal_code: '0150',
+      region_code: '03',
+      source: 'server_request'
+    },
     page_url: 'https://utekos.no/produkter/utekos-techdown',
     user_data: {
       email_sha256: [emailHash],
@@ -61,11 +73,13 @@ test('maps canonical view_item to a catalog-compatible Meta ViewContent event', 
       em: [emailHash],
       ph: [phoneHash],
       external_id: [
-        '47b360efda81ae521d5388c4cd14f96456ebdddda7cad245a7040f40070e9f87'
+        '47b360efda81ae521d5388c4cd14f96456ebdddda7cad245a7040f40070e9f87.AQQCAQMB'
       ],
+      ct: [sha256('oslo')],
+      zp: [sha256('0150')],
+      country: [sha256('no')],
       client_ip_address: '203.0.113.10',
       client_user_agent: 'Mozilla/5.0',
-      fbc: 'fb.1.1784196000000.meta-click-id',
       fbp: 'fb.1.1784195900000.123456789'
     },
     custom_data: {
@@ -93,7 +107,7 @@ test('maps canonical view_item to a catalog-compatible Meta ViewContent event', 
   })
 })
 
-test('prefers an existing fbc value over synthesizing one', () => {
+test('uses the persisted fbc value and never rebuilds it from event time', () => {
   const normalized = mapCanonicalViewItemToMeta(
     viewItem({
       browser_id: {

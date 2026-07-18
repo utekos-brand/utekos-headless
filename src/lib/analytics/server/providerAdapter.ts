@@ -28,6 +28,7 @@ export type ProviderAdapter<
   E extends CanonicalEvent,
   R
 > = {
+  claimNotBefore?: string
   deadLetterReasons: {
     attemptsExhausted: string
     invalidPayload: string

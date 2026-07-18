@@ -86,7 +86,8 @@ test('atomically claims one due or stale Meta view_item row', async () => {
   )
   assert.deepEqual(fake.calls[0]?.parameters, [
     'meta',
-    'view_item'
+    'view_item',
+    null
   ])
 })
 

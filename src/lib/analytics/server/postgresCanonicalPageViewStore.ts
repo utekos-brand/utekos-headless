@@ -72,18 +72,30 @@ const runPostgresTransaction: CanonicalEventTransactionRunner =
               payload,
               consent_basis,
               data_quality,
-              dispatch_mode
+              dispatch_mode,
+              skip_reason,
+              processed_at,
+              response_semantics
             ) values (
               ${row.idempotency_key},
               ${row.provider},
               ${row.event_id},
               ${row.event_name},
               ${row.status},
-              now(),
+              case when ${row.status} = 'pending' then now() end,
               ${sql.json(row.payload as postgres.JSONValue)},
               ${sql.json(row.consent_basis)},
               ${sql.json(row.data_quality)},
-              ${row.dispatch_mode}
+              ${row.dispatch_mode},
+              ${row.skip_reason ?? null},
+              case
+                when ${row.status} = 'skipped_unqualified'
+                  then now()
+              end,
+              case
+                when ${row.status} = 'skipped_unqualified'
+                  then 'skipped_unqualified'
+              end
             )
             on conflict (provider, idempotency_key) do nothing
           `

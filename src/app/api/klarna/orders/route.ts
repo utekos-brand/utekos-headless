@@ -101,7 +101,8 @@ export async function POST(req: NextRequest) {
     authorizationToken,
     orderPayload,
     collectedShippingAddress,
-    shopifyCartId
+    shopifyCartId,
+    attribution
   } = parsed.data
 
   try {
@@ -123,7 +124,8 @@ export async function POST(req: NextRequest) {
       orderPayload,
       collectedShippingAddress,
       klarnaOrderId: klarnaOrder.order_id,
-      authorizationToken
+      authorizationToken,
+      ...(attribution ? { attribution } : {})
     })
 
     return NextResponse.json({

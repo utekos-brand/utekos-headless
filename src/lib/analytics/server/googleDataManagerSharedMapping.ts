@@ -1,16 +1,15 @@
 import { protos } from '@google-ads/datamanager'
 import type { CanonicalEventEnvelope } from '../canonicalEventEnvelope'
+import { findGoogleClientId } from './findGoogleClientId'
 
 type DataManagerParameter =
   protos.google.ads.datamanager.v1.IEventParameter
 
-export const GA_CLIENT_ID = /^\d+\.\d+$/
-export const GA_COOKIE = /^GA\d+\.\d+\.(\d+\.\d+)$/
 export const MAX_PARAMETER_VALUE_LENGTH = 100
 export const MAX_ADDITIONAL_ITEM_PARAMETERS = 24
-export const MAX_PAGE_LOCATION_LENGTH = 1000
-export const MAX_PAGE_REFERRER_LENGTH = 420
-export const MAX_PAGE_TITLE_LENGTH = 300
+export const MAX_PAGE_LOCATION_LENGTH = MAX_PARAMETER_VALUE_LENGTH
+export const MAX_PAGE_REFERRER_LENGTH = MAX_PARAMETER_VALUE_LENGTH
+export const MAX_PAGE_TITLE_LENGTH = MAX_PARAMETER_VALUE_LENGTH
 export const MAX_USER_IDENTIFIERS = 10
 export const IP_MATCHING_RESTRICTED_COUNTRY_CODES = new Set([
   'AT', 'BE', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES',
@@ -39,22 +38,8 @@ type MappableBrowserEvent = Pick<
 export function resolveGoogleClientId(
   browserId: CanonicalEventEnvelope['browser_id']
 ) {
-  const candidate =
-    browserId?.ga_client_id
-    ?? browserId?.ga_client
-    ?? browserId?.ga_cookie
-
-  if (!candidate) {
-    throw new Error(
-      'Google Data Manager event requires a GA client ID'
-    )
-  }
-
-  const normalized = candidate.trim()
-  if (GA_CLIENT_ID.test(normalized)) return normalized
-
-  const cookieMatch = GA_COOKIE.exec(normalized)
-  if (cookieMatch?.[1]) return cookieMatch[1]
+  const clientId = findGoogleClientId(browserId)
+  if (clientId) return clientId
 
   throw new Error(
     'Google Data Manager event requires a valid GA client ID'

@@ -70,6 +70,7 @@ export function mapShopifyBeginCheckout(
   const checkoutId = resolveCheckoutId(cart)
 
   return {
+    cart_id: cart.id,
     currency,
     value: netValue,
     gross_value: grossValue,

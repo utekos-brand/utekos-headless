@@ -52,7 +52,9 @@ test('rejects fully denied events without calling storage', async () => {
 })
 
 test('accepts the event and its provider intents through one storage call', async () => {
-  const writes: Parameters<CanonicalPageViewStore['accept']>[0][] = []
+  const writes: Parameters<
+    CanonicalPageViewStore['accept']
+  >[0][] = []
   const store: CanonicalPageViewStore = {
     accept: async input => {
       writes.push(input)
@@ -70,7 +72,7 @@ test('accepts the event and its provider intents through one storage call', asyn
   assert.equal(writes.length, 1)
   assert.deepEqual(
     writes[0]?.dispatches.map(dispatch => dispatch.provider),
-    ['meta', 'microsoft_uet']
+    ['meta']
   )
 })
 

@@ -1,4 +1,5 @@
 import { captureException } from '@sentry/nextjs'
+import { enrichCanonicalEventWithMetaAttribution } from './enrichCanonicalEventWithMetaAttribution'
 import { enrichCanonicalViewItemWithGoogleAnalyticsIds } from './googleAnalyticsBrowserIds'
 import type { ConsentSnapshot } from './pageViewEvent'
 import type { CanonicalViewItem } from './viewItemEvent'
@@ -270,9 +271,11 @@ function isRetryableStatus(status: number) {
 async function postCanonicalViewItem(
   event: CanonicalViewItem
 ): Promise<void> {
+  const metaEnrichedEvent =
+    await enrichCanonicalEventWithMetaAttribution(event)
   const enrichedEvent =
     await enrichCanonicalViewItemWithGoogleAnalyticsIds(
-      event
+      metaEnrichedEvent
     )
 
   for (let attempt = 0; attempt < 2; attempt += 1) {

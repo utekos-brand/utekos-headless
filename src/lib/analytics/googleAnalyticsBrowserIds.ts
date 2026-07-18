@@ -1,5 +1,6 @@
 import { GA_MEASUREMENT_ID } from '../../api/constants/monitoring'
 import type { CanonicalViewItem } from './viewItemEvent'
+import type { ConsentSnapshot } from './canonicalEventEnvelope'
 
 const GOOGLE_TAG_TIMEOUT_MS = 500
 
@@ -108,11 +109,16 @@ function readGoogleTagValue(
   })
 }
 
-export async function enrichCanonicalViewItemWithGoogleAnalyticsIds(
-  event: CanonicalViewItem,
+export async function enrichCanonicalEventWithGoogleAnalyticsIds<
+  E extends {
+    browser_id?: Record<string, string> | undefined
+    consent: ConsentSnapshot
+  }
+>(
+  event: E,
   dependencies: GoogleAnalyticsBrowserIdDependencies =
     defaultDependencies
-): Promise<CanonicalViewItem> {
+): Promise<E> {
   if (event.consent.analytics !== 'granted') return event
 
   const [clientId, sessionId] = await Promise.all([
@@ -130,4 +136,15 @@ export async function enrichCanonicalViewItemWithGoogleAnalyticsIds(
       ...(sessionId ? { ga_session_id: sessionId } : {})
     }
   }
+}
+
+export function enrichCanonicalViewItemWithGoogleAnalyticsIds(
+  event: CanonicalViewItem,
+  dependencies: GoogleAnalyticsBrowserIdDependencies =
+    defaultDependencies
+) {
+  return enrichCanonicalEventWithGoogleAnalyticsIds(
+    event,
+    dependencies
+  )
 }

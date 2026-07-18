@@ -58,6 +58,10 @@ const CLAIM_NEXT_QUERY = `
       and event_name = $2
       and dispatch_mode = 'server_retry'
       and (
+        $3::timestamptz is null
+        or created_at >= $3::timestamptz
+      )
+      and (
         (
           status in ('pending', 'retry_scheduled')
           and (
@@ -240,7 +244,8 @@ export function createPostgresProviderOutboxDatabase<
     claimNext: async () => {
       const rows = await executeQuery(CLAIM_NEXT_QUERY, [
         adapter.provider,
-        adapter.eventName
+        adapter.eventName,
+        adapter.claimNotBefore ?? null
       ])
 
       return parseClaimedRow(rows[0])

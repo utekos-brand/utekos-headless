@@ -7,6 +7,7 @@ import {
   canonicalPageViewSchema,
   type CanonicalPageView
 } from './pageViewEvent'
+import { enrichCanonicalEventWithMetaAttribution } from './enrichCanonicalEventWithMetaAttribution'
 
 export type CookiebotState = {
   consent?: CookiebotConsent
@@ -115,15 +116,17 @@ export function createPageViewCollectorTransport(
     if (events.length === 0) return 'skipped'
 
     const results = await Promise.allSettled(
-      events.map(event =>
-        dependencies.send(
-          prepareCanonicalPageViewForCollector(
-            event,
-            cookiebot as CookiebotState,
-            dependencies.getCookieHeader()
-          )
+      events.map(async event => {
+        const prepared = prepareCanonicalPageViewForCollector(
+          event,
+          cookiebot as CookiebotState,
+          dependencies.getCookieHeader()
         )
-      )
+        const enriched =
+          await enrichCanonicalEventWithMetaAttribution(prepared)
+
+        await dependencies.send(enriched)
+      })
     )
 
     return results.some(result => result.status === 'rejected') ?

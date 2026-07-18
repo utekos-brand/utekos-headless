@@ -4,12 +4,22 @@ import {
   type ProviderId as CatalogProviderId
 } from '../eventCatalog'
 import type { ProviderId } from './providerAdapter'
+import { findGoogleClientId } from './findGoogleClientId'
 
-export type ProviderDispatchIntent = {
+type ActiveProviderDispatchIntent = {
   dispatch_mode: 'server_retry'
   event_id: string
   provider: ProviderId
 }
+
+type SkippedProviderDispatchIntent = ActiveProviderDispatchIntent & {
+  skip_reason: 'missing_client_id'
+  status: 'skipped_unqualified'
+}
+
+export type ProviderDispatchIntent =
+  | ActiveProviderDispatchIntent
+  | SkippedProviderDispatchIntent
 
 const outboxProviderIds = [
   'google',
@@ -65,6 +75,21 @@ export function planCanonicalEventDispatch(
     }
     if (!hasRequiredConsent(providerEntry.consentRequirement, event)) {
       return []
+    }
+
+    if (
+      provider === 'google'
+      && !findGoogleClientId(event.browser_id)
+    ) {
+      return [
+        {
+          dispatch_mode: 'server_retry' as const,
+          event_id: event.event_id,
+          provider,
+          skip_reason: 'missing_client_id' as const,
+          status: 'skipped_unqualified' as const
+        }
+      ]
     }
 
     return [

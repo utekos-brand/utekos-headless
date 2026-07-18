@@ -11,6 +11,7 @@ import {
 
 export const canonicalBeginCheckoutCommerceSchema =
   canonicalCommerceValueSchema.extend({
+    cart_id: z.string().min(1),
     checkout_id: z.string().min(1),
     creation_revision: z.string().min(1)
   })

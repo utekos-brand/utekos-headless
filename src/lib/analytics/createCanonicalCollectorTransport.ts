@@ -1,5 +1,6 @@
 import { captureException } from '@sentry/nextjs'
 import type { ConsentSnapshot } from './canonicalEventEnvelope'
+import { enrichCanonicalEventWithMetaAttribution } from './enrichCanonicalEventWithMetaAttribution'
 
 const COOKIEBOT_EVENTS = [
   'CookiebotOnConsentReady',
@@ -55,6 +56,12 @@ type CreateCanonicalCollectorTransportInput<E extends { consent: ConsentSnapshot
   enrichEvent?: (event: E) => Promise<E>
   hasCollectionConsent?: (event: E) => boolean
 }
+
+type SendCanonicalCollectorEventInput<E extends { consent: ConsentSnapshot }> =
+  Pick<
+    CreateCanonicalCollectorTransportInput<E>,
+    'analyticsEventName' | 'endpoint' | 'enrichEvent'
+  >
 
 function compactRecord(
   entries: Array<[string, string | undefined]>
@@ -253,45 +260,54 @@ function defaultHasCollectionConsent(event: { consent: ConsentSnapshot }) {
   )
 }
 
+export async function sendCanonicalCollectorEvent<
+  E extends { consent: ConsentSnapshot }
+>(
+  input: SendCanonicalCollectorEventInput<E>,
+  event: E
+): Promise<void> {
+  const metaEnriched =
+    await enrichCanonicalEventWithMetaAttribution(event)
+  const enriched =
+    input.enrichEvent ?
+      await input.enrichEvent(metaEnriched)
+    : metaEnriched
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    let response: Response
+
+    try {
+      response = await fetch(input.endpoint, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(enriched),
+        cache: 'no-store',
+        credentials: 'same-origin',
+        keepalive: true
+      })
+    } catch (error) {
+      if (attempt === 1) throw error
+      continue
+    }
+
+    if (response.ok) return
+
+    if (attempt === 1 || !isRetryableStatus(response.status)) {
+      throw new Error(
+        `${input.analyticsEventName} collector returned ${response.status}`
+      )
+    }
+  }
+}
+
 export function createCanonicalCollectorTransport<
   E extends { consent: ConsentSnapshot }
 >(input: CreateCanonicalCollectorTransportInput<E>) {
   const hasCollectionConsent =
     input.hasCollectionConsent ?? defaultHasCollectionConsent
-
-  async function postEvent(event: E): Promise<void> {
-    const enriched =
-      input.enrichEvent ? await input.enrichEvent(event) : event
-
-    for (let attempt = 0; attempt < 2; attempt += 1) {
-      let response: Response
-
-      try {
-        response = await fetch(input.endpoint, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(enriched),
-          cache: 'no-store',
-          credentials: 'same-origin',
-          keepalive: true
-        })
-      } catch (error) {
-        if (attempt === 1) throw error
-        continue
-      }
-
-      if (response.ok) return
-
-      if (attempt === 1 || !isRetryableStatus(response.status)) {
-        throw new Error(
-          `${input.analyticsEventName} collector returned ${response.status}`
-        )
-      }
-    }
-  }
 
   function reportError(error: unknown) {
     captureException(error, {
@@ -323,7 +339,10 @@ export function createCanonicalCollectorTransport<
 
       if (hasCollectionConsent(current.event)) {
         finish()
-        void postEvent(current.event).catch(reportError)
+        void sendCanonicalCollectorEvent(
+          input,
+          current.event
+        ).catch(reportError)
         return
       }
 

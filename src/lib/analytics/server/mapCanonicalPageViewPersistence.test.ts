@@ -99,3 +99,36 @@ test('maps canonical Meta and Microsoft outbox rows without provider renaming', 
     }))
   )
 })
+
+test('persists a non-qualified Google row without scheduling it', () => {
+  const result = mapCanonicalPageViewPersistence({
+    event,
+    dispatches: [
+      {
+        dispatch_mode: 'server_retry',
+        event_id: event.event_id,
+        provider: 'google',
+        skip_reason: 'missing_client_id',
+        status: 'skipped_unqualified'
+      }
+    ]
+  })
+
+  assert.deepEqual(result.dispatches[0], {
+    consent_basis: event.consent,
+    data_quality: {
+      email_sha256_count: 1,
+      has_external_id: true,
+      phone_sha256_count: 0
+    },
+    dispatch_mode: 'server_retry',
+    event_id: event.event_id,
+    event_name: 'page_view',
+    idempotency_key:
+      'page_view:61c2ef59-6e6f-4f56-a63a-567ca398f9de',
+    payload: event,
+    provider: 'google',
+    skip_reason: 'missing_client_id',
+    status: 'skipped_unqualified'
+  })
+})

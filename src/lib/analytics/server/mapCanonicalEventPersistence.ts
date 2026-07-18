@@ -27,7 +27,8 @@ export type ProviderDispatchInsert = {
   idempotency_key: string
   payload: CanonicalEventStoreInput['event']
   provider: CanonicalEventStoreInput['dispatches'][number]['provider']
-  status: 'pending'
+  skip_reason?: 'missing_client_id'
+  status: 'pending' | 'skipped_unqualified'
 }
 
 export function mapCanonicalEventPersistence(
@@ -61,16 +62,33 @@ export function mapCanonicalEventPersistence(
       : {}),
       user_data_quality: dataQuality
     },
-    dispatches: input.dispatches.map(dispatch => ({
-      consent_basis: input.event.consent,
-      data_quality: dataQuality,
-      dispatch_mode: dispatch.dispatch_mode,
-      event_id: input.event.event_id,
-      event_name: input.event.event_name,
-      idempotency_key: idempotencyKey,
-      payload: input.event,
-      provider: dispatch.provider,
-      status: 'pending'
-    }))
+    dispatches: input.dispatches.map(dispatch => {
+      if ('status' in dispatch) {
+        return {
+          consent_basis: input.event.consent,
+          data_quality: dataQuality,
+          dispatch_mode: dispatch.dispatch_mode,
+          event_id: input.event.event_id,
+          event_name: input.event.event_name,
+          idempotency_key: idempotencyKey,
+          payload: input.event,
+          provider: dispatch.provider,
+          skip_reason: dispatch.skip_reason,
+          status: dispatch.status
+        }
+      }
+
+      return {
+        consent_basis: input.event.consent,
+        data_quality: dataQuality,
+        dispatch_mode: dispatch.dispatch_mode,
+        event_id: input.event.event_id,
+        event_name: input.event.event_name,
+        idempotency_key: idempotencyKey,
+        payload: input.event,
+        provider: dispatch.provider,
+        status: 'pending' as const
+      }
+    })
   }
 }

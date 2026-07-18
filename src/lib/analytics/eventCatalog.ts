@@ -569,7 +569,7 @@ const pageViewProviders = {
     serverOutbox: 'disabled'
   }),
   meta: providerMapping({
-    support: 'blocked',
+    support: 'supported',
     eventName: 'PageView',
     transport: { browser: null, server: 'meta_conversions_api' },
     requiredParameters: [
@@ -581,10 +581,10 @@ const pageViewProviders = {
     dedupeField: 'event_id',
     consentRequirement: 'marketing',
     adapterVersion: 1,
-    productionStatus: 'blocked',
+    productionStatus: 'active',
     productionDetail:
-      'Historical pending page_view rows exist, but no page_view worker is active. Do not replay them.',
-    serverOutbox: 'blocked_no_worker'
+      'Canonical Meta CAPI PageView outbox is active for newly accepted events. Historical blocked rows remain excluded from blind replay.',
+    serverOutbox: 'active'
   }),
   microsoft_uet: providerMapping({
     support: 'supported',
@@ -835,6 +835,7 @@ const beginCheckoutProviders = {
     transport: { browser: null, server: 'first_party_api' },
     requiredParameters: [
       ...baseCanonicalParameters,
+      'cart_id',
       'currency',
       'value',
       'items'
@@ -1349,6 +1350,7 @@ export const eventCatalog = {
       repeatability: 'Each newly created checkout is new.',
       eventTime: 'The successful checkout-creation response timestamp.',
       prerequisites: [
+        'cart_id',
         'checkout_id or token',
         'creation revision',
         'currency',

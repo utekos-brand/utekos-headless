@@ -4,6 +4,8 @@ import {
   type KlarnaExpressOrderPayload
 } from '@/components/klarna/schemas/klarnaExpressOrderSchema'
 import { KLARNA_EXPRESS_SESSION_KEY } from '@/components/klarna/constants/sessionStorage'
+import { captureException } from '@sentry/nextjs'
+import { captureBrowserCheckoutAttributionSnapshot } from '@/lib/analytics/captureBrowserCheckoutAttributionSnapshot'
 
 type CompleteKlarnaExpressCheckoutInput = {
   authorizationToken: string
@@ -30,6 +32,25 @@ export async function completeKlarnaExpressCheckout({
     klarnaCollectedShippingAddressSchema.parse(
       collectedShippingAddress
     )
+  let attribution:
+    | Awaited<
+        ReturnType<
+          typeof captureBrowserCheckoutAttributionSnapshot
+        >
+      >
+    | undefined
+
+  try {
+    attribution =
+      await captureBrowserCheckoutAttributionSnapshot()
+  } catch (error) {
+    captureException(error, {
+      tags: {
+        analytics_event: 'begin_checkout',
+        analytics_stage: 'klarna_attribution_handoff'
+      }
+    })
+  }
 
   const response = await fetch('/api/klarna/orders', {
     method: 'POST',
@@ -38,7 +59,8 @@ export async function completeKlarnaExpressCheckout({
       authorizationToken,
       orderPayload,
       collectedShippingAddress: validatedAddress,
-      shopifyCartId
+      shopifyCartId,
+      ...(attribution ? { attribution } : {})
     })
   })
 

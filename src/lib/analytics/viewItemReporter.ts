@@ -93,6 +93,8 @@ export function createViewItemReporter(
     const expectedPageUrl = normalizePageUrl(
       initialContext.pageUrl
     )
+    const expectedPageResource =
+      normalizePageResource(expectedPageUrl)
 
     const provisionalPageView =
       dependencies.pageViewSession.ensure({
@@ -119,7 +121,8 @@ export function createViewItemReporter(
       if (
         cancelled ||
         completed ||
-        pageView.pageUrl !== expectedPageUrl ||
+        normalizePageResource(pageView.pageUrl) !==
+          expectedPageResource ||
         !dependencies.pageViewSession.hasEmitted(
           pageView.pageViewId
         )
@@ -130,8 +133,8 @@ export function createViewItemReporter(
       const clientContext = dependencies.readClientContext()
 
       if (
-        normalizePageUrl(clientContext.pageUrl) !==
-        expectedPageUrl
+        normalizePageResource(clientContext.pageUrl) !==
+        expectedPageResource
       ) {
         return
       }
@@ -306,4 +309,10 @@ function normalizePageUrl(pageUrl: string): string {
   }
 
   return url.href
+}
+
+function normalizePageResource(pageUrl: string): string {
+  const url = new URL(normalizePageUrl(pageUrl))
+
+  return `${url.origin}${url.pathname}`
 }

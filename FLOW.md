@@ -54,6 +54,23 @@ ikke-blokkerte katalogevents:
   `add_shipping_info`, `add_payment_info`, `checkout_error`,
   `payment_error`.
 
+Lokalt, men ikke produksjonsdeployert 2026-07-18, er Meta-attribusjonen
+utvidet med den offisielle Parameter Builder-flaten, samtykkestyrte
+90-dagers `_fbp`/`_fbc`-cookies, stabil anonym `external_id`, Vercel
+IP/UA/geodata i felles Meta-mapping, Meta CAPI PageView-worker og
+checkout-attribusjon for både standard Shopify checkout og Klarna Express.
+Historiske PageView-rader er beskyttet av claimant-cutover og replayes ikke
+automatisk. Se
+[audit og releasegater](META_ATTRIBUTION_AUDIT_2026-07-18.md).
+
+Pre-deploy-rapporten `2026-07-18T14:34:57Z` viste 625 aktive Google Data
+Manager-dead letters. 594 skyldtes at mappingen tillot lengre additional
+event-verdier enn providerens 100-tegnsgrense, 29 manglet gyldig GA client ID,
+og 2 var utenfor tidsvinduet. Den lokale releasen avgrenser verdiene til 100
+tegn og klassifiserer nye manglende client ID-er fail-closed. Historiske rader
+skal behandles etter eksakt feilklasse og provider-vindu, aldri ved blind
+replay.
+
 GTM får laste før samtykke for Advanced Consent Mode og cookieless
 pings. Meta, Microsoft, Clarity og øvrige ikke-Google-tagger skal
 fortsatt være blokkert av consent-gates i GTM. `/__sgtm` er alltid
@@ -70,12 +87,13 @@ aktive eller verifiserte flater:
 
 - browser tracking hub, direkte Meta/Microsoft/PostHog-klientkode og
   produkt-/kampanje-trackere;
-- `/api/tracking-events`, consent snapshots, checkout-attribusjon,
-  tracking receipts og analytics-ruter;
+- den tidligere `/api/tracking-events`-huben, consent snapshots, tracking
+  receipts og analytics-ruter; ny checkout-attribusjon bruker validerte
+  Shopify cart-/draft-order-attributter;
 - øvrige eventers provider-dispatch, ordre-/refund-webhooks og den
   tidligere generiske retry/dead-letter-runtime;
-- provider-adaptere utover aktiv Meta `ViewContent` og Google Data
-  Manager executed ingestion for `view_item`, inkludert direkte GA4
+- provider-adaptere utover aktiv Meta `PageView`/`ViewContent` og Google
+  Data Manager executed ingestion for `view_item`, inkludert direkte GA4
   Measurement Protocol og Microsoft UET CAPI;
 - tracking-, katalog- og provider-crons; den generiske provider-outbox-cronen
   finnes foreløpig bare i den lokale grunnmuren.
@@ -101,27 +119,24 @@ flowchart TD
   browser --> dl[Google dataLayer]
   browser --> pixels[Meta Pixel / UET / Clarity]
   browser --> posthog[PostHog produktanalyse]
-  browser --> api[/api/tracking-events]
+  browser --> api[/api/events/*]
 
   api --> ledger[Supabase marketing.event_ledger]
   api --> queue[Supabase ops.provider_dispatch_attempts]
   ledger --> archive[analytics.event_ledger_archive]
-  queue --> retry[/api/cron/retry-dispatch]
+  queue --> retry[/api/cron/provider-outbox-dispatch]
   queue --> deadletter[ops.dead_letter_events]
   deadletter --> replay[/api/cron/replay-dead-letter]
 
   retry --> meta[Meta CAPI]
-  retry --> google[GA4 Measurement Protocol]
+  retry --> google[Google Data Manager API]
   retry --> microsoft[Microsoft UET CAPI]
 
-  browser --> checkoutCapture[/api/checkout/capture-identifiers]
-  checkoutCapture --> redis[Redis attribution cache]
-  checkoutCapture --> attributionSnapshot[Supabase checkout attribution snapshots]
+  browser --> checkoutCapture[Checkout attribution snapshot]
+  checkoutCapture --> shopifyAttributes[Shopify cart / draft-order attributes]
 
-  shopify[Shopify order webhook] --> redis
-  shopify --> attributionSnapshot
-  redis --> serverPurchase[Server-side purchase dispatch]
-  attributionSnapshot --> serverPurchase
+  shopify[Shopify order webhook] --> shopifyAttributes
+  shopifyAttributes --> serverPurchase[Server-side purchase dispatch]
   serverPurchase --> ledger
   serverPurchase --> queue
 

@@ -39,6 +39,9 @@ function viewItem(): CanonicalEvent {
     environment: 'test',
     page_url: 'https://utekos.no/produkter/utekos-techdown',
     page_title: 'Utekos TechDown',
+    browser_id: {
+      ga_client_id: '123456789.1784201643'
+    },
     consent,
     custom_data: {
       currency: 'NOK',
@@ -72,8 +75,14 @@ function viewItem(): CanonicalEvent {
   })
 }
 
-test('does not create unsupported page_view server rows', () => {
-  assert.deepEqual(planCanonicalEventDispatch(pageView()), [])
+test('routes consented page_view events to the active Meta outbox', () => {
+  assert.deepEqual(planCanonicalEventDispatch(pageView()), [
+    {
+      dispatch_mode: 'server_retry',
+      event_id: '61c2ef59-6e6f-4f56-a63a-567ca398f9de',
+      provider: 'meta'
+    }
+  ])
 })
 
 test('routes view_item only to the active Google and Meta outboxes', () => {
@@ -122,6 +131,31 @@ test('applies provider-specific consent without creating Microsoft rows', () => 
       }
     }),
     [
+      {
+        dispatch_mode: 'server_retry',
+        event_id: event.event_id,
+        provider: 'meta'
+      }
+    ]
+  )
+})
+
+test('records consented Google events without a valid client ID as unqualified', () => {
+  const event = viewItem()
+
+  assert.deepEqual(
+    planCanonicalEventDispatch({
+      ...event,
+      browser_id: undefined
+    }),
+    [
+      {
+        dispatch_mode: 'server_retry',
+        event_id: event.event_id,
+        provider: 'google',
+        skip_reason: 'missing_client_id',
+        status: 'skipped_unqualified'
+      },
       {
         dispatch_mode: 'server_retry',
         event_id: event.event_id,

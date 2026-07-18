@@ -3,6 +3,10 @@ import type {
   KlarnaExpressOrderPayload
 } from '@/components/klarna/schemas/klarnaExpressOrderSchema'
 import { shopifyAdminGraphql } from '@/lib/shopify/shopifyAdminGraphql'
+import {
+  checkoutAttributionSnapshotToShopifyAttributes,
+  type CheckoutAttributionSnapshot
+} from '@/lib/analytics/checkoutAttributionSnapshot'
 import type { Cart } from 'types/cart'
 
 type ShopifyDraftOrderCreateResponse = {
@@ -27,6 +31,7 @@ type CreateOrderFromKlarnaExpressInput = {
   collectedShippingAddress: KlarnaCollectedShippingAddress
   klarnaOrderId: string
   authorizationToken: string
+  attribution?: CheckoutAttributionSnapshot
 }
 
 type ShopifyAddressInput = {
@@ -41,11 +46,15 @@ type ShopifyAddressInput = {
   phone?: string
 }
 
-function optionalStringField<Key extends keyof ShopifyAddressInput>(
+function optionalStringField<
+  Key extends keyof ShopifyAddressInput
+>(
   key: Key,
   value: string | undefined
 ): Pick<ShopifyAddressInput, Key> | Record<string, never> {
-  return value ? { [key]: value } as Pick<ShopifyAddressInput, Key> : {}
+  return value ?
+      ({ [key]: value } as Pick<ShopifyAddressInput, Key>)
+    : {}
 }
 
 function mapKlarnaAddressToShopify(
@@ -59,7 +68,10 @@ function mapKlarnaAddressToShopify(
     ...optionalStringField('city', address.city),
     ...optionalStringField('province', address.region),
     ...optionalStringField('zip', address.postal_code),
-    ...optionalStringField('countryCode', address.country?.toUpperCase()),
+    ...optionalStringField(
+      'countryCode',
+      address.country?.toUpperCase()
+    ),
     ...optionalStringField('phone', address.phone)
   }
 }
@@ -87,7 +99,8 @@ export async function createOrderFromKlarnaExpress({
   orderPayload,
   collectedShippingAddress,
   klarnaOrderId,
-  authorizationToken
+  authorizationToken,
+  attribution
 }: CreateOrderFromKlarnaExpressInput): Promise<{
   shopifyOrderId: string
   shopifyOrderName: string
@@ -155,7 +168,12 @@ export async function createOrderFromKlarnaExpress({
             {
               key: 'klarna_authorization_token',
               value: authorizationToken
-            }
+            },
+            ...(attribution ?
+              checkoutAttributionSnapshotToShopifyAttributes(
+                attribution
+              )
+            : [])
           ]
         }
       }

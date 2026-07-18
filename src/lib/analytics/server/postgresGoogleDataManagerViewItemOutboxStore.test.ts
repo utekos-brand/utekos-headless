@@ -66,7 +66,11 @@ test('atomically claims only Google view_item retry rows', async () => {
 
   assert.equal(claimed?.attemptCount, 2)
   assert.match(fake.calls[0]?.query ?? '', /for update skip locked/i)
-  assert.deepEqual(fake.calls[0]?.parameters, ['google', 'view_item'])
+  assert.deepEqual(fake.calls[0]?.parameters, [
+    'google',
+    'view_item',
+    null
+  ])
 })
 
 test('stores validateOnly acceptance separately as accepted_unverified', async () => {

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { checkoutAttributionSnapshotSchema } from '@/lib/analytics/checkoutAttributionSnapshot'
 
 const klarnaOrderLineTypeSchema = z.enum([
   'physical',
@@ -89,7 +90,8 @@ export const klarnaCreateOrderRequestSchema = z.object({
   authorizationToken: z.string().min(1),
   orderPayload: klarnaExpressOrderPayloadSchema,
   collectedShippingAddress: klarnaCollectedShippingAddressSchema,
-  shopifyCartId: z.string().optional()
+  shopifyCartId: z.string().optional(),
+  attribution: checkoutAttributionSnapshotSchema.optional()
 })
 
 export type KlarnaOrderLine = z.infer<

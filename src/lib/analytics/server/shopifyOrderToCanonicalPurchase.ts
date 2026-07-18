@@ -1,5 +1,5 @@
 import type { OrderPaid } from 'types/commerce/order/OrderPaid'
-import { parseOrderConsentFromNoteAttributes } from '../checkoutConsentSnapshot'
+import { parseOrderAttributionFromNoteAttributes } from '../checkoutAttributionSnapshot'
 import {
   canonicalPurchaseSchema,
   deterministicPurchaseEventId,
@@ -12,7 +12,9 @@ import { normalizeCustomerMatchPhone } from '@/lib/google/data-manager/normalize
 import { parseAbsoluteHttpUrl } from './parseAbsoluteHttpUrl'
 import { resolveCanonicalEnvironment } from './resolveCanonicalEnvironment'
 
-function parseDecimal(value: string | number | null | undefined) {
+function parseDecimal(
+  value: string | number | null | undefined
+) {
   const parsed = Number(value)
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0
 }
@@ -69,18 +71,50 @@ function mapPurchaseItems(order: OrderPaid) {
     .filter(item => item.quantity > 0)
 }
 
+function mapOrderLocation(order: OrderPaid) {
+  const address = order.shipping_address ?? order.billing_address
+  if (!address) return undefined
+
+  const location = {
+    ...(address.city ? { city: address.city } : {}),
+    ...(address.country_code ?
+      { country_code: address.country_code.toUpperCase() }
+    : {}),
+    ...(address.zip ? { postal_code: address.zip } : {}),
+    ...(address.province_code ?
+      { region_code: address.province_code }
+    : {})
+  }
+
+  return Object.keys(location).length > 0 ?
+      { ...location, source: 'server_request' as const }
+    : undefined
+}
+
 export function shopifyOrderToCanonicalPurchase(
   order: OrderPaid
 ): CanonicalPurchase {
   const orderLegacyId = String(order.id)
-  const email = order.email ?? order.contact_email ?? order.customer?.email
+  const email =
+    order.email ?? order.contact_email ?? order.customer?.email
   const phone = order.phone ?? order.customer?.phone
   const emailHash = hashEmail(email)
   const phoneHash = hashPhone(phone)
   const userAgent = readClientUserAgent(order)
+  const attribution = parseOrderAttributionFromNoteAttributes(
+    order.note_attributes
+  )
   const pageUrl =
+    attribution.page_url ??
+    parseAbsoluteHttpUrl(order.landing_site) ??
     parseAbsoluteHttpUrl(order.order_status_url)
-    ?? parseAbsoluteHttpUrl(order.landing_site)
+  const referrerUrl =
+    attribution.referrer_url ??
+    parseAbsoluteHttpUrl(order.referring_site)
+  const location =
+    attribution.consent.marketing === 'granted' ?
+      mapOrderLocation(order)
+    : undefined
   const items = mapPurchaseItems(order)
 
   if (items.length === 0) {
@@ -102,18 +136,29 @@ export function shopifyOrderToCanonicalPurchase(
     source: 'webhook',
     environment: resolveCanonicalEnvironment(),
     ...(pageUrl ? { page_url: pageUrl } : {}),
-    ...(parseAbsoluteHttpUrl(order.referring_site) ?
-      { referrer_url: parseAbsoluteHttpUrl(order.referring_site) }
+    ...(referrerUrl ? { referrer_url: referrerUrl } : {}),
+    consent: attribution.consent,
+    ...(attribution.browser_id ?
+      { browser_id: attribution.browser_id }
     : {}),
-    consent: parseOrderConsentFromNoteAttributes(order.note_attributes),
-    ...(order.customer?.id ?
-      { external_id: String(order.customer.id) }
+    ...(attribution.click_id ?
+      { click_id: attribution.click_id }
     : {}),
-    ...(order.browser_ip ? { client_ip_address: order.browser_ip } : {}),
+    ...(attribution.external_id ?
+      { external_id: attribution.external_id }
+    : order.customer?.id ?
+      { external_id: `shopify_customer_${order.customer.id}` }
+    : {}),
+    ...(order.browser_ip ?
+      { client_ip_address: order.browser_ip }
+    : {}),
     ...(userAgent ?
       { event_device_info: { user_agent: userAgent } }
     : {}),
-    ...(Object.keys(userData).length > 0 ? { user_data: userData } : {}),
+    ...(location ? { location } : {}),
+    ...(Object.keys(userData).length > 0 ?
+      { user_data: userData }
+    : {}),
     custom_data: {
       currency: (
         order.presentment_currency || order.currency
@@ -123,7 +168,8 @@ export function shopifyOrderToCanonicalPurchase(
       shipping_value: parseDecimal(
         order.total_shipping_price_set?.shop_money?.amount
       ),
-      transaction_id: shopifyPurchaseTransactionId(orderLegacyId),
+      transaction_id:
+        shopifyPurchaseTransactionId(orderLegacyId),
       order_name: order.name ?? String(order.order_number),
       items
     }

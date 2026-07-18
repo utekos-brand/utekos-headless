@@ -85,12 +85,16 @@ export function createMetaProviderAdapter<
   E extends CanonicalEvent,
   R extends MetaDispatchReceipt
 >(input: {
+  claimNotBefore?: string
   dispatch: (event: E) => Promise<R>
   eventName: E['event_name']
   key: ProviderAdapterKey
   schema: z.ZodType<E>
 }): ProviderAdapter<E, R> {
   return {
+    ...(input.claimNotBefore ?
+      { claimNotBefore: input.claimNotBefore }
+    : {}),
     deadLetterReasons: {
       attemptsExhausted: 'meta_attempts_exhausted',
       invalidPayload: 'invalid_canonical_payload',

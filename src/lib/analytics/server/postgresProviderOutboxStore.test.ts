@@ -107,7 +107,11 @@ test('atomically claims only the adapter provider and event', async () => {
     attemptId: '7bcd24a4-190c-4eca-a834-5c9854bd54ea',
     payload: { event_name: 'page_view' }
   })
-  assert.deepEqual(fake.calls[0]?.parameters, ['meta', 'page_view'])
+  assert.deepEqual(fake.calls[0]?.parameters, [
+    'meta',
+    'page_view',
+    null
+  ])
   assert.match(fake.calls[0]?.query ?? '', /for update skip locked/i)
   assert.match(
     fake.calls[0]?.query ?? '',
@@ -123,8 +127,31 @@ test('atomically claims only the adapter provider and event', async () => {
   )
   assert.match(
     fake.calls[0]?.query ?? '',
+    /created_at >= \$3::timestamptz/i
+  )
+  assert.match(
+    fake.calls[0]?.query ?? '',
     /attempt_count = attempt\.attempt_count \+ 1/i
   )
+})
+
+test('applies an adapter cutover without replaying older rows', async () => {
+  const fake = fakeExecutor([[]])
+  const database = createPostgresProviderOutboxDatabase(
+    {
+      ...adapter,
+      claimNotBefore: '2026-07-18T13:13:10.000Z'
+    },
+    fake.execute
+  )
+
+  await database.claimNext()
+
+  assert.deepEqual(fake.calls[0]?.parameters, [
+    'meta',
+    'page_view',
+    '2026-07-18T13:13:10.000Z'
+  ])
 })
 
 test('projects provider acceptance into accepted_unverified fields', async () => {

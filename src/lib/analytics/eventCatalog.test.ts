@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
-  activeCanonicalEventNames,
   canonicalEventNames,
   eventCatalog,
   gaAutomaticEventDecisions,
@@ -195,10 +194,8 @@ test('allows Google and Meta server outboxes only for active supported providers
   assert.ok(activeOutboxes.includes('google:add_to_cart'))
   assert.ok(activeOutboxes.includes('meta:search'))
   assert.equal(
-    Object.values(eventCatalog.page_view.providers).some(
-      (provider) => provider.serverOutbox === 'active'
-    ),
-    false
+    eventCatalog.page_view.providers.meta.serverOutbox,
+    'active'
   )
 })
 
@@ -238,7 +235,7 @@ test('records current mixed Microsoft delivery and historical page_view backlog 
   )
   assert.equal(
     eventCatalog.page_view.providers.meta.serverOutbox,
-    'blocked_no_worker'
+    'active'
   )
   assert.equal(
     eventCatalog.page_view.providers.microsoft_uet.serverOutbox,
@@ -246,7 +243,7 @@ test('records current mixed Microsoft delivery and historical page_view backlog 
   )
   assert.match(
     eventCatalog.page_view.providers.meta.productionDetail,
-    /Historical pending page_view rows/
+    /Historical blocked rows/
   )
   assert.match(
     eventCatalog.page_view.providers.microsoft_uet.productionDetail,

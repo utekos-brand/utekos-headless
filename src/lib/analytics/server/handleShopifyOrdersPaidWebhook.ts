@@ -3,6 +3,7 @@ import 'server-only'
 import { after } from 'next/server'
 import { ZodError } from 'zod'
 import { acceptCanonicalPurchase } from '@/lib/analytics/server/acceptCanonicalPurchase'
+import { getVerifiedShopifyCustomerContext } from '@/lib/analytics/server/getVerifiedShopifyCustomerContext'
 import { postgresCanonicalEventStore } from '@/lib/analytics/server/postgresCanonicalPageViewStore'
 import { runRegisteredProviderOutboxBatch } from '@/lib/analytics/server/runRegisteredProviderOutboxBatch'
 import { shopifyOrderToCanonicalPurchase } from '@/lib/analytics/server/shopifyOrderToCanonicalPurchase'
@@ -23,7 +24,10 @@ type ShopifyOrdersPaidWebhookDependencies = {
   verifyWebhook?: typeof verifyShopifyWebhook
 }
 
-function jsonResponse(body: Record<string, unknown>, status: number) {
+function jsonResponse(
+  body: Record<string, unknown>,
+  status: number
+) {
   return Response.json(body, {
     headers: NO_STORE_HEADERS,
     status
@@ -58,7 +62,10 @@ export async function handleShopifyOrdersPaidWebhook(
   }
 
   if (!verifyWebhook(rawBody, hmac)) {
-    return jsonResponse({ error: 'invalid_webhook_signature' }, 401)
+    return jsonResponse(
+      { error: 'invalid_webhook_signature' },
+      401
+    )
   }
 
   let orderPayload: unknown
@@ -73,7 +80,9 @@ export async function handleShopifyOrdersPaidWebhook(
     const canonicalPurchase = mapOrder(orderPayload as OrderPaid)
     const result = await acceptPurchase({
       payload: canonicalPurchase,
-      requestContext: {},
+      requestContext: getVerifiedShopifyCustomerContext(
+        canonicalPurchase
+      ),
       store: postgresCanonicalEventStore
     })
 
@@ -85,7 +94,10 @@ export async function handleShopifyOrdersPaidWebhook(
           const summary = await runBatch({
             maxItems: IMMEDIATE_BATCH_SIZE
           })
-          console.info('[purchase-outbox-after] completed', summary)
+          console.info(
+            '[purchase-outbox-after] completed',
+            summary
+          )
         } catch (error) {
           console.error('[purchase-outbox-after] failed', error)
           throw error
@@ -94,10 +106,7 @@ export async function handleShopifyOrdersPaidWebhook(
     }
 
     return jsonResponse(
-      {
-        event_id: result.event_id,
-        status: result.status
-      },
+      { event_id: result.event_id, status: result.status },
       result.status === 'accepted' ? 202 : 200
     )
   } catch (error) {
