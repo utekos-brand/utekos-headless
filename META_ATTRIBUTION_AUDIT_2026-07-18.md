@@ -1,7 +1,8 @@
-# Kanonisk Meta-attribusjon: audit og lokal remediering
+# Kanonisk Meta-attribusjon: produksjonsaudit og remediering
 
-Statusdato: 2026-07-18. Status: implementert og verifisert lokalt, ikke
-produksjonsdeployert.
+Statusdato: 2026-07-18. Status: produksjonsdeployert og verifisert. Dataset
+Quality-trenden for events med lavt etterreleasevolum skal fortsatt følges over
+7 og 14 dager.
 
 ## Konklusjon
 
@@ -12,7 +13,7 @@ hadde opprettet dem. Manglende `_fbc` ble feilaktig bygget fra event-tiden,
 `external_id` kunne utebli når samtykke kom etter første render, PageView
 hadde ingen Meta-worker, og Shopify purchase-webhooken arvet bare samtykke.
 
-Den lokale løsningen gjør nå følgende etter marketing-samtykke:
+Den aktive produksjonsløsningen gjør nå følgende etter marketing-samtykke:
 
 1. `fbclid` registreres fra hvilken som helst landingsrute og beholdes i
    besøkskonteksten gjennom intern navigasjon.
@@ -31,10 +32,13 @@ Den lokale løsningen gjør nå følgende etter marketing-samtykke:
    aldri kan låse betalingen. Purchase-webhooken gjenoppretter `external_id`,
    `_fbp`, `_fbc`, klikk-ID-er, GA-klient/session og samtykke.
 7. Klarna Express sender den samme snapshotkontrakten til serveren og lagrer
-   den på Shopify-draftordren.
+   attribusjonen på Shopify-draftordren. Klarna-godkjenningstokenet brukes bare
+   mot Klarna og lagres ikke som ordreattributt.
 
-Ingen Supabase-skjemaendring, Runtime Cache, Vercel Queue, GTM-publisering,
-provider-mutasjon eller produksjonsdeploy inngår i den lokale endringen.
+Releasen brukte eksisterende Supabase-skjema og outbox. Runtime Cache og Vercel
+Queues ble ikke innført. Vercel-runtime er deployert fra `main`, Google Data
+Manager-radgjelden er behandlet etter eksplisitt godkjenning, og server-GTM
+versjon `29` er publisert uten legacy Measurement Protocol-taggen.
 
 ## Verifiserte kilder
 
@@ -115,7 +119,7 @@ normaliseres.
 
 ## Eventdekning til Meta
 
-Lokalt aktive serveradaptere etter remedieringen:
+Produksjonsaktive serveradaptere etter remedieringen:
 
 - `page_view` → `PageView`
 - `view_item` → `ViewContent`
@@ -132,7 +136,7 @@ browser/server-dedupekonflikt for disse eventene. Dersom Pixel gjeninnføres,
 må browser-eventet bruke nøyaktig samme `event_id`; dette er en egen GTM-
 publisering med eksplisitt godkjenning.
 
-## Live baseline før release
+## Dataset Quality før og etter release
 
 Read-only Dataset Quality viste før denne lokale endringen:
 
@@ -145,26 +149,42 @@ Read-only Dataset Quality viste før denne lokale endringen:
 
 Historisk Shopify-rapport for 804 ordre viste `fbp` 45,1 %, `fbc` 26,5 % og
 minst én betalt klikk-ID 1,0 %. De ni historiske checkout-snapshotene hadde
-`fbp` 100 %, `fbc` 44,4 % og `external_id` 100 %. Tallene er baseline, ikke
-bevis for effekten av den ureleasede koden.
+`fbp` 100 %, `fbc` 44,4 % og `external_id` 100 %.
+
+Read-only Dataset Quality etter produksjonsrelease:
+
+| Meta-event | EMQ etter release | Identifikatordekning etter release | Etterreleasevolum ved kontroll |
+| --- | ---: | --- | ---: |
+| `PageView` | 6.6 | IP/UA/`fbp`/`external_id`/land 100 %, `fbc` 87,5 %, postnummer/by 83,3 % | 24 |
+| `AddToCart` | 3.6 | IP/UA 100 %, `fbp`/`external_id`/postnummer/land/by 25 % | 1 |
+| `InitiateCheckout` | 5.5 | IP/UA 100 %, `fbp` 40 %, `external_id`/postnummer/land/by/`fbc` 20 % | 1 |
+| `ViewContent` | 5.1 | IP 99,3 %, UA 100 %, `fbp` 14,2 %, `external_id` 21,3 %, `fbc` 80,2 % | 56 |
+| `Purchase` | 9.3 | e-post/IP/UA/telefon/`external_id`/adresse/navn 100 %, `fbp`/`fbc` 75 % | 3 |
+
+`ViewContent` har nok nye events til å vise en reell positiv bevegelse fra EMQ
+4.9 til 5.1 og bedre `fbp`/`fbc`-dekning. `PageView` etablerer en sterk ny
+baseline. Ett `AddToCart`- og ett `InitiateCheckout`-event er ikke nok til en
+trendkonklusjon; de skal måles på nytt etter 7 og 14 dager. `Purchase` er
+uendret på 9.3 og har fortsatt sterk kundematch.
 
 ## Data Manager og Measurement Protocol
 
 Aktiv kildekode inneholder ingen direkte GA4 Measurement Protocol-transport;
-kanoniske Google-serverevents bruker Google Data Manager API. Read-only audit
-av publisert server-GTM fant likevel en eldre tag med navnet
-`GA4 - MP Purchase`. Full erstatning er derfor ikke produksjonsbekreftet før
-den taggen er fjernet eller dokumentert deaktivert og containeren publisert.
-Det krever separat, eksplisitt GTM-godkjenning.
+kanoniske Google-serverevents bruker Google Data Manager API. Legacy-taggen
+`GA4 - MP Purchase` ble fjernet fra server-GTM og versjon `29` ble publisert.
+Live servercontainer er derfor Data Manager-/sGTM-basert uten denne parallelle
+Measurement Protocol-transporten.
 
-Provider-rapporten ved `2026-07-18T14:34:57Z` viste 625 uavklarte Google Data
-Manager-dead letters. Klassifiseringen var 594 avviste parameterverdier over
-100 tegn, 29 events uten gyldig GA client ID og 2 events utenfor tidsvinduet.
-Mapperen er derfor korrigert til 100 tegn for alle additional event-verdier,
-og fremtidige hendelser uten client ID blir registrert som
-`skipped_unqualified/missing_client_id`. Bare de 594 eksakt samsvarende og
-fortsatt tidsmessig kvalifiserte radene kan requeue-es etter deploy; de øvrige
-skal lukkes fail-closed uten provider-replay.
+Produksjonssettet bestod av 628 Google Data Manager-dead letters: 594
+overlange additional event-verdier, 29 events uten gyldig GA client ID og 5
+events utenfor provider-vinduet. De 594 kvalifiserte radene ble requeue-et
+etter mapperfixen. 593 ble akseptert av Data Manager; én historisk
+`begin_checkout` manglet dagens obligatoriske `cart_id` og ble lukket som
+`historical_payload_incompatible`. De 29 uten client ID og de 5 utenfor vinduet
+ble lukket fail-closed uten providerkall. To nye browser-clock-skew-rader ble
+deretter requeue-et etter timestamp-clamp og akseptert. Totalt ble 595
+aksepterte dead-letter-auditrader løst, og Google har nå 0 aktive rader, 0
+failed/dead-lettered og 0 uløste dead letters.
 
 ## Hvorfor ikke Vercel Queue eller Runtime Cache
 
@@ -177,7 +197,7 @@ skal lukkes fail-closed uten provider-replay.
   outbox-claim. Supabase-raden er den varige retry-kilden dersom funksjonen
   avsluttes.
 
-## Lokal verifikasjon
+## Verifikasjon
 
 - 218/218 analysetester, målrettet ESLint og `tsc --noEmit`: grønt.
 - Next.js route typegen, MCP build med 52 servere og MCP doctor: grønt.
@@ -195,21 +215,34 @@ skal lukkes fail-closed uten provider-replay.
   `x-vercel-cache: MISS`. Standardkommandoen mot lokal Next-dev feiler fordi
   den eksterne rewrite-responsen ikke arver Vercel-headerregelen; dette er ikke
   en feil på live gateway, men forblir et lokalt smoke-avvik.
+- Produksjonssmoke bekreftet ingen Meta-cookies før marketing-samtykke. Etter
+  samtykke ble én `_fbp`, én `_fbc` med test-`fbclid` og stabil
+  `utekos_external_id` opprettet med 90-dagers Meta-cookielevetid.
+- Live PageView og ViewContent inneholdt betrodd IP/UA/geodata og ble akseptert
+  av Meta med `events_received=1`. Claimant-cutoveren hindret historisk
+  PageView-replay.
+- Standard Shopify checkout beholdt `_fbp`, `_fbc`, `fbclid` og `external_id`
+  byte-for-byte fra browser til cart attributes. En etterfølgende ekte betalt
+  ordre bekreftet at `purchase` gjenbrukte samme `external_id` og `_fbp` som
+  kundens `begin_checkout`; denne reisen hadde ingen Meta-klikk og derfor
+  korrekt ingen `_fbc`/`fbclid`.
+- Klarna production Client ID og serverlegitimasjon ble validert fail-closed.
+  Live Express-knappen åpnet den ekte Klarna/BankID-flaten uten å miste
+  merchant-URL-en. En full betaling ble ikke gjennomført fordi den ville ha
+  opprettet en reell ordre; full betalingssmoke skal bruke Klarna Playground
+  eller en godkjent reell handel.
+- Provider-rapporten etter opprydding viser 0 aktive kø-rader, 0
+  failed/dead-lettered og 0 uløste dead letters. Microsoft-varselet er
+  bevisst: serveradapteren er ikke aktiv etter resetten, og historiske rader er
+  lukket som `skipped_unqualified`, ikke fremstilt som levert.
 
-## Produksjonsgater
+## Gjenstående observasjon
 
-Før status kan endres fra «lokalt implementert» til «produksjonsverifisert»:
-
-1. Eksplisitt godkjenn og deploy Vercel-runtimeendringen.
-2. Bekreft ingen Meta-cookies før marketing-samtykke.
-3. Land på forside, produktside og kampanjeside med test-`fbclid`; aksepter
-   marketing og bekreft én `_fbp`, én `_fbc`, korrekt appendix, 90-dagers
-   levetid og stabil `external_id`.
-4. Bekreft kanonisk PageView/ViewContent med Vercel IP/UA/geodata i ledger og
-   nye Meta-outboxrader etter claimant-cutover.
-5. Bekreft Meta `events_received=1` og ingen historisk PageView-replay.
-6. Kjør standard checkout og Klarna Express; bekreft attrs og at purchase
-   gjenbruker samme `external_id`, `fbp`, `fbc` og klikk-ID-er.
-7. Les Dataset Quality på nytt etter tilstrekkelig trafikk. Sammenlign mot
-   baseline per event; ikke bruk en enkelt smoke-event som trendbevis.
-8. Behandle eventuell fjerning av `GA4 - MP Purchase` som separat GTM-publish.
+1. Les Dataset Quality på nytt etter 7 og 14 dager for `AddToCart`,
+   `InitiateCheckout` og `Purchase`; nåværende etterreleasevolum er for lavt
+   til en sikker trendkonklusjon.
+2. Kjør en full Klarna Playground-betaling eller observer neste godkjente
+   livebetaling for å bevise hele Klarna → Shopify → purchase-webhook-kjeden.
+3. Microsoft UET CAPI må fortsatt reintroduseres med en registrert
+   serveradapter før Microsoft kan få serverlevering; 0 aktive kø-rader betyr
+   ikke at denne adapteren finnes.

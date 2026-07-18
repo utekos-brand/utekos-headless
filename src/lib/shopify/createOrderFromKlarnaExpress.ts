@@ -3,10 +3,8 @@ import type {
   KlarnaExpressOrderPayload
 } from '@/components/klarna/schemas/klarnaExpressOrderSchema'
 import { shopifyAdminGraphql } from '@/lib/shopify/shopifyAdminGraphql'
-import {
-  checkoutAttributionSnapshotToShopifyAttributes,
-  type CheckoutAttributionSnapshot
-} from '@/lib/analytics/checkoutAttributionSnapshot'
+import type { CheckoutAttributionSnapshot } from '@/lib/analytics/checkoutAttributionSnapshot'
+import { buildKlarnaExpressOrderAttributes } from './buildKlarnaExpressOrderAttributes'
 import type { Cart } from 'types/cart'
 
 type ShopifyDraftOrderCreateResponse = {
@@ -30,7 +28,6 @@ type CreateOrderFromKlarnaExpressInput = {
   orderPayload: KlarnaExpressOrderPayload
   collectedShippingAddress: KlarnaCollectedShippingAddress
   klarnaOrderId: string
-  authorizationToken: string
   attribution?: CheckoutAttributionSnapshot
 }
 
@@ -99,7 +96,6 @@ export async function createOrderFromKlarnaExpress({
   orderPayload,
   collectedShippingAddress,
   klarnaOrderId,
-  authorizationToken,
   attribution
 }: CreateOrderFromKlarnaExpressInput): Promise<{
   shopifyOrderId: string
@@ -163,18 +159,10 @@ export async function createOrderFromKlarnaExpress({
           billingAddress,
           tags: ['klarna-express'],
           note: `Klarna express checkout order ${klarnaOrderId}`,
-          customAttributes: [
-            { key: 'klarna_order_id', value: klarnaOrderId },
-            {
-              key: 'klarna_authorization_token',
-              value: authorizationToken
-            },
-            ...(attribution ?
-              checkoutAttributionSnapshotToShopifyAttributes(
-                attribution
-              )
-            : [])
-          ]
+          customAttributes: buildKlarnaExpressOrderAttributes({
+            klarnaOrderId,
+            ...(attribution ? { attribution } : {})
+          })
         }
       }
     )

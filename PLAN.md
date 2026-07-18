@@ -3,35 +3,36 @@
 ## Status
 
 STATUS 2026-07-18: META-IDENTITET OG CHECKOUT-ATTRIBUSJON ER
-REMEDIERT LOKALT. OFFISIELL META PARAMETER BUILDER 1.3.1 EIER
+PRODUKSJONSDEPLOYERT OG VERIFISERT. OFFISIELL META PARAMETER BUILDER 1.3.1 EIER
 OPPRETTELSE/OPPDATERING AV `_fbp` OG `_fbc` ETTER MARKETING-
 SAMTYKKE, `external_id` OPPRETTES VED FAKTISK DISPATCH, OG FELLES
 META-MAPPING BRUKER BETRODD VERCEL IP/UA/GEOLOKASJON. META CAPI
 `PageView` ER LAGT TIL MED CUTOVER SOM BLOKKERER HISTORISK
 REPLAY. STANDARD SHOPIFY CHECKOUT OG KLARNA EXPRESS BEVARER
-ATTRIBUSJON TIL PURCHASE-WEBHOOK. 218/218 ANALYTICS-TESTER OG
-TYPESCRIPT ER GRØNNE. INGEN SUPABASE-MIGRASJON, GTM-PUBLISERING,
-PROVIDER-MUTASJON, PUSH ELLER DEPLOY ER UTFØRT. PUBLISERT SGTM
-HAR FORTSATT LEGACY-TAGGEN `GA4 - MP Purchase`; FJERNING KREVER
-EGEN GODKJENNING. SE
+ATTRIBUSJON TIL PURCHASE-WEBHOOK. LIVE CONSENT-, LANDING-,
+PAGEVIEW/VIEWCONTENT-, STANDARD CHECKOUT- OG EKTE PURCHASE-BEVIS ER
+GRØNNE. SGTM V29 ER PUBLISERT UTEN LEGACY-TAGGEN
+`GA4 - MP Purchase`. DATASET QUALITY HAR FORBEDRET PAGEVIEW/
+VIEWCONTENT-BILDE, MENS LAVERE FUNNEL-EVENTS MÅ MÅLES IGJEN ETTER
+7 OG 14 DAGER. SE
 `META_ATTRIBUTION_AUDIT_2026-07-18.md`.
 
 STATUS 2026-07-18: GOOGLE DATA MANAGER-INCIDENTET ER KLASSIFISERT
-FØR DEPLOY. 625 DEAD-LETTERED FORSØK BESTÅR AV 594 PARAMETERVERDIER
-OVER 100 TEGN, 29 MANGLENDE GA CLIENT ID-ER OG 2 UTLØPTE
-TIDSSTEMPLER. LOKAL MAPPING ER RETTET TIL 100 TEGN, NYE HENDELSER
-UTEN CLIENT ID BLIR `SKIPPED_UNQUALIFIED/MISSING_CLIENT_ID`, OG
-FULL ANALYSETESTGATE ER 218/218. BARE EKSAKT MATCHENDE,
-TIDSKVALIFISERTE LENGDEFEIL SKAL REQUEUE-ES ETTER READY DEPLOY.
+OG LUKKET. AV 628 DEAD-LETTERED FORSØK BLE 593 RETTET OG AKSEPTERT,
+ÉN HISTORISK PAYLOAD LUKKET SOM INKOMPATIBEL, 29 UTEN GA CLIENT ID
+OG 5 UTENFOR PROVIDER-VINDUET LUKKET UTEN REPLAY. TO NYE CLOCK-
+SKEW-RADER BLE AKSEPTERT ETTER TIMESTAMP-CLAMP. GOOGLE HAR NÅ 0
+AKTIVE, 0 FAILED/DEAD-LETTERED OG 0 ULØSTE RADER. META- OG
+MICROSOFT-HISTORIKK ER OGSÅ LUKKET FAIL-CLOSED; MICROSOFT-
+SERVERADAPTEREN ER FORTSATT IKKE AKTIV OG SKAL IKKE RAPPORTERES SOM
+LEVERT BARE FORDI KØEN ER TOM.
 
 STATUS 2026-07-18: VERCEL WEB ANALYTICS ER AKTIVERT PÅ DET
 LINKEDE `utekos-headless`-PROSJEKTET (`prj_MpZN3Z0PDp8rfwpdzAeplGe4Di0s`).
-`@vercel/analytics@2.0.1` OG `<Analytics />` ER LAGT TIL LOKALT I
+`@vercel/analytics@2.0.1` OG `<Analytics />` ER PRODUKSJONSDEPLOYERT I
 ROOT LAYOUT ETTER AT ANALYTICS-KLIENTEN BLE FJERNET I SPORINGSRESETTEN
 2026-07-15. `utekos.no/_vercel/insights/script.js` RETURNERER 200,
-OG LINT, TYPESCRIPT OG PRODUKSJONSBYGG MED 117/117 GENERERTE SIDER ER
-GRØNNE. RUNTIMEENDRINGEN ER IKKE PUSHET ELLER PRODUKSJONSDEPLOYERT;
-LIVE SIDEVISNINGER STARTER FØRST ETTER EKSPLISITT GODKJENT DEPLOY.
+OG RUNTIMEEN ER VERIFISERT MOT READY PRODUKSJONSDEPLOYMENT.
 
 STATUS 2026-07-17: DEN ENKLE GIT-FLYTEN ER GJENOPPRETTET.
 `pnpm run sync -- "Commit message"` STAGER ALLE ENDRINGER,
@@ -455,8 +456,9 @@ CMP (Usercentrics-produkt) er nå autoritativ samtykkekilde.
   tilbakevendende Vercel-cronen er fjernet lokalt fordi replay-ruten
   er manuell og godkjenningsgated. Produksjonsdeploy, observasjon av
   nye events og eventuell engangsreplay krever separate porter.
-- GA4 browser fallback sender nå `page_location` uten query/hash og
-  dropper ugyldige/overlange URL-er før Measurement Protocol.
+- Den historiske GA4 Measurement Protocol-fallbacken er erstattet av Google
+  Data Manager API. Mapperen avgrenser additional event-verdier til 100 tegn
+  og begrenser fremtidige browser-tidsstempler til serverens nåtid.
 - Constraint-query bekrefter at `provider_dispatch_attempts` tillater
   `skipped_unqualified` og har `dispatch_mode`-sjekk for
   `server_retry`, `server_direct` og `client_observed`.
@@ -644,18 +646,14 @@ Gjeldende status etter 2026-07-07-herdingen står i
 - Cookiebot-events oppdaterer React-gates, Google Consent Mode,
   Microsoft UET consent og Clarity `consentv2` uten reload.
   Endringer lagres i `marketing.consent_snapshots`.
-- `/api/tracking-events` validerer en streng, versjonert
-  Zod-kontrakt og avviser valgfri lagring fail-closed når verken
+- `/api/events/*` validerer strenge, versjonerte
+  Zod-kontrakter og avviser valgfri lagring fail-closed når verken
   Meta-, Google- eller Microsoft-samtykke kan dokumenteres.
 - Browser-events bruker én sentral dispatcher. Google pusher fortsatt
-  til samtykkegatet dataLayer/sGTM, og samtykkede business-events med
-  `ga4Data.client_id` køes i tillegg som GA4 Measurement Protocol
-  fallback når de ikke er `PageView`. Meta Pixel og ledger/CAPI deler
-  samme `event_id`. Microsoft UET er consent-gatet i samme
-  dispatcher og sender dokumenterte lowercase actions
-  (`add_to_cart`, `begin_checkout`, `purchase`) med `event_id`,
-  `revenue_value`, `currency`, `ecomm_prodid` og lowercase
-  `ecomm_pagetype`.
+  til samtykkegatet dataLayer/sGTM, og kvalifiserte kanoniske
+  serverevents køes til Google Data Manager API. Meta ledger/CAPI bruker
+  samme `event_id`. Microsoft UET CAPI-serveradapteren er ikke aktiv etter
+  resetten og må reintroduseres som egen release.
 - Shopify `orders-paid` kan sende Microsoft purchase via UET
   Conversions API når
   `MICROSOFT_UET_CAPI_TOKEN`/`UTEKOS_MICROSOFT_UET_CAPI_TOKEN`/`MICROSOFT_UET_CAPI_ACCESS_TOKEN`
@@ -687,7 +685,7 @@ Gjeldende status etter 2026-07-07-herdingen står i
 | `view_item`      | `ViewContent`         | statistics/marketing etter samtykke                     | Google dataLayer/sGTM + Meta Pixel/CAPI                 |
 | `add_to_cart`    | `AddToCart`           | statistics/marketing etter samtykke                     | Google dataLayer/sGTM + Meta Pixel/CAPI + Microsoft UET |
 | `begin_checkout` | `InitiateCheckout`    | statistics/marketing etter samtykke                     | Google dataLayer/sGTM + Meta Pixel/CAPI + Microsoft UET |
-| `purchase`       | `Purchase`            | nødvendig ledger; provider kun med dokumentert samtykke | Google MP + Microsoft UET CAPI når token/msclkid finnes |
+| `purchase`       | `Purchase`            | nødvendig ledger; provider kun med dokumentert samtykke | Google Data Manager + Meta CAPI; Microsoft krever ny adapter |
 | `search`         | `Search`              | statistics/marketing etter samtykke                     | Google dataLayer/sGTM + Meta Pixel/CAPI                 |
 | `generate_lead`  | `Lead`                | marketing                                               | Google dataLayer/sGTM + Meta Pixel/CAPI                 |
 
@@ -728,7 +726,7 @@ Gjeldende status etter 2026-07-07-herdingen står i
 
 ### Drift og rollback
 
-- Varsle på manglende CMP/banner, `/api/tracking-events`
+- Varsle på manglende CMP/banner, `/api/events/*`
   feil/latency, eldste køpost, retry-rate, dead letters,
   eventdekning, manglende Meta-identifikatorer og avvik mellom
   Shopify- og provider-purchases.
@@ -751,24 +749,23 @@ Les [AGENTS/tracking.md] Dato: 2026-06-08
 
 ## Tracking-domener og event collector
 
-- `/api/tracking-events` på `utekos.no` er den
-  Utekos-kontrollerte event collectoren for marketing-events.
+- `/api/events/*` på `utekos.no` er de
+  Utekos-kontrollerte collectorene for kanoniske events.
 - `portal.utekos.no` er kanonisk PostHog-ingest. Utekos eier
   DNS-navnet hos One.com, mens PostHog driver mottakstjenesten
   bak CNAME-en.
 - Den parallelle Vercel-relayen på `/relay-MAhe` er fjernet.
 - Meta, Google og andre annonseplattformer skal integreres som
-  provider-adaptere bak `/api/tracking-events`, ikke via
+  provider-adaptere bak den kanoniske ledger/outbox-flyten, ikke via
   PostHog-proxien.
 - `cloud.server.utekos.no` er produksjonsdomene for server-side GTM.
 - Cookiebot CMP med domain group `f2145160-1ac5-4859-8385-36dc6327495f`
   er autoritativ samtykkekilde. Utekos sin event collector leser
   Cookiebot sin førsteparts-cookie `CookieConsent` server-side og
   lagrer normalisert status i event-ledgeret.
-- Google-nettleserevents skal eies av sGTM når
-  `GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm` aktiveres. Direkte GA4
-  Measurement Protocol beholdes for Shopify-, offline- og
-  server-only-events.
+- Google-nettleserevents eies av dataLayer/sGTM. Kanoniske serverevents,
+  inkludert Shopify/offline, bruker Google Data Manager API; direkte GA4
+  Measurement Protocol skal ikke reintroduseres.
 - `GOOGLE_BROWSER_EVENT_TRANSPORT=sgtm` skal ikke aktiveres før
   sGTM-endepunkter, GTM Consent Initialisation og Cookiebot CMP er
   verifisert.

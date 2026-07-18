@@ -124,7 +124,6 @@ export async function POST(req: NextRequest) {
       orderPayload,
       collectedShippingAddress,
       klarnaOrderId: klarnaOrder.order_id,
-      authorizationToken,
       ...(attribution ? { attribution } : {})
     })
 

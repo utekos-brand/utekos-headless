@@ -29,12 +29,11 @@ known and completed in the correct order.
 
 ### Meta identifier and checkout attribution release 2026-07-18
 
-The local release adds a consent-gated Meta Parameter Builder route,
+The production release adds a consent-gated Meta Parameter Builder route,
 first-party `_fbp`/`_fbc` persistence, dispatch-time `external_id`, trusted
 Vercel location matching, a Meta CAPI PageView worker and checkout attribution
 for standard Shopify checkout and Klarna Express. It uses the existing
-canonical ledger/outbox schema. Do not apply a Supabase migration for this
-release.
+canonical ledger/outbox schema; no Supabase migration was applied.
 
 The Meta PageView adapter has a fixed
 `claimNotBefore=2026-07-18T13:13:10.000Z`. Preserve this gate during release:
@@ -42,10 +41,11 @@ it allows rows created by the new runtime while preventing blind delivery of
 historical blocked PageView rows. Any historical replay remains a separate,
 explicitly approved operation.
 
-This is a Vercel runtime deployment and requires explicit approval. Before
-deploy, run targeted analytics tests, changed-file lint, `next typegen`,
-TypeScript, production build, MCP build/doctor and tracking gateway smoke. No
-GTM publish or provider mutation belongs to the Vercel release.
+The runtime was released through commits `8eb0db2a53`, `375f68070`,
+`bfd9cf4ef` and `9aa2b787b`, with exact-SHA Vercel deployments verified
+`READY` before production aliases moved. Targeted analytics/Klarna tests,
+changed-file lint, `next typegen`, TypeScript, production build, MCP
+build/doctor and tracking gateway smoke were green.
 
 After deploy, verify all of the following:
 
@@ -63,17 +63,15 @@ After deploy, verify all of the following:
 - Dataset Quality is compared with the documented pre-release baseline after
   sufficient traffic, not inferred from one smoke event.
 
-The source runtime has no direct GA4 Measurement Protocol transport. The live
-server-GTM container still exposes a legacy `GA4 - MP Purchase` tag as of the
-read-only audit. Removing or disabling it and publishing sGTM is a separate
-provider mutation that requires explicit approval and its own preview/live
-verification. See
-`META_ATTRIBUTION_AUDIT_2026-07-18.md`.
+The source runtime has no direct GA4 Measurement Protocol transport. The
+legacy `GA4 - MP Purchase` tag was removed under explicit approval and
+server-GTM version `29` was published. ADC readback verifies server live v29
+and web live v118. See `META_ATTRIBUTION_AUDIT_2026-07-18.md`.
 
-The pre-deploy provider snapshot at `2026-07-18T14:34:57Z` contained 625
-Google Data Manager dead-lettered attempts: 594 parameter values longer than
-the documented 100-character limit, 29 events without a valid GA client ID,
-and 2 events outside the accepted timestamp window. This release bounds every
+The classified production set contained 628 Google Data Manager
+dead-lettered attempts: 594 parameter values longer than the documented
+100-character limit, 29 events without a valid GA client ID, and 5 events
+outside the accepted timestamp window. This release bounds every
 additional event parameter to 100 characters and persists future consented
 Google events without a valid client ID as
 `skipped_unqualified/missing_client_id` instead of dispatching them. No schema
@@ -81,12 +79,30 @@ migration is required: the linked production history matches all 18 local
 migrations, and the existing outbox already exposes `status`, `skip_reason`,
 `processed_at`, and `response_semantics`.
 
-After the runtime deployment is `READY`, requeue only the exact 594
-length-rejected attempts still inside Google's documented ingestion window.
-Do not replay the 29 missing-client rows or the 2 expired rows; classify and
-resolve those fail-closed. Resolve each dead-letter audit row only after its
-joined provider attempt is accepted, or after its non-replay disposition has
-been recorded.
+The 594 length-rejected attempts were requeued after the runtime reached
+`READY`: 593 were accepted and one historical `begin_checkout` was closed as
+payload-incompatible because it lacked canonical `cart_id`. The 29
+missing-client rows and 5 expired rows were closed fail-closed without replay.
+Two subsequent clock-skew failures were accepted after the timestamp clamp.
+Current provider evidence: 0 active queue rows, 0 failed/dead-lettered rows
+and 0 unresolved dead letters. The Microsoft skipped-rate warning remains
+intentional because no Microsoft server adapter is registered after reset.
+
+### Klarna Express production gate 2026-07-18
+
+Production uses the live EU API endpoint and the deployed environment aliases
+`KLARNA_API_KEY_USERNAME`/`KLARNA_API_KEY_PASSWORD`. The public client-config
+route now fails closed unless server credentials also validate, and it returns
+`environment=production` with `Cache-Control: no-store`. The live storefront
+opened Klarna's real BankID flow successfully. The authorization token is used
+only to create the Klarna order and must never be persisted as a Shopify custom
+attribute.
+
+Do not complete a synthetic live payment merely to smoke-test tracking: it
+creates a real Shopify order and production provider events. Use Klarna
+Playground for a full controlled payment, or verify the next separately
+approved live purchase. A visible button and opened auth frame prove client
+configuration and origin continuity, not final payment capture.
 
 ### Vercel Web Analytics restoration 2026-07-18
 

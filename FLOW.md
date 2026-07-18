@@ -33,8 +33,8 @@ resetten består kun av:
 - Google server-side tagging via førstepartsruten `/__sgtm`.
 
 En avgrenset kanonisk storefront-flyt ble reintrodusert og
-produksjonsverifisert 2026-07-16 for `page_view`/`view_item`, og
-utvidet lokalt 2026-07-17 til hele commerce-funnelen plus øvrige
+produksjonsverifisert 2026-07-16 for `page_view`/`view_item`, og er nå
+produksjonsaktiv for hele den implementerte commerce-funnelen og øvrige
 ikke-blokkerte katalogevents:
 
 - Førsteparts Route Handlers under `/api/events/*` validerer
@@ -54,8 +54,8 @@ ikke-blokkerte katalogevents:
   `add_shipping_info`, `add_payment_info`, `checkout_error`,
   `payment_error`.
 
-Lokalt, men ikke produksjonsdeployert 2026-07-18, er Meta-attribusjonen
-utvidet med den offisielle Parameter Builder-flaten, samtykkestyrte
+Produksjonsdeployert 2026-07-18 er Meta-attribusjonen utvidet med den
+offisielle Parameter Builder-flaten, samtykkestyrte
 90-dagers `_fbp`/`_fbc`-cookies, stabil anonym `external_id`, Vercel
 IP/UA/geodata i felles Meta-mapping, Meta CAPI PageView-worker og
 checkout-attribusjon for både standard Shopify checkout og Klarna Express.
@@ -63,13 +63,13 @@ Historiske PageView-rader er beskyttet av claimant-cutover og replayes ikke
 automatisk. Se
 [audit og releasegater](META_ATTRIBUTION_AUDIT_2026-07-18.md).
 
-Pre-deploy-rapporten `2026-07-18T14:34:57Z` viste 625 aktive Google Data
-Manager-dead letters. 594 skyldtes at mappingen tillot lengre additional
-event-verdier enn providerens 100-tegnsgrense, 29 manglet gyldig GA client ID,
-og 2 var utenfor tidsvinduet. Den lokale releasen avgrenser verdiene til 100
-tegn og klassifiserer nye manglende client ID-er fail-closed. Historiske rader
-skal behandles etter eksakt feilklasse og provider-vindu, aldri ved blind
-replay.
+Produksjonssettet på 628 Google Data Manager-dead letters er ferdig
+klassifisert. 593 av 594 over-lengde-rader ble akseptert etter kontrollert
+replay; den siste var historisk payload-inkompatibel. 29 manglet gyldig GA
+client ID og 5 var utenfor provider-vinduet; alle ble lukket fail-closed uten
+providerkall. To nye clock-skew-rader ble også akseptert etter timestamp-clamp.
+Google står nå med 0 aktive rader, 0 failed/dead-lettered og 0 uløste dead
+letters.
 
 GTM får laste før samtykke for Advanced Consent Mode og cookieless
 pings. Meta, Microsoft, Clarity og øvrige ikke-Google-tagger skal
@@ -81,34 +81,28 @@ CMP-loaderen og skal beholdes. Live runtime viste nøyaktig én `uc.js`
 med `implementation=gtm`, Consent Mode fra `G100` til `G111` etter
 aksept og ingen app-eid duplikatloader.
 
-Følgende tidligere appimplementasjoner utover den avgrensede flyten
-over er fortsatt fjernet og skal behandles som åpne gap, ikke som
-aktive eller verifiserte flater:
+Følgende tidligere appimplementasjoner er fortsatt fjernet og skal behandles
+som åpne gap, ikke som aktive eller verifiserte flater:
 
 - browser tracking hub, direkte Meta/Microsoft/PostHog-klientkode og
   produkt-/kampanje-trackere;
 - den tidligere `/api/tracking-events`-huben, consent snapshots, tracking
   receipts og analytics-ruter; ny checkout-attribusjon bruker validerte
   Shopify cart-/draft-order-attributter;
-- øvrige eventers provider-dispatch, ordre-/refund-webhooks og den
-  tidligere generiske retry/dead-letter-runtime;
-- provider-adaptere utover aktiv Meta `PageView`/`ViewContent` og Google
-  Data Manager executed ingestion for `view_item`, inkludert direkte GA4
-  Measurement Protocol og Microsoft UET CAPI;
-- tracking-, katalog- og provider-crons; den generiske provider-outbox-cronen
-  finnes foreløpig bare i den lokale grunnmuren.
+- direkte GA4 Measurement Protocol-transport og Microsoft UET CAPI-adapter;
+- tidligere parallelle trackinghuber og transportlag som ikke inngår i dagens
+  kanoniske `/api/events/*` + ledger/outbox-flyt.
 
-Supabase er nå kanonisk lager for den reintroduserte `page_view`- og
-`view_item`-flaten. PostHog kan fortsatt være ønsket produktanalyse,
+Supabase er nå kanonisk lager for den reintroduserte eventkatalogen og
+provider-outboxen. PostHog kan fortsatt være ønsket produktanalyse,
 men må ikke omtales som aktiv storefront-tracking før den er innført
 på nytt, samtykkeverifisert og produksjonstestet.
 
 Vercel Web Analytics ble aktivert på prosjektet 2026-07-18. Pakken og
-`<Analytics />` er gjeninnført lokalt etter at den tidligere
+`<Analytics />` er produksjonsdeployert etter at den tidligere
 analytics-klienten ble fjernet i resetten 2026-07-15. Vercels
-førstepartsskript på `utekos.no` svarer 200, og produksjonsbygget er
-grønt. Endringen er ikke produksjonsdeployert ennå og kan ikke fylle
-tilbake perioden uten innsamling.
+førstepartsskript på `utekos.no` svarer 200. Det kan ikke fylle tilbake
+perioden uten innsamling.
 
 ## 1. Målbildet: komplett end-to-end-flyt
 
@@ -177,17 +171,17 @@ kapitalallokering.
 | Integrasjon                   | Tenkt rolle                                            | Data inn                                                                                | Data ut / bruk                                                                    | Skal ikke brukes til                                        | Nåværende status                                                                                                                                 |
 | ----------------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Cookiebot CMP                 | Samtykkekilde og legal gate                            | Brukerens consent state                                                                 | Google Consent Mode, UET consent, Clarity consentv2, service-gating               | Å maskere tekniske feil som "privacy"                       | Aktiv i produksjon; HTML-sjekk fant Cookiebot og ingen Usercentrics-runtime                                                                      |
-| Browser tracking hub          | Samlet klientdispatch                                  | Produkt-, side-, interaksjons- og checkout-events                                       | dataLayer, Meta Pixel, UET, PostHog, `/api/tracking-events`                       | Ukontrollert autocapture eller PII                          | Aktiv; avhengig av korrekt samtykke og event-dekning                                                                                             |
+| Browser tracking hub          | Samlet klientdispatch                                  | Produkt-, side-, interaksjons- og checkout-events                                       | dataLayer og kanoniske `/api/events/*`-kall                                       | Ukontrollert autocapture eller PII                          | Legacy-huben er fjernet; dagens avgrensede kanoniske eventklient er aktiv og samtykkegatet                                                        |
 | Supabase                      | Kanonisk ledger, queue, audit og read models           | Accepted events, provider attempts, consent, checkout attribution snapshots, web vitals | Provider health, dead-letter summary, arkiv, agentdiagnostikk                     | Produktanalyse alene eller rå brukerprofiler                | Aktiv og fylt med data; checkout-attribution snapshot er opprettet i production                                                                  |
 | Redis                         | Kortlevd attribusjon/runtime state                     | `fbp`, `fbc`, Google `client_id`, `msclkid`, dedupe/idempotency                         | Server-side purchase enrichment, med Supabase snapshot som varig fallback         | Langtidslagring, analysefasit eller rapportering            | Aktiv støttefunksjon; snapshot-fallback er deployet i production, men full purchase-smoke gjenstår                                               |
-| PostHog                       | Produktanalyse, webanalyse, funnel, replay, web vitals | Trygge pageviews, web vitals og eksplisitte commerce-events                             | Innsikt, session replay, CRO og adferdsanalyse                                    | Provider-audit, finansiell fasit, PII, rå provider payloads | Aktiv datainntak; mangler ferdig Utekos CRO-/commerce-dashboards                                                                                 |
-| GA4 / sGTM                    | Google-måling og consent-gated browser tagging         | Browser- og server-events                                                               | GA4/Google Ads-import, datalayer-sjekk, Google-optimalisering                     | Ukritisk dobbelttelling med Ads native tags                 | sGTM public endpoints er OK; Google Ads API-prober er fortsatt fail-closed                                                                       |
+| PostHog                       | Produktanalyse, webanalyse, funnel, replay, web vitals | Trygge pageviews, web vitals og eksplisitte commerce-events                             | Innsikt, session replay, CRO og adferdsanalyse                                    | Provider-audit, finansiell fasit, PII, rå provider payloads | Storefront-integrasjonen er fjernet etter resetten; skal ikke omtales som aktiv før ny samtykke- og runtimeverifikasjon                            |
+| GA4 / sGTM                    | Google-måling og consent-gated browser tagging         | Browser- og server-events                                                               | GA4/Google Ads-import, datalayer-sjekk, Google-optimalisering                     | Ukritisk dobbelttelling med Ads native tags                 | sGTM v29 er live uten legacy MP-tag; kanoniske serverevents bruker Data Manager API, og kø/dead letters er grønne                                 |
 | BigQuery                      | Tung GA4-/ads-/batchanalyse                            | GA4 BigQuery Export, senere andre batchkilder                                           | Kuraterte Supabase read models for session, campaign, landing page og attribution | Live runtime-avhengighet eller rådump i appflyten           | GA4-link er aktiv, men `analytics_489598217` finnes ikke ennå                                                                                    |
-| Meta Pixel / CAPI             | Meta-attribusjon og budoptimalisering                  | Pixel og CAPI events, purchase, IDs                                                     | Event Match Quality, Dataset Quality, ads learning                                | Skriveoperasjoner uten eksplisitt godkjenning               | Read-only Dataset Quality OK; ingen uløste provider-dead-letters i siste rapport                                                                  |
-| Microsoft Ads / UET / Clarity | Bing/Microsoft attribusjon, UET CAPI, Clarity          | UET browser/CAPI, consent, Clarity state                                                | Ads readiness, campaign/ad insight, Clarity diagnose                              | Kun en "UET endpoint" uten Ads-kontekst                     | Ads/account/campaign/ad-insight prober er OK; nyeste UET purchase-skip er `missing_attribution`, mens `missing_capi_token` er historisk radgjeld |
+| Meta Pixel / CAPI             | Meta-attribusjon og budoptimalisering                  | CAPI events, purchase og samtykkede IDs                                                 | Event Match Quality, Dataset Quality, ads learning                                | Skriveoperasjoner uten eksplisitt godkjenning               | CAPI produksjonsverifisert; Dataset Quality lest 2026-07-18; 0 aktive eller uløste Meta provider-rader                                            |
+| Microsoft Ads / UET / Clarity | Bing/Microsoft attribusjon, UET CAPI, Clarity          | UET browser/CAPI, consent, Clarity state                                                | Ads readiness, campaign/ad insight, Clarity diagnose                              | Kun en "UET endpoint" uten Ads-kontekst                     | Read-only Ads-flate er verifisert, men UET CAPI-serveradapter er ikke aktiv etter resetten; historiske kø-rader er lukket fail-closed            |
 | Google Merchant Center        | Produktfeed og Shopping-kvalitet                       | Shopify-katalog, GTIN, bilder, kategorier                                               | Product status, Shopping eligibility, feedkvalitet                                | Tracking-lager                                              | Merchant API og API source er OK; kontopolicy må fortsatt verifiseres                                                                            |
 | Sentry                        | Feilsporing og teknisk årsak                           | Server/edge/global/client errors                                                        | Issues, request errors, stack traces                                              | Produktanalyse eller session replay uten consent-oppsett    | Server/edge aktiv; Replay er ikke aktivert; Sentry MCP-probe fail-closed                                                                         |
-| Vercel                        | Deploy, runtime, produksjonsstatus og egen Web Analytics | Deployment metadata, runtime status og førsteparts sidevisninger                       | Deploy-verifikasjon, produksjonsdiagnostikk og uavhengig trafikksjekk              | Provider-fasit eller erstatning for GA4/Supabase-eventer     | Web Analytics er prosjektaktivert; lokal `<Analytics />`-integrasjon og build er grønn, men runtimeendringen er ikke produksjonsdeployert ennå      |
+| Vercel                        | Deploy, runtime, produksjonsstatus og egen Web Analytics | Deployment metadata, runtime status og førsteparts sidevisninger                       | Deploy-verifikasjon, produksjonsdiagnostikk og uavhengig trafikksjekk              | Provider-fasit eller erstatning for GA4/Supabase-eventer     | Web Analytics og tracking-runtime er produksjonsdeployert og kontrollert mot eksakt Git-SHA                                                       |
 | MCP/agentflater               | Lesbar operasjonell kontrollflate                      | Supabase, PostHog, provider-prober, docs                                                | Diagnose, gapregister, prioritering                                               | Skjulte provider-mutasjoner                                 | 28 commerce/tracking-verktøy OK; flere credential-gated prober fail-closed                                                                       |
 
 ## 3. Ønsket flyt steg for steg
@@ -247,11 +241,11 @@ skjemaendring eller provider-replay ble utført.
 | Steg                 | Hva som fungerer nå                                                                | Avvik / svakhet                                                                                                                                                                                                                                            | Hvorfor det betyr noe                                                                                                  | Lukkekriterium                                                                                                                           |
 | -------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | 0. Consent           | Cookiebot er aktiv i produksjon og kode oppdaterer Google, UET og Clarity consent. | Full produksjons-smoke må fortsatt validere alle service-navn mot Cookiebot admin og provider behavior.                                                                                                                                                    | Feil service-navn kan gi enten tapt tracking eller uønsket tracking.                                                   | Browser-smoke viser korrekt denied/accepted for Google, Meta, Microsoft, Clarity, PostHog og Sentry Replay før endring regnes som trygg. |
-| 1. Browser capture   | Klienthub sender dataLayer, Meta, UET, PostHog og first-party events.              | PostHog viser lavt volum av eksplisitte `utekos_*` commerce-events sammenlignet med pageviews/web vitals.                                                                                                                                                  | Produktanalyse får ikke nok detaljert commerce-grunnlag til CRO.                                                       | PostHog har stabile `utekos_view_item`, `utekos_add_to_cart`, `utekos_begin_checkout`, `utekos_purchase` og funnel-dashboard.            |
+| 1. Browser capture   | Den kanoniske eventklienten sender samtykkegatet dataLayer og first-party events.   | PostHog og Microsoft-klientflaten er ikke reintrodusert som full aktiv storefrontflyt.                                                                                                                               | Produktanalyse og Microsoft-dekning er svakere enn den verifiserte Meta/Google-flyten.                                 | Hver gjeninnført klientflate har eksplisitt consent-, network- og providerbevis.                                                         |
 | 2. Førsteparts API   | Supabase får accepted events og provider rows.                                     | Kvaliteten på identifier-capture er ikke god nok for alle provider-dispatcher.                                                                                                                                                                             | Historiske Google-rader med manglende `client_id` og Microsoft-skips viser at events ikke alltid kan optimalisere bidding. | Missing identifier rates synker til avtalt terskel og kvalifiseres som `skipped_unqualified` der det er forventet.                       |
 | 3. Supabase ledger   | Ledger, queue, health views, dead-letter views og arkiv finnes.                    | Supabase-data brukes for lite som løpende operasjonell alarmflate.                                                                                                                                                                                         | Data samles inn, men for sent eller manuelt omsatt til handling.                                                       | Ekstern alert/dashboard finnes for queue, dead letters, provider fail rate, purchase delivery og web vitals.                             |
-| 4. Provider dispatch | Meta/Google har store mengder `succeeded`; retry/dead-letter-ruter finnes, all historisk radgjeld er klassifisert/lukket uten blind replay, og den sentrale GA4-sanitizeren er live. | Ingen aktive eller uløste provider-rader i etterdeploy-rapporten; videre kontroll er løpende overvåkning. | Regresjoner eller nye callsites må oppdages før de bygger backlog. | Behold provider-rapporten på 0 failed/dead-lettered, 0 unresolved og 0 alerts, og alarmér på nye `page_location`-avvisninger. |
-| 5. Shopify purchase  | Purchase-flowen kan lagre ledger og dispatch-attempts, og ny samtykket checkout-capture er bevist med Supabase snapshot som inneholder Microsoft `msclkid`. | Microsoft UET CAPI har historiske token-skips, men nyeste purchase-skip skyldes `missing_attribution` fra før den nye checkout-capture-smoken. Full purchase delivery er fortsatt ikke bevist fordi ingen ny purchase/order er kjørt etter den grønne checkout-capturen. | Purchase-events er de viktigste signalene for budoptimalisering og kapitalallokering.                                  | Provider purchase smoke viser Meta CAPI, GA4 MP og Microsoft UET CAPI med riktige ids, dedupe og status.                                 |
+| 4. Provider dispatch | Meta/Google er aktive; Data Manager-radgjeld og historiske Meta/Microsoft-kørader er klassifisert og lukket uten blind replay. | Rapporten har 0 aktive, 0 failed/dead-lettered og 0 uløste rader. Ett Microsoft-varsel består fordi adapteren er fraværende og alle Microsoft-rader er skips. | Et tomt køtall må ikke forveksles med Microsoft-levering. | Behold Meta/Google på null feil; reintroduser Microsoft-adapter eksplisitt før Microsoft serverlevering markeres grønn. |
+| 5. Shopify purchase  | En ekte betalt ordre har bevist kanonisk purchase til Meta og Google med samme `external_id`/`fbp` som checkout når identifikatorene fantes. | Reisen hadde ingen Meta-klikk, så `_fbc`/`fbclid` kunne ikke verifiseres på purchase; Microsoft UET CAPI-adapter er ikke aktiv. | Purchase-events er de viktigste signalene for budoptimalisering og kapitalallokering. | Observer en samtykket betalt Meta-klikkreise og reintroduser/verifiser Microsoft UET CAPI før full tre-provider-dekning hevdes. |
 | 6. PostHog innsikt   | PostHog mottar pageviews og web vitals, og init er consent-gated/masket.           | Dedikerte CRO-, checkout-, UTM- og revenue-flater er ikke etablert. Lokal commerce MCP har PostHog fail-closed.                                                                                                                                            | Data blir liggende som rå analyse i stedet for å drive beslutninger.                                                   | PostHog project/event-prober er grønne, og dashboards/funnels brukes i ukentlig CRO-/trackinggjennomgang.                                |
 | 7. Produktfeed       | Merchant API pr eflight er grønn, API source og autofeed er synlige.               | Kontopolicy/Misrepresentation-status er ikke bevist grønn i fersk kontroll, og dual source kan fortsatt gi styringsrisiko.                                                                                                                                 | Shopping-eligibility og produktdistribusjon kan være begrenset selv om feeden teknisk prosesseres.                     | Merchant UI/API-policystatus dokumenteres grønn, og ønsket kildeeierskap mellom API source og autofeed er avklart.                       |
 | 8. Observability     | Sentry server/edge/global error finnes; Vercel-proben er grønn.                    | Sentry Replay er ikke aktivert og issue-probe er fail-closed.                                                                                                                                                                                              | Kritiske frontend-/checkoutfeil kan mangle replay-kontekst.                                                            | Sentry org/project/issue-probe er grønn, og Replay er enten bevisst aktivert med Cookiebot-gate eller eksplisitt parkert.                |
@@ -363,14 +357,14 @@ coverage og purchase match rate, ikke radtall.
 | Prioritet | Gap                                     | Nåværende evidens                                                                                                        | Neste handling                                                                                                                              | Gate                                                                                                     |
 | --------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | Lukket 2026-07-14 | Google `page_location` dead letters | 48 historiske rader er klassifisert/lukket uten replay; sentral sanitizer er deployet, og etterdeploy-rapporten har 0 failed/dead-lettered, 0 unresolved og 0 alerts | Overvåk samme rapportgate og alarmér på nye avvisninger | Fortsatt 0 nye feil med samme grunn og grønn `--fail-on-alerts` |
-| P0        | Microsoft UET CAPI purchase ikke bevist | Ny samtykket checkout-capture er grønn med snapshot og `msclkid`; `microsoft_uet` har 2 historiske `missing_capi_token`, og nyeste purchase-skip fra før smoken er `missing_attribution` | Kjør full purchase-smoke med faktisk testordre eller ny live purchase-event-id etter den grønne checkout-capturen; verifiser både attribution og CAPI-token-status | Purchase smoke viser Microsoft UET CAPI `succeeded` eller bevisst disabled                               |
+| P0        | Microsoft UET CAPI-adapter mangler | Etter resetten finnes ingen registrert Microsoft-serverworker. 208 historiske, aldri forsøkte rader er lukket som `skipped_unqualified/provider_adapter_unavailable_after_reset`; aktiv kø er 0. | Reintroduser adapter, consent-/identifier-kvalifisering og provider-smoke som egen godkjent trackingrelease. | Ny kvalifisert purchase viser Microsoft UET CAPI `succeeded`, eller serverkanalen er eksplisitt deaktivert. |
 | P0        | Merchant policy / feed ownership        | Merchant API preflight OK, men policy-status ikke ferskt bevist grønn                                                    | Verifiser Merchant Center policy og avklar API source vs autofeed                                                                           | Merchant UI/API policy evidence lagres i runbook                                                         |
 | P1        | PostHog CRO-loop mangler                | Data finnes, men få `utekos_*` commerce-events og ingen dedikerte dashboards funnet                                      | Bygg dashboards/funnels for landing, product, checkout, campaign og replay shortlist                                                        | Ukentlig innsiktsflate kan svare på hvor og hvorfor brukere faller fra                                   |
 | P1        | Supabase-operasjonalisering             | Warehouse fylles, men rapporter er fortsatt for manuelle                                                                 | Lag alert/dashboard for queue, fail rate, dead letters, purchases, consent og web vitals                                                    | Varsel eller dashboard brukes som fast beslutningsflate                                                  |
 | P1        | Commercial intelligence-plan            | Ny styringsplan er opprettet, men read models, agentfunn og workflows er ikke implementert                               | Følg [COMMERCIAL_INTELLIGENCE_PLAN.md](COMMERCIAL_INTELLIGENCE_PLAN.md) og bygg ett verifisert spor av gangen                               | Supabase/PostHog/MCP-flater viser konkrete beslutninger, ikke bare datainnsamling                        |
 | P1        | GA4 BigQuery -> Supabase                | `npm run ops:ga4-bigquery-readiness` bekrefter `ga4_bigquery_dataset_missing`; `analytics_489598217` finnes ikke ennå     | Rerun readiness-gaten til dataset og `events_*` finnes; først da bygg read-only wrapper/read models                                          | Kuraterte read models finnes; rå GA4-dump er ikke app-avhengighet                                        |
 | P1        | Google Ads API read-only prober         | GA4, public sGTM og GTM API workspace er grønne, men flere Google Ads-spørringer returnerer fortsatt strukturerte credential/scope-feil | Rett credentials/scopes eller dokumenter blokkering | Prober skiller tydelig mellom teknisk feil og manglende tilgang |
-| P1        | Identifier coverage                     | Historiske Google-skips domineres av manglende `client_id`; Microsoft purchase mangler fortsatt attribution/ids i nyeste rad | Mål coverage for `client_id`, `fbp`, `fbc`, `msclkid` per steg                                                                              | Coverage-rapport per eventtype og consent state                                                          |
+| P1        | Identifier coverage                     | Meta PageView/ViewContent er forbedret, mens etterreleasevolumet for AddToCart/Checkout/Purchase fortsatt er lavt; 29 historiske Google-rader uten `client_id` ble korrekt skippet. | Mål `client_id`, `fbp`, `fbc`, `external_id` og betalt klikk-ID per event etter 7 og 14 dager. | Coverage-rapport per eventtype og consent state med tilstrekkelig denominator. |
 | P2        | Sentry Replay                           | Sentry server/edge aktiv, Replay ikke aktivert                                                                           | Beslutning: aktivere med Cookiebot statistics gate eller eksplisitt parkere                                                                 | Replay status dokumentert; ingen antatt dekning                                                          |
 | P2        | Underbrukte tabeller                    | Flere partner-/analytics-/lead-tabeller står tomme                                                                       | Fjern, parker eller koble til konkret bruk                                                                                                  | Ingen schema-only dataløfter uten eier                                                                   |
 
@@ -429,12 +423,11 @@ evidens:
   provider-replay. Dead-letter-registeret er igjen grønt med 0
   unresolved. Replay-ruten forblir secret- og godkjenningsgated og
   ligger ikke i Vercels tilbakevendende cronplan.
-- "Supabase checkout snapshot-fallback er ikke live før Vercel
-  deploy" er foreldet. Production deployment
-  `utekos-headless-55g9vsbve-utekos-marketing-group.vercel.app`
-  er `READY`, og ny samtykket checkout-capture er bevist med
-  snapshot og Microsoft `msclkid`. Full commerce purchase-smoke
-  gjenstår.
+- "Supabase checkout snapshot-fallback er ikke live før Vercel deploy" er
+  foreldet. Standard Shopify checkout er bevist med `_fbp`, `_fbc`, `fbclid`
+  og `external_id` i cart attributes. En ekte betalt ordre har i tillegg
+  bevist Meta/Google purchase-kontinuitet for identifikatorene som fantes i
+  den reisen.
 - Chatbase skal behandles som legacy. Ny AI-kundeservice må
   planlegges separat og skal ikke blandes inn som aktiv
   analytics-flyt.
@@ -445,15 +438,15 @@ Punkter som fortsatt ikke kan markeres løst uten ny kontroll:
   Misrepresentation-status.
 - Google Ads API credentials/scopes.
 - Sentry issue-probe og eventuell Sentry Replay.
-- Full commerce purchase smoke mot Meta CAPI, GA4 Measurement
-  Protocol og Microsoft UET CAPI.
+- Microsoft UET CAPI purchase etter at serveradapteren er reintrodusert.
+- Dataset Quality-trend for events med lavt etterreleasevolum.
 - PostHog-dashboards/funnels som faktisk brukes til CRO og
   kundeinnsikt.
 
 ## 10. Neste praktiske rekkefølge
 
-1. Kjør full commerce purchase-smoke med faktisk testordre eller
-   ny live purchase-event-id etter grønn checkout-capture.
+1. Følg Meta Dataset Quality etter 7 og 14 dager og reintroduser Microsoft UET
+   CAPI som en separat, dokumentert release.
 2. Vent på og verifiser GA4 BigQuery-datasettet, deretter bygg
    kuraterte Supabase read models.
 3. Verifiser Merchant Center policy og kildeeierskap.
