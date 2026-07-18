@@ -221,9 +221,9 @@ som 0.
 Runtime-releasen `dpl_EtXm5e58YNqzx4E2xVFvXwr14u76` for kode-SHA
 `da2e3191a947589a084d15b6d794211bbb3dd1a3` nådde `READY` og er artefaktet
 som cron-/ruteverifikasjonen ble utført mot. Senere rene
-dokumentasjonsdeployments kan flytte produksjonsaliasene uten å endre
-runtime-artefaktet; aktuell aliaseier må derfor kontrolleres med
-`vercel inspect`. Vercel viser
+dokumentasjonsdeployments kan flytte produksjonsaliasene selv om den
+verifiserte cron-/ruteimplementasjonen er uendret; aktuell aliaseier må
+derfor kontrolleres med `vercel inspect`. Vercel viser
 cron-definisjonen som aktiv uten ventende eller endrede definisjoner.
 Produksjonsruten returnerte 401 uten legitimasjon og 200 med godkjent
 bearer-token, begge med `Cache-Control: no-store`; den autoriserte

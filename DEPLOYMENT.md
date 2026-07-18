@@ -291,8 +291,9 @@ second run inserted zero duplicates. Runtime release
 `dpl_EtXm5e58YNqzx4E2xVFvXwr14u76` for code SHA
 `da2e3191a947589a084d15b6d794211bbb3dd1a3` reached `READY` and is the runtime
 artifact used for cron and route verification. Later documentation-only Git
-deployments can advance the production alias without changing that runtime
-artifact, so current alias ownership must be checked with `vercel inspect`.
+deployments can advance the production alias while the verified cron and
+route implementation remains unchanged, so current alias ownership must be
+checked with `vercel inspect`.
 Vercel lists the cron as enabled with no undeployed or modified definition.
 Production returned 401 without credentials and 200 with the approved bearer
 token, both with `Cache-Control: no-store`; the authorized same-day run
