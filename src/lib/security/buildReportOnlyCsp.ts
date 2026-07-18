@@ -23,6 +23,14 @@ const MICROSOFT_TRACKING_ORIGINS = [
   'https://*.clarity.ms'
 ] as const
 
+const META_PIXEL_SCRIPT_ORIGINS = [
+  'https://connect.facebook.net'
+] as const
+
+const META_PIXEL_EVENT_ORIGINS = [
+  'https://www.facebook.com'
+] as const
+
 const GOOGLE_ADS_ORIGINS = [
   'https://ad.doubleclick.net',
   'https://googleads.g.doubleclick.net',
@@ -46,6 +54,7 @@ export function buildReportOnlyCsp(): string {
     ...KLARNA_ORIGINS,
     ...TAG_GATEWAY_ORIGINS,
     ...MICROSOFT_TRACKING_ORIGINS,
+    ...META_PIXEL_SCRIPT_ORIGINS,
     ...GOOGLE_ADS_ORIGINS,
     ...VERCEL_LIVE_ORIGINS
   ]
@@ -55,6 +64,8 @@ export function buildReportOnlyCsp(): string {
     ...KLARNA_ORIGINS,
     ...TAG_GATEWAY_ORIGINS,
     ...MICROSOFT_TRACKING_ORIGINS,
+    ...META_PIXEL_SCRIPT_ORIGINS,
+    ...META_PIXEL_EVENT_ORIGINS,
     ...GOOGLE_ADS_ORIGINS,
     ...VERCEL_LIVE_ORIGINS,
     'https://*.google-analytics.com',
@@ -69,6 +80,7 @@ export function buildReportOnlyCsp(): string {
     'blob:',
     ...TAG_GATEWAY_ORIGINS,
     ...MICROSOFT_TRACKING_ORIGINS,
+    ...META_PIXEL_EVENT_ORIGINS,
     ...GOOGLE_ADS_ORIGINS,
     'https://*.google-analytics.com',
     'https://www.google.com',

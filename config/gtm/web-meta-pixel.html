@@ -1,0 +1,259 @@
+<script>
+(function(w, d) {
+  'use strict';
+
+  var PIXEL_ID = '1092362672918571';
+  var EXTERNAL_ID_COOKIE = 'utekos_external_id';
+  var EVENT_NAMES = {
+    page_view: 'PageView',
+    view_item: 'ViewContent',
+    add_to_cart: 'AddToCart',
+    begin_checkout: 'InitiateCheckout',
+    search: 'Search',
+    generate_lead: 'Lead'
+  };
+  var state = w.__utekosMetaPixelState || {
+    initialized: false,
+    sent: {},
+    timer: null
+  };
+
+  w.__utekosMetaPixelState = state;
+
+  function readCookie(name) {
+    var prefix = name + '=';
+    var parts = d.cookie ? d.cookie.split(';') : [];
+    var index;
+
+    for (index = 0; index < parts.length; index += 1) {
+      var candidate = parts[index].replace(/^\s+|\s+$/g, '');
+
+      if (candidate.indexOf(prefix) !== 0) continue;
+
+      try {
+        return decodeURIComponent(candidate.slice(prefix.length));
+      } catch (error) {
+        return null;
+      }
+    }
+
+    return null;
+  }
+
+  function hasMarketingConsent() {
+    return Boolean(
+      w.Cookiebot &&
+      w.Cookiebot.consent &&
+      w.Cookiebot.consent.marketing === true
+    );
+  }
+
+  function ensureExternalId() {
+    var existing = readCookie(EXTERNAL_ID_COOKIE);
+
+    if (existing) return existing;
+    if (!w.crypto || typeof w.crypto.randomUUID !== 'function') return null;
+
+    var externalId = 'anon_' + w.crypto.randomUUID();
+    d.cookie = EXTERNAL_ID_COOKIE + '=' + encodeURIComponent(externalId) +
+      '; Path=/; Max-Age=31536000; SameSite=Lax; Secure';
+
+    return externalId;
+  }
+
+  function installPixel(externalId) {
+    if (!w.fbq) {
+      var queue = function() {
+        if (queue.callMethod) {
+          queue.callMethod.apply(queue, arguments);
+        } else {
+          queue.queue.push(arguments);
+        }
+      };
+      var firstScript;
+      var script;
+
+      w.fbq = queue;
+      if (!w._fbq) w._fbq = queue;
+      queue.push = queue;
+      queue.loaded = true;
+      queue.version = '2.0';
+      queue.queue = [];
+
+      script = d.createElement('script');
+      script.async = true;
+      script.src = 'https://connect.facebook.net/en_US/fbevents.js';
+      firstScript = d.getElementsByTagName('script')[0];
+
+      if (firstScript && firstScript.parentNode) {
+        firstScript.parentNode.insertBefore(script, firstScript);
+      } else if (d.head) {
+        d.head.appendChild(script);
+      }
+    }
+
+    w.fbq(
+      'init',
+      PIXEL_ID,
+      externalId ? { external_id: externalId } : {}
+    );
+    state.initialized = true;
+  }
+
+  function contentId(variantId) {
+    var match = /^gid:\/\/shopify\/ProductVariant\/(\d+)$/.exec(variantId || '');
+
+    return match ? match[1] : null;
+  }
+
+  function finiteNumber(value) {
+    return typeof value === 'number' && isFinite(value);
+  }
+
+  function commerceData(customData) {
+    var items = customData && customData.items;
+    var contentIds = [];
+    var contents = [];
+    var index;
+
+    if (!items || !items.length) return null;
+
+    for (index = 0; index < items.length; index += 1) {
+      var item = items[index];
+      var id = contentId(item.variant_id);
+
+      if (!id) continue;
+
+      contentIds.push(id);
+      contents.push({
+        id: id,
+        quantity: item.quantity,
+        item_price: item.gross_unit_price
+      });
+    }
+
+    if (!contentIds.length) return null;
+
+    var primary = items[0];
+    var result = {
+      content_ids: contentIds,
+      contents: contents,
+      content_type: 'product'
+    };
+
+    if (customData.currency) result.currency = customData.currency;
+    if (finiteNumber(customData.gross_value)) result.value = customData.gross_value;
+    if (primary.item_name) result.content_name = primary.item_name;
+    if (primary.item_category || primary.product_type) {
+      result.content_category = primary.item_category || primary.product_type;
+    }
+
+    return result;
+  }
+
+  function eventData(eventName, canonicalEvent) {
+    var customData = canonicalEvent.custom_data || {};
+
+    if (
+      eventName === 'view_item' ||
+      eventName === 'add_to_cart' ||
+      eventName === 'begin_checkout'
+    ) {
+      return commerceData(customData);
+    }
+
+    if (eventName === 'search') {
+      return customData.search_term ?
+        { search_string: customData.search_term } : {};
+    }
+
+    if (eventName === 'generate_lead') {
+      var lead = {};
+
+      if (customData.currency) lead.currency = customData.currency;
+      if (finiteNumber(customData.value)) lead.value = customData.value;
+      return lead;
+    }
+
+    return {};
+  }
+
+  function isCurrentPage(canonicalEvent) {
+    if (!canonicalEvent.page_url) return true;
+
+    try {
+      var eventUrl = new w.URL(canonicalEvent.page_url, w.location.href);
+
+      return eventUrl.origin === w.location.origin &&
+        eventUrl.pathname === w.location.pathname;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function dispatch(entry) {
+    var canonicalEvent = entry.canonical_event;
+    var metaEventName = EVENT_NAMES[entry.event];
+    var eventKey;
+    var data;
+
+    if (!canonicalEvent || !metaEventName) return;
+    if (entry.event_id !== canonicalEvent.event_id) return;
+    if (!isCurrentPage(canonicalEvent)) return;
+
+    eventKey = metaEventName + ':' + entry.event_id;
+    if (state.sent[eventKey]) return;
+
+    data = eventData(entry.event, canonicalEvent);
+    if (data === null) return;
+
+    w.fbq(
+      'trackSingle',
+      PIXEL_ID,
+      metaEventName,
+      data,
+      { eventID: entry.event_id }
+    );
+    state.sent[eventKey] = true;
+  }
+
+  function scanDataLayer() {
+    var dataLayer = w.dataLayer || [];
+    var index;
+
+    for (index = 0; index < dataLayer.length; index += 1) {
+      var entry = dataLayer[index];
+
+      if (!entry || typeof entry !== 'object') continue;
+      if (typeof entry.event_id !== 'string' || !entry.event_id) continue;
+      dispatch(entry);
+    }
+  }
+
+  function run(attempt) {
+    state.timer = null;
+    if (!hasMarketingConsent()) return;
+
+    var externalId = readCookie(EXTERNAL_ID_COOKIE);
+    var fbp = readCookie('_fbp');
+    var needsFbc = /(?:^|[?&])fbclid=/.test(w.location.search || '');
+    var fbc = readCookie('_fbc');
+
+    if (
+      attempt < 30 &&
+      (!externalId || !fbp || (needsFbc && !fbc))
+    ) {
+      state.timer = w.setTimeout(function() {
+        run(attempt + 1);
+      }, 100);
+      return;
+    }
+
+    if (!externalId) externalId = ensureExternalId();
+    if (!state.initialized) installPixel(externalId);
+    scanDataLayer();
+  }
+
+  if (state.timer === null) run(0);
+})(window, document);
+</script>
