@@ -287,15 +287,18 @@ authorization header and is never included in the request URL or response.
 
 Production-credential verification inserted six event snapshots at
 `2026-07-18T21:21:27.253Z`; Supabase readback confirmed all six rows and a
-second run inserted zero duplicates. Git deployment
-`dpl_EtXm5e58YNqzx4E2xVFvXwr14u76` for SHA
-`da2e3191a947589a084d15b6d794211bbb3dd1a3` is `READY` and owns the production
-aliases. Vercel lists the cron as enabled with no undeployed or modified
-definition. Production returned 401 without credentials and 200 with the
-approved bearer token, both with `Cache-Control: no-store`; the authorized
-same-day run reported six events and zero duplicate inserts. Compare
-event-level denominators and Meta source split after 7 and 14 days; one daily
-snapshot is not a trend.
+second run inserted zero duplicates. Runtime release
+`dpl_EtXm5e58YNqzx4E2xVFvXwr14u76` for code SHA
+`da2e3191a947589a084d15b6d794211bbb3dd1a3` reached `READY` and is the runtime
+artifact used for cron and route verification. Later documentation-only Git
+deployments can advance the production alias without changing that runtime
+artifact, so current alias ownership must be checked with `vercel inspect`.
+Vercel lists the cron as enabled with no undeployed or modified definition.
+Production returned 401 without credentials and 200 with the approved bearer
+token, both with `Cache-Control: no-store`; the authorized same-day run
+reported six events and zero duplicate inserts. Compare event-level
+denominators and Meta source split after 7 and 14 days; one daily snapshot is
+not a trend.
 
 ### Local integration audit 2026-07-14
 
