@@ -46,18 +46,23 @@ export function resolveGoogleClientId(
   )
 }
 
-export function mapGoogleDataManagerTimestamp(eventTime: string) {
+export function mapGoogleDataManagerTimestamp(
+  eventTime: string,
+  now = Date.now()
+) {
   const milliseconds = Date.parse(eventTime)
 
-  if (!Number.isFinite(milliseconds)) {
+  if (!Number.isFinite(milliseconds) || !Number.isFinite(now)) {
     throw new Error(
       'Google Data Manager event_time must be a valid timestamp'
     )
   }
 
+  const providerMilliseconds = Math.min(milliseconds, now)
+
   return {
-    seconds: Math.floor(milliseconds / 1000),
-    nanos: (milliseconds % 1000) * 1_000_000
+    seconds: Math.floor(providerMilliseconds / 1000),
+    nanos: (providerMilliseconds % 1000) * 1_000_000
   }
 }
 

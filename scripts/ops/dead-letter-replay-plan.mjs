@@ -25,6 +25,7 @@ const deadLetterReplayRowSchema = z.object({
   id: z.string().min(1),
   source: z.string().min(1),
   reason: z.string().min(1),
+  payload: z.unknown(),
   metadata: z.unknown(),
   created_at: z.unknown(),
   attempt_id: z.string().nullable().optional(),
@@ -33,6 +34,7 @@ const deadLetterReplayRowSchema = z.object({
   dispatch_mode: z.string().nullable().optional(),
   event_id: z.string().nullable().optional(),
   event_name: z.string().nullable().optional(),
+  last_error: z.string().nullable().optional(),
   skip_reason: z.string().nullable().optional(),
   attempt_updated_at: z.unknown().optional()
 })
@@ -66,6 +68,10 @@ function normalizeText(value, fallback = null) {
 }
 
 function getReplayProvider(source) {
+  if (SUPPORTED_REPLAY_PROVIDERS.has(source)) {
+    return source
+  }
+
   if (!source.startsWith(TRACKING_SOURCE_PREFIX)) {
     return null
   }
@@ -74,18 +80,36 @@ function getReplayProvider(source) {
   return SUPPORTED_REPLAY_PROVIDERS.has(provider) ? provider : null
 }
 
-function getProviderDispatchAttemptId(metadata) {
-  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) {
-    return null
+function getUuidProperty(value, property) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return undefined
   }
 
-  const value = metadata.providerDispatchAttemptId
-  return typeof value === 'string' && UUID_PATTERN.test(value) ? value : null
+  const candidate = value[property]
+  return typeof candidate === 'string' && UUID_PATTERN.test(candidate) ?
+      candidate
+    : undefined
 }
 
-function hasMissingClientIdReason(reason, skipReason) {
-  const normalized = `${reason} ${skipReason ?? ''}`.toLowerCase()
+function getProviderDispatchAttemptId(payload, metadata) {
+  return (
+    getUuidProperty(payload, 'provider_dispatch_attempt_id')
+    ?? getUuidProperty(metadata, 'providerDispatchAttemptId')
+    ?? null
+  )
+}
+
+function hasMissingClientIdReason(reason, skipReason, lastError) {
+  const normalized = `${reason} ${skipReason ?? ''} ${lastError ?? ''}`.toLowerCase()
   return normalized.includes('missing_client_id') || normalized.includes('missing client_id')
+    || normalized.includes('requires a ga client id')
+    || normalized.includes('requires a valid ga client id')
+}
+
+function hasOutsideTimestampWindowError(lastError) {
+  const normalized = String(lastError ?? '').toLowerCase()
+  return normalized.includes('events.events[0].event_timestamp')
+    && normalized.includes('event did not occur within the acceptable time window')
 }
 
 function hasInvalidQueuedPayloadReason(reason) {
@@ -125,12 +149,16 @@ function classifyReplayRow(row, generatedAt = new Date()) {
   const source = parsed.source
   const provider = getReplayProvider(source)
   const reason = redactOperationalText(parsed.reason)
-  const metadataAttemptId = getProviderDispatchAttemptId(parsed.metadata)
-  const attemptId = normalizeText(parsed.attempt_id) ?? metadataAttemptId
+  const referencedAttemptId = getProviderDispatchAttemptId(
+    parsed.payload,
+    parsed.metadata
+  )
+  const attemptId = normalizeText(parsed.attempt_id) ?? referencedAttemptId
   const attemptProvider = normalizeText(parsed.provider)
   const attemptStatus = normalizeText(parsed.status)
   const dispatchMode = normalizeText(parsed.dispatch_mode)
   const skipReason = normalizeText(parsed.skip_reason)
+  const lastError = normalizeText(parsed.last_error)
 
   const base = {
     deadLetterId: parsed.id,
@@ -153,16 +181,16 @@ function classifyReplayRow(row, generatedAt = new Date()) {
       ...base,
       eligible: false,
       classification: 'unsupported_source',
-      requiredAction: 'Resolve manually; only tracking:meta, tracking:google, and tracking:microsoft_uet are replay-supported.'
+      requiredAction: 'Resolve manually; only meta, google, microsoft_uet and their tracking:-prefixed legacy sources are replay-supported.'
     }
   }
 
-  if (!metadataAttemptId) {
+  if (!referencedAttemptId) {
     return {
       ...base,
       eligible: false,
       classification: 'invalid_metadata',
-      requiredAction: 'Inspect the dead-letter metadata and repair or resolve manually before replay.'
+      requiredAction: 'Inspect the dead-letter payload/metadata and repair or resolve manually before replay.'
     }
   }
 
@@ -193,12 +221,24 @@ function classifyReplayRow(row, generatedAt = new Date()) {
     }
   }
 
-  if (provider === 'google' && hasMissingClientIdReason(parsed.reason, skipReason)) {
+  if (
+    provider === 'google'
+    && hasMissingClientIdReason(parsed.reason, skipReason, lastError)
+  ) {
     return {
       ...base,
       eligible: false,
       classification: 'requires_attribution_repair',
       requiredAction: 'Do not replay missing client_id rows; repair attribution or resolve as unqualified.'
+    }
+  }
+
+  if (provider === 'google' && hasOutsideTimestampWindowError(lastError)) {
+    return {
+      ...base,
+      eligible: false,
+      classification: 'outside_provider_replay_window',
+      requiredAction: 'Google already rejected the event timestamp as outside its acceptable window; resolve without replay.'
     }
   }
 
@@ -277,7 +317,7 @@ export function buildReplayPlan(deadLetterRows, summaryRows = [], options = {}) 
     approvalRequiredForReplay: eligibleCount > 0,
     approvalQuestion:
       eligibleCount > 0
-        ? `Approve one production dead-letter replay run for ${eligibleCount} eligible row(s) by enabling DEAD_LETTER_REPLAY_ENABLED=1 and invoking /api/cron/replay-dead-letter with CRON_SECRET? This will requeue and dispatch provider attempts with original event_id/idempotency.`
+        ? `Approve one controlled production requeue for ${eligibleCount} eligible row(s), followed by the existing /api/cron/provider-outbox-dispatch worker with CRON_SECRET? This preserves original event_id/idempotency and does not rely on the removed replay-dead-letter route.`
         : null,
     totals: {
       unresolvedRowsInspected: items.length,
@@ -348,7 +388,7 @@ export function getWarehouseUrl(env = process.env) {
 function getLimit(argv = process.argv.slice(2)) {
   const rawLimit = getCliValue('--limit', argv)
   const parsed = Number(rawLimit)
-  return Number.isInteger(parsed) && parsed > 0 ? Math.min(parsed, 500) : DEFAULT_LIMIT
+  return Number.isInteger(parsed) && parsed > 0 ? Math.min(parsed, 2000) : DEFAULT_LIMIT
 }
 
 async function queryReplayPlanRows(warehouseUrl, limit) {
@@ -365,6 +405,7 @@ async function queryReplayPlanRows(warehouseUrl, limit) {
         dead_letters.id::text,
         dead_letters.source,
         dead_letters.reason,
+        dead_letters.payload,
         dead_letters.metadata,
         dead_letters.created_at,
         attempts.id::text as attempt_id,
@@ -373,11 +414,15 @@ async function queryReplayPlanRows(warehouseUrl, limit) {
         attempts.dispatch_mode,
         attempts.event_id,
         attempts.event_name,
+        attempts.last_error,
         attempts.skip_reason,
         attempts.updated_at as attempt_updated_at
       from ops.dead_letter_events as dead_letters
       left join ops.provider_dispatch_attempts as attempts
-        on attempts.id::text = dead_letters.metadata ->> 'providerDispatchAttemptId'
+        on attempts.id::text = coalesce(
+          dead_letters.payload ->> 'provider_dispatch_attempt_id',
+          dead_letters.metadata ->> 'providerDispatchAttemptId'
+        )
       where dead_letters.resolved_at is null
       order by dead_letters.created_at, dead_letters.id
       limit ${limit}

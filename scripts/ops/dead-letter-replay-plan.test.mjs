@@ -10,6 +10,7 @@ function createDeadLetterRow(overrides = {}) {
     id: overrides.id ?? 'dead-letter-1',
     source: overrides.source ?? 'tracking:meta',
     reason: overrides.reason ?? 'temporary provider timeout',
+    payload: overrides.payload ?? {},
     metadata: overrides.metadata ?? {
       providerDispatchAttemptId: ATTEMPT_ID,
       eventId: 'event-1',
@@ -23,6 +24,7 @@ function createDeadLetterRow(overrides = {}) {
     dispatch_mode: overrides.dispatch_mode ?? 'server_retry',
     event_id: overrides.event_id ?? 'event-1',
     event_name: overrides.event_name ?? 'Purchase',
+    last_error: overrides.last_error ?? null,
     skip_reason: overrides.skip_reason ?? null,
     attempt_updated_at: overrides.attempt_updated_at ?? '2026-07-07T12:05:00.000Z'
   }
@@ -38,7 +40,23 @@ test('buildReplayPlan marks dead_lettered server_retry tracking rows eligible', 
   assert.equal(plan.approvalRequiredForReplay, true)
   assert.equal(plan.totals.eligibleRequeue, 1)
   assert.equal(plan.items[0].classification, 'eligible_requeue')
-  assert.match(plan.approvalQuestion, /Approve one production dead-letter replay run/)
+  assert.match(plan.approvalQuestion, /Approve one controlled production requeue/)
+})
+
+test('buildReplayPlan supports active provider sources and snake-case payload references', () => {
+  const plan = buildReplayPlan([
+    createDeadLetterRow({
+      source: 'google',
+      provider: 'google',
+      payload: { provider_dispatch_attempt_id: ATTEMPT_ID },
+      metadata: { event_id: 'event-1', event_name: 'view_item' }
+    })
+  ], [], {
+    generatedAt: '2026-07-07T12:10:00.000Z'
+  })
+
+  assert.equal(plan.totals.eligibleRequeue, 1)
+  assert.equal(plan.items[0].classification, 'eligible_requeue')
 })
 
 test('buildReplayPlan blocks Google missing client_id rows from replay', () => {
@@ -47,6 +65,7 @@ test('buildReplayPlan blocks Google missing client_id rows from replay', () => {
       source: 'tracking:google',
       provider: 'google',
       reason: 'Missing client_id',
+      last_error: 'Google Data Manager event requires a GA client ID',
       skip_reason: 'missing_client_id'
     })
   ])
@@ -54,6 +73,22 @@ test('buildReplayPlan blocks Google missing client_id rows from replay', () => {
   assert.equal(plan.totals.eligibleRequeue, 0)
   assert.equal(plan.items[0].classification, 'requires_attribution_repair')
   assert.match(plan.items[0].requiredAction, /Do not replay missing client_id rows/)
+})
+
+test('buildReplayPlan blocks rows already rejected for an expired Google timestamp', () => {
+  const plan = buildReplayPlan([
+    createDeadLetterRow({
+      source: 'google',
+      provider: 'google',
+      payload: { provider_dispatch_attempt_id: ATTEMPT_ID },
+      last_error: 'field=events.events[0].event_timestamp description=Event did not occur within the acceptable time window.'
+    })
+  ], [], {
+    generatedAt: '2026-07-07T12:10:00.000Z'
+  })
+
+  assert.equal(plan.totals.eligibleRequeue, 0)
+  assert.equal(plan.items[0].classification, 'outside_provider_replay_window')
 })
 
 test('buildReplayPlan blocks invalid payload rows from replay', () => {
