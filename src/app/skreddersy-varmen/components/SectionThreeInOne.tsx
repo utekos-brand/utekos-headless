@@ -47,7 +47,7 @@ export function SectionThreeInOne() {
           variants={revealGroup}
         >
           <m.span
-            className='font-utekos-text-medium dark:text-dark-accent mb-3 block text-base leading-4 tracking-wide text-accent'
+            className='mb-3 block font-utekos-text-medium text-base leading-4 tracking-wide text-ceramic'
             variants={revealItemLeft}
           >
             Adaptiv funksjonalitet

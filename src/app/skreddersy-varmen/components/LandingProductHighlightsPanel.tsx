@@ -30,7 +30,7 @@ export function LandingProductHighlightsPanel({
         <h3 className='text-base font-bold tracking-tight sm:text-lg'>
           Dette gjør {modelName} spesiell
         </h3>
-        <p className='text-muted-foreground mt-1 text-sm'>
+        <p className='mt-1 text-sm text-card-foreground/80'>
           Kvaliteter som gjør forskjellen i hverdagen
         </p>
       </div>
@@ -61,7 +61,7 @@ export function LandingProductHighlightsPanel({
             </AccordionTrigger>
             <AccordionContent
               className={cn(
-                'text-muted-foreground leading-text-paragraph pt-0 pb-4 text-sm sm:pb-5',
+                'leading-text-paragraph pt-0 pb-4 text-sm text-card-foreground/80 sm:pb-5',
                 'px-5 sm:px-6 sm:pl-16'
               )}
             >

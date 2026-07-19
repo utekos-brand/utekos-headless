@@ -265,8 +265,9 @@ export function TechDownSlider() {
 
               <div className='pointer-events-none absolute top-6 left-6 z-30'>
                 <BrandBadge
-                  tone='commerce-primary'
-                  className='h-8 px-4 py-0 text-xs leading-none font-medium shadow-lg backdrop-blur-md'
+                  bgColor='var(--card)'
+                  fgColor='var(--card-foreground)'
+                  className='h-8 px-4 py-0 text-xs leading-none font-medium shadow-lg'
                 >
                   Tørt vær
                 </BrandBadge>
@@ -327,7 +328,7 @@ export function TechDownSlider() {
                   <BrandBadge
                     backgroundColor='var(--color-foreground)'
                     textColor='var(--color-background)'
-                    className='mb-4 flex items-center gap-3 text-xs leading-none font-medium shadow-sm'
+                    className='mb-4 flex items-center gap-3 px-[30px] text-xs leading-none font-medium shadow-sm sm:px-8'
                   >
                     <span className='flex w-full items-center gap-2 text-left font-utekos-text-medium text-base leading-4 text-balance text-background dark:text-dark-background'>
                       {currentContent.icon}{' '}

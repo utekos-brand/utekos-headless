@@ -89,7 +89,7 @@ export function PurchaseClientViewLanding({
                 setSelectedModel(model as ModelKey)
               }
             />
-            <div key={`hero-${selectedModel}`} className='mb-12'>
+            <div key={`hero-${selectedModel}`} className='mb-10'>
               <h2 className='mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-sans text-4xl leading-[0.95] font-bold tracking-[-0.01em] text-background min-[1280px]:text-7xl'>
                 <span className='sr-only'>Utekos </span>
                 <UtekosWordmark
@@ -159,8 +159,7 @@ export function PurchaseClientViewLanding({
                       key={feature}
                       className={cn(
                         choicePillClass,
-                        'bg-muted text-foreground border-border border shadow-sm',
-                        'px-2.5 text-xs font-bold sm:px-4 sm:text-sm md:text-base'
+                        'border border-border bg-muted font-bold text-foreground shadow-sm'
                       )}
                     >
                       {feature}

@@ -6,10 +6,15 @@ import type { Route } from 'next'
 import {
   Truck,
   RefreshCcw,
-  Store,
+  CreditCard,
   ArrowRight
 } from 'lucide-react'
 import { reportLandingSelectPromotion } from '@/app/skreddersy-varmen/utils/reportLandingSelectPromotion'
+
+const pointIconClass =
+  'mt-0.5 shrink-0 text-ceramic drop-shadow-sm'
+const pointSubtextClass =
+  'mt-0.5 text-xs leading-snug text-foreground/85'
 
 export function ShippingAndReturnComponent() {
   return (
@@ -19,13 +24,14 @@ export function ShippingAndReturnComponent() {
           <div className='flex items-start gap-3 p-4'>
             <Truck
               size={22}
-              className='dark:text-dark-accent mt-0.5 shrink-0 text-accent drop-shadow-sm'
+              className={pointIconClass}
+              aria-hidden
             />
             <div className='min-w-0'>
               <p className='text-sm font-semibold text-foreground'>
                 Rask levering 2–5 dager
               </p>
-              <p className='/70 mt-0.5 text-xs leading-snug text-foreground/70'>
+              <p className={pointSubtextClass}>
                 Sendes samme dag. Fri frakt på denne varen.
               </p>
             </div>
@@ -34,29 +40,31 @@ export function ShippingAndReturnComponent() {
           <div className='flex items-start gap-3 p-4'>
             <RefreshCcw
               size={22}
-              className='dark:text-dark-accent mt-0.5 shrink-0 text-accent drop-shadow-sm'
+              className={pointIconClass}
+              aria-hidden
             />
             <div className='min-w-0'>
               <p className='text-sm font-semibold text-foreground'>
                 14 dagers åpent kjøp
               </p>
-              <p className='/70 mt-0.5 text-xs leading-snug text-foreground/70'>
-                Rolig returfrist når varen er ubrukt.
+              <p className={pointSubtextClass}>
+                Gjelder fra du har mottatt varen
               </p>
             </div>
           </div>
 
           <div className='flex items-start gap-3 p-4'>
-            <Store
+            <CreditCard
               size={22}
-              className='dark:text-dark-accent mt-0.5 shrink-0 text-accent drop-shadow-sm'
+              className={pointIconClass}
+              aria-hidden
             />
             <div className='min-w-0'>
               <p className='text-sm font-semibold text-foreground'>
-                På lager i Bergen
+                Fleksible betalingsmuligheter
               </p>
-              <p className='/70 mt-0.5 text-xs leading-snug text-foreground/70'>
-                Også via Intersport. Norsk garanti.
+              <p className={pointSubtextClass}>
+                Skreddersy i kassen
               </p>
             </div>
           </div>

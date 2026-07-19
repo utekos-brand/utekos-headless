@@ -59,5 +59,6 @@ export const maritimePanelHeaderClass = 'mb-3 border-b border-maritime-darkest/1
 export const choiceGridClass = 'grid grid-cols-3 gap-2 sm:gap-3'
 
 // Pillene får beholde formen sin, fargene på pillene styres allerede briljant i PurchaseClientViewLanding.tsx
+// whitespace-nowrap + tettere mobil-padding/type: unngår linjebryting i grid-cols-3 på iPhone 12 (~390px)
 export const choicePillClass =
-  'inline-flex min-h-12 min-w-0 items-center justify-center rounded-full px-1.5 py-2 text-center text-[11px] font-semibold leading-[1.15] tracking-normal transition-all sm:px-4 sm:text-sm md:text-base'
+  'inline-flex min-h-12 min-w-0 items-center justify-center whitespace-nowrap rounded-full px-1.5 py-2 text-center text-[10px] font-semibold leading-none tracking-normal transition-all sm:px-4 sm:text-sm sm:leading-[1.15] md:text-base'
