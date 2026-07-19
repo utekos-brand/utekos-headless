@@ -26,7 +26,7 @@ test('schedules provider dispatch and quality reconciliation', () => {
       schedule: '17 3 * * *'
     },
     {
-      path: '/api/cron/meta-dataset-quality',
+      path: '/api/cron/meta-dataset-quality-retry',
       schedule: '17 4 * * *'
     }
   ])

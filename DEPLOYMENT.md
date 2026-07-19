@@ -274,10 +274,11 @@ gate.
 The former combined campaign-insights/quality cron remains removed. This
 release adds only a read-only Dataset Quality collector at
 `/api/cron/meta-dataset-quality`. `vercel.json` schedules a primary run at
-`17 3 * * *` and an idempotent retry at `17 4 * * *`. Vercel sends the existing
-`CRON_SECRET` bearer authorization; the provider read uses the existing
-`META_ACCESS_TOKEN` and `META_PIXEL_ID`. No new environment value or Supabase
-migration is required.
+`17 3 * * *` and delegates an idempotent retry through
+`/api/cron/meta-dataset-quality-retry` at `17 4 * * *`. Vercel sends the
+existing `CRON_SECRET` bearer authorization; the provider read uses the
+existing `META_ACCESS_TOKEN` and `META_PIXEL_ID`. No new environment value or
+Supabase migration is required.
 
 The collector requests the documented Meta `v25.0` event-level EMQ,
 match-key coverage, diagnostics, event coverage, deduplication feedback,

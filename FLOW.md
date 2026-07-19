@@ -77,10 +77,12 @@ ordre `1866` nådde terminal `SUCCESS` på statusforsøk 4 kl. 21:31:06Z.
 
 Meta Dataset Quality har igjen en aktiv, avgrenset snapshot-flyt uten
 provider-skriverett. `/api/cron/meta-dataset-quality` leser Meta `v25.0`
-med primærkjøring kl. 03:17 UTC og idempotent retry kl. 04:17 UTC. Flyten
-validerer providerresponsen med Zod og lagrer eventnivåets EMQ, match-key
-coverage, diagnostikk, event coverage, dedupliseringsfeedback, freshness og ACR
-i `marketing.meta_quality_snapshots`. Før deploy skrev den første
+med primærkjøring kl. 03:17 UTC;
+`/api/cron/meta-dataset-quality-retry` delegerer en idempotent retry til samme
+handler kl. 04:17 UTC. Flyten validerer providerresponsen med Zod og lagrer
+eventnivåets EMQ, match-key coverage, diagnostikk, event coverage,
+dedupliseringsfeedback, freshness og ACR i
+`marketing.meta_quality_snapshots`. Før deploy skrev den første
 produksjonsverifiserte kjøringen seks rader med måletid
 `2026-07-18T21:21:27.253Z`; samme-dags retry skrev 0 duplikater.
 
