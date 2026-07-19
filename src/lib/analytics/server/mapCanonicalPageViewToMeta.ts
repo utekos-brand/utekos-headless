@@ -2,6 +2,7 @@ import { ServerEvent } from 'facebook-nodejs-business-sdk'
 import type { CanonicalPageView } from '../pageViewEvent'
 import { buildMetaUserData } from './buildMetaUserData'
 import { buildMetaRequestContext } from './buildMetaRequestContext'
+import { metaMarketingRequestContextPreference } from './metaMarketingRequestContextPreference'
 
 export function mapCanonicalPageViewToMeta(
   event: CanonicalPageView
@@ -27,6 +28,9 @@ export function mapCanonicalPageViewToMeta(
     .setActionSource('website')
     .setEventId(event.event_id)
 
-  serverEvent.setRequestContext(buildMetaRequestContext(event))
+  serverEvent.setRequestContext(
+    buildMetaRequestContext(event),
+    metaMarketingRequestContextPreference
+  )
   return serverEvent
 }

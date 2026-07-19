@@ -5,6 +5,7 @@ import {
   UserData
 } from 'facebook-nodejs-business-sdk'
 import { buildMetaRequestContext } from './buildMetaRequestContext'
+import { metaMarketingRequestContextPreference } from './metaMarketingRequestContextPreference'
 
 const consent = {
   analytics: 'denied',
@@ -42,7 +43,10 @@ test('native request context preserves canonical identifiers and adds the builde
         .setClientIpAddress(clientIpAddress)
     )
     .setEventSourceUrl(event.page_url)
-  serverEvent.setRequestContext(buildMetaRequestContext(event))
+  serverEvent.setRequestContext(
+    buildMetaRequestContext(event),
+    metaMarketingRequestContextPreference
+  )
 
   const payload = serverEvent.normalize() as {
     event_source_url: string
@@ -82,7 +86,10 @@ test('native request context fills missing identifiers and URLs', () => {
   } as const
   const serverEvent = new ServerEvent()
 
-  serverEvent.setRequestContext(buildMetaRequestContext(event))
+  serverEvent.setRequestContext(
+    buildMetaRequestContext(event),
+    metaMarketingRequestContextPreference
+  )
 
   const payload = serverEvent.normalize() as {
     event_source_url: string

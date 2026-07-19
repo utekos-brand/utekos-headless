@@ -6,6 +6,7 @@ import {
 import type { CanonicalPurchase } from '../purchaseEvent'
 import { buildMetaUserData } from './buildMetaUserData'
 import { buildMetaRequestContext } from './buildMetaRequestContext'
+import { metaMarketingRequestContextPreference } from './metaMarketingRequestContextPreference'
 
 function buildPurchaseContent(
   item: CanonicalPurchase['custom_data']['items'][number]
@@ -65,7 +66,8 @@ export function mapCanonicalPurchaseToMeta(
 
   if (event.page_url) {
     serverEvent.setRequestContext(
-      buildMetaRequestContext({ ...event, page_url: event.page_url })
+      buildMetaRequestContext({ ...event, page_url: event.page_url }),
+      metaMarketingRequestContextPreference
     )
   }
 

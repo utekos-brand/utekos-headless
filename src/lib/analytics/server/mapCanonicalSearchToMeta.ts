@@ -5,6 +5,7 @@ import {
 import type { CanonicalSearch } from '../searchEvent'
 import { buildMetaUserData } from './buildMetaUserData'
 import { buildMetaRequestContext } from './buildMetaRequestContext'
+import { metaMarketingRequestContextPreference } from './metaMarketingRequestContextPreference'
 
 export function mapCanonicalSearchToMeta(
   event: CanonicalSearch
@@ -35,6 +36,9 @@ export function mapCanonicalSearchToMeta(
     .setActionSource('website')
     .setEventId(event.event_id)
 
-  serverEvent.setRequestContext(buildMetaRequestContext(event))
+  serverEvent.setRequestContext(
+    buildMetaRequestContext(event),
+    metaMarketingRequestContextPreference
+  )
   return serverEvent
 }

@@ -5,6 +5,7 @@ import {
 import type { CanonicalEventEnvelope } from '../canonicalEventEnvelope'
 import { buildMetaUserData } from './buildMetaUserData'
 import { buildMetaRequestContext } from './buildMetaRequestContext'
+import { metaMarketingRequestContextPreference } from './metaMarketingRequestContextPreference'
 
 type MetaLeadEvent = CanonicalEventEnvelope & {
   page_url?: string | undefined
@@ -49,7 +50,8 @@ export function mapCanonicalLeadToMeta(
 
   if (event.page_url) {
     serverEvent.setRequestContext(
-      buildMetaRequestContext({ ...event, page_url: event.page_url })
+      buildMetaRequestContext({ ...event, page_url: event.page_url }),
+      metaMarketingRequestContextPreference
     )
   }
 

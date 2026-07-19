@@ -6,6 +6,7 @@ import {
 import type { CanonicalViewItem } from '../viewItemEvent'
 import { buildMetaUserData } from './buildMetaUserData'
 import { buildMetaRequestContext } from './buildMetaRequestContext'
+import { metaMarketingRequestContextPreference } from './metaMarketingRequestContextPreference'
 
 const SHOPIFY_VARIANT_GID =
   /^gid:\/\/shopify\/ProductVariant\/(\d+)$/
@@ -89,6 +90,9 @@ export function mapCanonicalViewItemToMeta(
     .setActionSource('website')
     .setEventId(event.event_id)
 
-  serverEvent.setRequestContext(buildMetaRequestContext(event))
+  serverEvent.setRequestContext(
+    buildMetaRequestContext(event),
+    metaMarketingRequestContextPreference
+  )
   return serverEvent
 }
