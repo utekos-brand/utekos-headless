@@ -20,8 +20,9 @@ them as active runtime. A deliberately scoped replacement is now active:
 `src/app/api/cron/meta-dataset-quality/route.ts` reads Dataset Quality through
 `src/lib/analytics/server/fetchMetaDatasetQuality.ts` and stores one validated,
 idempotent batch per UTC day in `marketing.meta_quality_snapshots`. Vercel runs
-the route daily at `17 3 * * *`; see [`DEPLOYMENT.md`](../../DEPLOYMENT.md) and
-[`FLOW.md`](../../FLOW.md) for the production artifact and verification gates.
+the primary route at `17 3 * * *` and an idempotent retry at `17 4 * * *`; see
+[`DEPLOYMENT.md`](../../DEPLOYMENT.md) and [`FLOW.md`](../../FLOW.md) for the
+production artifact and verification gates.
 
 ## Required Access
 
