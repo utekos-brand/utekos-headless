@@ -92,7 +92,10 @@ Production commit `1117a0e385832b73aa76a3705e2747dc6757fbc6` replaces the
 project-owned `MetaServerEvent` wrapper with the native
 `facebook-nodejs-business-sdk@25.0.3` `ServerEvent.setRequestContext()` API.
 Vercel deployment `dpl_DCw986Yc1vLsfX2ViadqFpKatTgg` reached `READY`, has the
-exact Git SHA and owns `utekos.no`, `www.utekos.no` and `feed.utekos.no`.
+exact Git SHA and was verified on `utekos.no`, `www.utekos.no` and
+`feed.utekos.no`. A later documentation-only deployment may own the aliases
+without changing the verified runtime implementation; inspect current alias
+ownership separately.
 
 The dependency is pinned to
 `file:vendor/facebook-nodejs-business-sdk-25.0.3.tgz`. The checked-in archive
