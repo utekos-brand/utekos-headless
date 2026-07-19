@@ -62,7 +62,7 @@ export function normalizeCanonicalPageView(
       { region_code: requestContext.regionCode }
     : {}),
     ...(hasLocation ?
-      { location: { ...location, source: 'server_request' } }
+      { location: { ...location, source: 'ip_geolocation' } }
     : {}),
     ...(hasMarketingConsent && browser_id ? { browser_id } : {}),
     ...(hasMarketingConsent && click_id ? { click_id } : {}),

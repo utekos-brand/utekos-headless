@@ -43,7 +43,12 @@ const locationSchema = z.strictObject({
   postal_code: z.string().min(1).optional(),
   region_code: z.string().min(1).optional(),
   source: z
-    .enum(['browser_permission', 'server_request'])
+    .enum([
+      'browser_permission',
+      'customer_provided',
+      'ip_geolocation',
+      'server_request'
+    ])
     .optional()
 })
 

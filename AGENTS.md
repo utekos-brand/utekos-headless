@@ -471,3 +471,9 @@ Read and follow the
 [Utekos Well-Architected Framework](.agent/utekos-well-architechted-framework.md)
 and use the Google Developer documentation MCP for current provider
 documentation before changing Google Cloud integrations.
+
+
+## Google Analytics
+
+The Measurement Protocol has reached a mature, finalized product state and will remain operational with no plans for deprecation. However, to ensure your technical setups are future-proofed,
+build server-to-server event integrations using the Data Manager API, which is our central infrastructure for future data ingestion innovations.

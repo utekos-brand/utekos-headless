@@ -130,7 +130,7 @@ test('restores checkout attribution for the purchase webhook', () => {
     country_code: 'NO',
     postal_code: '0150',
     region_code: '03',
-    source: 'server_request'
+    source: 'customer_provided'
   })
   assert.equal(event.consent.marketing, 'granted')
   assert.equal(event.consent.analytics, 'granted')

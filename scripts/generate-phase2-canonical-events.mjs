@@ -570,7 +570,7 @@ export function normalizeCanonical${Pascal}(
   if (hasLocation) {
     normalized.location = {
       ...serverLocation,
-      source: 'server_request'
+      source: 'ip_geolocation'
     }
   }
 

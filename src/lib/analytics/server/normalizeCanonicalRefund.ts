@@ -52,7 +52,7 @@ export function normalizeCanonicalRefund(
   if (hasLocation) {
     normalized.location = {
       ...serverLocation,
-      source: 'server_request'
+      source: 'ip_geolocation'
     }
   }
 

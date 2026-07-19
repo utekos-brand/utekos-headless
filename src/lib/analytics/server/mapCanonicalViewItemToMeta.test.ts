@@ -54,7 +54,7 @@ function viewItem(
       country_code: 'NO',
       postal_code: '0150',
       region_code: '03',
-      source: 'server_request'
+      source: 'customer_provided'
     },
     page_url: 'https://utekos.no/produkter/utekos-techdown',
     user_data: {
@@ -109,6 +109,32 @@ test('maps canonical view_item to a catalog-compatible Meta ViewContent event', 
     event_source_url:
       'https://utekos.no/produkter/utekos-techdown.AQQCAQMB'
   })
+})
+
+test('does not map IP geolocation city or postal code into Meta ct/zp', () => {
+  const normalized = mapCanonicalViewItemToMeta(
+    viewItem({
+      location: {
+        city: 'Oslo',
+        country_code: 'NO',
+        postal_code: '0150',
+        region_code: '03',
+        source: 'ip_geolocation'
+      }
+    })
+  ).normalize() as {
+    user_data: {
+      ct?: string[]
+      zp?: string[]
+      country?: string[]
+      client_ip_address?: string
+    }
+  }
+
+  assert.equal(normalized.user_data.ct, undefined)
+  assert.equal(normalized.user_data.zp, undefined)
+  assert.equal(normalized.user_data.country, undefined)
+  assert.equal(normalized.user_data.client_ip_address, '203.0.113.10')
 })
 
 test('uses the persisted fbc value and never rebuilds it from event time', () => {

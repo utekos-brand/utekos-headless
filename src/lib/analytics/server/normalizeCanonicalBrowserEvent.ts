@@ -50,7 +50,7 @@ export function normalizeCanonicalBrowserEvent<TEvent>(
     mayUseBrowserLocation ?
       clientLocation
     : Object.keys(serverLocation).length > 0 ?
-      { ...serverLocation, source: 'server_request' as const }
+      { ...serverLocation, source: 'ip_geolocation' as const }
     : undefined
 
   const hasDeviceInfo = Object.keys(deviceInfo).length > 0

@@ -38,6 +38,10 @@ export function buildMetaUserData(event: MetaUserDataEvent) {
   const fbc = event.browser_id?.fbc
   const fbp = event.browser_id?.fbp
   const location = event.location
+  // Only customer-provided address belongs in Meta ct/zp/st/country.
+  // IP geolocation must not be sent as declared customer address fields.
+  const useCustomerAddressFields =
+    location?.source === 'customer_provided'
 
   if (emailHashes?.length) userData.setEmails(emailHashes)
   if (phoneHashes?.length) userData.setPhones(phoneHashes)
@@ -50,16 +54,21 @@ export function buildMetaUserData(event: MetaUserDataEvent) {
   }
   if (fbc) userData.setFbc(fbc)
   if (fbp) userData.setFbp(fbp)
-  if (location?.city) userData.setCity(location.city)
+
+  if (useCustomerAddressFields && location?.city) {
+    userData.setCity(location.city)
+  }
   if (
+    useCustomerAddressFields &&
     location?.region_code &&
     /[a-z]/i.test(location.region_code)
   ) {
     userData.setState(location.region_code)
   }
-  if (location?.postal_code)
+  if (useCustomerAddressFields && location?.postal_code) {
     userData.setZip(location.postal_code)
-  if (location?.country_code) {
+  }
+  if (useCustomerAddressFields && location?.country_code) {
     userData.setCountry(location.country_code)
   }
 

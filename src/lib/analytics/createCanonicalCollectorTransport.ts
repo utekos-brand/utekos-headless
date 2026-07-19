@@ -39,7 +39,11 @@ type EventWithConsent = {
   external_id?: string | undefined
   impression_id?: string | undefined
   location?: {
-    source?: 'browser_permission' | 'server_request'
+    source?:
+      | 'browser_permission'
+      | 'customer_provided'
+      | 'ip_geolocation'
+      | 'server_request'
     [key: string]: unknown
   } | undefined
   region_code?: string | undefined

@@ -80,7 +80,7 @@ function viewItem(
       country_code: 'NO',
       postal_code: '0150',
       region_code: '03',
-      source: 'server_request'
+      source: 'ip_geolocation'
     },
     user_data: {
       email_sha256: [emailHash],
@@ -301,7 +301,7 @@ test('keeps request IP matching for a known non-restricted location', () => {
       viewItem({
         location: {
           country_code: 'US',
-          source: 'server_request'
+          source: 'ip_geolocation'
         }
       })
     )

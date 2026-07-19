@@ -86,7 +86,7 @@ test('normalizes view_item with trusted request context', () => {
     'trusted user agent'
   )
   assert.equal(event.location?.country_code, 'NO')
-  assert.equal(event.location?.source, 'server_request')
+  assert.equal(event.location?.source, 'ip_geolocation')
   assert.equal(event.browser_id?.fbp, 'fb.1.123')
 })
 

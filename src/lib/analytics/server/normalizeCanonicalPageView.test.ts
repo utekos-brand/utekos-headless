@@ -75,7 +75,7 @@ test('uses trusted request context for server-owned fields', () => {
     country_code: 'NO',
     postal_code: '0150',
     region_code: '03',
-    source: 'server_request'
+    source: 'ip_geolocation'
   })
 })
 

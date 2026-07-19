@@ -63,7 +63,7 @@ function mapOrderLocation(order: OrderPaid) {
   }
 
   return Object.keys(location).length > 0 ?
-      { ...location, source: 'server_request' as const }
+      { ...location, source: 'customer_provided' as const }
     : undefined
 }
 

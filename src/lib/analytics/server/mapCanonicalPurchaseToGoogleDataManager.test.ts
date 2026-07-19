@@ -62,7 +62,7 @@ function purchase(
       country_code: 'NO',
       postal_code: '3182',
       region_code: '07',
-      source: 'server_request'
+      source: 'ip_geolocation'
     },
     user_data: {
       email_sha256: [emailHash]

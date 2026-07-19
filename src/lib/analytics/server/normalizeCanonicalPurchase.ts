@@ -53,7 +53,8 @@ export function normalizeCanonicalPurchase(
   if (hasLocation) {
     normalized.location = {
       ...serverLocation,
-      source: 'server_request'
+      // Purchase location comes from verified Shopify shipping/billing.
+      source: 'customer_provided'
     }
   }
 

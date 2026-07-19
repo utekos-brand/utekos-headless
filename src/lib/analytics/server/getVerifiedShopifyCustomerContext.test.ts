@@ -26,7 +26,7 @@ test('uses verified Shopify customer context instead of webhook-request geolocat
       country_code: 'NO',
       postal_code: '0150',
       region_code: '03',
-      source: 'server_request'
+      source: 'customer_provided'
     },
     custom_data: {
       currency: 'NOK',

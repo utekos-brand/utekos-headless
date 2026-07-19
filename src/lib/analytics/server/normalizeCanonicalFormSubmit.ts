@@ -53,7 +53,7 @@ export function normalizeCanonicalFormSubmit(
   if (hasLocation) {
     normalized.location = {
       ...serverLocation,
-      source: 'server_request'
+      source: 'ip_geolocation'
     }
   }
 
