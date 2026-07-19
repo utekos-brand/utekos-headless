@@ -1,6 +1,6 @@
 # Deployment And Migration Checklist
 
-Status date: 2026-07-18
+Status date: 2026-07-19
 
 This is the mandatory release checklist for Utekos Headless. Use it
 before every deploy, production mutation, provider change, GTM publish,
@@ -85,6 +85,62 @@ After deploy, verify all of the following:
   order; opening the production auth/BankID surface is not payment proof;
 - Dataset Quality is compared with the documented pre-release baseline after
   sufficient traffic, not inferred from one smoke event.
+
+### Meta SDK v25 native request-context release 2026-07-19
+
+Production commit `1117a0e385832b73aa76a3705e2747dc6757fbc6` replaces the
+project-owned `MetaServerEvent` wrapper with the native
+`facebook-nodejs-business-sdk@25.0.3` `ServerEvent.setRequestContext()` API.
+Vercel deployment `dpl_DCw986Yc1vLsfX2ViadqFpKatTgg` reached `READY`, has the
+exact Git SHA and owns `utekos.no`, `www.utekos.no` and `feed.utekos.no`.
+
+The dependency is pinned to
+`file:vendor/facebook-nodejs-business-sdk-25.0.3.tgz`. The checked-in archive
+has SHA-256
+`88fac8a67e6e78a3715909fa2fd27ccb30da48550530ec6af920d510cc983aac` and its
+source, license and README match upstream commit
+`584ba8d7414574744abe2f3bf0f2390937c916d5`. Preserve this install form: the
+direct Git dependency requires a package build and its nested legacy install
+scripts are incompatible with the repository's fail-closed pnpm policy. No
+Meta-specific `allowBuilds` exception is required or present.
+
+All active Meta mappers now instantiate the SDK `ServerEvent` and apply the
+canonical request context. Explicit event data remains authoritative, so the
+raw `ipAddress(request)` result, browser `_fbc`/`_fbp`, canonical
+`external_id`, `event_time`, `event_id`, source URL and user agent are retained
+when available. The native builder fills only absent values from the request
+context and applies Meta's documented appendix to supported user-data values.
+The browser Pixel and server CAPI continue to share the canonical event name
+and event ID for deduplication.
+
+Release verification:
+
+- frozen pnpm install and runtime import reported SDK `25.0.3`,
+  `setRequestContext=function` and `Preference=function`;
+- 170 server analytics tests, targeted lint, Next type generation, TypeScript,
+  production build, MCP build/doctor and the production tracking-gateway smoke
+  passed;
+- fresh consented homepage, product and campaign production journeys produced
+  matching canonical, Pixel and OpenBridge event names and IDs; all expected
+  Pixel and OpenBridge requests returned HTTP 200;
+- each of the five fresh canonical IDs had one first-attempt Meta provider row
+  with raw IP, user agent, `_fbc`, `_fbp`, `external_id` and a source URL
+  containing `fbclid`; Meta returned one received event, no messages and a
+  trace ID;
+- provider status `accepted_unverified` proves API acceptance only. It is not
+  evidence of downstream attribution, campaign reporting or optimization;
+- no Supabase schema, Vercel environment or GTM container was changed.
+
+The release-time Dataset Quality baseline is PageView `6.6`, ViewContent
+`5.7`, AddToCart `6.4`, InitiateCheckout `6.1`, Purchase `9.3` and Lead `9.0`.
+The preceding seven-day event volumes were respectively `2013`, `923`, `44`,
+`22`, `42` and `11`; AddToWishlist and Search both had zero reported events.
+Zero or low volume is insufficient to diagnose a route failure or establish a
+quality trend. A read-only daily snapshot guard runs for 14 days, with explicit
+day-7 and day-14 reviews scheduled for 2026-07-26 and 2026-08-02 at 06:45
+Europe/Oslo. Those reviews must compare denominators, browser/server volume,
+deduplication, match-key coverage, provider acceptance and retry/dead-letter
+state; GA data remains separate context rather than Meta quality evidence.
 
 The source runtime has no direct GA4 Measurement Protocol transport. The
 legacy `GA4 - MP Purchase` tag was removed under explicit approval and
