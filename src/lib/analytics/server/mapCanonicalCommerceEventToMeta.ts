@@ -1,12 +1,12 @@
 import {
   Content,
-  CustomData
+  CustomData,
+  ServerEvent
 } from 'facebook-nodejs-business-sdk'
 import type { CanonicalCommerceItem } from '../canonicalCommerceItem'
 import type { CanonicalEventEnvelope } from '../canonicalEventEnvelope'
 import { buildMetaUserData } from './buildMetaUserData'
 import { buildMetaRequestContext } from './buildMetaRequestContext'
-import { MetaServerEvent } from './MetaServerEvent'
 
 const SHOPIFY_VARIANT_GID =
   /^gid:\/\/shopify\/ProductVariant\/(\d+)$/
@@ -74,7 +74,7 @@ function buildCustomData(event: MetaCommerceEvent) {
 export function mapCanonicalCommerceEventToMeta(
   event: MetaCommerceEvent,
   metaEventName: string
-): MetaServerEvent {
+): ServerEvent {
   if (event.consent.marketing !== 'granted') {
     throw new Error(
       'Meta dispatch requires granted marketing consent'
@@ -89,7 +89,7 @@ export function mapCanonicalCommerceEventToMeta(
     throw new Error('Meta event_time must be a valid timestamp')
   }
 
-  const serverEvent = new MetaServerEvent()
+  const serverEvent = new ServerEvent()
   serverEvent
     .setEventName(metaEventName)
     .setEventTime(eventTime)

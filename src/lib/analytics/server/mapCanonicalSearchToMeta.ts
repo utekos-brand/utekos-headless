@@ -1,14 +1,14 @@
 import {
-  CustomData
+  CustomData,
+  ServerEvent
 } from 'facebook-nodejs-business-sdk'
 import type { CanonicalSearch } from '../searchEvent'
 import { buildMetaUserData } from './buildMetaUserData'
 import { buildMetaRequestContext } from './buildMetaRequestContext'
-import { MetaServerEvent } from './MetaServerEvent'
 
 export function mapCanonicalSearchToMeta(
   event: CanonicalSearch
-): MetaServerEvent {
+): ServerEvent {
   if (event.consent.marketing !== 'granted') {
     throw new Error(
       'Meta dispatch requires granted marketing consent'
@@ -26,7 +26,7 @@ export function mapCanonicalSearchToMeta(
     event.custom_data.search_term
   )
 
-  const serverEvent = new MetaServerEvent()
+  const serverEvent = new ServerEvent()
   serverEvent
     .setEventName('Search')
     .setEventTime(eventTime)

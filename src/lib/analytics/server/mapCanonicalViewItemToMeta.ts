@@ -1,11 +1,11 @@
 import {
   Content,
-  CustomData
+  CustomData,
+  ServerEvent
 } from 'facebook-nodejs-business-sdk'
 import type { CanonicalViewItem } from '../viewItemEvent'
 import { buildMetaUserData } from './buildMetaUserData'
 import { buildMetaRequestContext } from './buildMetaRequestContext'
-import { MetaServerEvent } from './MetaServerEvent'
 
 const SHOPIFY_VARIANT_GID =
   /^gid:\/\/shopify\/ProductVariant\/(\d+)$/
@@ -65,7 +65,7 @@ function buildCustomData(event: CanonicalViewItem) {
 
 export function mapCanonicalViewItemToMeta(
   event: CanonicalViewItem
-): MetaServerEvent {
+): ServerEvent {
   if (event.consent.marketing !== 'granted') {
     throw new Error(
       'Meta dispatch requires granted marketing consent'
@@ -80,7 +80,7 @@ export function mapCanonicalViewItemToMeta(
     throw new Error('Meta event_time must be a valid timestamp')
   }
 
-  const serverEvent = new MetaServerEvent()
+  const serverEvent = new ServerEvent()
   serverEvent
     .setEventName('ViewContent')
     .setEventTime(eventTime)

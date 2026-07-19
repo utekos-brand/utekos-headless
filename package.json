@@ -215,7 +215,7 @@
     "embla-carousel-fade": "^9.0.0-rc02",
     "embla-carousel-react": "^9.0.0-rc02",
     "embla-carousel-ssr": "^9.0.0-rc02",
-    "facebook-nodejs-business-sdk": "^24.0.1",
+    "facebook-nodejs-business-sdk": "file:vendor/facebook-nodejs-business-sdk-25.0.3.tgz",
     "fastmcp-ts": "^0.1.2",
     "flags": "^4.1.0",
     "google-auth-library": "^10.6.2",

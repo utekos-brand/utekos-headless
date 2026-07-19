@@ -1,10 +1,10 @@
 import {
-  CustomData
+  CustomData,
+  ServerEvent
 } from 'facebook-nodejs-business-sdk'
 import type { CanonicalEventEnvelope } from '../canonicalEventEnvelope'
 import { buildMetaUserData } from './buildMetaUserData'
 import { buildMetaRequestContext } from './buildMetaRequestContext'
-import { MetaServerEvent } from './MetaServerEvent'
 
 type MetaLeadEvent = CanonicalEventEnvelope & {
   page_url?: string | undefined
@@ -16,7 +16,7 @@ type MetaLeadEvent = CanonicalEventEnvelope & {
 
 export function mapCanonicalLeadToMeta(
   event: MetaLeadEvent
-): MetaServerEvent {
+): ServerEvent {
   if (event.consent.marketing !== 'granted') {
     throw new Error(
       'Meta dispatch requires granted marketing consent'
@@ -38,7 +38,7 @@ export function mapCanonicalLeadToMeta(
     customData.setValue(event.custom_data.value)
   }
 
-  const serverEvent = new MetaServerEvent()
+  const serverEvent = new ServerEvent()
   serverEvent
     .setEventName('Lead')
     .setEventTime(eventTime)

@@ -6,6 +6,8 @@ import { mapCanonicalViewItemToMeta } from './mapCanonicalViewItemToMeta'
 
 const emailHash = 'a'.repeat(64)
 const phoneHash = 'b'.repeat(64)
+const prehashedAppendix = 'AQQAAQMB'
+const normalizedAppendix = 'AQQCAQMB'
 
 function sha256(value: string) {
   return createHash('sha256').update(value).digest('hex')
@@ -73,14 +75,14 @@ test('maps canonical view_item to a catalog-compatible Meta ViewContent event', 
     event_name: 'ViewContent',
     event_time: 1784196000,
     user_data: {
-      em: [emailHash],
-      ph: [phoneHash],
+      em: [`${emailHash}.${prehashedAppendix}`],
+      ph: [`${phoneHash}.${prehashedAppendix}`],
       external_id: [
         '47b360efda81ae521d5388c4cd14f96456ebdddda7cad245a7040f40070e9f87.AQQCAQMB'
       ],
-      ct: [sha256('oslo')],
-      zp: [sha256('0150')],
-      country: [sha256('no')],
+      ct: [`${sha256('oslo')}.${normalizedAppendix}`],
+      zp: [`${sha256('0150')}.${normalizedAppendix}`],
+      country: [`${sha256('no')}.${normalizedAppendix}`],
       client_ip_address: '203.0.113.10',
       client_user_agent: 'Mozilla/5.0',
       fbc: 'fb.1.1784195800000.meta-click-id',
