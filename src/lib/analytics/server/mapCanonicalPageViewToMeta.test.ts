@@ -45,7 +45,10 @@ test('maps canonical page_view to a server-side Meta PageView', () => {
   assert.equal(normalized.event_name, 'PageView')
   assert.equal(normalized.action_source, 'website')
   assert.equal(normalized.event_id, pageView().event_id)
-  assert.equal(normalized.event_source_url, pageView().page_url)
+  assert.equal(
+    normalized.event_source_url,
+    `${pageView().page_url}.AQQCAQMB`
+  )
   assert.equal(
     normalized.user_data.fbc,
     pageView().browser_id?.fbc

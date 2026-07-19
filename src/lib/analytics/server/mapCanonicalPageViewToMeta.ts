@@ -1,10 +1,11 @@
-import { ServerEvent } from 'facebook-nodejs-business-sdk'
 import type { CanonicalPageView } from '../pageViewEvent'
 import { buildMetaUserData } from './buildMetaUserData'
+import { buildMetaRequestContext } from './buildMetaRequestContext'
+import { MetaServerEvent } from './MetaServerEvent'
 
 export function mapCanonicalPageViewToMeta(
   event: CanonicalPageView
-): ServerEvent {
+): MetaServerEvent {
   if (event.consent.marketing !== 'granted') {
     throw new Error(
       'Meta dispatch requires granted marketing consent'
@@ -18,11 +19,14 @@ export function mapCanonicalPageViewToMeta(
     throw new Error('Meta event_time must be a valid timestamp')
   }
 
-  return new ServerEvent()
+  const serverEvent = new MetaServerEvent()
+  serverEvent
     .setEventName('PageView')
     .setEventTime(eventTime)
     .setUserData(buildMetaUserData(event))
     .setActionSource('website')
     .setEventId(event.event_id)
-    .setEventSourceUrl(event.page_url)
+
+  serverEvent.setRequestContext(buildMetaRequestContext(event))
+  return serverEvent
 }

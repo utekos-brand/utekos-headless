@@ -15,7 +15,10 @@ function viewItem(
   overrides: Partial<CanonicalViewItem> = {}
 ): CanonicalViewItem {
   return {
-    browser_id: { fbp: 'fb.1.1784195900000.123456789' },
+    browser_id: {
+      fbc: 'fb.1.1784195800000.meta-click-id',
+      fbp: 'fb.1.1784195900000.123456789'
+    },
     click_id: { fbclid: 'meta-click-id' },
     client_ip_address: '203.0.113.10',
     consent: {
@@ -80,6 +83,7 @@ test('maps canonical view_item to a catalog-compatible Meta ViewContent event', 
       country: [sha256('no')],
       client_ip_address: '203.0.113.10',
       client_user_agent: 'Mozilla/5.0',
+      fbc: 'fb.1.1784195800000.meta-click-id',
       fbp: 'fb.1.1784195900000.123456789'
     },
     custom_data: {
@@ -103,7 +107,7 @@ test('maps canonical view_item to a catalog-compatible Meta ViewContent event', 
     action_source: 'website',
     event_id: '61c2ef59-6e6f-4f56-a63a-567ca398f9de',
     event_source_url:
-      'https://utekos.no/produkter/utekos-techdown'
+      'https://utekos.no/produkter/utekos-techdown.AQQCAQMB'
   })
 })
 

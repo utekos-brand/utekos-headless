@@ -1,10 +1,11 @@
 import {
   Content,
-  CustomData,
-  ServerEvent
+  CustomData
 } from 'facebook-nodejs-business-sdk'
 import type { CanonicalPurchase } from '../purchaseEvent'
 import { buildMetaUserData } from './buildMetaUserData'
+import { buildMetaRequestContext } from './buildMetaRequestContext'
+import { MetaServerEvent } from './MetaServerEvent'
 
 function buildPurchaseContent(
   item: CanonicalPurchase['custom_data']['items'][number]
@@ -38,7 +39,7 @@ function buildPurchaseCustomData(event: CanonicalPurchase) {
 
 export function mapCanonicalPurchaseToMeta(
   event: CanonicalPurchase
-): ServerEvent {
+): MetaServerEvent {
   if (event.consent.marketing !== 'granted') {
     throw new Error(
       'Meta dispatch requires granted marketing consent'
@@ -53,7 +54,8 @@ export function mapCanonicalPurchaseToMeta(
     throw new Error('Meta event_time must be a valid timestamp')
   }
 
-  const serverEvent = new ServerEvent()
+  const serverEvent = new MetaServerEvent()
+  serverEvent
     .setEventName('Purchase')
     .setEventTime(eventTime)
     .setUserData(buildMetaUserData(event))
@@ -62,7 +64,9 @@ export function mapCanonicalPurchaseToMeta(
     .setEventId(event.event_id)
 
   if (event.page_url) {
-    serverEvent.setEventSourceUrl(event.page_url)
+    serverEvent.setRequestContext(
+      buildMetaRequestContext({ ...event, page_url: event.page_url })
+    )
   }
 
   return serverEvent
