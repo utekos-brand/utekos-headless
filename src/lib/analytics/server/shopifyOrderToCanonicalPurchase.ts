@@ -1,4 +1,5 @@
 import type { OrderPaid } from 'types/commerce/order/OrderPaid'
+import { ensureFbclidFromFbc } from '../extractFbclidFromFbc'
 import { parseOrderAttributionFromNoteAttributes } from '../checkoutAttributionSnapshot'
 import {
   canonicalPurchaseSchema,
@@ -80,6 +81,17 @@ export function shopifyOrderToCanonicalPurchase(
   const attribution = parseOrderAttributionFromNoteAttributes(
     order.note_attributes
   )
+  const clickId =
+    attribution.consent.marketing === 'granted' ?
+      ensureFbclidFromFbc({
+        ...(attribution.browser_id ?
+          { browser_id: attribution.browser_id }
+        : {}),
+        ...(attribution.click_id ?
+          { click_id: attribution.click_id }
+        : {})
+      })
+    : attribution.click_id
   const pageUrl =
     attribution.page_url ??
     parseAbsoluteHttpUrl(order.landing_site) ??
@@ -114,9 +126,7 @@ export function shopifyOrderToCanonicalPurchase(
     ...(attribution.browser_id ?
       { browser_id: attribution.browser_id }
     : {}),
-    ...(attribution.click_id ?
-      { click_id: attribution.click_id }
-    : {}),
+    ...(clickId ? { click_id: clickId } : {}),
     ...(attribution.external_id ?
       { external_id: attribution.external_id }
     : order.customer?.id ?
