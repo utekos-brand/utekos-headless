@@ -32,6 +32,7 @@ import { metaPageViewProviderAdapter } from './providerAdapters/metaPageViewProv
 import { metaPurchaseProviderAdapter } from './providerAdapters/metaPurchaseProviderAdapter'
 import { metaSearchProviderAdapter } from './providerAdapters/metaSearchProviderAdapter'
 import { metaViewItemProviderAdapter } from './providerAdapters/metaViewItemProviderAdapter'
+import { microsoftUetPurchaseProviderAdapter } from './providerAdapters/microsoftUetPurchaseProviderAdapter'
 import type { ProviderOutboxBatchSummary } from './runProviderOutboxWorker'
 
 export const providerOutboxWorkerRegistry = {
@@ -130,6 +131,9 @@ export const providerOutboxWorkerRegistry = {
   ),
   'meta:view_item': createPostgresProviderOutboxWorker(
     metaViewItemProviderAdapter
+  ),
+  'microsoft_uet:purchase': createPostgresProviderOutboxWorker(
+    microsoftUetPurchaseProviderAdapter
   )
 } as const satisfies Record<
   RegisteredProviderAdapterKey,

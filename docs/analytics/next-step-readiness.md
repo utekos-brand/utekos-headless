@@ -6,27 +6,28 @@ The repository is ready for a narrowly scoped first code change: remove the glob
 
 ## Blockers
 
-Updated 2026-07-20:
+Updated 2026-07-20 (evening):
 
-1. Read-only GTM Admin access is still required before changing event ownership, server tags or destinations. Root cause verified: the Stape GTM MCP OAuth identity has zero GTM accounts; the user must re-authenticate with the Google account that owns `GTM-5TWMJQFP`. The GA4 MCP shares the same identity problem.
-2. ~~Read-only Meta Events Manager access~~ **Resolved:** Events Manager evidence obtained via Graph API v23.0 (dataset live, PascalCase-only 7d names, source split, match keys). Numeric EMQ and the paused server-tag question remain open pending blocker 1.
-3. ~~Shopify Admin access~~ **Resolved:** app-scoped subscriptions verified **empty** for the app token. New open question: what (if anything) delivers to the webhook routes (DEV-008).
-4. A decision is required between:
+1. ~~Read-only GTM Admin access~~ **Resolved for agents:** project `gtm-mcp` lists both accounts/containers; SA inventory confirms server `GTM-M8GT97CV` version 29. Stape remote MCP is optional and not required for agent GTM reads.
+2. ~~Read-only Meta Events Manager / numeric EMQ~~ **EMQ resolved** (Purchase 9.3; upper-funnel 6.1). **Meta browser/server dedupe: NOT OK / not proven (2026-07-20).** ViewContent Deduplication tab = not set up; PageView/AddToCart/InitiateCheckout still parsing; Graph omits `dedupe_key_feedback`. Paired same-`event_id` proof deferred — do not block other work on a Test Events script.
+3. ~~Shopify Admin access~~ **Resolved:** app-scoped subscriptions verified **empty** for the app token. Open question: what (if anything) delivers to the webhook routes (DEV-008).
+4. ~~Microsoft live conversion goals~~ **Resolved:** audit green after Entra OAuth; UET Active; four goals returned. **Purchase UET CAPI worker reintroduced in code (2026-07-20);** production deploy + purchase smoke still required before live CAPI is claimed.
+5. A decision is required between:
    - cron-only dispatch; or
    - targeted immediate dispatch by the attempts created in the acceptance transaction.
-5. Provider-specific status names must be agreed before migrating existing statuses.
-6. Database index changes require explicit schema-mutation approval and a deployment plan.
-7. **New:** `AW-18180376403` must be located and reconciled with the Google Ads conversion-exclusion policy before any Google-side change (DEV-017).
-8. **New:** the `meta-purchase-replay` dedup risk on branch `fix/meta-fbc-durable-click-ids` must be resolved before that branch merges (DEV-018).
+6. Provider-specific status names must be agreed before migrating existing statuses.
+7. Database index changes require explicit schema-mutation approval and a deployment plan.
+8. `AW-18180376403` must be located and reconciled with the Google Ads conversion-exclusion policy before any Google-side change (DEV-017).
+9. the `meta-purchase-replay` dedup risk on branch `fix/meta-fbc-durable-click-ids` must be resolved before that branch merges (DEV-018).
 
 ## Missing data
 
-- Exact active server GTM container ID/version/config (pending GTM re-auth).
-- Numeric Meta EMQ per event.
-- Microsoft live conversion goals/CAPI and `pageLoadId` behavior.
+- Microsoft `pageLoadId` browser-server dedupe for non-purchase / full funnel (purchase CAPI is purchase-only and does not yet emit paired pageLoad).
+- Meta Deduplication Overlap for `event_id` after ViewContent remediation (DEV-020) — currently documented as not set up / not proven.
 - Delivery source (if any) for the Shopify webhook routes.
 - Proven reason for the 47-row dead-letter count reduction.
 - Where `AW-18180376403` is configured and which conversion actions it carries.
+- Production Microsoft UET CAPI purchase smoke after deploy (ApiToken on Vercel + `msclkid` journey).
 
 ## Recommended first code change
 

@@ -334,12 +334,16 @@
     },
     "gtm-mcp": {
       "type": "stdio",
-      "command": "gtm-mcp",
-      "args": [],
+      "command": "node",
+      "args": [
+        "scripts/mcp/gtm-mcp-schema-fix.mjs"
+      ],
       "env": {
         "GTM_CLIENT_ID": "${GTM_CLIENT_ID}",
         "GTM_CLIENT_SECRET": "${GTM_CLIENT_SECRET}",
-        "GTM_PROJECT_ID": "${GTM_PROJECT_ID}"
+        "GTM_PROJECT_ID": "${GTM_PROJECT_ID}",
+        "GTM_CREDENTIALS_FILE": "${GTM_CREDENTIALS_FILE}",
+        "GTM_TOKEN_FILE": "${GTM_TOKEN_FILE}"
       },
       "tools": [
         "bulk_update_gtm_workspace",
@@ -1236,6 +1240,18 @@
       "env": {
         "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
       }
+    },
+    "utekos-docs": {
+      "type": "http",
+      "url": "https://mcp.utekos.no/mcp",
+      "tools": [
+        "get_context_manifest",
+        "list_context_collections",
+        "list_sources",
+        "read_context",
+        "search_context"
+      ],
+      "autoApprove": []
     },
     "vercel": {
       "type": "stdio",

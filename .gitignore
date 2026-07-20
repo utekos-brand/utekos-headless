@@ -220,3 +220,8 @@ gcloud components install alpha beta skaffold minikube kubectl gke-gcloud-auth-p
 .playwright-cli/
 .vc-config.json
 /types/codex-log.md
+
+# Local OAuth client for gtm-mcp (never commit)
+credentials.json
+
+token.json

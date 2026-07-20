@@ -158,8 +158,10 @@ Tabellkodene er komplette statusprofiler:
   `disabled`.
 - Meta `P(name)`: supported CAPI-mapping, production `planned`, outbox
   `disabled`; `—` er `not_relevant`.
-- Microsoft `P(name)`: supported browser UET/UET CAPI-mapping, production
-  `planned`, outbox `disabled`; `—` er `not_relevant`.
+- Microsoft `P(name)`: supported browser UET/UET CAPI-mapping. Production
+  `purchase` server outbox is `active` (UET CAPI worker registered 2026-07-20);
+  other Microsoft events remain `blocked_no_worker` until expanded. `—` er
+  `not_relevant`.
 - PostHog `P`: planned browser/server-mapping, production `not_implemented`,
   outbox `disabled`; `—` er `not_relevant`.
 

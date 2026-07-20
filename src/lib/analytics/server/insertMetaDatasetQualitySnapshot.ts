@@ -55,7 +55,11 @@ export async function insertMetaDatasetQualitySnapshot(
           ${event.event_match_quality?.composite_score ?? null},
           ${event.event_coverage?.percentage ?? null},
           ${sql.json(
-            (event.dedupe_key_feedback ?? []) as postgres.JSONValue
+            (event.dedupe_key_feedback === undefined
+              ? { status: 'omitted_by_provider' }
+              : event.dedupe_key_feedback === null
+                ? { status: 'null_from_provider' }
+                : event.dedupe_key_feedback) as postgres.JSONValue
           )},
           ${sql.json(
             (event.data_freshness ?? {}) as postgres.JSONValue

@@ -4,13 +4,6 @@
       "type": "http",
       "url": "https://mcp.vercel.com"
     },
-    "spor": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@vygruppen/spor-mcp-server"
-      ]
-    },
     "utekos-frost": {
       "url": "http://localhost:3060/api/mcp/frost",
       "headers": {
@@ -45,6 +38,15 @@
       "chrome-devtools-mcp@latest"
     ]
   },
+  "google-tag-manager-mcp-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://gtm-mcp.stape.ai/mcp"
+      ]
+    },
   "mdn": {
     "url": "https://mcp.mdn.mozilla.net/"
   },
@@ -61,12 +63,26 @@
       "@playwright/mcp@latest"
     ]
   },
-  "langchain": {
-    "type": "http",
-    "url": "https://eu.api.smith.langchain.com/mcp"
-  },
-  "LangSmith": {
-    "url": "https://eu.api.smith.langchain.com/mcp"
-  }
-}
+  "ga4-mcp-server": {
+     "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp-google-analytics.stape.io/mcp"
+      ]
+    },
+"facebook-ads": {
+      "url": "https://mcp.facebook.com/ads",
+      "headers": {
+        "ACCESS_TOKEN": "${input:facebookAdsToken}",
+        "META_PIXEL_ID": "${input:metaPixelId}",
+        "SYSTEM_USER_TOKEN": "${input:systemUserToken}"
+      }
+    }
+},
+  "inputs": [
+    { "id": "facebookAdsToken", "type": "promptString", "description": "Facebook Ads bearer token", "password": true },
+    { "id": "metaPixelId", "type": "promptString", "description": "Meta Pixel ID" },
+    { "id": "systemUserToken", "type": "promptString", "description": "Meta System User token", "password": true }
+  ]
 }

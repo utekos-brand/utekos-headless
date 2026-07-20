@@ -21,7 +21,7 @@ Status vocabulary:
 
 The project already has a substantial canonical architecture. It has a typed event catalog, a shared consent-aware browser collector, 23 first-party event routes, Zod validation, atomic ledger/outbox persistence, a generic `SKIP LOCKED` outbox, 24 Google and 8 Meta workers, provider retries/dead letters, Google request-status reconciliation, Shopify-owned purchase/refund events, Cookiebot Consent Mode and first-party GTM/sGTM routing.
 
-The principal problem is not absence of a canonical pipeline. It is coexistence with historical naming/data, overly broad immediate dispatch, generic acceptance semantics and incomplete provider/runtime verification. A successful browser request schedules all 32 workers, each with `maxItems: 1`; it can therefore claim unrelated backlog and compete with the five-minute cron. The live warehouse has 19,043 ledger rows and 21,588 attempts, no active backlog and no duplicate canonical IDs, but contains both canonical snake_case and legacy/provider PascalCase names. Google finality is reconciled; generic Meta success is still persisted as `accepted_unverified`. Microsoft browser UET is present, but no Microsoft server worker is registered.
+The principal problem is not absence of a canonical pipeline. It is coexistence with historical naming/data, overly broad immediate dispatch, generic acceptance semantics and incomplete provider/runtime verification. A successful browser request schedules all registered provider-event workers, each with `maxItems: 1`; it can therefore claim unrelated backlog and compete with the five-minute cron. The live warehouse has 19,043 ledger rows and 21,588 attempts, no active backlog and no duplicate canonical IDs, but contains both canonical snake_case and legacy/provider PascalCase names. Google finality is reconciled; generic Meta success is still persisted as `accepted_unverified`. Microsoft browser UET is present; purchase UET CAPI is reintroduced in-repo (production smoke pending).
 
 ## System boundaries
 
@@ -262,11 +262,11 @@ Numeric EMQ per event and the alleged paused server-container CAPI Gateway tag r
 
 - Published browser UET tag: `97247724`.
 - Browser UET is present and consent-gated.
-- Vercel contains the relevant credential variable names, including the UET CAPI token name; values were not read.
-- No Microsoft worker is registered.
-- All 222 historical Microsoft attempts are `skipped_unqualified`.
+- Vercel contains the relevant credential variable names, including the UET CAPI token name; values were not read in the original audit. Local `.env.mcp.local` / `.env.local` hold ApiToken aliases for agents.
+- **Purchase server worker reintroduced (2026-07-20 code):** `microsoft_uet:purchase` is registered and catalog `serverOutbox` is `active`. Fail-closed plan skips: `missing_msclkid`, `missing_capi_token`. Other Microsoft events remain `blocked_no_worker`.
+- Historical Microsoft attempts remain `skipped_unqualified` until a new qualified purchase is accepted after deploy.
 
-Microsoft server CAPI is blocked, not production-active. Live conversion-goal state could not be verified from the current Microsoft tool surface. Browser smoke (2026-07-20) verified the browser side: UET `97247724` stays silent pre-consent and fires `pageLoad` plus a custom `view_item` event (`asc=G`) post-consent; Clarity project `wupwleuv2e` activates post-consent and reports linkage to the same UET tag.
+Microsoft UET CAPI purchase is **implemented in-repo**, not yet production-verified. Production requires Vercel ApiToken env + a consent-gated Microsoft-click purchase smoke. Live conversion goals (2026-07-20 audit): UET Active; Add To Cart, Begin Checkout, PageView Active. Browser smoke verified UET `pageLoad` + custom `view_item` post-consent.
 
 ### PostHog
 
@@ -351,7 +351,7 @@ The build and explicit post-build type generation demonstrate that the initial s
 4. Generic accepted status does not express Meta and Google finality equally.
 5. Google diagnostics lookups lack an aligned request-ID index; main claims lack an event-name-aligned index.
 6. Data Manager is validate-only, so “accepted” is not proof of live ad-destination ingestion.
-7. Microsoft has browser UET but no server worker.
+7. Microsoft UET CAPI purchase worker is in-repo; production smoke and non-purchase events remain open.
 8. App-scoped Shopify webhook subscriptions/deliveries are unverified.
 9. Consent snapshots stop after the 2026-07-15 reset; this is consistent with the reset but must not be described as an active snapshot writer.
 
@@ -370,12 +370,16 @@ The build and explicit post-build type generation demonstrate that the initial s
 
 ## Areas blocked from verification
 
-Updated 2026-07-20 after the follow-up verification round:
+Updated 2026-07-20 (evening) after agent credential repair:
 
-- **Still blocked:** GTM workspace, published version metadata, exact server-container ID, tags, triggers, variables, templates, clients, transformations and paused state. Root cause verified: the Stape GTM MCP OAuth identity has zero GTM accounts; user re-authentication with the correct Google account is required. The GA4 Admin/Data MCP is blocked by the same identity.
-- **Still blocked:** numeric Meta EMQ per event and the alleged paused server-container CAPI Gateway tag (the latter depends on the GTM block above).
-- **Still blocked:** Microsoft conversion goals, UET CAPI provider status and `pageLoadId` browser-server dedupe.
-- **Resolved:** Meta Events Manager activity, event names, source split and match keys — verified via Graph API v23.0.
-- **Resolved:** Shopify app-scoped subscriptions — verified empty for the app token; delivery path for webhook routes remains an open question, not a tool block.
-- **Resolved:** browser console/network smoke across consent choices — executed 2026-07-20 against production with pre/post-consent evidence (SMOKE-001..007).
-- **Partially resolved:** Google Ads/Data Manager live destination diagnostics — browser smoke surfaced active destination `AW-18180376403`; per-request Data Manager diagnostics beyond stored application responses remain blocked.
+- **Resolved:** GTM Admin for web + server. Project `gtm-mcp` OAuth token refreshed; `list_gtm_accounts` returns both accounts. Service-account inventory also works via `scripts/mcp/run-gtm-readonly-inventory.mjs`. Server container is `GTM-M8GT97CV` (`248521914`) with `taggingServerUrls=["https://utekos.no/__sgtm"]`. Published server version 29 has only `GA4` + `Conversion Linker` tags (no Meta CAPI Gateway tag in sGTM). Evidence: `.agent-artifacts/analytics/gtm-readonly-inventory-2026-07-20.json`.
+- **Resolved (EMQ):** numeric Meta EMQ via Graph `v25.0/dataset_quality`. Live 2026-07-20: PageView/ViewContent/AddToCart/InitiateCheckout **6.1**, Purchase **9.3**.
+- **Meta dedupe (2026-07-20 evening — fail-closed):** Deduplication is **not proven** and Events Manager shows it is **not healthy** for ViewContent right now. Evidence:
+  - Events Manager Deduplication: PageView / AddToCart / InitiateCheckout = «Still Parsing Your Data»; **ViewContent** = «Deduplication has not been set up» / improve event ID coverage (no Overlap).
+  - Graph `dataset_quality`: field-table spelling `dedup_key_feedback` is invalid (`(#100) nonexisting field`); example spelling `dedupe_key_feedback` is valid but **omitted** from the live response (not `[]`). `event_coverage` also omitted. Probe: `.agent-artifacts/analytics/meta-dedupe-field-probe-2026-07-20.json`.
+  - Test Events (`TEST46149`): browser ViewContent and a manual CAPI ViewContent arrived as **separate** events with different `event_id`s and products — that only proves both channels reach Meta, **not** shared-ID dedupe. A script + unrelated UI hit never shares an ID; production dedupe requires one app-minted UUID on Pixel `eventID` and CAPI `event_id` for the same action.
+  - Do not claim browser/server Meta dedupe OK until Events Manager shows Overlap for `event_id` (or Dataset Quality returns non-omitted `dedupe_key_feedback`) on ViewContent and the parsing events. Collector stores omitted feedback as `{ status: 'omitted_by_provider' }` instead of coercing to `[]`.
+- **Resolved:** Microsoft live conversion goals + UET tag via `npm run microsoft-ads:audit` after Entra OAuth refresh (keep `.env.mcp.local` Microsoft tokens preferred over stale `.env.local`). UET `97247724` Active; goals: Add To Cart, Begin Checkout, PageView Active; Utgående klikk Paused. Purchase product goal not visible in Campaign Management v13 type set.
+- **Microsoft UET CAPI purchase (2026-07-20 code):** `microsoft_uet:purchase` worker + catalog `active` outbox reintroduced. Still requires production deploy + purchase smoke with `msclkid` before claiming live CAPI health. Non-purchase Microsoft events remain `blocked_no_worker`.
+- **Resolved earlier:** Meta Events Manager activity/source split/match keys; Shopify app-scoped subscriptions empty; browser console/network smoke SMOKE-001..007.
+- **Partially resolved:** Google Ads destination `AW-18180376403` observed in browser smoke; per-request Data Manager diagnostics beyond stored application responses remain limited.

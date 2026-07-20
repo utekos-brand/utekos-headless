@@ -180,7 +180,7 @@ test('marks all non-blocked catalog events as active', () => {
   ])
 })
 
-test('allows Google and Meta server outboxes only for active supported providers', () => {
+test('allows active Google, Meta, and Microsoft purchase server outboxes', () => {
   const activeOutboxes = canonicalEventNames.flatMap((eventName) =>
     providerIds.flatMap((providerId) =>
       eventCatalog[eventName].providers[providerId].serverOutbox ===
@@ -193,8 +193,13 @@ test('allows Google and Meta server outboxes only for active supported providers
   assert.ok(activeOutboxes.includes('google:view_item'))
   assert.ok(activeOutboxes.includes('google:add_to_cart'))
   assert.ok(activeOutboxes.includes('meta:search'))
+  assert.ok(activeOutboxes.includes('microsoft_uet:purchase'))
   assert.equal(
     eventCatalog.page_view.providers.meta.serverOutbox,
+    'active'
+  )
+  assert.equal(
+    eventCatalog.purchase.providers.microsoft_uet.serverOutbox,
     'active'
   )
 })

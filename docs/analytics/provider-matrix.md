@@ -38,20 +38,21 @@
 - **Dedupe:** source mappers set identical canonical event ID. Meta requires both provider event name and ID to match between browser and server; the numeric live dedupe rate is still unavailable from the `/stats` aggregations used.
 - **Retry:** generic outbox retry/jitter/dead-letter.
 - **Finality:** successful API receipt becomes `accepted_unverified`; no repository reconciliation poller.
-- **Diagnostics:** daily dataset-quality snapshot/retry code exists. Events Manager activity/source split/match keys verified via Graph API; numeric EMQ remains unavailable. Live console warning: invalid currency parameter format (DEV-019).
+- **Diagnostics:** daily dataset-quality snapshot/retry code exists. Events Manager activity/source split/match keys verified via Graph API; numeric EMQ live (upper funnel 6.1, Purchase 9.3). **Dedupe: NOT OK / not proven** — ViewContent Deduplication tab reports setup missing; Graph omits `dedupe_key_feedback` (DEV-020). Live console warning: invalid currency parameter format (DEV-019).
 - **Status:** browser and server delivery verified at the dataset. Exact server-container tag state and claimed paused CAPI Gateway tag remain unknown pending GTM re-auth.
 
 ## Microsoft
 
-- **Owner:** Web GTM for browser UET. No active server owner.
-- **Transport:** browser UET only; catalog describes UET CAPI but no worker is registered.
-- **Events:** canonical Microsoft names in the catalog; live published container contains UET.
+- **Owner:** Web GTM for browser UET; analytics server outbox for UET CAPI purchase.
+- **Transport:** browser UET + server Conversions API (`capi.uet.microsoft.com`) for `purchase` only.
+- **Events:** canonical Microsoft names in the catalog; live published container contains UET. Server worker registered for `purchase` only; other Microsoft `serverOutbox` values remain `blocked_no_worker`.
 - **Destination:** UET tag `97247724`.
-- **Dedupe:** canonical catalog specifies `event_id`; live `pageLoadId`/browser-server behavior is unverified.
-- **Retry:** none for current server path because no worker exists.
-- **Finality:** browser network receipt only; no server status lifecycle.
-- **Diagnostics:** Microsoft read-only API/MCP unavailable. Browser smoke 2026-07-20 verified UET `97247724` fires `pageLoad` + custom `view_item` post-consent only (`asc=G`), and Clarity `wupwleuv2e` activates post-consent with UET linkage.
-- **Status:** browser verified live and consent-gated; server blocked. All 222 historical Microsoft attempts are skipped.
+- **Auth:** UET tag ApiToken (`MICROSOFT_UET_CAPI_*` aliases), not Ads OAuth.
+- **Dedupe:** catalog `event_id`; live `pageLoadId` browser-server pairing still unverified (purchase-first path does not emit pageLoad).
+- **Retry:** provider outbox retry for purchase CAPI HTTP/network failures; qualification skips are terminal.
+- **Finality:** purchase CAPI HTTP 200 → generic `accepted_unverified`; missing `msclkid`/token → `skipped_unqualified`.
+- **Diagnostics:** Microsoft Ads audit green 2026-07-20; browser smoke verified UET `97247724` fires `pageLoad` + custom `view_item` post-consent only (`asc=G`), Clarity `wupwleuv2e` linked.
+- **Status:** browser verified; purchase CAPI implemented in-repo; production delivery smoke pending. Historical 222 skipped Microsoft rows unchanged until new qualified purchases after deploy.
 
 ## Supabase
 

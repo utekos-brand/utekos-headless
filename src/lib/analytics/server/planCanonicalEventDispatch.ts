@@ -5,6 +5,8 @@ import {
 } from '../eventCatalog'
 import type { ProviderId } from './providerAdapter'
 import { findGoogleClientId } from './findGoogleClientId'
+import { findMicrosoftClickId } from './findMicrosoftClickId'
+import { resolveMicrosoftUetCapiTokenFromEnv } from './microsoftUetCapiTokenEnvKeys'
 
 type ActiveProviderDispatchIntent = {
   dispatch_mode: 'server_retry'
@@ -12,8 +14,13 @@ type ActiveProviderDispatchIntent = {
   provider: ProviderId
 }
 
+type ProviderSkipReason =
+  | 'missing_capi_token'
+  | 'missing_client_id'
+  | 'missing_msclkid'
+
 type SkippedProviderDispatchIntent = ActiveProviderDispatchIntent & {
-  skip_reason: 'missing_client_id'
+  skip_reason: ProviderSkipReason
   status: 'skipped_unqualified'
 }
 
@@ -90,6 +97,32 @@ export function planCanonicalEventDispatch(
           status: 'skipped_unqualified' as const
         }
       ]
+    }
+
+    if (provider === 'microsoft_uet') {
+      if (!resolveMicrosoftUetCapiTokenFromEnv()) {
+        return [
+          {
+            dispatch_mode: 'server_retry' as const,
+            event_id: event.event_id,
+            provider,
+            skip_reason: 'missing_capi_token' as const,
+            status: 'skipped_unqualified' as const
+          }
+        ]
+      }
+
+      if (!findMicrosoftClickId(event.click_id)) {
+        return [
+          {
+            dispatch_mode: 'server_retry' as const,
+            event_id: event.event_id,
+            provider,
+            skip_reason: 'missing_msclkid' as const,
+            status: 'skipped_unqualified' as const
+          }
+        ]
+      }
     }
 
     return [

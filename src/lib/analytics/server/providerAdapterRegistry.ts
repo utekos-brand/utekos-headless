@@ -30,6 +30,7 @@ import { metaPageViewProviderAdapter } from './providerAdapters/metaPageViewProv
 import { metaPurchaseProviderAdapter } from './providerAdapters/metaPurchaseProviderAdapter'
 import { metaSearchProviderAdapter } from './providerAdapters/metaSearchProviderAdapter'
 import { metaViewItemProviderAdapter } from './providerAdapters/metaViewItemProviderAdapter'
+import { microsoftUetPurchaseProviderAdapter } from './providerAdapters/microsoftUetPurchaseProviderAdapter'
 import type { ProviderAdapterKey } from './providerAdapter'
 
 export const providerAdapterRegistry = {
@@ -66,7 +67,8 @@ export const providerAdapterRegistry = {
   'meta:page_view': metaPageViewProviderAdapter,
   'meta:purchase': metaPurchaseProviderAdapter,
   'meta:search': metaSearchProviderAdapter,
-  'meta:view_item': metaViewItemProviderAdapter
+  'meta:view_item': metaViewItemProviderAdapter,
+  'microsoft_uet:purchase': microsoftUetPurchaseProviderAdapter
 } as const satisfies Partial<Record<ProviderAdapterKey, unknown>>
 
 export type RegisteredProviderAdapterKey =

@@ -4,8 +4,8 @@
 
 - **Priority:** P0
 - **Description:** Every accepted browser event and transaction webhook schedules a full provider registry drain.
-- **Evidence:** `createBrowserEventRouteHandler.ts:16-29`; `runRegisteredProviderOutboxBatch.ts:21-39`; 32 entries in `providerOutboxWorkerRegistry.ts`.
-- **Consequence:** One request can claim unrelated backlog, execute 32 empty/active claims, compete with cron and move queue drainage into the request deployment lifecycle.
+- **Evidence:** `createBrowserEventRouteHandler.ts:16-29`; `runRegisteredProviderOutboxBatch.ts:21-39`; registered provider-event workers in `providerOutboxWorkerRegistry.ts` (includes `microsoft_uet:purchase` as of 2026-07-20).
+- **Consequence:** One request can claim unrelated backlog, execute every registered worker claim, compete with cron and move queue drainage into the request deployment lifecycle.
 - **Systems:** All `/api/events/*`, purchase/refund webhooks, Vercel functions, Supabase outbox.
 - **Recommended next action:** Make request-path dispatch targeted to the attempt IDs created by that transaction, or remove immediate dispatch and rely on cron.
 - **Target task:** Oppgave 1, first code change.
@@ -62,13 +62,13 @@
 
 ## DEV-007
 
-- **Priority:** P1
-- **Description:** Microsoft browser UET exists but no Microsoft server worker is registered.
-- **Evidence:** Published UET `97247724`; registry has only Google/Meta; 222 Microsoft attempts are skipped.
-- **Consequence:** Catalog/server expectations can be mistaken for production CAPI coverage.
+- **Priority:** P1 (downgraded from P0 on 2026-07-20 after purchase worker land)
+- **Description:** Microsoft UET CAPI is purchase-only in code; non-purchase Microsoft server events remain `blocked_no_worker`, and production purchase smoke is not yet proven.
+- **Evidence:** `microsoft_uet:purchase` registered; catalog purchase `serverOutbox: active`; page_view/view_item/cart Microsoft still blocked; historical 222 skipped rows remain until new qualified purchases after deploy.
+- **Consequence:** Microsoft paid-media optimization still lacks full-funnel server coverage and live purchase CAPI proof until deploy + smoke.
 - **Systems:** Microsoft UET/CAPI, catalog, outbox.
-- **Recommended next action:** Keep status blocked until official CAPI contract, dedupe and credential smoke are proven.
-- **Target task:** Dedicated Microsoft task.
+- **Recommended next action:** Deploy with UET ApiToken on Vercel Production; run consent-gated Microsoft-click purchase smoke; then decide whether to expand beyond purchase.
+- **Target task:** Microsoft purchase smoke after approved tracking release.
 
 ## DEV-008
 
@@ -189,6 +189,16 @@
 - **Systems:** Browser Meta tag/dataLayer contract.
 - **Recommended next action:** Inspect the GTM Meta tag's currency variable mapping against the dataLayer contract; currency must be a three-letter ISO 4217 string.
 - **Target task:** Oppgave 1.
+
+## DEV-020
+
+- **Priority:** P1
+- **Description:** Meta browser/server deduplication is **not proven** and Events Manager reports ViewContent dedupe as not set up.
+- **Evidence (2026-07-20):** Events Manager Deduplication for `1092362672918571` — ViewContent: «Deduplication has not been set up» / improve event ID coverage; PageView, AddToCart, InitiateCheckout: «Still Parsing Your Data». Graph `dataset_quality` omits `dedupe_key_feedback` (docs `dedup_key_feedback` is a nonexisting field). Test Events (`TEST46149`) showed separate browser and server ViewContent rows with different `event_id`s and products — channel reach only, not shared-ID dedupe. Probe: `.agent-artifacts/analytics/meta-dedupe-field-probe-2026-07-20.json`.
+- **Consequence:** Risk of double-counting or weak event coverage for redundant Pixel + CAPI ViewContent until Overlap/`event_id` parity is proven in Events Manager.
+- **Systems:** Browser Meta Pixel (GTM), Meta CAPI adapters, Events Manager Dataset Quality.
+- **Recommended next action:** Deferred remediation — prove one live product-view with identical Pixel `eventID` and CAPI `event_id`, then re-check Deduplication Overlap. Do not block Oppgave 1 or UET CAPI on a Test Events script.
+- **Target task:** Separate Meta dedupe remediation after Oppgave 1.
 
 ## Previously requested hypotheses
 

@@ -1004,15 +1004,16 @@ const purchaseProviders = {
       ...baseProviderParameters,
       'revenue_value',
       'currency',
-      'items'
+      'items',
+      'msclkid'
     ],
     dedupeField: 'event_id',
     consentRequirement: 'marketing',
     adapterVersion: 1,
     productionStatus: 'active',
     productionDetail:
-      'Server UET CAPI is blocked because no UET CAPI worker exists.',
-    serverOutbox: 'blocked_no_worker'
+      'Microsoft UET CAPI purchase outbox is active when checkout marketing consent was granted and msclkid is present; missing token or msclkid is skipped_unqualified.',
+    serverOutbox: 'active'
   }),
   posthog: providerMapping({
     support: 'planned',

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { CanonicalEvent } from '../canonicalEvent'
 import { canonicalPageViewSchema } from '../pageViewEvent'
+import { canonicalPurchaseSchema } from '../purchaseEvent'
 import { canonicalViewItemSchema } from '../viewItemEvent'
 import { planCanonicalEventDispatch } from './planCanonicalEventDispatch'
 
@@ -163,4 +164,117 @@ test('records consented Google events without a valid client ID as unqualified',
       }
     ]
   )
+})
+
+test('routes consented purchase with msclkid and UET token to Microsoft outbox', () => {
+  const previous = process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN
+  process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN = 'test-uet-token'
+
+  try {
+    const event = canonicalPurchaseSchema.parse({
+      schema_version: 1,
+      event_name: 'purchase',
+      event_id: '61c2ef59-6e6f-4f56-a63a-567ca398f9de',
+      event_time: '2026-07-17T10:05:00.000Z',
+      source: 'webhook',
+      environment: 'test',
+      browser_id: {
+        ga_client_id: '123456789.1784201643'
+      },
+      click_id: {
+        msclkid: 'dd4afcccb1c9a4cad9544dd7e5006'
+      },
+      consent,
+      custom_data: {
+        currency: 'NOK',
+        value: 100,
+        transaction_id: 'shopify_order_1',
+        order_name: '#1',
+        items: [
+          {
+            item_id: '1',
+            item_name: 'Item',
+            quantity: 1,
+            unit_price: 100
+          }
+        ]
+      }
+    })
+
+    assert.deepEqual(planCanonicalEventDispatch(event), [
+      {
+        dispatch_mode: 'server_retry',
+        event_id: event.event_id,
+        provider: 'google'
+      },
+      {
+        dispatch_mode: 'server_retry',
+        event_id: event.event_id,
+        provider: 'meta'
+      },
+      {
+        dispatch_mode: 'server_retry',
+        event_id: event.event_id,
+        provider: 'microsoft_uet'
+      }
+    ])
+  } finally {
+    if (previous === undefined) {
+      delete process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN
+    } else {
+      process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN = previous
+    }
+  }
+})
+
+test('skips Microsoft purchase without msclkid as unqualified', () => {
+  const previous = process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN
+  process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN = 'test-uet-token'
+
+  try {
+    const event = canonicalPurchaseSchema.parse({
+      schema_version: 1,
+      event_name: 'purchase',
+      event_id: '61c2ef59-6e6f-4f56-a63a-567ca398f9de',
+      event_time: '2026-07-17T10:05:00.000Z',
+      source: 'webhook',
+      environment: 'test',
+      browser_id: {
+        ga_client_id: '123456789.1784201643'
+      },
+      consent,
+      custom_data: {
+        currency: 'NOK',
+        value: 100,
+        transaction_id: 'shopify_order_1',
+        order_name: '#1',
+        items: [
+          {
+            item_id: '1',
+            item_name: 'Item',
+            quantity: 1,
+            unit_price: 100
+          }
+        ]
+      }
+    })
+
+    const microsoft = planCanonicalEventDispatch(event).find(
+      intent => intent.provider === 'microsoft_uet'
+    )
+
+    assert.deepEqual(microsoft, {
+      dispatch_mode: 'server_retry',
+      event_id: event.event_id,
+      provider: 'microsoft_uet',
+      skip_reason: 'missing_msclkid',
+      status: 'skipped_unqualified'
+    })
+  } finally {
+    if (previous === undefined) {
+      delete process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN
+    } else {
+      process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN = previous
+    }
+  }
 })

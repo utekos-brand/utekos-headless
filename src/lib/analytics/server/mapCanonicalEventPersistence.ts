@@ -27,7 +27,10 @@ export type ProviderDispatchInsert = {
   idempotency_key: string
   payload: CanonicalEventStoreInput['event']
   provider: CanonicalEventStoreInput['dispatches'][number]['provider']
-  skip_reason?: 'missing_client_id'
+  skip_reason?:
+    | 'missing_capi_token'
+    | 'missing_client_id'
+    | 'missing_msclkid'
   status: 'pending' | 'skipped_unqualified'
 }
 
