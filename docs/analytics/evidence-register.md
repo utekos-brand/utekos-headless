@@ -43,7 +43,8 @@
 | GTM-001 | Active web container is `GTM-5TWMJQFP` | Verified | Runtime + source | CDN 200, `/__gtg` 200, `layout.tsx` |
 | GTM-002 | `GTM-WZ4R3PQL` is not the active web container | Refuted prior claim | Runtime + source | CDN/proxy 404; only planning reference |
 | GTM-003 | `GTM-PGTJ3FJ` is not a resolvable active server ID | Refuted prior claim | Runtime + source | CDN 404/sGTM 400; only planning reference |
-| GTM-004 | Exact server container/version/config is unavailable | Blocked | GTM Admin MCP | Permission denied |
+| GTM-004 | Exact server container/version/config is unavailable | Blocked | GTM Admin MCP | Root cause verified 2026-07-20: the Stape `gtm-mcp.stape.ai` remote MCP works, but its cached OAuth identity (`~/.mcp-auth/mcp-remote-*`) sees zero GTM accounts (`gtm_account list` returns empty; direct account `get` returns 404/permission denied). User must re-authenticate with the Google account that has GTM-5TWMJQFP access |
+| GTM-006 | GA4 MCP has the same identity problem | Blocked | GA4 MCP (Stape) | `get_account_summaries` returns empty account list for the cached OAuth identity |
 | GTM-005 | `/__sgtm` is healthy and no-store | Verified | Runtime | HTTP 200, no-store, cache MISS |
 | GA-001 | GA4 `G-FCES3L0M9M` is in the published container | Verified | Published GTM | CDN payload |
 | GA-002 | No direct application Measurement Protocol transport exists | Verified | Repository search | No runtime `mp/collect`/`api_secret`; `DEPLOYMENT.md:148` |
@@ -54,17 +55,31 @@
 | GDM-004 | Status lookup lacks a request-ID index | Verified | Live schema/EXPLAIN | `pg_indexes`; safe EXPLAIN |
 | META-001 | Published Meta destination is `1092362672918571` | Verified | Published GTM + source/config | CDN payload |
 | META-002 | Server mappers use canonical event ID | Verified | Repository | Meta mapping `.setEventId(event.event_id)` |
-| META-003 | Events Manager activity, EMQ and paused gateway tag are unknown | Blocked | Meta/GTM MCP | Required read-only access unavailable |
+| META-003 | Events Manager dataset is live and receiving | Verified | Graph API v23.0 (`META_SYSTEM_USER_TOKEN`) | Dataset `1092362672918571` `last_fired_time` 2026-07-19T22:51Z; verified again 2026-07-20 with 6h window SERVER 242 / BROWSER 125 events |
+| META-004 | Only PascalCase provider event names are active in the last 7 days | Verified | Graph API `/stats?aggregation=event` | PageView 3562, ViewContent 2260, LandingScrollDepth 982, Purchase 55 and more; zero lowercase duplicates in the 7-day window |
+| META-005 | Browser/server split and match keys are healthy | Verified | Graph API `/stats?aggregation=event_source,match_keys` | 7d: SERVER 3959 / BROWSER 1838; match keys: external_id 7461, email 59, phone 47 |
+| META-006 | Browser pixel routes through Meta CAPI Gateway (openbridge3), not `facebook.com/tr` | Verified | Signals config + production CSP | `connect.facebook.net/signals/config/1092362672918571` contains `openbridge` endpoints `mpc2-prod-25-is5qnl632q-wl.a.run.app` (fallback `5z-...ecs.us-east-1.on.aws`); both hosts respond and are explicitly allowed in the production CSP `connect-src` |
+| META-007 | Browser Meta events reach the dataset despite no observable `/tr` request | Verified | Graph API + browser smoke | No `facebook.com/tr` or gateway request was observable via CDP network log, performance API or instrumented fetch/beacon/XHR/Image, yet BROWSER-source events keep arriving (125 in 6h). The pixel binds network primitives before instrumentation; delivery is proven at the dataset, not at the wire |
+| META-008 | Meta Pixel emits a currency-format warning in production | Verified | Browser console smoke | `[Meta Pixel] - Invalid parameter format for currency` on the product page |
 | MS-001 | Published UET tag is `97247724` | Verified | Published GTM | CDN payload |
 | MS-002 | No Microsoft server worker exists | Verified | Repository + live data | Worker registry; 222 skipped rows |
 | SHOP-001 | Shopify HMAC verification is fail-closed over raw body | Verified | Repository | `verifyWebhook.ts`; webhook handlers |
 | SHOP-002 | Purchase/refund event IDs are deterministic | Verified | Repository | `shopifyOrderToCanonicalPurchase.ts`; `shopifyRefundToCanonicalRefund.ts` |
-| SHOP-003 | App-scoped subscriptions/delivery logs are not proven | Blocked | Shopify Admin MCP/plugin | Tool not available/authorized |
+| SHOP-003 | The app owning `SHOPIFY_ADMIN_API_TOKEN` has zero app-scoped webhook subscriptions | Verified | Shopify Admin GraphQL 2025-07 | `webhookSubscriptions(first:50)` returned empty nodes for `erling-7921.myshopify.com` |
+| SHOP-004 | Purchases still reach the ledger despite the empty subscription list | Verified | Live Supabase | 16 purchase ledger rows in 7d; recent rows are browser `purchase:<uuid>` plus `backfill:meta-purchase-replay:shopify_order...` pairs with different event IDs |
 | VER-001 | Both main tracking crons run every five minutes | Verified | Vercel config/logs | `vercel.json`; 36 executions/3h each |
 | VER-002 | Recent tracking persistence has `EMAXCONNSESSION` errors | Verified | Vercel runtime errors | consent/web-vitals routes |
 | TEST-001 | Frozen install and production build pass | Verified | Local command | Exit 0 |
 | TEST-002 | Lint/initial typecheck/direct Node test commands have baseline failures | Verified | Local command | See `current-state.md` validation table |
 | TEST-003 | Post-typegen typecheck and targeted analytics tests pass | Verified | Local command | Typecheck exit 0; 265/265 targeted tests |
+| SMOKE-001 | Pre-consent state is default-denied with exactly one Cookiebot loader | Verified | Browser smoke (agent-browser/Chromium 151, 2026-07-20) | One `uc.js` request with `implementation=gtm`; `gcs=G100`; Cookiebot consent all-false; no Meta/UET/Clarity network pre-consent |
+| SMOKE-002 | `/__gtg` and `/__sgtm` are healthy first-party endpoints | Verified | Browser smoke + curl | `/__gtg/gtm.js?id=GTM-5TWMJQFP` 200; `/__sgtm/healthy` 200 with `cache-control: no-store` and `x-vercel-cache: MISS` |
+| SMOKE-003 | Consent acceptance flips Google consent to `gcs=G111` | Verified | Browser smoke | `logconsent.ashx?action=accept` then `G111` on subsequent `/__sgtm/g/collect` and `ccm/collect` hits |
+| SMOKE-004 | UET and Clarity fire post-consent | Verified | Browser smoke | `bat.bing.com` `pageLoad` + custom `view_item` (ti=97247724, `asc=G`); Clarity project `wupwleuv2e` active and linked to UET 97247724 |
+| SMOKE-005 | Cookieless pre-consent pings include Google Ads destination `AW-18180376403` | Verified | Browser smoke | `pagead2.googlesyndication.com/ccm/collect` with `tid=AW-18180376403`, `npa=1`, `gcs=G100`; also present post-consent |
+| SMOKE-006 | sGTM serves only GA4 (`G-FCES3L0M9M`) on `/g/collect`; no first-party Meta routing via `/__sgtm` | Verified | Browser smoke | All `/__sgtm/g/collect` hits are GA4 `tid=G-FCES3L0M9M`; no Meta payloads observed on first-party paths |
+| SMOKE-007 | Production CSP is report-only, not enforced | Verified | curl header inspection | Only `content-security-policy-report-only` present on `https://utekos.no/`; zero enforced `content-security-policy` headers |
+| LED-001 | `meta-purchase-replay` backfill rows exist with new event IDs | Verified | Live Supabase + branch inspection | Ledger rows `backfill:meta-purchase-replay:shopify_order...` paired with browser `purchase:<uuid>` rows sharing `occurred_at` but with different `event_id`; script `scripts/ops/force-resend-meta-purchases-jul19.ts` exists only on branch `fix/meta-fbc-durable-click-ids` (c6c88efaf); 3 Meta attempts `accepted_unverified` |
 
 ## External documentation evidence
 

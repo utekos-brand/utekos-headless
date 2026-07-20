@@ -12,12 +12,12 @@
 
 ## DEV-002
 
-- **Priority:** P0
+- **Priority:** P1 (downgraded from P0 on 2026-07-20)
 - **Description:** Meta destination/tag state is not fully reconciled across web GTM, server GTM and Events Manager.
-- **Evidence:** Current web payload/source agree on `1092362672918571`, but Meta Events Manager and GTM server Admin are blocked; paused CAPI Gateway claim remains unknown.
-- **Consequence:** A hidden server destination mismatch or paused tag could cause loss or non-deduplicated duplication.
-- **Systems:** Web GTM, server GTM, Meta Events Manager, Meta adapters.
-- **Recommended next action:** Obtain read-only Meta/GTM access and produce a three-source destination/event-name/event-ID proof before any cleanup.
+- **Evidence:** Browser side now verified: published web payload, source/config and the live dataset all agree on `1092362672918571`; Graph API shows the dataset actively receiving (7d SERVER 3959 / BROWSER 1838) with only PascalCase names in the current window. Browser events route via CAPI Gateway (openbridge3). Remaining unknown: server GTM internals and the alleged paused CAPI Gateway tag (blocked by GTM MCP OAuth identity).
+- **Consequence:** Residual risk is confined to the server container; a hidden server destination mismatch or paused tag could still affect dedupe.
+- **Systems:** Server GTM, Meta Events Manager, Meta adapters.
+- **Recommended next action:** Re-authenticate the GTM MCP with the correct Google account and complete the server-container half of the three-source proof.
 - **Target task:** Oppgave 1 prerequisite.
 
 ## DEV-003
@@ -73,11 +73,11 @@
 ## DEV-008
 
 - **Priority:** P1
-- **Description:** Shopify active subscriptions and delivery history are not proven.
-- **Evidence:** Routes exist; no registration code/app config; Shopify Admin MCP/plugin unavailable.
-- **Consequence:** Correct webhook code does not prove Shopify is delivering production events.
+- **Description:** The app owning `SHOPIFY_ADMIN_API_TOKEN` has zero app-scoped webhook subscriptions, yet purchases keep reaching the ledger.
+- **Evidence:** Shopify Admin GraphQL 2025-07 `webhookSubscriptions(first:50)` returned empty nodes (verified 2026-07-20). 16 purchase ledger rows in 7d; recent rows come from the browser purchase route and the `meta-purchase-replay` backfill (DEV-018), not proven webhook deliveries.
+- **Consequence:** The `orders-paid`/`refunds-create` webhook routes may be receiving no production traffic; purchase capture may silently depend on the browser path alone, losing server-side authority for order truth.
 - **Systems:** Shopify app configuration, purchase/refund routes.
-- **Recommended next action:** Read app-scoped subscriptions and delivery logs; do not infer from shop-scoped queries alone.
+- **Recommended next action:** Determine whether any other app/custom app is subscribed and delivering to these routes (Vercel access logs for `/api/webhooks/*`), then either register subscriptions deliberately or document the browser-only capture decision.
 - **Target task:** Oppgave 1 prerequisite.
 
 ## DEV-009
@@ -160,6 +160,36 @@
 - **Recommended next action:** Consider generated/static definitions only after behavior and ownership are stable.
 - **Target task:** Later refactor.
 
+## DEV-017
+
+- **Priority:** P1
+- **Description:** Google Ads destination `AW-18180376403` is live in browser traffic despite the documented policy that native Google Ads conversion tags remain excluded.
+- **Evidence:** Browser smoke 2026-07-20 observed `pagead2.googlesyndication.com/ccm/collect` pings carrying `tid=AW-18180376403` both pre-consent (cookieless, `npa=1`, `gcs=G100`) and post-consent (`gcs=G111`). No `AW-` tag exists in the published web GTM payload, so the destination is most plausibly configured on the `GT-MKRLF5WK` Google tag.
+- **Consequence:** Potential double-counting risk against GA4-imported conversions — the exact risk the exclusion policy exists to prevent — and an undocumented active ad destination.
+- **Systems:** Google tag configuration, Google Ads, consent surface.
+- **Recommended next action:** Identify where `AW-18180376403` is configured (Google tag settings in GTM or Google Ads-side linking), verify whether conversion actions are attached, and reconcile with the GA4-import conversion policy before any change.
+- **Target task:** Oppgave 1 prerequisite.
+
+## DEV-018
+
+- **Priority:** P1
+- **Description:** A concurrent branch replays Meta purchases through backfill ledger rows with **new** event IDs.
+- **Evidence:** Ledger rows `backfill:meta-purchase-replay:shopify_order...` are paired with browser `purchase:<uuid>` rows sharing `occurred_at` but carrying different `event_id` values. The script `scripts/ops/force-resend-meta-purchases-jul19.ts` exists only on branch `fix/meta-fbc-durable-click-ids` (c6c88efaf). Three Meta attempts from the backfill are `accepted_unverified`.
+- **Consequence:** Meta dedupe requires identical event name **and** event ID; a replay with a new event ID cannot deduplicate against the original browser Purchase and can double-count revenue in Meta.
+- **Systems:** `event_ledger`, Meta adapters, concurrent branch work.
+- **Recommended next action:** Coordinate with the owner of `fix/meta-fbc-durable-click-ids`; any replay must reuse the original `event_id` or be explicitly accepted as incremental. Do not merge the branch before this is resolved.
+- **Target task:** Oppgave 1 design gate.
+
+## DEV-019
+
+- **Priority:** P2
+- **Description:** Meta Pixel logs `Invalid parameter format for currency` in production.
+- **Evidence:** Browser console warning during smoke on the product page 2026-07-20; the pixel's ViewContent payload appears to carry a malformed `currency` value.
+- **Consequence:** Meta may drop or degrade value/currency on affected browser events, reducing value-based optimization quality.
+- **Systems:** Browser Meta tag/dataLayer contract.
+- **Recommended next action:** Inspect the GTM Meta tag's currency variable mapping against the dataLayer contract; currency must be a three-letter ISO 4217 string.
+- **Target task:** Oppgave 1.
+
 ## Previously requested hypotheses
 
 | Hypothesis | Verdict |
@@ -168,7 +198,7 @@
 | Global outbox dispatch from request path | Confirmed |
 | Common `accepted_unverified` | Confirmed |
 | Google permanent-error history | Confirmed and currently resolved/classified |
-| Meta destination mismatch | Not proven; current web/source ID agrees, Events Manager/server GTM blocked |
-| Mixed event naming | Confirmed |
+| Meta destination mismatch | Refuted for the browser side (payload/source/dataset agree and receive); server GTM half still blocked |
+| Mixed event naming | Confirmed in warehouse history; refuted for the live 7-day Meta provider window (PascalCase only) |
 | Open Data Manager PR | Confirmed open; superseded/conflicting |
-| Missing shop-scoped subscriptions prove missing webhooks | Refuted as a valid inference; app-scoped status blocked |
+| Missing shop-scoped subscriptions prove missing webhooks | Refuted as a valid inference; app-scoped list now verified empty for this app token, delivery path unresolved |

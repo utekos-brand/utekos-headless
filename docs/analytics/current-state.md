@@ -221,9 +221,9 @@ The worker outcome `succeeded` is always persisted through a method named `markA
 - `server_container_url`: `https://utekos.no/__sgtm`.
 - sGTM health and Google tag endpoints return 200.
 - `/__sgtm` is `no-store` and was not a cache HIT.
-- No `AW-` native Google Ads conversion tag was found in the published web payload.
+- No `AW-` native Google Ads conversion tag was found in the published web payload. However, live browser smoke (2026-07-20) observed Google Ads destination `AW-18180376403` in `pagead2.googlesyndication.com/ccm/collect` pings both pre-consent (cookieless, `npa=1`) and post-consent. The destination is most plausibly wired through the `GT-MKRLF5WK` Google tag configuration rather than a GTM tag. This must be reconciled against the policy that excludes native Google Ads conversion tags (see DEV-017).
 
-The previous IDs `GTM-WZ4R3PQL` and `GTM-PGTJ3FJ` are refuted as active identities: both fail runtime resolution and only occur in planning text. The exact server-container ID, version, tags/clients/transformations and paused states are blocked by GTM API authorization.
+The previous IDs `GTM-WZ4R3PQL` and `GTM-PGTJ3FJ` are refuted as active identities: both fail runtime resolution and only occur in planning text. The exact server-container ID, version, tags/clients/transformations and paused states remain blocked by GTM API authorization. The block's root cause is now verified: the Stape-hosted GTM MCP (`gtm-mcp.stape.ai` via `mcp-remote`) works, but its cached OAuth identity in `~/.mcp-auth/` has zero visible GTM accounts. The GA4 MCP has the identical identity problem. Resolution requires the user to re-authenticate interactively with the Google account that owns `GTM-5TWMJQFP`.
 
 No direct application Measurement Protocol transport exists. Browser Google collection still reaches `/g/collect` through Google tag/sGTM, which is protocol traffic owned by GTM rather than a direct application `mp/collect` adapter. The published legacy direct MP tag was previously documented as removed, but exact current server-container internals remain blocked.
 
@@ -248,7 +248,15 @@ Production configuration was observed with `GOOGLE_DATA_MANAGER_VALIDATE_ONLY`; 
 - Every current server mapper uses canonical `event_id`.
 - Dataset-quality snapshot/retry crons exist.
 
-The same destination ID is present in the published web payload and current environment/source. Fresh Events Manager activity, EMQ, warnings, browser/server dedupe rate and the alleged paused server-container CAPI Gateway tag remain blocked because Meta read-only MCP/API and GTM Admin access were unavailable. This is **not** evidence that a destination mismatch exists; it is an unresolved P0 verification gate.
+Events Manager evidence was obtained 2026-07-20 through the Graph API v23.0 with the system-user token (the remote `facebook-ads` MCP entry has an empty token header and exposes no tools; direct Graph API reads replaced it):
+
+- The dataset is live: `last_fired_time` 2026-07-19T22:51Z, and a 6-hour recheck showed SERVER 242 / BROWSER 125 events still arriving.
+- The 7-day event-name distribution contains **only PascalCase provider names** (PageView 3562, ViewContent 2260, LandingScrollDepth 982, Purchase 55 and more). The PascalCase/snake_case coexistence in the warehouse is historical; it is not present in the current 7-day provider window.
+- Event-source split 7d: SERVER 3959 / BROWSER 1838. Match keys: `external_id` 7461 (dominant), `email` 59, `phone` 47.
+- The browser pixel is configured with **openbridge3 / Meta CAPI Gateway**: the signals config for `1092362672918571` declares gateway endpoint `https://mpc2-prod-25-is5qnl632q-wl.a.run.app/` with an AWS ECS fallback, and both hosts are explicitly allowed in the production CSP `connect-src`. Browser events therefore do not use `facebook.com/tr`. In-session wire observation of the gateway POST was not possible (the pixel binds its network primitives before instrumentation), but dataset arrival of BROWSER events proves delivery.
+- The browser console shows a live data-quality warning: `[Meta Pixel] - Invalid parameter format for currency`.
+
+Numeric EMQ per event and the alleged paused server-container CAPI Gateway tag remain blocked: EMQ scores are not exposed on the `/stats` aggregations used here, and server GTM internals require the GTM Admin re-authentication described above. The destination-mismatch hypothesis is refuted for the browser side: the published web payload, source/config and the live dataset all agree on `1092362672918571` and the dataset actively receives from both sources.
 
 ### Microsoft
 
@@ -258,7 +266,7 @@ The same destination ID is present in the published web payload and current envi
 - No Microsoft worker is registered.
 - All 222 historical Microsoft attempts are `skipped_unqualified`.
 
-Microsoft server CAPI is blocked, not production-active. `pageLoadId`/browser-server dedupe and live conversion-goal state could not be verified from the current Microsoft tool surface.
+Microsoft server CAPI is blocked, not production-active. Live conversion-goal state could not be verified from the current Microsoft tool surface. Browser smoke (2026-07-20) verified the browser side: UET `97247724` stays silent pre-consent and fires `pageLoad` plus a custom `view_item` event (`asc=G`) post-consent; Clarity project `wupwleuv2e` activates post-consent and reports linkage to the same UET tag.
 
 ### PostHog
 
@@ -274,7 +282,7 @@ Routes:
 
 Webhook HMAC is verified fail-closed against the raw body with SHA-256 and constant-time comparison. Purchase/refund IDs are deterministic. `refunds/create` means a refund object was created; it does not prove settlement or financial reconciliation.
 
-No webhook registration code or `shopify.app.toml` was found. Active app-scoped subscriptions and delivery logs were blocked because Shopify Admin MCP/plugin access was unavailable. Their status is **not proven**, not “missing.”
+No webhook registration code or `shopify.app.toml` was found. On 2026-07-20 the Shopify Admin GraphQL API (2025-07) verified that the app owning `SHOPIFY_ADMIN_API_TOKEN` has **zero app-scoped webhook subscriptions** (`webhookSubscriptions(first:50)` returned empty nodes). Purchases nonetheless keep reaching the ledger (16 rows in 7d), which recent evidence attributes to the browser purchase route plus the `meta-purchase-replay` backfill script on a concurrent branch (see DEV-018). Whether any *other* app delivers `orders-paid`/`refunds-create` webhooks to these routes remains unknown; the delivery path for the webhook routes is therefore unproven, while the subscription emptiness for this app token is proven.
 
 ## Production data snapshot
 
@@ -362,10 +370,12 @@ The build and explicit post-build type generation demonstrate that the initial s
 
 ## Areas blocked from verification
 
-- GTM workspace, published version metadata, exact server-container ID, tags, triggers, variables, templates, clients, transformations and paused state.
-- GA4 property configuration and live event traffic.
-- Meta Events Manager activity, EMQ, warnings, dedupe metrics and test events.
-- Google Ads/Data Manager live destination diagnostics beyond stored application responses.
-- Microsoft conversion goals, UET endpoint/CAPI provider status and `pageLoadId` behavior.
-- Shopify app-scoped subscriptions and delivery logs.
-- Browser console/network smoke for Cookiebot, Meta and UET during this audit.
+Updated 2026-07-20 after the follow-up verification round:
+
+- **Still blocked:** GTM workspace, published version metadata, exact server-container ID, tags, triggers, variables, templates, clients, transformations and paused state. Root cause verified: the Stape GTM MCP OAuth identity has zero GTM accounts; user re-authentication with the correct Google account is required. The GA4 Admin/Data MCP is blocked by the same identity.
+- **Still blocked:** numeric Meta EMQ per event and the alleged paused server-container CAPI Gateway tag (the latter depends on the GTM block above).
+- **Still blocked:** Microsoft conversion goals, UET CAPI provider status and `pageLoadId` browser-server dedupe.
+- **Resolved:** Meta Events Manager activity, event names, source split and match keys — verified via Graph API v23.0.
+- **Resolved:** Shopify app-scoped subscriptions — verified empty for the app token; delivery path for webhook routes remains an open question, not a tool block.
+- **Resolved:** browser console/network smoke across consent choices — executed 2026-07-20 against production with pre/post-consent evidence (SMOKE-001..007).
+- **Partially resolved:** Google Ads/Data Manager live destination diagnostics — browser smoke surfaced active destination `AW-18180376403`; per-request Data Manager diagnostics beyond stored application responses remain blocked.
