@@ -1,0 +1,371 @@
+# Canonical analytics architecture: current state
+
+**Evidence freeze:** 2026-07-20
+**Repository baseline:** `utekos-brand/utekos-headless` at `16296b58fdad3713814b776028e74758ac2f3686`
+**Production deployment:** `dpl_8mmJZonfNHBXc3ugyLyHYxrULRrv`, READY, `arn1`, Node.js 24.x
+**Branch:** `docs/analytics-current-state`
+
+## Documentation status
+
+The repository, live Supabase warehouse, Vercel project, production logs, first-party GTM/sGTM endpoints and published web-container payload were inspected read-only. GTM Admin API, GA4 Admin/Data API, Meta Events Manager, Microsoft Ads/UET and Shopify Admin webhook delivery/subscription views were unavailable or unauthorized. Claims requiring those surfaces are marked **blocked**, not inferred.
+
+Status vocabulary:
+
+- **Verified:** direct source plus runtime/database corroboration, or two independent primary sources.
+- **Observed:** one current primary source.
+- **Unknown:** evidence does not decide the question.
+- **Blocked:** the required system exists, but current authorization/tooling cannot read it.
+- **Refuted:** current primary evidence contradicts the prior claim.
+
+## Executive summary
+
+The project already has a substantial canonical architecture. It has a typed event catalog, a shared consent-aware browser collector, 23 first-party event routes, Zod validation, atomic ledger/outbox persistence, a generic `SKIP LOCKED` outbox, 24 Google and 8 Meta workers, provider retries/dead letters, Google request-status reconciliation, Shopify-owned purchase/refund events, Cookiebot Consent Mode and first-party GTM/sGTM routing.
+
+The principal problem is not absence of a canonical pipeline. It is coexistence with historical naming/data, overly broad immediate dispatch, generic acceptance semantics and incomplete provider/runtime verification. A successful browser request schedules all 32 workers, each with `maxItems: 1`; it can therefore claim unrelated backlog and compete with the five-minute cron. The live warehouse has 19,043 ledger rows and 21,588 attempts, no active backlog and no duplicate canonical IDs, but contains both canonical snake_case and legacy/provider PascalCase names. Google finality is reconciled; generic Meta success is still persisted as `accepted_unverified`. Microsoft browser UET is present, but no Microsoft server worker is registered.
+
+## System boundaries
+
+```text
+Shopify storefront and webhooks
+  -> Next.js 16.2 App Router on Vercel
+  -> first-party event APIs
+  -> Supabase PostgreSQL canonical ledger and provider outbox
+  -> Google Data Manager / Meta CAPI workers
+
+Browser
+  -> dataLayer / web GTM
+  -> first-party /__gtg loader
+  -> first-party /__sgtm server tagging endpoint
+  -> GA4 / Meta browser / Microsoft UET according to GTM and consent
+```
+
+Klarna Search & Compare is a commerce/feed experiment, not a registered canonical event provider. PostHog is catalogued but the storefront integration is currently not implemented.
+
+## Repository and production freeze
+
+| Item | Current state | Evidence |
+|---|---|---|
+| Default branch | `main` | Git remote HEAD |
+| Frozen HEAD | `16296b58fdad3713814b776028e74758ac2f3686` | Git and production deployment |
+| Latest production | READY, commit matches frozen HEAD | Vercel deployment `dpl_8mmJZonfNHBXc3ugyLyHYxrULRrv` |
+| Runtime region | `arn1` | `.vercel/project.json`, `vercel.json`, Vercel API |
+| Node.js | 24.x | `package.json`, Vercel project |
+| PR 44 | Open, conflicting/dirty, functionally superseded | GitHub PR and main source |
+| Local pre-existing changes | `.mcp.json`, `PLAN.md`, `config/mcp/servers.base.json` | Initial `git status`; excluded from this commit |
+
+PR 44 adds a ten-identifier cap and positive retry jitter to pre-refactor files. The same intent is already on `main`: `googleDataManagerSharedMapping.ts` centralizes `MAX_USER_IDENTIFIERS = 10`, deduplication and interleaving, while `processProviderOutboxAttempt.ts` applies positive jitter. Merging PR 44 would reintroduce event-specific mapping structure. It should be closed as superseded only after separate approval; Oppgave 0 did not change it.
+
+## Canonical event model
+
+`src/lib/analytics/eventCatalog.ts` declares 29 events: 25 active and four `blocked_source`. `src/lib/analytics/canonicalEvent.ts` defines the implemented Zod discriminated union. Each active event declares an owner, trigger, dedupe policy, consent policy and provider mapping. The complete chain is in [event-matrix.md](event-matrix.md).
+
+The four source-blocked events are:
+
+- `add_shipping_info`
+- `add_payment_info`
+- `checkout_error`
+- `payment_error`
+
+They are not eligible for persistence or provider dispatch until an authoritative source is implemented.
+
+### Event creation
+
+- Browser reporters create UUID `event_id` values and ISO-offset `event_time` values.
+- `page_view` uses a per-navigation `page_view_id`; a committed navigation is emitted once by `pageViewSession.ts`.
+- Mutation events use an authoritative mutation/interaction identifier.
+- Shopify `purchase` and `refund` use deterministic UUIDs derived from the order/refund identifiers, preserving retry idempotency.
+- Ledger idempotency is `event_name:event_id`; provider idempotency is provider plus the canonical key.
+
+### Browser collection and dataLayer
+
+Most active browser events follow this shared pattern:
+
+1. An event-specific reporter builds and validates the canonical payload.
+2. The reporter emits a canonical snake_case dataLayer event through `sendGTMEvent`.
+3. A thin event-specific collector transport delegates to `createCanonicalCollectorTransport`.
+4. The collector waits for Cookiebot when no authoritative response exists.
+5. It strips consent-ineligible identifiers and sends JSON to `/api/events/<event>`.
+6. It retries one network/408/429/5xx failure once, then reports failure to Sentry.
+
+The event-specific `*CollectorTransport.ts` files are thin endpoint/name/type wrappers. Reporter files are necessary specialization because they map UI-specific inputs and own dataLayer emission. `pageViewCollectorTransport.ts` and `viewItemCollectorTransport.ts` contain additional enrichment/dedupe behavior and are not mere aliases. No compatibility alias was proven unused; deletion requires call-site analysis in a later task.
+
+### URL, referrer and request context
+
+- Page/referrer URLs are normalized as absolute HTTP(S) URLs.
+- Google mapping removes fragments, then query strings if required, and truncates to provider limits.
+- Browser event schemas never accept an arbitrary client-provided IP/user agent as trusted server context.
+- Server request context derives IP/user agent from headers and applies provider restrictions.
+
+## Consent and identity
+
+Cookiebot is the CMP. The published web container contains `uc.js` and `implementation=gtm`; the app does not load `uc.js` itself. The application defines default-denied Consent Mode v2 before tag use:
+
+- `ad_storage`, `ad_user_data`, `ad_personalization`, `analytics_storage`, `functionality_storage`, `personalization_storage`: denied
+- `security_storage`: granted
+- `ads_data_redaction`: true
+- `url_passthrough`: true
+- Microsoft UET `ad_storage`: denied
+
+The shared collector maps Cookiebot statistics to analytics, marketing to marketing and preferences to preferences. Without consent:
+
+- analytics browser IDs are removed unless analytics is granted;
+- marketing browser/click IDs, external ID, user data and impression ID are removed unless marketing is granted;
+- browser-permission location requires preferences consent;
+- IP and user agent are not accepted from the browser payload.
+
+Identity handling:
+
+| Identifier | Source and lifetime | Consent | Recipients/current use |
+|---|---|---|---|
+| `event_id` | UUID per occurrence; deterministic for Shopify transaction events | Event's collection basis | Ledger, outbox, Meta dedupe, provider mappings |
+| `page_view_id` | In-memory UUID per committed navigation | Analytics or marketing | Related browser events |
+| `external_id` | `anon_<uuid>` first-party cookie, one year | Marketing | Canonical payload, Meta/approved provider mappings |
+| GA `client_id` | `_ga` and Google tag `get` path | Analytics | Google mappings; missing value becomes `skipped_unqualified` |
+| `fbp`, `fbc` | Meta cookies | Marketing | Meta matching/dedupe support |
+| click IDs | URL, sessionStorage and 90-day localStorage | Marketing | Google/Meta/Microsoft mappings as applicable |
+| email/phone | Pre-hashed SHA-256 arrays only | Marketing | Google/Meta mappings; max ten Google identifiers |
+| IP/user agent | Server request context | Provider policy and consent | Meta website context; Google device info where allowed |
+| postal/country | Customer/server/browser location source | Marketing/preferences according to source | Provider matching where approved |
+
+The durable click-ID store catches storage/privacy failures silently by design. This is a documented best-effort browser persistence behavior, not evidence of provider delivery.
+
+## Validation and API routes
+
+`canonicalEventEnvelopeSchema` is strict and validates schema version, event name, UUID, offset datetime, source/environment, Cookiebot consent, hashed-contact shapes, identifier maps, URLs and optional location/device context. `canonicalEventSchema` dispatches by `event_name`.
+
+There are 23 browser event routes under `src/app/api/events`. Each route delegates collection to the event-specific canonical handler and wires `runRegisteredProviderOutboxBatch` through `after()`. Purchase and refund arrive through Shopify webhook routes; `generate_lead` and `form_submit` are server-owned even though event API routes also exist for their canonical collection path.
+
+Duplicate canonical events return the existing event outcome without inserting new dispatch rows. Live production has 19,043 distinct event IDs and idempotency keys across 19,043 ledger rows.
+
+## Persistence and atomicity
+
+`postgresCanonicalPageViewStore.ts` is misnamed but generic:
+
+- It creates one `postgres` client using `SUPABASE_VERCEL_POSTGRES_URL_NON_POOLING`.
+- `sql.begin()` encloses ledger insertion and every provider-attempt insertion.
+- Ledger insertion uses `ON CONFLICT (idempotency_key) DO NOTHING`.
+- If ledger insertion is duplicate, no dispatch rows are created.
+- Provider insertion uses `ON CONFLICT (provider, idempotency_key) DO NOTHING`.
+- Any dispatch insertion error rejects the callback and rolls back the ledger insertion.
+
+No database RPC or trigger performs the same acceptance transaction. Direct PostgreSQL transaction code is the sole current implementation. The exported `postgresCanonicalPageViewStore` is only an alias of `postgresCanonicalEventStore`; the file cannot be deleted before the generic implementation is moved/renamed.
+
+Live constraints:
+
+- unique `marketing.event_ledger(idempotency_key)`;
+- unique `ops.provider_dispatch_attempts(provider, idempotency_key)`;
+- status, dispatch mode, attempt count, HTTP status and latency checks;
+- RLS enabled, no policies, no `anon`/`authenticated` grants, no triggers.
+
+## Provider outbox
+
+### Creation
+
+`planCanonicalEventDispatch` reads the active catalog. It creates only active, supported outbox intents for which required consent exists. Google rows without `client_id` are persisted as terminal `skipped_unqualified` with `skip_reason='missing_client_id'`.
+
+### Claim and locking
+
+Each adapter owns a `(provider, event_name)` claimant. The claim query:
+
+- selects `server_retry` rows;
+- claims `pending`/`retry_scheduled` rows whose `next_attempt_at` is due;
+- reclaims `processing` rows stale for ten minutes;
+- orders stale processing first;
+- uses `FOR UPDATE SKIP LOCKED`;
+- atomically updates the row to `processing` and increments `attempt_count`.
+
+### Retry and dead letter
+
+- Max batch size: 100.
+- Current adapters use their declared max attempts/delay schedule and positive jitter.
+- Retryable errors become `retry_scheduled`.
+- Permanent errors or exhausted attempts become `dead_lettered`.
+- Dead lettering and insertion into `ops.dead_letter_events` happen in one SQL statement.
+- Invalid payloads are dead-lettered without provider dispatch.
+
+### Immediate and cron dispatch
+
+Both `/api/cron/provider-outbox-dispatch` and `/api/cron/google-data-manager-status` run every five minutes. The dispatch cron uses one item per worker. Browser routes and Shopify transaction webhooks also schedule `runRegisteredProviderOutboxBatch({maxItems: 1})` after successful acceptance.
+
+`runRegisteredProviderOutboxBatch` executes every registry entry in `Promise.all`. There are 32 workers: 24 Google and 8 Meta. Thus `maxItems: 1` means one item **per worker**, not one item for the accepted event. This confirms the P0 isolation defect.
+
+### Index alignment
+
+The queue has useful status, provider/status, event/provider, skipped and dead-letter indexes. The main claim key includes provider, event name, dispatch mode, status and due time, but no index includes `event_name`; under backlog, each worker can heap-filter the shared queue. Google status polling has no `request_id` index and currently plans a sequential scan. No index was added in this audit.
+
+## Status and finality
+
+Live allowed statuses:
+
+| Status | Set by | Terminal | Meaning |
+|---|---|---:|---|
+| `pending` | Persistence plan | No | Eligible for initial claim |
+| `processing` | Claim/reclaim query | No | Leased/being processed; reclaim after ten minutes |
+| `retry_scheduled` | Generic worker | No | Retryable failure with due time |
+| `accepted_unverified` | Generic worker completion | Provider-dependent | Adapter call returned a receipt; finality not proven |
+| `succeeded` | Google reconciliation or historical repair | Yes | Provider-confirmed or administratively classified success |
+| `failed` | Historical schema state | No current writer found | Legacy/non-current |
+| `dead_lettered` | Worker or Google reconciliation | Yes until explicit replay | Permanent/exhausted/invalid/provider-confirmed failure |
+| `skipped_unqualified` | Dispatch planning/repair | Yes | Provider prerequisites absent or adapter unavailable |
+
+The worker outcome `succeeded` is always persisted through a method named `markAcceptedUnverified`, so both Google and Meta successful adapter calls first become `accepted_unverified`. Google has a separate reconciler: request IDs are leased and statuses map `SUCCESS` to `succeeded`, `FAILED`/`PARTIAL_SUCCESS` to dead letter, and `PROCESSING`/unknown back to `accepted_unverified`. Meta has no equivalent reconciliation worker in the repository. Generic acceptance therefore overstates neither finality nor provider equality, but the shared name/status is too coarse for operational decisions.
+
+## Provider state
+
+### Google Analytics and GTM
+
+- Active GA4 measurement ID in the published container: `G-FCES3L0M9M`.
+- Active Google tag: `GT-MKRLF5WK`.
+- Web GTM container: `GTM-5TWMJQFP`.
+- First-party paths: `/__gtg` and `/__sgtm`.
+- `server_container_url`: `https://utekos.no/__sgtm`.
+- sGTM health and Google tag endpoints return 200.
+- `/__sgtm` is `no-store` and was not a cache HIT.
+- No `AW-` native Google Ads conversion tag was found in the published web payload.
+
+The previous IDs `GTM-WZ4R3PQL` and `GTM-PGTJ3FJ` are refuted as active identities: both fail runtime resolution and only occur in planning text. The exact server-container ID, version, tags/clients/transformations and paused states are blocked by GTM API authorization.
+
+No direct application Measurement Protocol transport exists. Browser Google collection still reaches `/g/collect` through Google tag/sGTM, which is protocol traffic owned by GTM rather than a direct application `mp/collect` adapter. The published legacy direct MP tag was previously documented as removed, but exact current server-container internals remain blocked.
+
+### Google Data Manager
+
+Google Data Manager server outbox exists for 24 active events. Mappings:
+
+- require a GA client ID for active dispatch;
+- use canonical event ID as transaction ID where mapped;
+- cap parameter/URL lengths;
+- deduplicate and cap hashed email/phone identifiers at ten;
+- use restricted-country logic for IP matching;
+- persist response, request ID and validation result;
+- reconcile request status every five minutes.
+
+Production configuration was observed with `GOOGLE_DATA_MANAGER_VALIDATE_ONLY`; the repository/runtime audit found validate-only enabled. Therefore current acceptance can validate payloads without proving live provider ingestion. The request-ID coverage query observed 3,501 request IDs among 6,095 Google rows. The separate provider-total query observed 6,092 Google rows. Those live queries were not one repeatable-read transaction, so the three-row difference is snapshot timing rather than a stable denominator. Rows without request IDs cannot be reconciled through the current poller.
+
+### Meta
+
+- Published browser destination: `1092362672918571`.
+- Current source mappings: `PageView`, `ViewContent`, `AddToCart`, `AddToWishlist`, `InitiateCheckout`, `Purchase`, `Search`, `Lead`.
+- Every current server mapper uses canonical `event_id`.
+- Dataset-quality snapshot/retry crons exist.
+
+The same destination ID is present in the published web payload and current environment/source. Fresh Events Manager activity, EMQ, warnings, browser/server dedupe rate and the alleged paused server-container CAPI Gateway tag remain blocked because Meta read-only MCP/API and GTM Admin access were unavailable. This is **not** evidence that a destination mismatch exists; it is an unresolved P0 verification gate.
+
+### Microsoft
+
+- Published browser UET tag: `97247724`.
+- Browser UET is present and consent-gated.
+- Vercel contains the relevant credential variable names, including the UET CAPI token name; values were not read.
+- No Microsoft worker is registered.
+- All 222 historical Microsoft attempts are `skipped_unqualified`.
+
+Microsoft server CAPI is blocked, not production-active. `pageLoadId`/browser-server dedupe and live conversion-goal state could not be verified from the current Microsoft tool surface.
+
+### PostHog
+
+PostHog remains represented in the catalog as planned/not implemented. It is not part of the active canonical dispatch registry.
+
+## Shopify webhooks
+
+Routes:
+
+- `orders-paid` -> canonical `purchase`
+- `refunds-create` -> canonical `refund`
+- `products-create`, `products-update`, `products-delete` -> cache invalidation only
+
+Webhook HMAC is verified fail-closed against the raw body with SHA-256 and constant-time comparison. Purchase/refund IDs are deterministic. `refunds/create` means a refund object was created; it does not prove settlement or financial reconciliation.
+
+No webhook registration code or `shopify.app.toml` was found. Active app-scoped subscriptions and delivery logs were blocked because Shopify Admin MCP/plugin access was unavailable. Their status is **not proven**, not “missing.”
+
+## Production data snapshot
+
+| Measure | 2026-07-20 value |
+|---|---:|
+| Ledger events | 19,043 |
+| Provider attempts | 21,588 |
+| Dead-letter events | 1,127 |
+| Unresolved dead letters | 0 |
+| Consent snapshots | 15,046 |
+| Duplicate ledger event IDs | 0 |
+| Pending/processing/retry/dead-lettered attempts | 0 |
+
+Provider attempts:
+
+- Meta: 15,274
+- Google: 6,092
+- Microsoft UET: 222
+
+Status:
+
+- Meta: 13,291 `succeeded`, 1,773 `accepted_unverified`, 210 skipped
+- Google: 4,572 `succeeded`, 1,045 `accepted_unverified`, 475 skipped
+- Microsoft: 222 skipped
+
+The prior 18,400/20,500 counts were earlier lower snapshots. The prior 1,174 dead letters exceed the current 1,127 by 47; deletion/retention/earlier counting cannot be proven from current evidence and requires audit-log reconciliation.
+
+Historical errors:
+
+- 635 `google_data_manager_permanent_error`, resolved
+- 340 `Missing client_id`, resolved/marked attribution repair
+- page-location/session payload families, resolved/classified
+- historical Meta token-expiry rows
+
+Current code converts missing Google client ID to a qualified skip and caps page-location values. No matching Google permanent-error runtime group appeared in the last seven days.
+
+## Production logs
+
+Both five-minute crons are active and predominantly return 200. Neither appears in seven-day Vercel error groups. Relevant project-wide errors:
+
+- Supabase `EMAXCONNSESSION` for web-vitals and consent snapshots: indirectly relevant to warehouse write reliability.
+- Next.js “Failed to parse postponed state”: not a canonical event defect, but affects high-traffic rendering routes.
+- Browser extension/Cookiebot `Illegal invocation`: not reproduced in the inspected server error groups.
+- Historical `UET is not defined`: not reproduced in the inspected server error groups; browser-console verification remains blocked.
+
+## Tests and baseline validation
+
+| Command | Exit | Result |
+|---|---:|---|
+| `pnpm install --frozen-lockfile` | 0 | Lockfile current |
+| `pnpm lint` | 1 | Pre-existing repository-wide violations; 55,916 findings, including generated/vendor/skill surfaces |
+| `pnpm exec tsc --noEmit` | 2 | Stale `.next/types/validator.ts` route constraints for two routes |
+| `node --test $(find src -name '*.test.ts')` | 1 | Incorrect direct Node runner cannot resolve the project TS/module setup; no package `test` script exists |
+| `find src -name '*.test.ts' ... pnpm exec tsx --test` | 1 | 316 tests: 313 passed; three unrelated Shopify/cache tests fail because the standalone runner imports `server-only` |
+| `find src/lib/analytics src/app/api/cron ... pnpm exec tsx --test` | 0 | 265 targeted analytics/cron tests passed |
+| `pnpm build` | 0 | Next.js production build, type phase and 121 static pages succeeded |
+| `pnpm exec next typegen && pnpm exec tsc --noEmit` | 0 | Post-build route types regenerated; standalone typecheck passed |
+
+The build and explicit post-build type generation demonstrate that the initial standalone typecheck failure was stale generated `.next` state rather than a documentation change. No runtime file was changed to repair baseline failures.
+
+## Principal risks
+
+1. A request-path event drains the entire registry and can process unrelated backlog.
+2. Published/live Meta destination and server-tag state are not fully verifiable without Meta/GTM read access.
+3. Historical/provider names coexist with canonical names; older rows are not uniformly claimable by current workers.
+4. Generic accepted status does not express Meta and Google finality equally.
+5. Google diagnostics lookups lack an aligned request-ID index; main claims lack an event-name-aligned index.
+6. Data Manager is validate-only, so “accepted” is not proof of live ad-destination ingestion.
+7. Microsoft has browser UET but no server worker.
+8. App-scoped Shopify webhook subscriptions/deliveries are unverified.
+9. Consent snapshots stop after the 2026-07-15 reset; this is consistent with the reset but must not be described as an active snapshot writer.
+
+## Official sources
+
+- Google Data Manager `events.ingest`: <https://developers.google.com/data-manager/api/reference/rest/v1/events/ingest>
+- GA4 Measurement Protocol: <https://developers.google.com/analytics/devguides/collection/protocol/ga4>
+- Meta CAPI deduplication: <https://developers.facebook.com/documentation/ads-commerce/conversions-api/deduplicate-pixel-and-server-events>
+- Meta server event parameters: <https://developers.facebook.com/documentation/ads-commerce/conversions-api/parameters/server-event>
+- Microsoft UET: <https://learn.microsoft.com/en-us/advertising/guides/universal-event-tracking?view=bingads-13>
+- Shopify webhooks: <https://shopify.dev/docs/apps/build/webhooks>
+- Shopify delivery verification: <https://shopify.dev/docs/apps/build/webhooks/verify-deliveries>
+- Next.js `after`: <https://nextjs.org/docs/app/api-reference/functions/after>
+- Vercel cron jobs: <https://vercel.com/docs/cron-jobs>
+- PostgreSQL `SELECT` locking: <https://www.postgresql.org/docs/current/sql-select.html>
+
+## Areas blocked from verification
+
+- GTM workspace, published version metadata, exact server-container ID, tags, triggers, variables, templates, clients, transformations and paused state.
+- GA4 property configuration and live event traffic.
+- Meta Events Manager activity, EMQ, warnings, dedupe metrics and test events.
+- Google Ads/Data Manager live destination diagnostics beyond stored application responses.
+- Microsoft conversion goals, UET endpoint/CAPI provider status and `pageLoadId` behavior.
+- Shopify app-scoped subscriptions and delivery logs.
+- Browser console/network smoke for Cookiebot, Meta and UET during this audit.
