@@ -3,6 +3,7 @@
 import { captureException } from '@sentry/nextjs'
 import { buildMetaParameterContextRequestUrl } from './buildMetaParameterContextRequestUrl'
 import type { ConsentSnapshot } from './canonicalEventEnvelope'
+import { extractFbclidFromFbc } from './extractFbclidFromFbc'
 import { browserFirstPartyExternalIdStore } from './firstPartyExternalId'
 import { metaParameterContextResponseSchema } from './metaParameterContextContract'
 
@@ -51,7 +52,9 @@ function readPersistedMetaIdentifiers(
   const fbp = readCookie('_fbp')
 
   if (!fbp) return undefined
-  if (fbclid && fbc?.split('.')[3] !== fbclid) {
+
+  const cookieFbclid = extractFbclidFromFbc(fbc)
+  if (fbclid && cookieFbclid !== fbclid) {
     return undefined
   }
 

@@ -146,6 +146,43 @@ test('restores checkout attribution for the purchase webhook', () => {
   })
 })
 
+test('derives fbclid from appendix-bearing fbc when click_id is missing', () => {
+  const attribution = createCheckoutAttributionSnapshot(
+    {
+      browser_id: {
+        fbc: 'fb.1.1784368700000.meta-click-only.AQQCAQMB',
+        fbp: 'fb.1.1784368600000.123456789.AQQCAQMB'
+      },
+      consent: {
+        analytics: 'granted',
+        marketing: 'granted',
+        preferences: 'denied',
+        source: 'cookiebot',
+        version: '1'
+      },
+      external_id: 'anon_550e8400-e29b-41d4-a716-446655440000',
+      page_url: 'https://utekos.no/produkter/utekos-techdown'
+    },
+    '2026-07-18T10:00:00.000Z'
+  )
+  const order = orderPaid()
+  order.note_attributes =
+    checkoutAttributionSnapshotToShopifyAttributes(attribution).map(
+      attribute => ({
+        name: attribute.key,
+        value: attribute.value
+      })
+    )
+
+  const event = shopifyOrderToCanonicalPurchase(order)
+
+  assert.equal(event.click_id?.fbclid, 'meta-click-only')
+  assert.equal(
+    event.browser_id?.fbc,
+    'fb.1.1784368700000.meta-click-only.AQQCAQMB'
+  )
+})
+
 test('uses a namespaced Shopify customer id only without first-party external_id', () => {
   const order = orderPaid()
   order.note_attributes = order.note_attributes.filter(
