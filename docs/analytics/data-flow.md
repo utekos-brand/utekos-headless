@@ -14,7 +14,7 @@ flowchart LR
   Ledger[(marketing.event_ledger)]
   Outbox[(ops.provider_dispatch_attempts)]
   After[Next.js after]
-  Registry[32-worker global registry]
+  Registry[33-worker global registry]
   Cron[Provider outbox cron every 5 min]
   Google[Google Data Manager]
   GoogleStatus[Google status cron]
@@ -40,6 +40,7 @@ flowchart LR
   Cron --> Registry
   Registry --> Google
   Registry --> Meta
+  Registry --> MicrosoftCAPI[Microsoft UET CAPI purchase]
   Registry --> DLQ
   Google --> GoogleStatus
   GoogleStatus --> Outbox
@@ -51,7 +52,11 @@ flowchart LR
   Shopify --> Validate
 ```
 
-The `After -> Registry` edge is the confirmed P0: every successful request invokes every registered worker, not only attempts created by that request.
+The `After -> Registry` edge is the confirmed P0 (DEV-001): every
+successful request invokes every registered worker, not only
+attempts created by that request. Microsoft UET CAPI purchase is
+an active registry worker (`microsoft_uet:purchase`); other
+Microsoft server events remain `blocked_no_worker`.
 
 ## Consent and identity flow
 
@@ -142,4 +147,5 @@ stateDiagram-v2
   dead_lettered --> [*]
 ```
 
-Meta currently stops at `accepted_unverified` unless a later administrative/data repair changes the row.
+Meta currently stops at `accepted_unverified` unless a later
+administrative/data repair changes the row.

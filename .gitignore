@@ -208,6 +208,9 @@ supabase/md.md
 /.gemini/
 docs/
 /docs/
+!docs/
+!docs/analytics/
+!docs/analytics/**
 .env.docker.example
 /.env.docker.example
 .env.local.incomplete.backup
