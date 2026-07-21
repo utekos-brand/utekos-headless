@@ -7,9 +7,9 @@
   "repository": "utekos-brand/utekos-headless",
   "git": {
     "origin_main_reported": "0a800b1ae169eab8af12c21b3595fe99a667d54c",
-    "local_head_reported": "85b552a95d063e227232861bb226658ec653d960",
+    "local_head_reported": "06f41152bc62415057626618f5550c1f2f6d240b",
     "local_ahead_by_reported": null,
-    "expected_parent_for_next_task": "PENDING_THIS_GOVERNANCE_ACCEPTANCE_COMMIT",
+    "expected_parent_for_next_task": "06f41152bc62415057626618f5550c1f2f6d240b",
     "expected_parent_status": "SIGNAL_CONTRACT_ACCEPTED_CLEAN_WORKTREE_REQUIRED",
     "local_head_pushed": false,
     "local_head_deployed": false,
@@ -34,7 +34,7 @@
   "last_accepted_runtime_task": "signal-contract-integration",
   "last_accepted_runtime_sha": "85b552a95d063e227232861bb226658ec653d960",
   "last_accepted_governance_task": "signal-contract-integration",
-  "last_accepted_governance_sha": null,
+  "last_accepted_governance_sha": "06f41152bc62415057626618f5550c1f2f6d240b",
   "ce_2_2": {
     "status": "ACCEPTED_SUPERSEDED_FOR_IMPLEMENTATION",
     "decision": "DEC-010",
@@ -58,7 +58,7 @@
     "decision_status": "APPROVED",
     "decision_title": "Shopify Admin notification webhooks own Purchase and Refund",
     "orders_paid": {
-      "surface": "Shopify Admin → Settings → Notifications → Webhooks",
+      "surface": "Shopify Admin \u2192 Settings \u2192 Notifications \u2192 Webhooks",
       "event": "Order payment",
       "destination": "https://utekos.no/api/shopify/webhooks/orders-paid",
       "format": "JSON",
@@ -68,7 +68,7 @@
       "status": "LIVE_PRODUCTION_PROVEN"
     },
     "refunds_create": {
-      "surface": "Shopify Admin → Settings → Notifications → Webhooks",
+      "surface": "Shopify Admin \u2192 Settings \u2192 Notifications \u2192 Webhooks",
       "event": "Refund create",
       "destination": "https://utekos.no/api/shopify/webhooks/refunds-create",
       "format": "JSON",
@@ -149,7 +149,7 @@
     "stop_concurrent_runtime_ownership": "CLOSED",
     "stop_active_double_count_risk": "ACTIVE",
     "release_readiness": "RELEASE_READINESS_PENDING_CLEAN_BASELINE_CHECK",
-    "governance_acceptance_sha": null
+    "governance_acceptance_sha": "06f41152bc62415057626618f5550c1f2f6d240b"
   },
   "signal_contract_baseline": {
     "status": "ACCEPTED_RUNTIME_COMMITTED",
@@ -160,7 +160,7 @@
     "stop_concurrent_runtime_ownership": "CLOSED",
     "ownership_transfer": "COMPLETED",
     "accepted_runtime_sha": "85b552a95d063e227232861bb226658ec653d960",
-    "next_clean_worktree_parent": "THIS_GOVERNANCE_ACCEPTANCE_COMMIT"
+    "next_clean_worktree_parent": "06f41152bc62415057626618f5550c1f2f6d240b"
   },
   "separate_p0_provider_purchase_incident": {
     "status": "INACTIVE",
@@ -183,7 +183,7 @@
   "known_release_blockers": [
     "Local docs commits deferred from separate push",
     "RELEASE_READINESS_PENDING_CLEAN_BASELINE_CHECK",
-    "STOP_ACTIVE_DOUBLE_COUNT_RISK webhook∩server distinct event_ids"
+    "STOP_ACTIVE_DOUBLE_COUNT_RISK webhook\u2229server distinct event_ids"
   ],
   "authoritative_files": [
     "docs/analytics/program-charter.md",
