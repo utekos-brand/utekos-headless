@@ -1,9 +1,7 @@
 import { geolocation, ipAddress } from '@vercel/functions'
-import { after } from 'next/server'
 import { handleCanonicalFormStartRequest } from '@/lib/analytics/server/handleCanonicalFormStartRequest'
 import { handleCanonicalFormStartRoute } from '@/lib/analytics/server/handleCanonicalFormStartRoute'
 import { postgresCanonicalEventStore } from '@/lib/analytics/server/postgresCanonicalPageViewStore'
-import { runRegisteredProviderOutboxBatch } from '@/lib/analytics/server/runRegisteredProviderOutboxBatch'
 
 export const maxDuration = 60
 
@@ -31,10 +29,6 @@ export function POST(request: Request) {
           }
         },
         store: postgresCanonicalEventStore
-      }),
-    runBatch: runRegisteredProviderOutboxBatch,
-    scheduleAfter: task => {
-      after(task)
-    }
+      })
   })
 }
