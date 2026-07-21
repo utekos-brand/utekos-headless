@@ -11,8 +11,9 @@ Non-goals: GraphQL webhookSubscriptionCreate/Update, Mode A toml,
   deploy storefront code, forged HMAC, schema remediation in this task
 Primary role: canonical-event-implementer / evidence-auditor
 Supporting role: canonical-event-verifier (read-only)
-Status: ACCEPTED_WITH_PAYLOAD_BLOCKER
+Status: ACCEPTED
 Technical conclusion: SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER
+F1 conclusion: REFUND_2026_04_COMPATIBILITY_FIXED
 ```
 
 ## Acceptance (2026-07-21)
@@ -22,6 +23,16 @@ Technical conclusion: SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER
 - Evidence:
   `docs/analytics/evidence/ce-2.3a-notification-webhook-post-mutation-verification.md`
   (commit `0787af63a`; verifier APPROVE)
+
+## CE-2.3A-F1 acceptance (2026-07-21)
+
+```text
+CE-2.3A-F1: ACCEPTED
+Conclusion: REFUND_2026_04_COMPATIBILITY_FIXED
+Accepted runtime SHA: 59c130c2e
+STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE: CLOSED
+STOP_ACTIVE_DOUBLE_COUNT_RISK: fortsatt ACTIVE
+```
 
 ## Approved destinations
 
@@ -64,29 +75,19 @@ purchase: deterministic canonical ID + atomic ledger/outbox
 tests: 17/17 pass
 ```
 
-## Active blockers (unchanged)
+## Active blockers
 
 ```text
 STOP_ACTIVE_DOUBLE_COUNT_RISK
+```
+
+Closed:
+
+```text
 STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE
 ```
 
-Refund blocker:
-
-```text
-Shopify refunds/create 2026-04:
-  subtotal may be number
-  currency may be null
-
-Current repository schema:
-  subtotal required as string
-  currency rejects null
-```
-
-Therefore Refund source is established, but canonical refund
-acceptance remains blocked until a separate approved schema task.
-
 ## Stop
 
-Do not auto-start CE-2.3B or refund schema remediation. Await
-explicit start order.
+CE-2.3A-F1 ACCEPTED. CE-2.3B is next authorized task. Do not
+auto-start CE-2.3C without CE-2.3B owner acceptance.

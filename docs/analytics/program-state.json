@@ -3,13 +3,11 @@
   "program": "CanonicalEvent",
   "charter_version": "1.0.0",
   "roadmap_version": "1.0.0",
-  "as_of": "2026-07-21T17:25:00+02:00",
+  "as_of": "2026-07-21T17:40:00+02:00",
   "repository": "utekos-brand/utekos-headless",
   "git": {
     "origin_main_reported": "0a800b1ae169eab8af12c21b3595fe99a667d54c",
-    "local_head_reported": "b445e9f8cfbc17bc4f01b576e23d3bfa2b407422",
-    "local_ahead_by_reported": 14,
-    "expected_parent_for_next_task": "b445e9f8cfbc17bc4f01b576e23d3bfa2b407422",
+    "local_ahead_by_reported": 17,
     "local_head_pushed": false,
     "local_head_deployed": false,
     "production_deployment_id": "dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1",
@@ -17,23 +15,24 @@
     "production_deployment_state": "READY",
     "rollback_sha": "ee781aed52474eb6bdecee63e43ffabec9d0cea2",
     "docs_push_deferred": true,
-    "verification_required_before_write": true
+    "verification_required_before_write": true,
+    "local_head_reported": "a37c1f0544cd67417168db237d37cb34b273be19",
+    "expected_parent_for_next_task": "a37c1f0544cd67417168db237d37cb34b273be19"
   },
   "progress": {
     "accepted_points": 31,
-    "implemented_points": 30,
+    "implemented_points": 31,
     "production_verified_points": 26,
     "total_points": 100,
     "phase_1_status": "ACCEPTED_WITH_NONBLOCKING_OBSERVATIONS",
     "phase_2_status": "IN_PROGRESS"
   },
   "current_governance_task": null,
-  "next_runtime_task": null,
-  "current_runtime_status": "AWAITING_EXPLICIT_START_ORDER",
-  "last_accepted_runtime_task": "CE-2.3A",
-  "last_accepted_runtime_sha": "0787af63a25fe71375b555854e8384743c9020f5",
-  "last_accepted_governance_task": "CE-2.2B",
-  "last_accepted_governance_sha": "b445e9f8cfbc17bc4f01b576e23d3bfa2b407422",
+  "next_runtime_task": "CE-2.3B",
+  "current_runtime_status": "CE_2_3B_AUTHORIZED",
+  "last_accepted_runtime_task": "CE-2.3A-F1",
+  "last_accepted_runtime_sha": "59c130c2ee9c93c3f62332fa03763d27e5168b05",
+  "last_accepted_governance_task": "CE-2.3A-F1",
   "ce_2_2": {
     "status": "ACCEPTED_SUPERSEDED_FOR_IMPLEMENTATION",
     "decision": "DEC-010",
@@ -73,7 +72,7 @@
       "format": "JSON",
       "webhook_api_version": "2026-04",
       "signing_secret_env": "SHOPIFY_WEBHOOK_SECRET",
-      "status": "LIVE_SUBSCRIPTION_ACCEPT_SCHEMA_BLOCKED",
+      "status": "LIVE_SUBSCRIPTION",
       "graphql_create": "FORBIDDEN"
     },
     "mode_a": "NOT_APPLICABLE",
@@ -83,12 +82,12 @@
     "mutation_performed": false
   },
   "ce_2_3a": {
-    "status": "ACCEPTED_WITH_PAYLOAD_BLOCKER",
+    "status": "ACCEPTED",
     "conclusion": "SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER",
     "evidence": "docs/analytics/evidence/ce-2.3a-notification-webhook-post-mutation-verification.md",
     "evidence_commit": "0787af63a25fe71375b555854e8384743c9020f5",
     "secret_fingerprint_prefix": "8a75081095f1",
-    "payload_blocker": "refunds/create Zod expects string subtotal and non-null currency; Shopify 2026-04 sample uses number subtotal and null currency",
+    "payload_blocker": null,
     "orders_paid_live": true,
     "refunds_create_live_subscription": true,
     "refunds_create_ledger_rows": 0,
@@ -97,16 +96,24 @@
     "owner_accepted": true,
     "accepted_at": "2026-07-21T17:21:00+02:00"
   },
+  "ce_2_3a_f1": {
+    "status": "ACCEPTED",
+    "conclusion": "REFUND_2026_04_COMPATIBILITY_FIXED",
+    "accepted_runtime_sha": "59c130c2ee9c93c3f62332fa03763d27e5168b05",
+    "stop_refund_2026_04_payload_incompatible": "CLOSED",
+    "stop_active_double_count_risk": "ACTIVE",
+    "owner_accepted": true,
+    "accepted_at": "2026-07-21T17:40:00+02:00",
+    "status_commit_sha": "a37c1f0544cd67417168db237d37cb34b273be19"
+  },
   "active_interlocks": [
     "SAFE-001_META_PURCHASE_REPLAY",
     "SAFE-002_SHOPIFY_OWNER_UNPROVEN",
     "SAFE-003_GOOGLE_NATIVE_ADS_OWNER_UNKNOWN",
-    "STOP_ACTIVE_DOUBLE_COUNT_RISK",
-    "STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE"
+    "STOP_ACTIVE_DOUBLE_COUNT_RISK"
   ],
   "known_release_blockers": [
     "Local docs commits deferred from separate push",
-    "STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE",
     "STOP_ACTIVE_DOUBLE_COUNT_RISK webhook∩server distinct event_ids"
   ],
   "authoritative_files": [
@@ -114,5 +121,6 @@
     "docs/analytics/roadmap.md",
     "docs/analytics/decision-log.md",
     "docs/analytics/current-handoff.md"
-  ]
+  ],
+  "last_accepted_governance_sha": "a37c1f0544cd67417168db237d37cb34b273be19"
 }

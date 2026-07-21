@@ -288,6 +288,30 @@ eller endring får ny oppføring som refererer den gamle.
 - **Godkjent av:** Prosjekteier (ACCEPTED 2026-07-21; commit
   `b445e9f8c`; verifier APPROVE).
 
+## Status — CE-2.3A-F1 ACCEPTED (mekanisk registrering)
+
+- **Dato:** 2026-07-21
+- **Status:** `ACCEPTED` (ingen ny beslutning; ingen omtolkning)
+- **Berører:** CE-2.3A-F1;
+  `STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE`;
+  `STOP_ACTIVE_DOUBLE_COUNT_RISK`
+- **Registrert eksakt:**
+
+```text
+CE-2.3A-F1: ACCEPTED
+Conclusion: REFUND_2026_04_COMPATIBILITY_FIXED
+Accepted runtime SHA: 59c130c2e
+STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE: CLOSED
+STOP_ACTIVE_DOUBLE_COUNT_RISK: fortsatt ACTIVE
+```
+
+- **Full runtime SHA:**
+  `59c130c2ee9c93c3f62332fa03763d27e5168b05`
+- **Konsekvens:** CE-2.3B er neste autoriserte task. Expected
+  parent for CE-2.3B er denne statuscommitens fulle SHA.
+- **Godkjent av:** Prosjekteier (eiergodkjent F1; mekanisk
+  statusregistrering)
+
 ## Mal for ny beslutning
 
 ```text

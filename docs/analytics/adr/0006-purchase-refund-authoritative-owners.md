@@ -10,7 +10,7 @@ Status: APPROVED (CE-2.2B / DEC-012 ACCEPTED 2026-07-21;
   preconditions remain for cutover + refund schema remediation)
 Date: 2026-07-21
 Amended: 2026-07-21 (CE-2.2A, CE-2.2B; CE-2.3A ACCEPTED with
-  payload blocker)
+  payload blocker; CE-2.3A-F1 CLOSED refund payload blocker)
 Primary evidence:
   docs/analytics/evidence/ce-2.1-shopify-commerce-delivery-source-inventory.md
   docs/analytics/evidence/ce-2.3a-notification-webhook-post-mutation-verification.md
@@ -127,14 +127,19 @@ Technical conclusion:
   SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER
 
 Governance status:
-  ACCEPTED_WITH_PAYLOAD_BLOCKER
+  ACCEPTED
+
+CE-2.3A-F1:
+  ACCEPTED
+  Conclusion: REFUND_2026_04_COMPATIBILITY_FIXED
+  Accepted runtime SHA: 59c130c2e
+  STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE: CLOSED
 
 orders-paid:
   LIVE — production-proven; do not create; do not duplicate
 
 refunds-create:
-  LIVE subscription — canonical accept blocked until separate
-  approved schema remediation for 2026-04 payload types
+  LIVE subscription — 2026-04 payload compatibility fixed
 
 GraphQL webhookSubscriptionCreate / webhookSubscriptionUpdate
   for ORDERS_PAID / REFUNDS_CREATE:
@@ -151,20 +156,23 @@ Mode B (Admin API subscription create for these topics):
 
 ```text
 STOP_ACTIVE_DOUBLE_COUNT_RISK
+```
+
+Closed:
+
+```text
 STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE
 ```
 
-Refund blocker detail (schema fix is a later code task — not this
-ADR amendment):
+Historical refund blocker (closed by CE-2.3A-F1 @ 59c130c2e):
 
 ```text
 Shopify refunds/create 2026-04 sample:
   subtotal may be number
   currency may be null
 
-Current repository schema:
-  subtotal required as string
-  currency rejects null
+Fixed in accepted runtime SHA 59c130c2e — Zod accepts number
+subtotal and null currency without fabrication.
 ```
 
 ## Alternatives considered
@@ -323,8 +331,8 @@ Unchanged Sev-1 treatment for webhook ∩ server distinct
 
 1. CE-2.3A evidence remains the technical basis for live
    destinations; no GraphQL duplicates.
-2. Refund schema remediation requires a separate explicit
-   approved code task (not authorized by DEC-012 alone).
+2. CE-2.3A-F1 closed `STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE`
+   at runtime SHA `59c130c2e`.
 3. Replay freeze (SAFE-001 / DEV-018) remains until CE-2.6.
 4. CE-2.3B+ reconciliation designed before cutover.
 5. Independent gates; no combined deploy.
@@ -334,17 +342,17 @@ Unchanged Sev-1 treatment for webhook ∩ server distinct
 
 - CE-2.2B / DEC-012 and CE-2.3A are owner-ACCEPTED
   (`SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER`).
-- Active blockers remain: `STOP_ACTIVE_DOUBLE_COUNT_RISK` and
-  `STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE`.
-- No runtime or schema mutation is authorized by this acceptance.
-- Do not auto-start CE-2.3B or refund schema fix without a new
-  explicit start order.
+- CE-2.3A-F1 ACCEPTED: `REFUND_2026_04_COMPATIBILITY_FIXED`;
+  `STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE: CLOSED`.
+- Active blocker remains: `STOP_ACTIVE_DOUBLE_COUNT_RISK`.
+- CE-2.3B is the next authorized task after F1 status
+  registration.
 
 ## References
 
 - CE-2.1 evidence (ACCEPTED)
-- CE-2.3A evidence (verifier APPROVE; owner ACCEPTED with payload
-  blocker)
+- CE-2.3A evidence (verifier APPROVE; owner ACCEPTED)
+- CE-2.3A-F1 (ACCEPTED; runtime `59c130c2e`)
 - CE-2.2 / CE-2.2A / CE-2.2B (DEC-012 ACCEPTED)
 - DEC-006, DEC-007, DEC-010, DEC-011, DEC-012
 - SAFE-001 / SAFE-002 / DEV-018
