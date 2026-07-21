@@ -82,3 +82,24 @@ test('collect error propagates without scheduling outbox drain', async () => {
   assert.equal(runBatchCalled, false)
   assert.equal(scheduleAfterCalled, false)
 })
+
+test('handler accepts collect-only dependencies without dispatch wiring', async () => {
+  const collectCalls: Request[] = []
+  const request = new Request('https://utekos.no/api/events/filter-apply', {
+    method: 'POST'
+  })
+  const expectedResponse = new Response(null, { status: 202 })
+  const handleRoute = createBrowserEventRouteHandler('filter-apply')
+
+  const response = await handleRoute(request, {
+    collect: async (incoming) => {
+      collectCalls.push(incoming)
+      return expectedResponse
+    }
+  })
+
+  assert.equal(response, expectedResponse)
+  assert.equal(response.status, 202)
+  assert.equal(collectCalls.length, 1)
+  assert.equal(collectCalls[0], request)
+})
