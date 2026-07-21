@@ -1,6 +1,7 @@
 # CanonicalEvent Decision Log
 
-**Format:** append-only  
+**Format:** append-only
+
 **Regel:** eksisterende beslutningstekst omskrives ikke. Feil
 eller endring får ny oppføring som refererer den gamle.
 
