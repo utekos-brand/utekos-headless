@@ -16,8 +16,8 @@
     "rollback_sha": "ee781aed52474eb6bdecee63e43ffabec9d0cea2",
     "docs_push_deferred": true,
     "verification_required_before_write": true,
-    "local_head_reported": "a37c1f0544cd67417168db237d37cb34b273be19",
-    "expected_parent_for_next_task": "a37c1f0544cd67417168db237d37cb34b273be19"
+    "local_head_reported": "b2cd690372bf8ee188f0a711abe60dc200039cef",
+    "expected_parent_for_next_task": "b2cd690372bf8ee188f0a711abe60dc200039cef"
   },
   "progress": {
     "accepted_points": 31,
@@ -104,7 +104,7 @@
     "stop_active_double_count_risk": "ACTIVE",
     "owner_accepted": true,
     "accepted_at": "2026-07-21T17:40:00+02:00",
-    "status_commit_sha": "a37c1f0544cd67417168db237d37cb34b273be19"
+    "status_commit_sha": "b2cd690372bf8ee188f0a711abe60dc200039cef"
   },
   "active_interlocks": [
     "SAFE-001_META_PURCHASE_REPLAY",
@@ -122,5 +122,5 @@
     "docs/analytics/decision-log.md",
     "docs/analytics/current-handoff.md"
   ],
-  "last_accepted_governance_sha": "a37c1f0544cd67417168db237d37cb34b273be19"
+  "last_accepted_governance_sha": "b2cd690372bf8ee188f0a711abe60dc200039cef"
 }
