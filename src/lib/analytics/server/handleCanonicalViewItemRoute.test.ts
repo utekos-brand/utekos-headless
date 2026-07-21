@@ -1,118 +1,102 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import {
-  handleCanonicalViewItemRoute,
-  type CanonicalViewItemRouteDependencies
-} from './handleCanonicalViewItemRoute'
+import { handleCanonicalViewItemRoute } from './handleCanonicalViewItemRoute'
 
-type ScheduledTask = () => Promise<void>
-
-const batchSummary = {
-  google: {
-    acceptedUnverified: 1,
-    claimed: 1,
-    deadLettered: 0,
-    limitReached: true,
-    retryScheduled: 0
-  },
-  meta: {
-    acceptedUnverified: 1,
-    claimed: 1,
-    deadLettered: 0,
-    limitReached: true,
-    retryScheduled: 0
-  }
-} as const
-
-function createHarness(status: number) {
-  const response = new Response(null, { status })
-  const scheduledTasks: ScheduledTask[] = []
-  const batchInputs: Array<{ maxItems: number }> = []
-
-  const dependencies: CanonicalViewItemRouteDependencies = {
-    collect: async () => response,
-    runBatch: async input => {
-      batchInputs.push(input)
-      return batchSummary
-    },
-    scheduleAfter: task => {
-      scheduledTasks.push(task)
-    }
-  }
-
-  return {
-    batchInputs,
-    dependencies,
-    response,
-    scheduledTasks
+function throwIfCalled(name: string) {
+  return () => {
+    throw new Error(`${name} must not be called`)
   }
 }
 
-test('schedules one immediate outbox item after an accepted event', async () => {
-  const harness = createHarness(202)
+test('accepted view item returns 202 without scheduling outbox drain', async () => {
+  let runBatchCalled = false
+  let scheduleAfterCalled = false
+  const expectedResponse = new Response(null, { status: 202 })
+  const request = new Request('https://utekos.no/api/events/view-item', {
+    method: 'POST'
+  })
 
-  const response = await handleCanonicalViewItemRoute(
-    new Request('https://utekos.no/api/events/view-item', {
-      method: 'POST'
-    }),
-    harness.dependencies
-  )
+  const response = await handleCanonicalViewItemRoute(request, {
+    collect: async () => expectedResponse,
+    runBatch: async () => {
+      runBatchCalled = true
+    },
+    scheduleAfter: () => {
+      scheduleAfterCalled = true
+    }
+  })
 
-  assert.equal(response, harness.response)
-  assert.equal(harness.scheduledTasks.length, 1)
-  assert.deepEqual(harness.batchInputs, [])
-
-  await harness.scheduledTasks[0]?.()
-
-  assert.deepEqual(harness.batchInputs, [{ maxItems: 1 }])
+  assert.equal(response, expectedResponse)
+  assert.equal(response.status, 202)
+  assert.equal(runBatchCalled, false)
+  assert.equal(scheduleAfterCalled, false)
 })
 
-test('schedules immediate processing for a duplicate event', async () => {
-  const harness = createHarness(200)
+test('duplicate view item returns 200 without scheduling outbox drain', async () => {
+  let runBatchCalled = false
+  let scheduleAfterCalled = false
+  const expectedResponse = new Response(null, { status: 200 })
+  const request = new Request('https://utekos.no/api/events/view-item', {
+    method: 'POST'
+  })
 
-  await handleCanonicalViewItemRoute(
-    new Request('https://utekos.no/api/events/view-item', {
-      method: 'POST'
-    }),
-    harness.dependencies
-  )
+  const response = await handleCanonicalViewItemRoute(request, {
+    collect: async () => expectedResponse,
+    runBatch: async () => {
+      runBatchCalled = true
+    },
+    scheduleAfter: () => {
+      scheduleAfterCalled = true
+    }
+  })
 
-  assert.equal(harness.scheduledTasks.length, 1)
+  assert.equal(response, expectedResponse)
+  assert.equal(response.status, 200)
+  assert.equal(runBatchCalled, false)
+  assert.equal(scheduleAfterCalled, false)
 })
 
 for (const status of [204, 400, 403, 413, 415, 500]) {
   test(`does not schedule processing for response status ${status}`, async () => {
-    const harness = createHarness(status)
+    const expectedResponse = new Response(null, { status })
+    const request = new Request('https://utekos.no/api/events/view-item', {
+      method: 'POST'
+    })
 
-    await handleCanonicalViewItemRoute(
-      new Request('https://utekos.no/api/events/view-item', {
-        method: 'POST'
-      }),
-      harness.dependencies
-    )
+    const response = await handleCanonicalViewItemRoute(request, {
+      collect: async () => expectedResponse,
+      runBatch: throwIfCalled('runBatch') as never,
+      scheduleAfter: throwIfCalled('scheduleAfter') as never
+    })
 
-    assert.deepEqual(harness.scheduledTasks, [])
-    assert.deepEqual(harness.batchInputs, [])
+    assert.equal(response, expectedResponse)
+    assert.equal(response.status, status)
   })
 }
 
-test('keeps a background failure observable without changing the response', async () => {
-  const harness = createHarness(202)
-  const expectedError = new Error('Provider unavailable')
-  harness.dependencies.runBatch = async () => {
-    throw expectedError
-  }
+test('collect error propagates without scheduling outbox drain', async () => {
+  const expectedError = new Error('collect failed')
+  let runBatchCalled = false
+  let scheduleAfterCalled = false
+  const request = new Request('https://utekos.no/api/events/view-item', {
+    method: 'POST'
+  })
 
-  const response = await handleCanonicalViewItemRoute(
-    new Request('https://utekos.no/api/events/view-item', {
-      method: 'POST'
-    }),
-    harness.dependencies
-  )
-
-  assert.equal(response, harness.response)
   await assert.rejects(
-    harness.scheduledTasks[0]?.() ?? Promise.resolve(),
-    expectedError
+    handleCanonicalViewItemRoute(request, {
+      collect: async () => {
+        throw expectedError
+      },
+      runBatch: async () => {
+        runBatchCalled = true
+      },
+      scheduleAfter: () => {
+        scheduleAfterCalled = true
+      }
+    }),
+    (error) => error === expectedError
   )
+
+  assert.equal(runBatchCalled, false)
+  assert.equal(scheduleAfterCalled, false)
 })
