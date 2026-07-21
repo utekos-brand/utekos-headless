@@ -7,7 +7,7 @@ Affected invariants: INV-001, INV-002, INV-003, INV-006, INV-010, INV-015, INV-0
 Goal: ensure one Shopify Refund record creates one canonical refund under the approved owner
 Non-goals: treat settlement as refund creation, purchase redesign, provider finality redesign, historical replay
 Primary role: canonical-event-implementer
-Status: AUTHORIZED_PENDING_WRITER_ISOLATION_AND_EXACT_ALLOWLIST
+Status: AUTHORIZED_CLEAN_WORKTREE_AFTER_SIGNAL_CONTRACT_ACCEPTANCE
 Package: CE-2.4/CE-2.5 — Shopify Purchase and Refund ownership cutover
 ```
 
@@ -15,6 +15,9 @@ Package: CE-2.4/CE-2.5 — Shopify Purchase and Refund ownership cutover
 
 - CE-2.3C is owner-accepted at runtime SHA
   `fde892700b9090a9db9b42ff19d3655444c7b60e`.
+- Signal-contract integration is owner-accepted at runtime SHA
+  `85b552a95d063e227232861bb226658ec653d960`.
+- `STOP_CONCURRENT_RUNTIME_OWNERSHIP` is `CLOSED`.
 - CE-2.4 and CE-2.5 share one approved package, one writer and
   one non-overlapping exact allowlist.
 - The CE-2.4 purchase half is implemented and independently
@@ -26,10 +29,8 @@ Package: CE-2.4/CE-2.5 — Shopify Purchase and Refund ownership cutover
 - Current live absence/presence of canonical refund rows is
   freshly verified.
 - Rollback plan is approved.
-- Use the current worktree only after the signal-contract writer
-  is finished and its baseline is resolved; otherwise use a
-  separate clean worktree from the CE-2.3C governance-acceptance
-  commit.
+- Start in a new clean worktree from the signal-contract
+  governance-acceptance commit after clean-baseline gate.
 - A separate provider/Purchase incident must have a frozen
   allowlist that does not overlap this package.
 

@@ -7,7 +7,7 @@ Affected invariants: INV-001, INV-002, INV-003, INV-006, INV-010, INV-013, INV-0
 Goal: ensure one paid Shopify order creates one canonical purchase under the approved owner
 Non-goals: provider finality redesign, historical replay, unrelated signal/schema work
 Primary role: canonical-event-implementer
-Status: AUTHORIZED_PENDING_WRITER_ISOLATION_AND_EXACT_ALLOWLIST
+Status: AUTHORIZED_CLEAN_WORKTREE_AFTER_SIGNAL_CONTRACT_ACCEPTANCE
 Package: CE-2.4/CE-2.5 — Shopify Purchase and Refund ownership cutover
 ```
 
@@ -17,15 +17,16 @@ Package: CE-2.4/CE-2.5 — Shopify Purchase and Refund ownership cutover
   owner-accepted.
 - CE-2.3C accepted runtime SHA is
   `fde892700b9090a9db9b42ff19d3655444c7b60e`.
+- Signal-contract integration is owner-accepted at runtime SHA
+  `85b552a95d063e227232861bb226658ec653d960`.
+- `STOP_CONCURRENT_RUNTIME_OWNERSHIP` is `CLOSED`.
 - ADR-approved Purchase owner is explicit.
 - Subscription/reconciliation source is testable.
 - CE-2.1 identified every browser/server/backfill source.
 - Production cutover plan and rollback commit are approved.
 - Current purchase provider mapping tests are green.
-- Use the current worktree only after the signal-contract writer
-  is finished and its baseline is resolved; otherwise use a
-  separate clean worktree from the CE-2.3C governance-acceptance
-  commit.
+- Start in a new clean worktree from the signal-contract
+  governance-acceptance commit after clean-baseline gate.
 - One writer must own the combined CE-2.4/CE-2.5 package, and its
   exact allowlist must not overlap a separate provider/Purchase
   incident.

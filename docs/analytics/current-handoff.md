@@ -1,7 +1,7 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.14.0 **Oppdatert:**
-2026-07-21T21:13:00+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.15.0 **Oppdatert:**
+2026-07-21T21:45:00+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
@@ -18,6 +18,8 @@ deployment- og livefakta før enhver handling
 - `origin/main`: `0a800b1ae169eab8af12c21b3595fe99a667d54c`
 - ACCEPTED CE-2.3C runtime:
   `fde892700b9090a9db9b42ff19d3655444c7b60e`
+- ACCEPTED signal-contract runtime:
+  `85b552a95d063e227232861bb226658ec653d960`
 - tip: se `git rev-parse HEAD` after this status commit
 - lokale commits **ikke pushet**
 - produksjonsdeploy: `dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1` READY
@@ -99,6 +101,7 @@ Closed:
 
 ```text
 STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE
+STOP_CONCURRENT_RUNTIME_OWNERSHIP
 ```
 
 ## 9. Rekkefølge
@@ -109,18 +112,13 @@ CE-2.3A ACCEPTED_WITH_PAYLOAD_BLOCKER ✓
 CE-2.3A-F1 ACCEPTED ✓
 CE-2.3B ACCEPTED ✓
 CE-2.3C ACCEPTED ✓
+Signal-contract integration ACCEPTED ✓
 CE-2.4/CE-2.5 — AUTHORIZED AS ONE RUNTIME PACKAGE
 ```
 
-CE-2.4/CE-2.5 kan ikke starte i denne urene worktree-en mens
-signal-contract-filene har en aktiv eller uavklart writer.
-Tillatt startmodell er:
-
-```text
-A. samme worktree etter at signal-contract-writeren er ferdig og
-   baseline er avklart; eller
-B. separat clean worktree fra governance-akseptcommitten.
-```
+CE-2.4/CE-2.5 startes i en ny clean worktree fra denne
+governance-akseptcommitten etter clean-baseline gate
+(`tsc --noEmit` + `pnpm build`).
 
 ## 10. Ingen autorisasjon uten ny startordre
 
@@ -131,7 +129,6 @@ B. separat clean worktree fra governance-akseptcommitten.
 - vercel.json cron schedule for shopify-commerce-reconciliation
 - CE-2.3C production invocation
 - `*/10` reconciliation schedule
-- CE-2.4/CE-2.5 implementation with writer/file overlap
 
 ## 11. P0 provider/Purchase incident — INACTIVE
 
@@ -142,43 +139,36 @@ Owned paths: NONE
 Allowlist overlap with CE-2.4/2.5: NONE
 ```
 
-Den tidligere P0-instruksen var en foreslått incidentjobb, ikke
-bevis på at jobben ble startet. Ikke opprett eller start P0-
-jobben. Purchase-reparasjon og event ownership håndteres gjennom
-CE-2.4/CE-2.5; eventuell provider repair krever en senere,
-eksplisitt bounded operasjon.
-
-## 12. Signal-contract ownership gate
+## 12. Signal-contract integration — ACCEPTED
 
 ```text
-STOP_CONCURRENT_RUNTIME_OWNERSHIP: ACTIVE
+Signal-contract integration: ACCEPTED
+Accepted runtime SHA: 85b552a95d063e227232861bb226658ec653d960
+Fresh verifier: APPROVE
+
+STOP_CONCURRENT_RUNTIME_OWNERSHIP: CLOSED
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
 ```
 
-Hele den aktive signal-contract-pakken forblir hos nåværende
-writer til den:
+Release readiness:
 
-1. fryser og rapporterer eksakt allowlist;
-2. fullfører bare den allowlisten;
-3. kjører relevante tester, TypeScript, ESLint, Prettier og
-   `git diff --check`;
-4. committer endringene;
-5. får fresh verifier-resultat;
-6. stopper annen skriving i filene.
+```text
+RELEASE_READINESS_PENDING_CLEAN_BASELINE_CHECK
+```
 
-Den urørte CE-2.4/CE-2.5-worktree-en fra `da10ac2f...` er
-fjernet. Etter verifisert og eierakseptert signal-contract-
-commit skal en ny clean worktree opprettes direkte fra den nye
-autoritative SHA-en uten ny designrunde.
+Repository-wide TypeScript/build må reproduseres fra clean
+worktree før den klassifiseres som committed type-break. Den
+registreres ikke som feil i signal-contract-allowlisten uten
+denne kontrollen.
 
 ## 13. Dokumentasjonsstatus
 
 - CE-2.3C er eiergodkjent (fresh verifier `APPROVE`)
+- signal-contract-pakken er eiergodkjent (fresh verifier
+  `APPROVE`)
 - reconciliation er implementert, men ikke produksjonsaktivert
 - CE-2.4/CE-2.5 er neste autoriserte samlede runtimepakke
-- signal-contract-baseline blokkerer release readiness, ikke
-  CE-2.3C-aksepten
-- CE-2.4/CE-2.5 runtimearbeid er stoppet til signal-contract-
-  writeren har levert en verifisert og eierakseptert commit
+- ny clean worktree opprettes fra governance-akseptcommitten
 - dirty `program-charter.md` og `roadmap.md` håndteres separat og
-  skal ikke kopieres inn i neste runtime-worktree
+  skal ikke kopieres inn i runtime-worktree-en
 - `STOP_ACTIVE_DOUBLE_COUNT_RISK` forblir ACTIVE

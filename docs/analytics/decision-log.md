@@ -407,6 +407,36 @@ Allowlist overlap with CE-2.4/2.5: NONE
   worktree-en og blokkerer ikke senere runtimearbeid.
 - **Godkjent av:** Prosjekteier
 
+## Status — Signal-contract integration ACCEPTED (mekanisk registrering)
+
+- **Dato:** 2026-07-21
+- **Status:** `ACCEPTED` (ingen ny beslutning; ingen omtolkning)
+- **Berører:** CE-3.2B1; CE-3.2B2; bounded CE-3.2C
+  (`generate_lead`); CE-2.4; CE-2.5;
+  `STOP_CONCURRENT_RUNTIME_OWNERSHIP`
+- **Registrert eksakt:**
+
+```text
+Signal-contract integration: ACCEPTED
+Accepted runtime SHA: 85b552a95d063e227232861bb226658ec653d960
+Fresh verifier: APPROVE
+
+STOP_CONCURRENT_RUNTIME_OWNERSHIP: CLOSED
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+```
+
+- **Release readiness:**
+  `RELEASE_READINESS_PENDING_CLEAN_BASELINE_CHECK`.
+  Repository-wide TypeScript/build klassifiseres ikke som feil i
+  signal-contract-allowlisten før den er reprodusert fra clean
+  worktree.
+- **Konsekvens:** CE-2.4/CE-2.5 startes i en ny clean worktree
+  fra denne governance-akseptcommitten. Den parkerte grenen/
+  worktree-en fra `da10ac2f851cbdd330367c2647e747e3de7c7358`
+  skal ikke gjenbrukes.
+- **Godkjent av:** Prosjekteier (eiergodkjent signal-contract;
+  fresh verifier `APPROVE`; mekanisk statusregistrering)
+
 ## Mal for ny beslutning
 
 ```text
