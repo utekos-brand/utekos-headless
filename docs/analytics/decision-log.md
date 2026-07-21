@@ -148,7 +148,7 @@ eller endring får ny oppføring som refererer den gamle.
 ## DEC-010 — Authoritative Purchase and Refund owners
 
 - **Dato:** 2026-07-21
-- **Status:** `PROPOSED_FOR_OWNER_APPROVAL`
+- **Status:** `APPROVED`
 - **Berører:** INV-001, INV-002, INV-003, INV-010, INV-014,
   INV-015, INV-017, INV-020, INV-021; SAFE-001, SAFE-002,
   DEV-018; `STOP_ACTIVE_DOUBLE_COUNT_RISK`
@@ -176,11 +176,12 @@ eller endring får ny oppføring som refererer den gamle.
   delivery; live trafikk peker på app-specific path;
   reconciliation dekker missede deliveries; server/ops_backfill
   som konkurrerende owners må fryses til CE-2.6-kontrakt.
-- **Konsekvens for roadmap/DoD:** etter eier-ACCEPTED kan CE-2.3A
-  starte; `STOP_ACTIVE_DOUBLE_COUNT_RISK` forblir interlock til
-  purchase cutover + replay containment; ingen runtime/Shopify-
-  mutasjon i denne beslutningen.
-- **Godkjent av:** _pending owner ACCEPTED_
+- **Konsekvens for roadmap/DoD:** CE-2.3A er neste; forblir
+  fail-closed til released `shopify.app.toml` / app-identitet og
+  eksplisitt Shopify mutation-godkjenning finnes.
+  `STOP_ACTIVE_DOUBLE_COUNT_RISK` forblir interlock til purchase
+  cutover + replay containment.
+- **Godkjent av:** Prosjekteier (ACCEPTED 2026-07-21).
 
 ## Mal for ny beslutning
 

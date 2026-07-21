@@ -1,7 +1,7 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.4.0 **Oppdatert:**
-2026-07-21T10:05:00+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.5.0 **Oppdatert:**
+2026-07-21T15:45:25+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
@@ -15,151 +15,122 @@ deployment- og livefakta før enhver handling
 6. den konkrete autoritative task-filen
 
 Task-filer under `docs/analytics/tasks/` er autoritative.
-Chatmeldinger skal ikke overstyre taskens mål, avgrensning,
-tillatte filer, start-SHA eller stop conditions.
 
-## 2. Git- og produksjonsstatus ved overlevering
-
-Følgende status er rapportert under CE-2.2 docs-only owner
-decision (før verifier/owner ACCEPTED av denne committen):
+## 2. Git- og produksjonsstatus
 
 - `origin/main`: `0a800b1ae169eab8af12c21b3595fe99a667d54c`
-- forventet parent for CE-2.2:
-  `9923c5adea249eb3e2d88bfa0856569ef4be1cb4`
-- CE-2.2 worktree tip: se `git rev-parse HEAD` etter commit
-- lokale evidens-/governance-commits er **ikke pushet**
+- lokal `main` tip: `2c0c3c6fd67dc9a4098fac71c8f20d7046828f2e`
+  (før ACCEPTED-statuscommit)
+- lokal `main`: **9 commits ahead of `origin/main`** (docs-only;
+  ikke pushet)
 - produksjons-SHA: `0a800b1ae169eab8af12c21b3595fe99a667d54c`
-- produksjonsdeploy: `dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1`
-- produksjonsstatus: **READY**
-- produksjonsaliaser:
+- produksjonsdeploy: `dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1` **READY**
+- rollback-SHA: `ee781aed52474eb6bdecee63e43ffabec9d0cea2`
 
-  - `utekos.no`
-  - `www.utekos.no`
-  - `feed.utekos.no`
-
-- rollback-SHA før fase-1-deploy:
-  `ee781aed52474eb6bdecee63e43ffabec9d0cea2`
-
-Kjør før enhver handling:
-
-```bash
-git fetch origin
-git status --short --branch
-git rev-parse HEAD
-git rev-parse origin/main
-git rev-list --left-right --count origin/main...HEAD
-git log --oneline --decorate -8
-git worktree list --porcelain
-```
-
-Stopp dersom lokal HEAD ikke er forventet parent, `origin/main`
-har beveget seg, eller en annen worktree eier samme filer.
-
-## 3. CE-1.6B / CE-1.6C / Phase 1 — ACCEPTED
-
-Fase 1 er eiergodkjent
-(`PHASE_1_ACCEPTED_WITH_NONBLOCKING_OBSERVATIONS`).
-Produksjonsdeploy forblir `0a800b1ae…` /
-`dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1`.
-
-## 4. CE-2.1 — ACCEPTED
+## 3. CE-2.2 — ACCEPTED
 
 ```text
-ACCEPTED @ 95e8d38090e97e4aa0fe08def47d8be01173d8a2
-purchase: MULTIPLE_SOURCES
-refund: NO_SOURCE
-program: STOP_ACTIVE_DOUBLE_COUNT_RISK
-```
-
-Evidens:
-
-```text
-docs/analytics/evidence/
-ce-2.1-shopify-commerce-delivery-source-inventory.md
-```
-
-## 5. CE-GOV-001A — ACCEPTED
-
-```text
-ACCEPTED @ 9923c5adea249eb3e2d88bfa0856569ef4be1cb4
-ADR target: 0006
-Decision target: DEC-010
-```
-
-Kun CE-2.2-taskfilen ble renummerert. Ingen owner-ADR ble skrevet
-i CE-GOV-001A.
-
-## 6. CE-2.2 — docs decision; venter verifier + eier-ACCEPTED
-
-Worktree: `.worktrees/ce-2.2-purchase-refund-owners`
-
-Foreslått beslutning (ADR-0006 / DEC-010):
-
-```text
+ACCEPTED @ 2c0c3c6fd67dc9a4098fac71c8f20d7046828f2e
+ADR-0006 / DEC-010
 purchase: APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
 refund:   APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
 conclusion: APPROVED_WITH_PRECONDITIONS
 ```
 
-Tillatte filer i CE-2.2-commit:
+`STOP_ACTIVE_DOUBLE_COUNT_RISK` forblir aktiv interlock.
+
+## 4. CE-2.1 / CE-GOV-001A / Phase 1 — ACCEPTED
+
+Uendret. Se tidligere handoff-seksjoner i git-historikk ved
+behov.
+
+## 5. CE-2.3A — START BLOKKERT (fail-closed)
+
+Task:
 
 ```text
-docs/analytics/adr/0006-purchase-refund-authoritative-owners.md
-docs/analytics/decision-log.md
-docs/analytics/current-handoff.md
+docs/analytics/tasks/
+CE-2.3A-establish-selected-shopify-webhook-subscriptions.md
 ```
 
-`STOP_ACTIVE_DOUBLE_COUNT_RISK` forblir aktiv interlock til
-purchase cutover + replay containment. Det er hovedproblemet
-beslutningen binder cutover for — ikke en stans av CE-2.2.
+Mode fra ADR-0006: **Mode A**
+(`APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION`).
 
-## 7. Aktive avvik og interlocks
+Tillatt fil: `shopify.app.toml` only.
 
-- SAFE-001 / DEV-018 — Meta purchase replay / distinct event_ids
-- SAFE-002 — Shopify app-specific owner unproven until CE-2.3A
-- SAFE-003 — Google native ads owner unknown
-- `STOP_ACTIVE_DOUBLE_COUNT_RISK` — webhook ∩ server overlaps
-
-## 8. Nåværende rekkefølge
+### Stop conclusion
 
 ```text
-CE-2.2
-→ fresh verifier
-→ owner acceptance  ← HER etter denne committen
-
-CE-2.3A
-→ explicit owner start only after CE-2.2 ACCEPTED
+STOP_WRONG_APP_OR_SHOP
 ```
 
-Ingen agent fortsetter automatisk til CE-2.3A.
+(alternativt/samtidig: mangler frigitt produksjons-app-config)
 
-## 9. Push-status
+Begrunnelse (CE-2.1 + repo preflight 2026-07-21):
 
-Lokale CE-1.6C / CE-2.1 / CE-GOV-001A / CE-2.2 docs-commits skal
-ikke pushes isolert uten eksplisitt eierinstruks (docs-only
-redeploy-risiko).
+- `shopify.app.toml` **finnes ikke** i repository
+- task Mode A: _Stop if shopify.app.toml is not the released
+  production app configuration_
+- Partner/released app version forblir **UNKNOWN** (SAFE-002)
+- Live `orders-paid` leveres allerede fra ukjent app-specific
+  eier — å opprette en ny toml uten bevist released config
+  risikerer duplikat-subscriptions
+  (`STOP_DUPLICATE_SUBSCRIPTIONS`)
 
-## 10. Ingen autorisasjon
+### Ikke gjort
 
-Denne handoffen gir ikke godkjenning til:
+- ingen `shopify.app.toml` opprettet
+- ingen Shopify mutation
+- ingen `shopify app deploy`
+- CE-2.3B / CE-2.3C ikke startet
 
-- push eller produksjonsdeploy;
-- Shopify subscription-opprettelse/-endring;
-- runtime/schema/env-endring;
-- replay, backfill, resend;
-- GTM/provider/campaign-mutasjon;
-- oppstart av CE-2.3A før CE-2.2 er eiergodkjent.
+### Eier må levere før CE-2.3A kan fortsette
 
-## 11. Neste agentinstruks
+1. Identitet for den **frigitte** produksjonsappen som allerede
+   leverer (eller skal eie) `orders/paid` / `refunds/create` (app
+   name/gid, client_id, shop).
+2. Eksisterende Partner/CLI `shopify.app.toml` (eller eksplisitt
+   godkjenning til å bootstrap en ny toml som _blir_ released
+   config).
+3. Godkjent webhook `api_version` (ADR peker ikke eksplisitt;
+   CE-2.1 Admin-lesninger brukte `2025-07`).
+4. Eksplisitt godkjenning i handoff for:
+   - toml-commit
+   - senere `shopify app deploy` / subscription mutation
+5. Bekreftelse på at vi ikke lager parallell subscription mot
+   samme URI fra en annen app.
 
-1. Fresh verifier av CE-2.2-commit (kun de tre tillatte filene).
-2. Eier-ACCEPTED av ADR-0006 / DEC-010.
-3. Deretter eksplisitt eierordre for CE-2.3A.
+Expected parent når CE-2.3A gjenopptas: lokal tip etter ACCEPTED-
+statuscommit (kjør `git rev-parse HEAD`).
 
-## 12. Dokumentasjonsstatus
+## 6. Aktive interlocks
 
-- CE-2.1: ACCEPTED
-- CE-GOV-001A: ACCEPTED @ `9923c5ade`
-- CE-2.2: foreslått docs-pakke; venter verifier + eier-ACCEPTED
-- CE-2.3A: ikke startet
-- remote baseline: `0a800b1ae169eab8af12c21b3595fe99a667d54c`
+- SAFE-001 / DEV-018
+- SAFE-002 (uendret — app owner unproven)
+- SAFE-003
+- `STOP_ACTIVE_DOUBLE_COUNT_RISK`
+
+## 7. Rekkefølge
+
+```text
+CE-2.3A  ← BLOKKERT til eier leverer app-config/mutation-godkjenning
+CE-2.3B
+CE-2.3C
+CE-2.4 …
+```
+
+## 8. Ingen autorisasjon
+
+- push/deploy
+- Shopify subscription create/update/delete
+- `shopify app deploy`
+- bootstrap av `shopify.app.toml` uten punktene i §5
+- CE-2.3B/C
+
+## 9. Dokumentasjonsstatus
+
+- CE-2.2: **ACCEPTED**
+- CE-2.3A: autorisert å starte, men **fail-closed stop** på
+  manglende released `shopify.app.toml` / app-identitet
+- nok docs til å stanse korrekt; ikke nok til Mode
+  A-implementasjon
