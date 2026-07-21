@@ -7,9 +7,9 @@
   "repository": "utekos-brand/utekos-headless",
   "git": {
     "origin_main_reported": "0a800b1ae169eab8af12c21b3595fe99a667d54c",
-    "local_head_reported": "fde892700b9090a9db9b42ff19d3655444c7b60e",
-    "local_ahead_by_reported": 22,
-    "expected_parent_for_next_task": "fde892700b9090a9db9b42ff19d3655444c7b60e",
+    "local_head_reported": "a652cfee0540134dca791a206b0a008c29e3134f",
+    "local_ahead_by_reported": 23,
+    "expected_parent_for_next_task": "a652cfee0540134dca791a206b0a008c29e3134f",
     "local_head_pushed": false,
     "local_head_deployed": false,
     "production_deployment_id": "dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1",
@@ -33,7 +33,7 @@
   "last_accepted_runtime_task": "CE-2.3C",
   "last_accepted_runtime_sha": "fde892700b9090a9db9b42ff19d3655444c7b60e",
   "last_accepted_governance_task": "CE-2.3C",
-  "last_accepted_governance_sha": "fde892700b9090a9db9b42ff19d3655444c7b60e",
+  "last_accepted_governance_sha": "a652cfee0540134dca791a206b0a008c29e3134f",
   "ce_2_2": {
     "status": "ACCEPTED_SUPERSEDED_FOR_IMPLEMENTATION",
     "decision": "DEC-010",
@@ -134,7 +134,9 @@
     "release_readiness": "BLOCKED_UNRELATED_SIGNAL_CONTRACT_BASELINE",
     "next_runtime_package": "CE-2.4/CE-2.5",
     "same_worktree_start": "BLOCKED_PENDING_SIGNAL_CONTRACT_WRITER_COMPLETION",
-    "clean_worktree_start": "AUTHORIZED_FROM_GOVERNANCE_ACCEPTANCE_COMMIT"
+    "clean_worktree_start": "AUTHORIZED_FROM_GOVERNANCE_ACCEPTANCE_COMMIT",
+    "governance_acceptance_sha": "a652cfee0540134dca791a206b0a008c29e3134f",
+    "status_commit_sha": "a652cfee0540134dca791a206b0a008c29e3134f"
   },
   "signal_contract_baseline": {
     "status": "ACTIVE_DIRTY_WRITER_UNRESOLVED",
