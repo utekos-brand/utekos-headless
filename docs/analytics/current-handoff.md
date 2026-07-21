@@ -1,14 +1,13 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.6.0 **Oppdatert:**
-2026-07-21T16:04:12+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.7.0 **Oppdatert:**
+2026-07-21T16:25:01+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
 
 1. `AGENTS.md`
-2. `FLOW.md`, `DEPLOYMENT.md`, `PLAN.md` og øvrige obligatoriske
-   rotfiler
+2. `FLOW.md`, `DEPLOYMENT.md`, `PLAN.md`
 3. `docs/analytics/program-charter.md`
 4. `docs/analytics/roadmap.md`
 5. dette dokumentet
@@ -17,83 +16,72 @@ deployment- og livefakta før enhver handling
 ## 2. Git- og produksjonsstatus
 
 - `origin/main`: `0a800b1ae169eab8af12c21b3595fe99a667d54c`
-- expected parent for CE-2.2A:
-  `96b1ac84f83d36bcc0c5d72c8d5b2d226d42527d`
-- CE-2.2A tip: se `git rev-parse HEAD` etter commit
-- lokale docs-commits er **ikke pushet**
-- produksjonsdeploy: `dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1` **READY**
-  @ `0a800b1ae…`
+- expected parent for CE-2.2B:
+  `998a22efd414309e1cb1187535cebc0768c9dac9`
+- tip etter CE-2.2B: se `git rev-parse HEAD`
+- lokale docs-commits **ikke pushet**
+- produksjonsdeploy: `dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1` READY
 
-## 3. CE-2.2 — ACCEPTED (owner model amended by CE-2.2A)
-
-```text
-ACCEPTED @ 2c0c3c6fd67dc9a4098fac71c8f20d7046828f2e
-```
-
-Original DEC-010 chose app-specific; **CE-2.2A** amends to
-shop-specific for the custom Admin app.
-
-## 4. CE-2.2A — amend in progress (this commit)
+## 3. CE-2.2B — amend in progress
 
 ```text
-purchase: SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
-refund:   SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
-Mode A:   NOT_APPLICABLE
-Mode B:   REQUIRED (GraphQL webhookSubscriptionCreate/Update)
-DEC-011:  PROPOSED_FOR_OWNER_APPROVAL
+purchase: SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION
+refund:   SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION
+DEC-012:  PROPOSED_FOR_OWNER_APPROVAL
 ```
 
-Production app fact:
+Verified live purchase webhook:
 
 ```text
-App: Utekos Storefront (custom Admin app)
-Shop domain: erling-7921.myshopify.com
+Admin → Settings → Notifications → Webhooks
+Order payment → https://utekos.no/api/shopify/webhooks/orders-paid
+JSON + shop notification secret → SHOPIFY_WEBHOOK_SECRET
 ```
 
-No webhook subscriptions created in CE-2.2A. No Mode B start.
+Not visible in Admin API `webhookSubscriptions`. GraphQL create
+for these topics is **FORBIDDEN**.
 
-## 5. CE-2.3A — awaiting CE-2.2A ACCEPTED; then Mode B only
+## 4. Prior decisions
 
-Previous Mode A block (`STOP_WRONG_APP_OR_SHOP` / missing toml)
-is explained by app class: Mode A is now `NOT_APPLICABLE`.
+- CE-2.2 ACCEPTED (app-specific) — superseded for implementation
+- CE-2.2A (shop-specific GraphQL) — superseded by CE-2.2B /
+  DEC-012
+- Mode A toml: `NOT_APPLICABLE`
+- Mode B GraphQL create: `FORBIDDEN` for
+  orders-paid/refunds-create
 
-After CE-2.2A ACCEPTED, CE-2.3A may implement Mode B scripts —
-still **without** mutation until explicit owner mutation approval
-and identity match:
+## 5. CE-2.3A after CE-2.2B ACCEPTED
 
 ```text
-app.title = Utekos Storefront
-shop.myshopifyDomain = erling-7921.myshopify.com
+orders-paid: verify only
+refunds-create: plan manual Admin UI create (separate approval)
+no automatic refund webhook creation
 ```
 
-## 6. Aktive interlocks
+## 6. Interlocks
 
 - SAFE-001 / DEV-018
-- SAFE-002 (subscription not yet established under amended model)
+- SAFE-002 (refund notification not yet established; purchase
+  management surface now identified)
 - SAFE-003
 - `STOP_ACTIVE_DOUBLE_COUNT_RISK`
 
 ## 7. Rekkefølge
 
 ```text
-CE-2.2A
-→ fresh verifier
-→ owner ACCEPTED  ← HER
-
-CE-2.3A Mode B (script commit)
-→ verifier
-→ owner ACCEPTED
-→ separate explicit mutation approval
+CE-2.2B → verifier → owner ACCEPTED  ← HER
+CE-2.3A verify/plan → … (no GraphQL create)
 ```
 
 ## 8. Ingen autorisasjon
 
-- Shopify subscription create/update/delete
-- `shopify.app.toml` / `shopify app deploy`
+- Shopify Admin UI mutation
+- GraphQL webhookSubscriptionCreate/Update for these topics
+- replacing SHOPIFY_WEBHOOK_SECRET with app API secret
 - push/deploy
-- automatic Mode B start or mutation after this amend
+- automatic Mode B / refund webhook creation
 
 ## 9. Dokumentasjonsstatus
 
-- CE-2.2A docs amend ready for verifier + owner ACCEPTED
-- nok til å rette owner-modellen; ikke nok til å mutere Shopify
+- CE-2.2B docs amend ready for verifier + owner ACCEPTED
+- nok til å rette owner-modellen; ikke nok til Shopify-mutasjon

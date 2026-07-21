@@ -2,18 +2,19 @@
 
 ```text
 Charter-version: 1.0.0
-Roadmap task: CE-2.2 / CE-2.2A
+Roadmap task: CE-2.2 / CE-2.2A / CE-2.2B
 Affected invariants: INV-001, INV-002, INV-003, INV-010, INV-014,
   INV-015, INV-017, INV-020, INV-021
-Decision-log entry: DEC-010 (amended by DEC-011)
-Status: APPROVED_WITH_PRECONDITIONS (amended CE-2.2A —
-  pending owner ACCEPTED of amendment)
+Decision-log entry: DEC-010 (amended by DEC-011, DEC-012)
+Status: APPROVED_WITH_PRECONDITIONS (amended CE-2.2B —
+  pending owner ACCEPTED of DEC-012)
 Date: 2026-07-21
-Amended: 2026-07-21 (CE-2.2A)
+Amended: 2026-07-21 (CE-2.2A, CE-2.2B)
 Primary evidence: docs/analytics/evidence/
   ce-2.1-shopify-commerce-delivery-source-inventory.md
-Owner app fact (CE-2.2A): custom Admin app "Utekos Storefront"
-  on shop erling-7921.myshopify.com — cannot use shopify.app.toml
+Owner fact (CE-2.2B): Shopify Admin → Settings → Notifications →
+  Webhooks delivers Order payment to
+  https://utekos.no/api/shopify/webhooks/orders-paid
 ```
 
 ## Context
@@ -27,57 +28,87 @@ refund   → NO_SOURCE
 program  → STOP_ACTIVE_DOUBLE_COUNT_RISK
 ```
 
-Shop-specific Admin `webhookSubscriptions` and REST webhooks were
-empty at audit time (including `ORDERS_PAID` / `REFUNDS_CREATE`),
-while production still received live
-`POST /api/shopify/webhooks/orders-paid` (202/200). Subscription
-ownership remained SAFE-002 until the production app class was
-clarified.
+Admin GraphQL `webhookSubscriptions` / REST `webhooks.json` were
+empty for the inspected token, while production still received
+live `POST /api/shopify/webhooks/orders-paid`. That gap is now
+explained:
 
-### CE-2.2A amendment — production app class
+### CE-2.2B — Shopify Admin notification webhooks
 
-Owner clarified the production integration:
+Verified production purchase webhook:
 
 ```text
-App: Utekos Storefront
-Type: custom app created in Shopify Admin
-Shop: Utekos
-Domain: erling-7921.myshopify.com
+Management surface:
+  Shopify Admin → Settings → Notifications → Webhooks
+Event:
+  Order payment
+Destination:
+  https://utekos.no/api/shopify/webhooks/orders-paid
+Format:
+  JSON
+Signing secret:
+  Shop-level notification webhook secret
+Runtime env:
+  SHOPIFY_WEBHOOK_SECRET
 ```
 
-A custom Admin-created app **cannot** manage webhook
-subscriptions via `shopify.app.toml` / `shopify app deploy`.
-Subscriptions must be created and updated with GraphQL Admin API
-(`webhookSubscriptionCreate` / `webhookSubscriptionUpdate`) using
-the app’s existing Admin API token.
+Shopify Admin-created **notification** webhook subscriptions are
+shop-attached and are **not** returned by Admin API
+`webhookSubscriptions`. Therefore:
 
-Therefore CE-2.2’s initial
-`APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION` choice is **amended**.
-Mode A (`shopify.app.toml`) is `NOT_APPLICABLE`. CE-2.3A proceeds
-as **Mode B** only.
+- empty `webhookSubscriptions` does **not** prove absence of the
+  live `orders-paid` delivery path;
+- `webhookSubscriptionCreate` must **not** be used to “fix” or
+  duplicate the existing Order payment notification webhook;
+- HMAC verification continues via `SHOPIFY_WEBHOOK_SECRET` (shop
+  notification secret), not the custom app API secret key.
 
-Three `payload.custom_data.transaction_id` values appear under
-both `webhook` and `server` with **distinct** `event_id`s (Meta
-purchase replay / DEV-018 / SAFE-001). That active double-count
-risk remains the cutover problem — not a reason to refuse an
-owner model.
+### Role of custom app “Utekos Storefront”
 
-DEC-007 remains binding: a webhook **route** is not a proven
-production owner until subscription, delivery, and identity are
-established.
+The Admin API token for **Utekos Storefront**
+(`erling-7921.myshopify.com`) is used for:
+
+- read-only identity control;
+- Shopify reconciliation (CE-2.3B+);
+- other future Admin API operations when separately approved;
+
+It does **not** own or represent the existing notification
+webhook. The app API secret key must **not** replace
+`SHOPIFY_WEBHOOK_SECRET` while notification webhooks are the
+authoritative model.
+
+### Prior amendments
+
+- CE-2.2 initially chose
+  `APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION` (toml/Partner) — not
+  applicable to this storefront setup.
+- CE-2.2A chose `SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION`
+  (GraphQL `webhookSubscriptionCreate`) — wrong management
+  surface for the live Order payment webhook.
+- CE-2.2B replaces both with notification-webhook ownership
+  below.
+
+Three `payload.custom_data.transaction_id` values still appear
+under both `webhook` and `server` with **distinct** `event_id`s.
+`STOP_ACTIVE_DOUBLE_COUNT_RISK` remains active until purchase
+cutover + replay containment.
+
+DEC-007 remains binding: a webhook **route** is not proven
+ownership until subscription, delivery, and identity are
+established for each event.
 
 ## Decision
 
 ### Purchase owner model
 
 ```text
-SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
+SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION
 ```
 
 ### Refund owner model
 
 ```text
-SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
+SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION
 ```
 
 ### ADR conclusion
@@ -86,139 +117,104 @@ SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
 APPROVED_WITH_PRECONDITIONS
 ```
 
-`STOP_ACTIVE_DOUBLE_COUNT_RISK` remains the active program
-interlock until the independent gates **purchase cutover** and
-**replay containment** close webhook ∩ server overlaps with
-distinct `event_id`s.
-
-### Implementation mode (CE-2.3A)
+### CE-2.3A implementation posture
 
 ```text
-Mode A (shopify.app.toml / shopify app deploy): NOT_APPLICABLE
-Mode B (GraphQL Admin API webhookSubscriptionCreate /
-        webhookSubscriptionUpdate): REQUIRED
+orders-paid:
+  VERIFY ONLY — already active; do not create; do not duplicate
+
+refunds-create:
+  PLAN manual Shopify Admin → Notifications → Webhooks creation
+  (separate explicit owner approval before any Admin UI change)
+
+GraphQL webhookSubscriptionCreate / webhookSubscriptionUpdate
+  for ORDERS_PAID / REFUNDS_CREATE under this owner model:
+  FORBIDDEN
+
+Mode A (shopify.app.toml / shopify app deploy):
+  NOT_APPLICABLE
+
+Mode B (Admin API subscription create for these topics):
+  FORBIDDEN under this owner model
 ```
 
 ## Alternatives considered
 
 ### `APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION`
 
-Initially selected in CE-2.2; **superseded by CE-2.2A**. Rejected
-for this production app because Utekos Storefront is a custom
-Admin app without released `shopify.app.toml` / Partner deploy
-surface. Mode A is `NOT_APPLICABLE`.
+Rejected / superseded — no released `shopify.app.toml` path for
+this production delivery.
+
+### `SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION`
+
+Rejected / superseded by CE-2.2B — Admin API
+`webhookSubscriptions` cannot see or safely manage the live
+notification webhook; creating GraphQL subscriptions would risk
+`STOP_DUPLICATE_SUBSCRIPTIONS` against the existing Order payment
+destination.
 
 ### `RECONCILIATION_ONLY`
 
-Rejected as sole authoritative owner. Target architecture
-requires verified Shopify delivery for commerce events.
-Reconciliation is mandatory coverage for missed deliveries, not a
-substitute for the live webhook owner.
+Rejected as sole owner. Verified Shopify delivery remains
+required; reconciliation covers missed deliveries only.
 
 ### `TEMPORARY_COMPATIBILITY_SOURCE_WITH_CUTOVER`
 
-Rejected as the durable owner. Server/`ops_backfill` paths that
-mint new purchase `event_id`s for already-accepted orders are the
-active double-count vector. They may only exist under an explicit
-CE-2.6 replay contract after freeze — never as competing
-authoritative owners.
+Rejected as durable owner. Server/`ops_backfill` UUID-minting
+paths remain the active double-count vector until CE-2.6.
 
 ## Decision dimensions
 
 ### Authoritative trigger semantics
 
-| Event    | Authoritative trigger                            |
-| -------- | ------------------------------------------------ |
-| purchase | Shopify `ORDERS_PAID` (order reaches paid)       |
-| refund   | Shopify `REFUNDS_CREATE` (Refund record created) |
+| Event    | Authoritative trigger                                       |
+| -------- | ----------------------------------------------------------- |
+| purchase | Shopify Admin notification **Order payment**                |
+| refund   | Shopify Admin notification **Refund create** (to establish) |
 
 One paid Shopify order → at most one canonical `purchase`. One
 Shopify Refund ID → exactly one canonical `refund`.
 
 ### Webhook subscription method
 
-**Shop-specific** HTTPS callbacks for `ORDERS_PAID` and
-`REFUNDS_CREATE` targeting the existing accept-only routes:
+**Shopify Admin → Settings → Notifications → Webhooks** for:
 
-- `/api/shopify/webhooks/orders-paid`
-- `/api/shopify/webhooks/refunds-create`
+- Order payment → `/api/shopify/webhooks/orders-paid`
+  (**active**)
+- Refund create → `/api/shopify/webhooks/refunds-create`
+  (**planned manual create**; not auto-created by agents)
 
-CE-2.3A **Mode B** must create/update subscriptions via GraphQL
-Admin API `webhookSubscriptionCreate` /
-`webhookSubscriptionUpdate` using the production
-`SHOPIFY_ADMIN_API_TOKEN` after read-only identity verification
-and **separate explicit owner approval** for mutation.
+HMAC: shop-level notification signing secret via
+`SHOPIFY_WEBHOOK_SECRET` (`verifyShopifyWebhook`).
 
-Do **not** use:
+Do **not**:
 
-```text
-shopify.app.toml
-shopify app config link
-shopify app deploy
-```
+- create GraphQL Admin API subscriptions for these topics;
+- replace `SHOPIFY_WEBHOOK_SECRET` with the app API secret key;
+- invent a second `orders-paid` destination.
 
-HMAC verification on the existing handlers remains mandatory.
-
-### Required production identity (read-only before mutation)
-
-Verify with the runtime Admin token before any mutation:
-
-```graphql
-query CanonicalProductionAppIdentity {
-  app {
-    id
-    apiKey
-    title
-    handle
-    webhookApiVersion
-  }
-  currentAppInstallation {
-    id
-    accessScopes {
-      handle
-    }
-  }
-  shop {
-    id
-    name
-    myshopifyDomain
-  }
-}
-```
-
-Required match:
+### Utekos Storefront Admin API token — allowed uses
 
 ```text
-app.title = Utekos Storefront
-shop.myshopifyDomain = erling-7921.myshopify.com
+KEEP — read-only identity verification
+KEEP — reconciliation source fetches (CE-2.3B+)
+KEEP — future Admin API ops under separate approval
+FORBIDDEN — representing or recreating notification webhooks
+FORBIDDEN — replacing SHOPIFY_WEBHOOK_SECRET
 ```
-
-Stop with `STOP_WRONG_APP_OR_SHOP` if the token identifies a
-different app or shop.
 
 ### Reconciliation query/source
 
-A bounded Shopify Admin reconciliation job (CE-2.3B) must:
-
-- use a bounded `updated_at` overlap window;
-- paginate and handle rate limits;
-- avoid full unbounded order scans in normal cron;
-- be duplicate-safe across overlap;
-- reuse canonical ledger + provider outbox (INV-017: no new
-  queue);
-- use an overlap-safe job lease;
-- fetch read-only from Shopify, then accept via normal canonical
-  acceptance paths;
-- provide an explicit historical backfill path separate from
-  normal cron.
-
-Reconciliation is `KEEP_RECONCILIATION`, never a second
-authoritative owner.
+Unbounded requirements unchanged from CE-2.2: bounded
+`updated_at` overlap, pagination, rate limits, no full unbounded
+scan in normal cron, duplicate-safe overlap, reuse ledger/outbox
+(INV-017), overlap-safe lease, read-only Shopify fetch then
+normal canonical acceptance, explicit historical backfill path.
+`KEEP_RECONCILIATION` — never a second authoritative owner.
 
 ### Canonical event-ID derivation
 
-Preserve existing deterministic helpers unless a later
-compatibility ADR proves a stronger contract:
+Unchanged:
 
 ```text
 purchase event_id:
@@ -226,7 +222,6 @@ purchase event_id:
 
 purchase transaction_id:
   shopifyPurchaseTransactionId(shopify order legacy ID)
-  (= shopify_order_{legacyId})
 
 refund event_id:
   deterministicRefundEventId(shopify refund legacy ID)
@@ -236,200 +231,93 @@ refund refund_id:
 
 refund transaction_id:
   original Shopify purchase transaction ID
-  (shopifyPurchaseTransactionId(order legacy ID))
 ```
 
 ### Shopify delivery / event ID usage
 
-- `X-Shopify-Webhook-Id` — delivery retry dedupe only; must not
-  replace the canonical `event_id`.
-- `X-Shopify-Event-Id` — merchant-action correlation evidence
-  only; must not silently replace order/refund-derived canonical
-  IDs.
+- `X-Shopify-Webhook-Id` — delivery retry dedupe only.
+- `X-Shopify-Event-Id` — correlation evidence only.
+- Neither replaces order/refund-derived canonical IDs.
 
 ### Ledger / provider idempotency
 
-- Ledger uniqueness: `(event_name, event_id)` for canonical
-  acceptance.
-- Provider attempts: existing provider idempotency keys derived
-  from the canonical `event_id` (no second attempt stream for a
-  competing UUID for the same paid order).
-- After cutover, accepting a second purchase for the same order
-  legacy ID with a different `event_id` is a **fail-closed
-  incident**, not a compatibility feature.
+Unchanged: `(event_name, event_id)` ledger uniqueness; provider
+keys from canonical `event_id`; second UUID for same paid order
+is fail-closed after cutover.
 
-### Purchase paid-state definition
+### Purchase paid-state / refund semantics / attribution /
 
-`ORDERS_PAID` is the authoritative paid trigger once the
-shop-specific subscription is proven/established.
+browser / PascalCase / replay dispositions
 
-- Partial payment / later edits after the first paid acceptance
-  do **not** mint a second canonical purchase.
-- Manual mark-as-paid that yields `ORDERS_PAID` (or
-  reconciliation equivalent paid state) may create the **first**
-  canonical purchase only.
-- Chargebacks, cancellations, and full refunds do not rewrite
-  purchase ownership; they may produce separate `refund` (or
-  future) events.
+Unchanged from CE-2.2 except subscription disposition table:
 
-### Refund-created versus refund-settled
+| Source                                            | Disposition                                                    |
+| ------------------------------------------------- | -------------------------------------------------------------- |
+| Admin notification Order payment → orders-paid    | `KEEP_AUTHORITATIVE` (verify; already live)                    |
+| Admin notification Refund create → refunds-create | `KEEP_AUTHORITATIVE` after manual establish                    |
+| GraphQL webhookSubscription\* for these topics    | `FORBIDDEN` under this model                                   |
+| shopify.app.toml / Partner deploy                 | `NOT_APPLICABLE`                                               |
+| Browser purchase                                  | `ARCHIVE_NO_EXECUTION`                                         |
+| Server meta-purchase-replay / force-resend        | `DISABLE_BEFORE_CUTOVER` → `ARCHIVE_NO_EXECUTION` until CE-2.6 |
+| `ops_backfill` competing inserts                  | `HISTORICAL_ONLY` / `DISABLE_BEFORE_CUTOVER`                   |
+| Reconciliation                                    | `KEEP_RECONCILIATION`                                          |
+| Meta / Google / Microsoft / GTM / GA              | never owner                                                    |
 
-```text
-canonical refund = creation of one Shopify Refund record
-```
-
-Settlement / capture / financial transaction status is separate
-evidence and must not silently redefine `refund`.
-
-### Checkout / Klarna attribution inheritance
-
-Webhook and reconciliation acceptance must continue to inherit
-checkout/Klarna attribution and consent snapshots from existing
-note-attribute / checkout snapshot contracts used by the current
-mappers. No new attribution owner is introduced by this ADR.
-
-### Browser purchase disposition
+### Cutover sequence
 
 ```text
-ARCHIVE_NO_EXECUTION
+1. subscription/source establishment (CE-2.3A: verify orders-paid;
+   plan/manual refunds-create — no GraphQL create)
+2. reconciliation implementation (CE-2.3B)
+3. purchase cutover (CE-2.4)
+4. refund cutover (CE-2.5)
+5. replay containment (CE-2.6A/B)
+6. production proof (CE-2.7)
 ```
 
-No `/api/events/purchase` route; published GTM excludes
-`purchase` / `Purchase`. Do not reintroduce browser purchase as
-an owner or temporary compatibility source without a new ADR.
-
-### Historical PascalCase disposition
+### Active risk until cutover
 
 ```text
-HISTORICAL_ONLY
+STOP_ACTIVE_DOUBLE_COUNT_RISK
 ```
 
-Legacy `Purchase` / `Refund` rows are not a live owner and must
-not be re-activated.
+### Production proof (before closing the interlock)
 
-### Existing backfill / replay disposition
-
-| Source                                     | Disposition                                                         |
-| ------------------------------------------ | ------------------------------------------------------------------- |
-| Shop-specific ORDERS_PAID / REFUNDS_CREATE | `KEEP_AUTHORITATIVE` (after CE-2.3A Mode B prove/establish)         |
-| App-specific toml / Partner deploy path    | `NOT_APPLICABLE` / `ARCHIVE_NO_EXECUTION` for this custom Admin app |
-| Browser purchase                           | `ARCHIVE_NO_EXECUTION`                                              |
-| Server meta-purchase-replay / force-resend | `DISABLE_BEFORE_CUTOVER` then `ARCHIVE_NO_EXECUTION` until CE-2.6   |
-| `ops_backfill` competing purchase inserts  | `HISTORICAL_ONLY` / `DISABLE_BEFORE_CUTOVER` for new execution      |
-| Reconciliation job                         | `KEEP_RECONCILIATION`                                               |
-| Meta / Google / Microsoft / GTM / GA       | provider derivation / corroboration only — never owner              |
-
-Any path that mints a **new** purchase `event_id` for an order
-already accepted under the deterministic webhook ID is forbidden
-until CE-2.6 defines a dry-run, bounded, audited replay contract
-that preserves or explicitly maps identity.
-
-### Cutover sequence (independent gates)
-
-Do not combine into one deployment:
-
-```text
-1. subscription/source establishment   (CE-2.3A Mode B)
-2. reconciliation implementation       (CE-2.3B)
-3. purchase cutover                    (CE-2.4)
-4. refund cutover                      (CE-2.5)
-5. replay containment                  (CE-2.6A/B)
-6. production proof                    (CE-2.7 / phase gate)
-```
-
-### Rollback owner
-
-Until CE-2.4/2.5 production proof, rollback means:
-
-- leave accept-only routes in place;
-- do not create competing duplicate shop-specific subscriptions;
-- keep replay/force-resend disabled;
-- revert only the specific subscription/reconciliation change
-  under explicit owner approval.
-
-After cutover, rollback requires an explicit incident
-ADR/decision; it must not re-enable UUID-minting replays against
-live webhook orders.
-
-### Production proof
-
-Required before closing `STOP_ACTIVE_DOUBLE_COUNT_RISK`:
-
-- proven shop-specific subscription ownership via Admin GraphQL
-  for Utekos Storefront @ `erling-7921.myshopify.com` (SAFE-002);
-- at least one live deterministic `purchase` ledger row from
-  webhook or reconciliation with no competing server UUID for the
-  same `transaction_id`;
-- refund path either live-proven or explicitly deferred with
-  reconciliation coverage after CE-2.5;
+- verified Admin notification Order payment webhook still points
+  at production `orders-paid` with `SHOPIFY_WEBHOOK_SECRET`;
+- refunds-create notification webhook established when CE-2.5
+  requires it (or explicit deferral);
+- live deterministic purchase without competing server UUID for
+  the same `transaction_id`;
 - zero new meta-purchase-replay overlaps in the proof window.
 
 ### Operator and incident response
 
-- Treat webhook ∩ server distinct `event_id` for the same
-  `shopify_order_*` as Sev-1 measurement integrity.
-- Freeze force-resend / unbounded backfill immediately on
-  recurrence.
-- Prefer ledger+outbox audit over provider dashboard counts.
-- Do not “fix” double-count by sending a third event_id.
+Unchanged Sev-1 treatment for webhook ∩ server distinct
+`event_id`s; freeze force-resend; no third event_id “fix”.
 
-## Purchase semantics (summary)
+## Preconditions
 
-- `event_time`: Shopify `processed_at ?? created_at` per current
-  `shopifyOrderToCanonicalPurchase` mapper contract.
-- Amount / currency / items / tax / shipping / discount: from the
-  Shopify order payload via the existing mapper.
-- Browser compatibility period as owner: **none**.
-
-## Refund semantics (summary)
-
-- Currently `NO_SOURCE` in production; this ADR still selects the
-  owner **model** so CE-2.3A/2.5 can establish it without
-  re-opening CE-2.2.
-- Absence of refund today is acceptable only as a temporary gap
-  until subscription/source establishment and refund cutover —
-  not as permanent non-ownership.
-
-## Preconditions (must hold before claiming live ownership)
-
-1. CE-2.3A Mode B proves or establishes shop-specific
-   `ORDERS_PAID` / `REFUNDS_CREATE` delivery to the existing
-   routes after identity match (SAFE-002).
-2. Force-resend / UUID-minting purchase replay remains disabled
-   for orders already present as webhook purchases (SAFE-001 /
-   DEV-018).
-3. CE-2.3B reconciliation is designed to the requirements above
-   before purchase/refund cutover.
-4. CE-2.4/2.5/2.6 execute as separate gates; no combined deploy.
-5. DEC-007 is respected until precondition (1) is evidenced.
-6. Explicit owner approval is required before any Shopify
-   subscription mutation (separate from this ADR amendment
-   ACCEPTED).
-
-## Compatibility with DEC-007
-
-This ADR approves the **target** owner model. It does **not**
-claim that webhook delivery is already a fully proven production
-owner. SAFE-002 remains open until CE-2.3A Mode B evidence.
+1. CE-2.3A verifies existing orders-paid notification webhook;
+   does not create GraphQL duplicates.
+2. Any Admin UI creation of refunds-create requires separate
+   explicit owner approval.
+3. Replay freeze (SAFE-001 / DEV-018) remains until CE-2.6.
+4. CE-2.3B+ reconciliation designed before cutover.
+5. Independent gates; no combined deploy.
+6. DEC-007 respected until live ownership is evidenced per event.
 
 ## Consequences
 
-- After owner ACCEPTED of CE-2.2A (this amendment / DEC-011),
-  CE-2.3A may start in **Mode B only** — still without automatic
-  mutation; mutation requires a further explicit owner order.
-- Mode A remains `NOT_APPLICABLE`.
-- `STOP_ACTIVE_DOUBLE_COUNT_RISK` stays in program state /
-  handoff until purchase cutover + replay containment are proven.
-- No runtime, schema, env, Shopify subscription mutation, push,
-  or deploy is authorized by this amendment alone.
+- After owner ACCEPTED of CE-2.2B / DEC-012, CE-2.3A becomes a
+  **verify + plan** task — not GraphQL subscription creation.
+- No Shopify mutation is authorized by this amendment alone.
+- Do not auto-create the refund notification webhook.
 
 ## References
 
-- CE-2.1 evidence inventory (ACCEPTED)
-- CE-2.2 ACCEPTED @ `2c0c3c6fd…` (superseded owner-model portion)
-- CE-2.2A amendment (this revision)
-- DEC-006 Meta purchase replay fail-closed
-- DEC-007 Shopify webhook route ≠ production owner
-- DEC-010 / DEC-011
+- CE-2.1 evidence (ACCEPTED)
+- CE-2.2 / CE-2.2A / CE-2.2B
+- DEC-006, DEC-007, DEC-010, DEC-011, DEC-012
 - SAFE-001 / SAFE-002 / DEV-018
-- Target architecture §2 commerce webhook owner class
+- `src/lib/shopify/verifyWebhook.ts` (`SHOPIFY_WEBHOOK_SECRET`)
