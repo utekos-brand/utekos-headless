@@ -1,15 +1,12 @@
 import 'server-only'
 
-import { after } from 'next/server'
 import { ZodError } from 'zod'
 import { acceptCanonicalRefund } from '@/lib/analytics/server/acceptCanonicalRefund'
 import { postgresCanonicalEventStore } from '@/lib/analytics/server/postgresCanonicalPageViewStore'
-import { runRegisteredProviderOutboxBatch } from '@/lib/analytics/server/runRegisteredProviderOutboxBatch'
 import { shopifyRefundToCanonicalRefund } from '@/lib/analytics/server/shopifyRefundToCanonicalRefund'
 import type { ShopifyRefundWebhook } from '@/lib/analytics/server/shopifyRefundWebhookPayload'
 import { verifyShopifyWebhook } from '@/lib/shopify/verifyShopifyWebhook'
 
-const IMMEDIATE_BATCH_SIZE = 1
 const NO_STORE_HEADERS = {
   'Cache-Control': 'no-store, max-age=0',
   'Content-Type': 'application/json; charset=utf-8'
@@ -18,7 +15,7 @@ const NO_STORE_HEADERS = {
 type ShopifyRefundsCreateWebhookDependencies = {
   acceptRefund?: typeof acceptCanonicalRefund
   mapRefund?: typeof shopifyRefundToCanonicalRefund
-  runBatch?: typeof runRegisteredProviderOutboxBatch
+  runBatch?: (input: { maxItems: number }) => Promise<unknown>
   scheduleAfter?: (task: () => Promise<void>) => void
   verifyWebhook?: typeof verifyShopifyWebhook
 }
@@ -40,13 +37,6 @@ export async function handleShopifyRefundsCreateWebhook(
     dependencies.mapRefund ?? shopifyRefundToCanonicalRefund
   const acceptRefund =
     dependencies.acceptRefund ?? acceptCanonicalRefund
-  const runBatch =
-    dependencies.runBatch ?? runRegisteredProviderOutboxBatch
-  const scheduleAfter =
-    dependencies.scheduleAfter ??
-    (task => {
-      after(task)
-    })
 
   const hmac = request.headers.get('x-shopify-hmac-sha256') ?? ''
   let rawBody: string
@@ -76,22 +66,6 @@ export async function handleShopifyRefundsCreateWebhook(
       requestContext: {},
       store: postgresCanonicalEventStore
     })
-
-    if (result.status === 'accepted') {
-      scheduleAfter(async () => {
-        console.info('[refund-outbox-after] started')
-
-        try {
-          const summary = await runBatch({
-            maxItems: IMMEDIATE_BATCH_SIZE
-          })
-          console.info('[refund-outbox-after] completed', summary)
-        } catch (error) {
-          console.error('[refund-outbox-after] failed', error)
-          throw error
-        }
-      })
-    }
 
     return jsonResponse(
       {
