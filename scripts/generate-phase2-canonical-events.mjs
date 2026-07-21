@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 import fs from 'node:fs'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
+const isDirectRun =
+  process.argv[1] !== undefined &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 
 function write(relPath, content) {
   const fullPath = path.join(ROOT, relPath)
@@ -897,14 +901,11 @@ export const meta${Pascal}ProviderAdapter = createMetaProviderAdapter({
 
 function generateApiRoute(event) {
   const Pascal = pascalFromSnake(event.name)
-  const kebab = event.name.replaceAll('_', '-')
 
   return `import { geolocation, ipAddress } from '@vercel/functions'
-import { after } from 'next/server'
 import { handleCanonical${Pascal}Request } from '@/lib/analytics/server/handleCanonical${Pascal}Request'
 import { handleCanonical${Pascal}Route } from '@/lib/analytics/server/handleCanonical${Pascal}Route'
 import { postgresCanonicalEventStore } from '@/lib/analytics/server/postgresCanonicalPageViewStore'
-import { runRegisteredProviderOutboxBatch } from '@/lib/analytics/server/runRegisteredProviderOutboxBatch'
 
 export const maxDuration = 60
 
@@ -932,116 +933,116 @@ export function POST(request: Request) {
           }
         },
         store: postgresCanonicalEventStore
-      }),
-    runBatch: runRegisteredProviderOutboxBatch,
-    scheduleAfter: task => {
-      after(task)
-    }
+      })
   })
 }
 `
 }
 
-for (const event of EVENTS) {
-  const camel = camelFromSnake(event.name)
-  write(`src/lib/analytics/${camel}Event.ts`, generateEventSchema(event))
+function main() {
+  for (const event of EVENTS) {
+    const camel = camelFromSnake(event.name)
+    write(`src/lib/analytics/${camel}Event.ts`, generateEventSchema(event))
 
-  const collector = generateCollectorTransport(event)
-  if (collector) {
-    write(`src/lib/analytics/${camel}CollectorTransport.ts`, collector)
-  }
+    const collector = generateCollectorTransport(event)
+    if (collector) {
+      write(`src/lib/analytics/${camel}CollectorTransport.ts`, collector)
+    }
 
-  const reporter = generateReporter(event)
-  if (reporter) {
-    write(`src/lib/analytics/${camel}Reporter.ts`, reporter)
-  }
+    const reporter = generateReporter(event)
+    if (reporter) {
+      write(`src/lib/analytics/${camel}Reporter.ts`, reporter)
+    }
 
-  write(
-    `src/lib/analytics/server/normalizeCanonical${pascalFromSnake(event.name)}.ts`,
-    generateNormalize(event)
-  )
-  write(
-    `src/lib/analytics/server/acceptCanonical${pascalFromSnake(event.name)}.ts`,
-    generateAccept(event)
-  )
-  write(
-    `src/lib/analytics/server/handleCanonical${pascalFromSnake(event.name)}Request.ts`,
-    generateHandleRequest(event)
-  )
-  write(
-    `src/lib/analytics/server/handleCanonical${pascalFromSnake(event.name)}Route.ts`,
-    generateHandleRoute(event)
-  )
-  write(
-    `src/lib/analytics/server/mapCanonical${pascalFromSnake(event.name)}ToGoogleDataManager.ts`,
-    generateMapGoogle(event)
-  )
-
-  const mapMeta = generateMapMeta(event)
-  if (mapMeta) {
     write(
-      `src/lib/analytics/server/mapCanonical${pascalFromSnake(event.name)}ToMeta.ts`,
-      mapMeta
+      `src/lib/analytics/server/normalizeCanonical${pascalFromSnake(event.name)}.ts`,
+      generateNormalize(event)
+    )
+    write(
+      `src/lib/analytics/server/acceptCanonical${pascalFromSnake(event.name)}.ts`,
+      generateAccept(event)
+    )
+    write(
+      `src/lib/analytics/server/handleCanonical${pascalFromSnake(event.name)}Request.ts`,
+      generateHandleRequest(event)
+    )
+    write(
+      `src/lib/analytics/server/handleCanonical${pascalFromSnake(event.name)}Route.ts`,
+      generateHandleRoute(event)
+    )
+    write(
+      `src/lib/analytics/server/mapCanonical${pascalFromSnake(event.name)}ToGoogleDataManager.ts`,
+      generateMapGoogle(event)
+    )
+
+    const mapMeta = generateMapMeta(event)
+    if (mapMeta) {
+      write(
+        `src/lib/analytics/server/mapCanonical${pascalFromSnake(event.name)}ToMeta.ts`,
+        mapMeta
+      )
+    }
+
+    write(
+      `src/lib/analytics/server/dispatchCanonical${pascalFromSnake(event.name)}ToGoogleDataManager.ts`,
+      generateDispatchGoogle(event)
+    )
+
+    const dispatchMeta = generateDispatchMeta(event)
+    if (dispatchMeta) {
+      write(
+        `src/lib/analytics/server/dispatchCanonical${pascalFromSnake(event.name)}ToMeta.ts`,
+        dispatchMeta
+      )
+    }
+
+    write(
+      `src/lib/analytics/server/providerAdapters/googleDataManager${pascalFromSnake(event.name)}ProviderAdapter.ts`,
+      generateGoogleAdapter(event)
+    )
+
+    const metaAdapter = generateMetaAdapter(event)
+    if (metaAdapter) {
+      write(
+        `src/lib/analytics/server/providerAdapters/meta${pascalFromSnake(event.name)}ProviderAdapter.ts`,
+        metaAdapter
+      )
+    }
+
+    write(
+      `src/app/api/events/${event.name.replaceAll('_', '-')}/route.ts`,
+      generateApiRoute(event)
     )
   }
 
-  write(
-    `src/lib/analytics/server/dispatchCanonical${pascalFromSnake(event.name)}ToGoogleDataManager.ts`,
-    generateDispatchGoogle(event)
-  )
+  // Update canonicalEvent.ts
+  const schemaImports = EVENTS.map(
+    event =>
+      `import { canonical${pascalFromSnake(event.name)}Schema } from './${camelFromSnake(event.name)}Event'`
+  ).join('\n')
 
-  const dispatchMeta = generateDispatchMeta(event)
-  if (dispatchMeta) {
-    write(
-      `src/lib/analytics/server/dispatchCanonical${pascalFromSnake(event.name)}ToMeta.ts`,
-      dispatchMeta
-    )
-  }
-
-  write(
-    `src/lib/analytics/server/providerAdapters/googleDataManager${pascalFromSnake(event.name)}ProviderAdapter.ts`,
-    generateGoogleAdapter(event)
-  )
-
-  const metaAdapter = generateMetaAdapter(event)
-  if (metaAdapter) {
-    write(
-      `src/lib/analytics/server/providerAdapters/meta${pascalFromSnake(event.name)}ProviderAdapter.ts`,
-      metaAdapter
-    )
-  }
-
-  write(`src/app/api/events/${event.name.replaceAll('_', '-')}/route.ts`, generateApiRoute(event))
-}
-
-// Update canonicalEvent.ts
-const schemaImports = EVENTS.map(
-  event =>
-    `import { canonical${pascalFromSnake(event.name)}Schema } from './${camelFromSnake(event.name)}Event'`
-).join('\n')
-
-const existingImports = `import { canonicalAddToCartSchema } from './addToCartEvent'
+  const existingImports = `import { canonicalAddToCartSchema } from './addToCartEvent'
 import { canonicalBeginCheckoutSchema } from './beginCheckoutEvent'
 import { canonicalPageViewSchema } from './pageViewEvent'
 import { canonicalPurchaseSchema } from './purchaseEvent'
 import { canonicalRefundSchema } from './refundEvent'
 import { canonicalViewItemSchema } from './viewItemEvent'`
 
-const unionMembers = [
-  'canonicalPageViewSchema',
-  'canonicalViewItemSchema',
-  'canonicalAddToCartSchema',
-  'canonicalBeginCheckoutSchema',
-  'canonicalPurchaseSchema',
-  'canonicalRefundSchema',
-  ...EVENTS.map(
-    event => `canonical${pascalFromSnake(event.name)}Schema`
-  )
-].join(',\n    ')
+  const unionMembers = [
+    'canonicalPageViewSchema',
+    'canonicalViewItemSchema',
+    'canonicalAddToCartSchema',
+    'canonicalBeginCheckoutSchema',
+    'canonicalPurchaseSchema',
+    'canonicalRefundSchema',
+    ...EVENTS.map(
+      event => `canonical${pascalFromSnake(event.name)}Schema`
+    )
+  ].join(',\n    ')
 
-write(
-  'src/lib/analytics/canonicalEvent.ts',
-  `import { z } from 'zod'
+  write(
+    'src/lib/analytics/canonicalEvent.ts',
+    `import { z } from 'zod'
 ${existingImports}
 ${schemaImports}
 
@@ -1062,33 +1063,33 @@ export function parseCanonicalEvent(
   return canonicalEventSchema.parse(input)
 }
 `
-)
+  )
 
-// Update registries
-const googleAdapters = EVENTS.map(event => {
-  const Pascal = pascalFromSnake(event.name)
-  return `  'google:${event.name}': googleDataManager${Pascal}ProviderAdapter`
-}).join(',\n')
+  // Update registries
+  const googleAdapters = EVENTS.map(event => {
+    const Pascal = pascalFromSnake(event.name)
+    return `  'google:${event.name}': googleDataManager${Pascal}ProviderAdapter`
+  }).join(',\n')
 
-const metaEvents = EVENTS.filter(event => event.meta)
-const metaAdapters = metaEvents.map(event => {
-  const Pascal = pascalFromSnake(event.name)
-  return `  'meta:${event.name}': meta${Pascal}ProviderAdapter`
-}).join(',\n')
+  const metaEvents = EVENTS.filter(event => event.meta)
+  const metaAdapters = metaEvents.map(event => {
+    const Pascal = pascalFromSnake(event.name)
+    return `  'meta:${event.name}': meta${Pascal}ProviderAdapter`
+  }).join(',\n')
 
-const googleImports = EVENTS.map(event => {
-  const Pascal = pascalFromSnake(event.name)
-  return `import { googleDataManager${Pascal}ProviderAdapter } from './providerAdapters/googleDataManager${Pascal}ProviderAdapter'`
-}).join('\n')
+  const googleImports = EVENTS.map(event => {
+    const Pascal = pascalFromSnake(event.name)
+    return `import { googleDataManager${Pascal}ProviderAdapter } from './providerAdapters/googleDataManager${Pascal}ProviderAdapter'`
+  }).join('\n')
 
-const metaImports = metaEvents.map(event => {
-  const Pascal = pascalFromSnake(event.name)
-  return `import { meta${Pascal}ProviderAdapter } from './providerAdapters/meta${Pascal}ProviderAdapter'`
-}).join('\n')
+  const metaImports = metaEvents.map(event => {
+    const Pascal = pascalFromSnake(event.name)
+    return `import { meta${Pascal}ProviderAdapter } from './providerAdapters/meta${Pascal}ProviderAdapter'`
+  }).join('\n')
 
-write(
-  'src/lib/analytics/server/providerAdapterRegistry.ts',
-  `${googleImports}
+  write(
+    'src/lib/analytics/server/providerAdapterRegistry.ts',
+    `${googleImports}
 import { googleDataManagerAddToCartProviderAdapter } from './providerAdapters/googleDataManagerAddToCartProviderAdapter'
 import { googleDataManagerBeginCheckoutProviderAdapter } from './providerAdapters/googleDataManagerBeginCheckoutProviderAdapter'
 import { googleDataManagerPurchaseProviderAdapter } from './providerAdapters/googleDataManagerPurchaseProviderAdapter'
@@ -1125,11 +1126,11 @@ export const registeredProviderAdapterKeys = Object.freeze(
   ) as RegisteredProviderAdapterKey[]
 )
 `
-)
+  )
 
-write(
-  'src/lib/analytics/server/providerOutboxWorkerRegistry.ts',
-  `import { createPostgresProviderOutboxWorker } from './createPostgresProviderOutboxWorker'
+  write(
+    'src/lib/analytics/server/providerOutboxWorkerRegistry.ts',
+    `import { createPostgresProviderOutboxWorker } from './createPostgresProviderOutboxWorker'
 import type { RegisteredProviderAdapterKey } from './providerAdapterRegistry'
 import { googleDataManagerAddToCartProviderAdapter } from './providerAdapters/googleDataManagerAddToCartProviderAdapter'
 import { googleDataManagerBeginCheckoutProviderAdapter } from './providerAdapters/googleDataManagerBeginCheckoutProviderAdapter'
@@ -1189,6 +1190,20 @@ ${metaEvents.map(event => {
   (input: { maxItems: number }) => Promise<ProviderOutboxBatchSummary>
 >
 `
-)
+  )
 
-console.log(`Generated ${EVENTS.length} canonical events`)
+  console.log(`Generated ${EVENTS.length} canonical events`)
+}
+
+export { generateApiRoute, main }
+
+if (isDirectRun) {
+  if (process.argv.includes('--help') || process.argv.includes('-h')) {
+    console.log(
+      'Usage: node scripts/generate-phase2-canonical-events.mjs\n' +
+        'Generates phase-2 canonical event modules into the repo.'
+    )
+    process.exit(0)
+  }
+  main()
+}
