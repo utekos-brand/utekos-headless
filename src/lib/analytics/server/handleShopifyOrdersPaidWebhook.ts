@@ -1,16 +1,13 @@
 import 'server-only'
 
-import { after } from 'next/server'
 import { ZodError } from 'zod'
 import { acceptCanonicalPurchase } from '@/lib/analytics/server/acceptCanonicalPurchase'
 import { getVerifiedShopifyCustomerContext } from '@/lib/analytics/server/getVerifiedShopifyCustomerContext'
 import { postgresCanonicalEventStore } from '@/lib/analytics/server/postgresCanonicalPageViewStore'
-import { runRegisteredProviderOutboxBatch } from '@/lib/analytics/server/runRegisteredProviderOutboxBatch'
 import { shopifyOrderToCanonicalPurchase } from '@/lib/analytics/server/shopifyOrderToCanonicalPurchase'
 import { verifyShopifyWebhook } from '@/lib/shopify/verifyShopifyWebhook'
 import type { OrderPaid } from 'types/commerce/order/OrderPaid'
 
-const IMMEDIATE_BATCH_SIZE = 1
 const NO_STORE_HEADERS = {
   'Cache-Control': 'no-store, max-age=0',
   'Content-Type': 'application/json; charset=utf-8'
@@ -19,7 +16,7 @@ const NO_STORE_HEADERS = {
 type ShopifyOrdersPaidWebhookDependencies = {
   acceptPurchase?: typeof acceptCanonicalPurchase
   mapOrder?: typeof shopifyOrderToCanonicalPurchase
-  runBatch?: typeof runRegisteredProviderOutboxBatch
+  runBatch?: (input: { maxItems: number }) => Promise<unknown>
   scheduleAfter?: (task: () => Promise<void>) => void
   verifyWebhook?: typeof verifyShopifyWebhook
 }
@@ -44,13 +41,6 @@ export async function handleShopifyOrdersPaidWebhook(
     dependencies.mapOrder ?? shopifyOrderToCanonicalPurchase
   const acceptPurchase =
     dependencies.acceptPurchase ?? acceptCanonicalPurchase
-  const runBatch =
-    dependencies.runBatch ?? runRegisteredProviderOutboxBatch
-  const scheduleAfter =
-    dependencies.scheduleAfter ??
-    (task => {
-      after(task)
-    })
 
   const hmac = request.headers.get('x-shopify-hmac-sha256') ?? ''
   let rawBody: string
@@ -85,25 +75,6 @@ export async function handleShopifyOrdersPaidWebhook(
       ),
       store: postgresCanonicalEventStore
     })
-
-    if (result.status === 'accepted') {
-      scheduleAfter(async () => {
-        console.info('[purchase-outbox-after] started')
-
-        try {
-          const summary = await runBatch({
-            maxItems: IMMEDIATE_BATCH_SIZE
-          })
-          console.info(
-            '[purchase-outbox-after] completed',
-            summary
-          )
-        } catch (error) {
-          console.error('[purchase-outbox-after] failed', error)
-          throw error
-        }
-      })
-    }
 
     return jsonResponse(
       { event_id: result.event_id, status: result.status },
