@@ -3,14 +3,14 @@
   "program": "CanonicalEvent",
   "charter_version": "1.0.0",
   "roadmap_version": "1.0.0",
-  "as_of": "2026-07-21T21:45:00+02:00",
+  "as_of": "2026-07-21T23:55:14+02:00",
   "repository": "utekos-brand/utekos-headless",
   "git": {
     "origin_main_reported": "0a800b1ae169eab8af12c21b3595fe99a667d54c",
-    "local_head_reported": "06f41152bc62415057626618f5550c1f2f6d240b",
+    "local_head_reported": "dc1fd3e611a7c3e4c15f3220e8c546d13d008242",
     "local_ahead_by_reported": null,
-    "expected_parent_for_next_task": "06f41152bc62415057626618f5550c1f2f6d240b",
-    "expected_parent_status": "SIGNAL_CONTRACT_ACCEPTED_CLEAN_WORKTREE_REQUIRED",
+    "expected_parent_for_next_task": "CURRENT_DOCS_ONLY_STOP_COMMIT",
+    "expected_parent_status": "RESOLVE_AND_REPORT_FULL_SHA_BEFORE_CE_2_4P1",
     "local_head_pushed": false,
     "local_head_deployed": false,
     "production_deployment_id": "dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1",
@@ -29,10 +29,10 @@
     "phase_2_status": "IN_PROGRESS"
   },
   "current_governance_task": null,
-  "next_runtime_task": "CE-2.4/CE-2.5",
-  "current_runtime_status": "CE_2_4_CE_2_5_AUTHORIZED_AFTER_CLEAN_BASELINE_GATE",
-  "last_accepted_runtime_task": "signal-contract-integration",
-  "last_accepted_runtime_sha": "85b552a95d063e227232861bb226658ec653d960",
+  "next_runtime_task": "CE-2.4P1",
+  "current_runtime_status": "CE_2_4P1_AUTHORIZED_CE_2_4_AND_CE_2_5_STOPPED",
+  "last_accepted_runtime_task": "meta-click-id-compatibility",
+  "last_accepted_runtime_sha": "3b9937f87f3d40cfcdeda82a0f60f462302260b7",
   "last_accepted_governance_task": "signal-contract-integration",
   "last_accepted_governance_sha": "06f41152bc62415057626618f5550c1f2f6d240b",
   "ce_2_2": {
@@ -58,7 +58,7 @@
     "decision_status": "APPROVED",
     "decision_title": "Shopify Admin notification webhooks own Purchase and Refund",
     "orders_paid": {
-      "surface": "Shopify Admin \u2192 Settings \u2192 Notifications \u2192 Webhooks",
+      "surface": "Shopify Admin → Settings → Notifications → Webhooks",
       "event": "Order payment",
       "destination": "https://utekos.no/api/shopify/webhooks/orders-paid",
       "format": "JSON",
@@ -68,7 +68,7 @@
       "status": "LIVE_PRODUCTION_PROVEN"
     },
     "refunds_create": {
-      "surface": "Shopify Admin \u2192 Settings \u2192 Notifications \u2192 Webhooks",
+      "surface": "Shopify Admin → Settings → Notifications → Webhooks",
       "event": "Refund create",
       "destination": "https://utekos.no/api/shopify/webhooks/refunds-create",
       "format": "JSON",
@@ -132,8 +132,8 @@
     "vercel_cron_schedule": "DISABLED",
     "initial_24h_production_run": "NOT_AUTHORIZED",
     "push_deploy": "NOT_AUTHORIZED",
-    "release_readiness": "RELEASE_READINESS_PENDING_CLEAN_BASELINE_CHECK",
-    "next_runtime_package": "CE-2.4/CE-2.5",
+    "release_readiness": "SUPERSEDED_BY_META_CLICK_ID_COMPATIBILITY_ACCEPTANCE",
+    "next_runtime_package": "CE-2.4P1",
     "same_worktree_start": "NOT_USED",
     "clean_worktree_start": "AUTHORIZED_FROM_SIGNAL_CONTRACT_GOVERNANCE_ACCEPTANCE",
     "governance_acceptance_sha": "a652cfee0540134dca791a206b0a008c29e3134f",
@@ -148,19 +148,51 @@
     "scope": "CE-3.2B1_CE-3.2B2_BOUNDED_CE-3.2C_GENERATE_LEAD",
     "stop_concurrent_runtime_ownership": "CLOSED",
     "stop_active_double_count_risk": "ACTIVE",
-    "release_readiness": "RELEASE_READINESS_PENDING_CLEAN_BASELINE_CHECK",
+    "release_readiness": "SUPERSEDED_BY_META_CLICK_ID_COMPATIBILITY_ACCEPTANCE",
     "governance_acceptance_sha": "06f41152bc62415057626618f5550c1f2f6d240b"
   },
   "signal_contract_baseline": {
     "status": "ACCEPTED_RUNTIME_COMMITTED",
     "scope": "CE-3.2B1_CE-3.2B2_BOUNDED_CE-3.2C_GENERATE_LEAD",
     "blocks_ce_2_3c_acceptance": false,
-    "blocks_release_readiness": "PENDING_CLEAN_BASELINE_CHECK",
+    "blocks_release_readiness": false,
     "blocks_same_worktree_ce_2_4_ce_2_5_start": false,
     "stop_concurrent_runtime_ownership": "CLOSED",
     "ownership_transfer": "COMPLETED",
     "accepted_runtime_sha": "85b552a95d063e227232861bb226658ec653d960",
-    "next_clean_worktree_parent": "06f41152bc62415057626618f5550c1f2f6d240b"
+    "clean_baseline_gate": "COMPLETED_AT_3b9937f87f3d40cfcdeda82a0f60f462302260b7",
+    "next_clean_worktree_parent": "SUPERSEDED_BY_CE_2_4P1_DOCS_ONLY_STOP_COMMIT"
+  },
+  "meta_click_id_compatibility": {
+    "status": "ACCEPTED",
+    "conclusion": "META_CLICK_ID_COMPATIBILITY_FIXED",
+    "accepted_runtime_sha": "3b9937f87f3d40cfcdeda82a0f60f462302260b7",
+    "owner_accepted": true,
+    "push_deploy": "NOT_AUTHORIZED"
+  },
+  "ce_2_4p1": {
+    "status": "AUTHORIZED_RUNTIME_NOT_STARTED",
+    "decision": "DEC-013",
+    "exact_allowlist": "MUST_BE_FROZEN_BEFORE_FIRST_RUNTIME_WRITE",
+    "production_schema_apply": "NOT_AUTHORIZED",
+    "remote_supabase_mutation": "NOT_AUTHORIZED",
+    "push_deploy": "NOT_AUTHORIZED",
+    "reconciliation_execution": "NOT_AUTHORIZED",
+    "backfill_replay": "NOT_AUTHORIZED"
+  },
+  "ce_3_3r": {
+    "status": "AUTHORIZED_SEQUENCED_AFTER_CE_2_4_PRODUCTION_PROOF",
+    "decision": "DEC-014",
+    "exact_allowlist": "MUST_BE_FROZEN_BEFORE_FIRST_RUNTIME_WRITE",
+    "parallel_start": "FORBIDDEN_WITHOUT_EXPLICIT_ZERO_OVERLAP_GATE",
+    "push_deploy": "NOT_AUTHORIZED",
+    "refund_production_test": "NOT_AUTHORIZED"
+  },
+  "ce_2_4": {
+    "status": "STOPPED_PENDING_CE_2_4P1_ACCEPTANCE"
+  },
+  "ce_2_5": {
+    "status": "STOPPED_PENDING_CE_2_4_PRODUCTION_PROOF_AND_CE_3_3R_ACCEPTANCE"
   },
   "separate_p0_provider_purchase_incident": {
     "status": "INACTIVE",
@@ -182,8 +214,7 @@
   ],
   "known_release_blockers": [
     "Local docs commits deferred from separate push",
-    "RELEASE_READINESS_PENDING_CLEAN_BASELINE_CHECK",
-    "STOP_ACTIVE_DOUBLE_COUNT_RISK webhook\u2229server distinct event_ids"
+    "STOP_ACTIVE_DOUBLE_COUNT_RISK webhook∩server distinct event_ids"
   ],
   "authoritative_files": [
     "docs/analytics/program-charter.md",

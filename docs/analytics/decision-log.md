@@ -437,6 +437,117 @@ STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
 - **Godkjent av:** Prosjekteier (eiergodkjent signal-contract;
   fresh verifier `APPROVE`; mekanisk statusregistrering)
 
+## Status — Meta click-ID compatibility ACCEPTED (mekanisk registrering)
+
+- **Dato:** 2026-07-21
+- **Status:** `ACCEPTED` (ingen ny beslutning; ingen omtolkning)
+- **Berører:** CE-2.4; CE-2.5; `STOP_ACTIVE_DOUBLE_COUNT_RISK`
+- **Registrert eksakt:**
+
+```text
+META_CLICK_ID_COMPATIBILITY_FIXED: ACCEPTED
+Accepted runtime SHA: 3b9937f87f3d40cfcdeda82a0f60f462302260b7
+```
+
+- **Konsekvens:** Clean-baseline/type-forutsetningen er lukket.
+  CE-2.4/CE-2.5 starter likevel ikke; DEC-013 og DEC-014 er
+  separate prerequisite-oppgaver.
+- **Godkjent av:** Prosjekteier (mekanisk statusregistrering)
+
+## DEC-013 — Provider-neutral commerce source evidence
+
+- **Dato:** 2026-07-21
+- **Status:** `APPROVED`
+- **Berører:** CE-2.4P1; CE-2.4; CE-2.5; INV-001, INV-002,
+  INV-003, INV-006, INV-008, INV-012, INV-016, INV-017, INV-019,
+  INV-021, INV-022
+- **Tidligere beslutning, hvis relevant:** DEC-012 etablerte
+  Shopify Admin notification webhook + reconciliation som owner.
+- **Nytt funn og primærevidens:** CE-2.4 krever varig korrelasjon
+  av Shopify delivery ID, event ID, source method, API-versjon og
+  tidsstempler. Dagens webhookhandlere kasserer disse headerne
+  etter HMAC-verifikasjon.
+- **Beslutning:** Autoriser CE-2.4P1 som separat prerequisite for
+  en provider-nøytral og eventuavhengig source-evidence-kontrakt.
+  Den skal gjenbruke eksisterende ledger/outbox-transaksjon og må
+  ikke bli ny canonical store, queue eller provideridentitet.
+  Lokal migration/store/schema/header extraction/reconciliation-
+  metadata og målrettede tester er tillatt etter frosset eksakt
+  no-glob allowlist.
+- **Alternativer:** canonical/provider-ID fra delivery-ID
+  (avvist); log-only evidence (avvist); rå payload/headerdump
+  (avvist); eventspesifikk store/queue (avvist).
+- **Begrunnelse:** Offisiell Shopify-kontrakt skiller individuell
+  delivery-ID fra merchant-action event-ID. Begge er
+  korrelasjonsbevis, ikke canonical identitet.
+- **Konsekvens for roadmap/DoD:** CE-2.4P1 er neste autoriserte
+  runtimeoppgave. CE-2.4 forblir stoppet til P1 har fresh
+  verifier og eieraksept. Produksjonsmigration, remote Supabase-
+  mutation, push/deploy, providerendring, reconciliation-kall og
+  backfill er ikke autorisert.
+- **Godkjent av:** Prosjekteier
+
+## DEC-014 — Legitimate itemless Shopify refunds
+
+- **Dato:** 2026-07-21
+- **Status:** `APPROVED`
+- **Berører:** CE-3.3R; CE-2.5; INV-001, INV-003, INV-005,
+  INV-010, INV-012, INV-015, INV-019, INV-021, INV-022
+- **Tidligere beslutning, hvis relevant:** DEC-012 etablerte
+  opprettet Shopify Refund som den autoritative semantiske
+  hendelsen.
+- **Nytt funn og primærevidens:** Shopify supports valid refunds
+  without refund line items, including shipping or adjustments.
+  The current canonical and webhook schemas require at least one
+  item and would reject those records.
+- **Beslutning:** Autoriser CE-3.3R som en separat commerce
+  item/value-remediering. En legitim refund kan inneholde
+  `items: []`; items forblir en eksplisitt array og fabrikeres
+  aldri. Identitet, event time, valuta og totalverdi bevares,
+  mens ugyldig beløp, valuta eller identitet fortsatt feiler
+  lukket. Aktive provider-mappere må akseptere det legitime
+  tilfellet uten items.
+- **Alternativer:** fabrikere placeholder-item (avvist); avvise
+  gyldige itemless refunds (avvist); omdefinere refund som
+  settlement (avvist).
+- **Begrunnelse:** Shopify permits itemless refund cases, Google
+  Analytics makes refund items optional, and Google Data Manager
+  requires a non-empty list only when cart data is supplied.
+- **Konsekvens for roadmap/DoD:** CE-3.3R er sekvensert etter
+  CE-2.4 release approval og Purchase production proof. CE-2.5
+  forblir stoppet til CE-3.3R har fresh verifier og eieraksept.
+  Ingen produksjonsmutasjon, push/deploy eller refund-
+  produksjonstest er autorisert.
+- **Godkjent av:** Prosjekteier
+
+## Status — CE-2.4/CE-2.5 sequence split (mekanisk registrering)
+
+- **Dato:** 2026-07-21
+- **Status:** `APPROVED`
+- **Berører:** CE-2.4P1; CE-2.4; CE-3.3R; CE-2.5; INV-022;
+  `STOP_ACTIVE_DOUBLE_COUNT_RISK`
+- **Registrert eksakt:**
+
+```text
+docs-only stop commit
+→ CE-2.4P1 source evidence
+→ fresh verifier + owner acceptance
+→ CE-2.4 Purchase cutover
+→ release approval + production proof
+→ CE-3.3R itemless refund remediation
+→ fresh verifier + owner acceptance
+→ CE-2.5 Refund cutover
+```
+
+- **Parallellitet:** CE-3.3R kan bare utvikles parallelt med
+  CE-2.4P1 når en eksplisitt overlap-gate beviser null felles
+  filer og hver oppgave har egen writer/worktree.
+- **Fortsatt forbudt:** production schema apply, push/deploy,
+  reconciliation schedule eller første 24-timersløp,
+  backfill/replay, provider mutation og lukking av
+  `STOP_ACTIVE_DOUBLE_COUNT_RISK`.
+- **Godkjent av:** Prosjekteier
+
 ## Mal for ny beslutning
 
 ```text

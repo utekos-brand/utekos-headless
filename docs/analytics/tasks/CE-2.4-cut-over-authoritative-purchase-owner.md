@@ -7,13 +7,15 @@ Affected invariants: INV-001, INV-002, INV-003, INV-006, INV-010, INV-013, INV-0
 Goal: ensure one paid Shopify order creates one canonical purchase under the approved owner
 Non-goals: provider finality redesign, historical replay, unrelated signal/schema work
 Primary role: canonical-event-implementer
-Status: AUTHORIZED_CLEAN_WORKTREE_AFTER_SIGNAL_CONTRACT_ACCEPTANCE
-Package: CE-2.4/CE-2.5 — Shopify Purchase and Refund ownership cutover
+Status: STOPPED_PENDING_CE-2.4P1_ACCEPTANCE
+Package: CE-2.4 — standalone Purchase owner cutover
 ```
 
 ## Preconditions
 
 - CE-2.3A and CE-2.3C are independently verified and
+  owner-accepted.
+- CE-2.4P1 is committed, independently verified and
   owner-accepted.
 - CE-2.3C accepted runtime SHA is
   `fde892700b9090a9db9b42ff19d3655444c7b60e`.
@@ -25,11 +27,11 @@ Package: CE-2.4/CE-2.5 — Shopify Purchase and Refund ownership cutover
 - CE-2.1 identified every browser/server/backfill source.
 - Production cutover plan and rollback commit are approved.
 - Current purchase provider mapping tests are green.
-- Start in a new clean worktree from the signal-contract
-  governance-acceptance commit after clean-baseline gate.
-- One writer must own the combined CE-2.4/CE-2.5 package, and its
-  exact allowlist must not overlap a separate provider/Purchase
-  incident.
+- Start in a new clean worktree from the owner-accepted CE-2.4P1
+  governance SHA after its fresh verifier gate.
+- One writer must own the standalone CE-2.4 task. Its exact
+  allowlist must not overlap CE-2.4P1, CE-3.3R or a separate
+  provider/Purchase incident.
 
 ## Allowed files
 
@@ -209,6 +211,7 @@ Commit exactly one purchase-owner cutover:
 git commit -m "feat(analytics): cut over authoritative purchase owner"
 ```
 
-No production push/deploy without CE-2.4 release approval. Do not
-begin CE-2.5 outside the owner-authorized combined CE-2.4/CE-2.5
-package.
+No production push/deploy without CE-2.4 release approval. After
+the approved release and Purchase production proof, CE-3.3R is
+the next task. Do not begin CE-2.5 before CE-3.3R is
+independently verified and owner-accepted.
