@@ -60,6 +60,68 @@ const runPostgresTransaction: CanonicalEventTransactionRunner =
 
           return inserted.length === 1
         },
+        upsertSourceEvidence: async row => {
+          const upserted = await sql`
+            insert into marketing.canonical_event_source_evidence (
+              canonical_event_id,
+              canonical_event_name,
+              canonical_idempotency_key,
+              observation_key,
+              source_system,
+              source_method,
+              source_object_type,
+              source_object_id,
+              source_topic,
+              source_delivery_id,
+              source_event_id,
+              source_api_version,
+              source_triggered_at,
+              source_observed_at
+            ) values (
+              ${row.canonical_event_id},
+              ${row.canonical_event_name},
+              ${row.canonical_idempotency_key},
+              ${row.observation_key},
+              ${row.source_system},
+              ${row.source_method},
+              ${row.source_object_type},
+              ${row.source_object_id},
+              ${row.source_topic},
+              ${row.source_delivery_id},
+              ${row.source_event_id},
+              ${row.source_api_version},
+              ${row.source_triggered_at},
+              ${row.source_observed_at}
+            )
+            on conflict (observation_key) do update
+            set
+              source_observed_at = greatest(
+                marketing.canonical_event_source_evidence.source_observed_at,
+                excluded.source_observed_at
+              ),
+              observation_count =
+                marketing.canonical_event_source_evidence.observation_count + 1,
+              updated_at = now()
+            where
+              marketing.canonical_event_source_evidence.canonical_event_id = excluded.canonical_event_id
+              and marketing.canonical_event_source_evidence.canonical_event_name = excluded.canonical_event_name
+              and marketing.canonical_event_source_evidence.canonical_idempotency_key = excluded.canonical_idempotency_key
+              and marketing.canonical_event_source_evidence.source_system = excluded.source_system
+              and marketing.canonical_event_source_evidence.source_method = excluded.source_method
+              and marketing.canonical_event_source_evidence.source_object_type = excluded.source_object_type
+              and marketing.canonical_event_source_evidence.source_object_id = excluded.source_object_id
+              and marketing.canonical_event_source_evidence.source_topic = excluded.source_topic
+              and marketing.canonical_event_source_evidence.source_delivery_id is not distinct from excluded.source_delivery_id
+              and marketing.canonical_event_source_evidence.source_event_id is not distinct from excluded.source_event_id
+              and marketing.canonical_event_source_evidence.source_api_version = excluded.source_api_version
+              and marketing.canonical_event_source_evidence.source_triggered_at = excluded.source_triggered_at
+            returning id
+          `
+
+          if (upserted.length !== 1) {
+            throw new Error('source_evidence_conflict')
+          }
+        },
         insertDispatch: async row => {
           await sql`
             insert into ops.provider_dispatch_attempts (

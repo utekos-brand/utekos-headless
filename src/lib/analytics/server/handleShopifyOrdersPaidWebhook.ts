@@ -4,6 +4,7 @@ import { ZodError } from 'zod'
 import { acceptCanonicalPurchase } from '@/lib/analytics/server/acceptCanonicalPurchase'
 import { getVerifiedShopifyCustomerContext } from '@/lib/analytics/server/getVerifiedShopifyCustomerContext'
 import { postgresCanonicalEventStore } from '@/lib/analytics/server/postgresCanonicalPageViewStore'
+import { createShopifyWebhookCommerceSourceEvidence } from '@/lib/analytics/server/shopifyCommerceSourceEvidence'
 import { shopifyOrderToCanonicalPurchase } from '@/lib/analytics/server/shopifyOrderToCanonicalPurchase'
 import { verifyShopifyWebhook } from '@/lib/shopify/verifyShopifyWebhook'
 import type { OrderPaid } from 'types/commerce/order/OrderPaid'
@@ -15,7 +16,9 @@ const NO_STORE_HEADERS = {
 
 type ShopifyOrdersPaidWebhookDependencies = {
   acceptPurchase?: typeof acceptCanonicalPurchase
+  createSourceEvidence?: typeof createShopifyWebhookCommerceSourceEvidence
   mapOrder?: typeof shopifyOrderToCanonicalPurchase
+  now?: () => Date
   verifyWebhook?: typeof verifyShopifyWebhook
 }
 
@@ -39,6 +42,10 @@ export async function handleShopifyOrdersPaidWebhook(
     dependencies.mapOrder ?? shopifyOrderToCanonicalPurchase
   const acceptPurchase =
     dependencies.acceptPurchase ?? acceptCanonicalPurchase
+  const createSourceEvidence =
+    dependencies.createSourceEvidence ??
+    createShopifyWebhookCommerceSourceEvidence
+  const now = dependencies.now ?? (() => new Date())
 
   const hmac = request.headers.get('x-shopify-hmac-sha256') ?? ''
   let rawBody: string
@@ -66,11 +73,17 @@ export async function handleShopifyOrdersPaidWebhook(
 
   try {
     const canonicalPurchase = mapOrder(orderPayload as OrderPaid)
+    const sourceEvidence = createSourceEvidence({
+      event: canonicalPurchase,
+      headers: request.headers,
+      observedAt: now()
+    })
     const result = await acceptPurchase({
       payload: canonicalPurchase,
       requestContext: getVerifiedShopifyCustomerContext(
         canonicalPurchase
       ),
+      sourceEvidence,
       store: postgresCanonicalEventStore
     })
 

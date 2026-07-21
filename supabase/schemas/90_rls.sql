@@ -14,6 +14,8 @@ alter table marketing.attribution_events enable row level security;
 alter table marketing.website_visitor_events enable row level security;
 alter table marketing.consent_snapshots enable row level security;
 alter table marketing.event_ledger enable row level security;
+alter table marketing.canonical_event_source_evidence enable row level security;
+alter table marketing.canonical_event_source_evidence force row level security;
 alter table marketing.meta_quality_snapshots enable row level security;
 alter table marketing.campaign_insights enable row level security;
 alter table marketing.checkout_attribution_snapshots enable row level security;

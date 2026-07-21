@@ -49,6 +49,9 @@ test('writes the ledger and every dispatch inside one transaction callback', asy
       calls.push('ledger')
       return true
     },
+    upsertSourceEvidence: async () => {
+      throw new Error('unexpected source evidence')
+    },
     insertDispatch: async dispatch => {
       calls.push(dispatch.provider)
     }
@@ -65,18 +68,136 @@ test('writes the ledger and every dispatch inside one transaction callback', asy
   assert.deepEqual(calls, ['ledger', 'meta', 'microsoft_uet'])
 })
 
-test('returns duplicate without writing dispatches when the ledger conflicts', async () => {
+test('records source evidence but returns duplicate without writing dispatches when the ledger conflicts', async () => {
   let dispatchWrites = 0
+  let evidenceWrites = 0
   const transaction: CanonicalPageViewTransaction = {
     insertLedger: async () => false,
+    upsertSourceEvidence: async evidence => {
+      evidenceWrites += 1
+      assert.equal(
+        evidence.canonical_event_id,
+        input().event.event_id
+      )
+    },
     insertDispatch: async () => {
       dispatchWrites += 1
     }
   }
-  const store = createCanonicalPageViewStore(work => work(transaction))
+  const store = createCanonicalPageViewStore(work =>
+    work(transaction)
+  )
 
-  const result = await store.accept(input())
+  const eventInput = input()
+  const result = await store.accept({
+    ...eventInput,
+    sourceEvidence: {
+      canonical_event_id: eventInput.event.event_id,
+      source_system: 'shopify',
+      source_method: 'webhook',
+      source_object_type: 'order',
+      source_object_id: '12345',
+      source_topic: 'orders/paid',
+      source_delivery_id: 'delivery-1',
+      source_event_id: 'event-1',
+      source_api_version: '2026-04',
+      source_triggered_at: '2026-07-15T10:00:00.000Z',
+      source_observed_at: '2026-07-15T10:00:01.000Z'
+    }
+  })
 
   assert.equal(result, 'duplicate')
+  assert.equal(evidenceWrites, 1)
   assert.equal(dispatchWrites, 0)
+})
+
+test('writes ledger, source evidence and dispatches in one transaction callback', async () => {
+  const calls: string[] = []
+  const eventInput = input()
+  const transaction: CanonicalPageViewTransaction = {
+    insertLedger: async () => {
+      calls.push('ledger')
+      return true
+    },
+    upsertSourceEvidence: async evidence => {
+      calls.push('source-evidence')
+      assert.equal(
+        evidence.canonical_event_id,
+        eventInput.event.event_id
+      )
+    },
+    insertDispatch: async dispatch => {
+      calls.push(dispatch.provider)
+    }
+  }
+  const store = createCanonicalPageViewStore(work =>
+    work(transaction)
+  )
+
+  const result = await store.accept({
+    ...eventInput,
+    sourceEvidence: {
+      canonical_event_id: eventInput.event.event_id,
+      source_system: 'shopify',
+      source_method: 'webhook',
+      source_object_type: 'order',
+      source_object_id: '12345',
+      source_topic: 'orders/paid',
+      source_delivery_id: 'delivery-1',
+      source_event_id: 'event-1',
+      source_api_version: '2026-04',
+      source_triggered_at: '2026-07-15T10:00:00.000Z',
+      source_observed_at: '2026-07-15T10:00:01.000Z'
+    }
+  })
+
+  assert.equal(result, 'inserted')
+  assert.deepEqual(calls, [
+    'ledger',
+    'source-evidence',
+    'meta',
+    'microsoft_uet'
+  ])
+})
+
+test('rejects mismatched source evidence before any transaction write', async () => {
+  let writes = 0
+  const transaction: CanonicalPageViewTransaction = {
+    insertLedger: async () => {
+      writes += 1
+      return true
+    },
+    upsertSourceEvidence: async () => {
+      writes += 1
+    },
+    insertDispatch: async () => {
+      writes += 1
+    }
+  }
+  const store = createCanonicalPageViewStore(work =>
+    work(transaction)
+  )
+  const eventInput = input()
+
+  await assert.rejects(
+    store.accept({
+      ...eventInput,
+      sourceEvidence: {
+        canonical_event_id:
+          '69b1f87e-a1a8-4b76-a849-7feeb636c919',
+        source_system: 'shopify',
+        source_method: 'webhook',
+        source_object_type: 'order',
+        source_object_id: '12345',
+        source_topic: 'orders/paid',
+        source_delivery_id: 'delivery-1',
+        source_event_id: 'event-1',
+        source_api_version: '2026-04',
+        source_triggered_at: '2026-07-15T10:00:00.000Z',
+        source_observed_at: '2026-07-15T10:00:01.000Z'
+      }
+    }),
+    /source_evidence_event_id_mismatch/
+  )
+  assert.equal(writes, 0)
 })

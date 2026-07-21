@@ -11,9 +11,10 @@ Non-goals: Purchase cutover, Refund cutover, provider changes,
   production schema apply, reconciliation execution, replay,
   push or deploy
 Primary role: canonical-event-implementer
-Status: AUTHORIZED — RUNTIME NOT STARTED
-Authorized start: the docs-only stop commit that introduced this
-  task; resolve and report its full SHA before the first runtime write
+Status: IMPLEMENTED — PENDING FRESH VERIFICATION AND OWNER ACCEPTANCE
+Authorized start: fdba6fdc7664279f8aa3b6a6ab21134b826b7eab
+Implementation branch: codex/ce-2.4p1-source-evidence
+Runtime commit: this commit; resolve and report its full SHA after creation
 ```
 
 ## Owner decision
@@ -151,3 +152,62 @@ git commit -m "feat(analytics): persist commerce source evidence"
 
 Then stop for fresh verification and owner acceptance. Do not
 start CE-2.4 automatically.
+
+## Implementation result
+
+```text
+Conclusion: CANONICAL_COMMERCE_SOURCE_EVIDENCE_IMPLEMENTED
+Fresh verifier: PENDING
+Owner acceptance: PENDING
+CE-2.4: STOPPED
+CE-2.5: STOPPED
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+```
+
+The implementation:
+
+- adds one provider-neutral sidecar table linked by foreign key
+  to the existing canonical ledger idempotency key;
+- writes a newly accepted event, its source evidence and provider
+  plan inside the existing database transaction;
+- records or correlates source evidence when the canonical ledger
+  reports a duplicate, without creating new provider attempts;
+- extracts the Shopify topic, delivery ID, event ID, API version
+  and triggered timestamp only after successful raw-body HMAC
+  verification;
+- emits explicit `null` delivery/event IDs for reconciliation
+  rather than fabricating webhook metadata;
+- preserves order-/refund-derived deterministic canonical event
+  IDs and keeps provider dispatch cron-owned.
+
+Verification on Node `24.17.0`:
+
+```text
+focused CE-2.4P1 tests: 61/61 PASS
+analytics + cron tests: 425/425 PASS
+targeted ESLint for hand-authored TypeScript: PASS
+pnpm exec next typegen: PASS
+pnpm exec tsc --noEmit: PASS
+pnpm build: PASS with existing ignored local env
+Supabase migration apply in isolated local Postgres: PASS
+Supabase db lint --schema marketing --fail-on warning: PASS
+production tracking:gateway:smoke: PASS
+```
+
+The repository-wide MCP gates remain blocked by missing versioned
+entrypoints that predate this task:
+
+```text
+npm run mcp:build:
+  ERR_MODULE_NOT_FOUND scripts/mcp/build-config.ts
+npm run mcp:doctor:
+  ERR_MODULE_NOT_FOUND scripts/mcp/doctor.ts
+```
+
+The full local Supabase stack also stops before the new migration
+in the pre-existing migration
+`20260712102148_meta_high_value_customer_audience.sql`, because
+`marketing.customer_source_meta_2025_raw` is absent. The new
+migration was therefore applied and linted independently against
+an isolated local Postgres 17 instance. No remote database was
+contacted.

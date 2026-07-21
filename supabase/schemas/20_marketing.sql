@@ -86,6 +86,51 @@ create table if not exists marketing.event_ledger (
 create index if not exists event_ledger_event_id_idx on marketing.event_ledger (event_id);
 create index if not exists event_ledger_event_name_idx on marketing.event_ledger (event_name, occurred_at desc);
 create index if not exists event_ledger_created_at_idx on marketing.event_ledger (created_at desc);
+create table if not exists marketing.canonical_event_source_evidence (
+  id uuid primary key default gen_random_uuid(),
+  canonical_event_id text not null,
+  canonical_event_name text not null,
+  canonical_idempotency_key text not null,
+  observation_key text not null unique,
+  source_system text not null,
+  source_method text not null,
+  source_object_type text not null,
+  source_object_id text not null,
+  source_topic text not null,
+  source_delivery_id text,
+  source_event_id text,
+  source_api_version text not null,
+  source_triggered_at timestamptz not null,
+  source_observed_at timestamptz not null,
+  observation_count integer not null default 1
+    check (observation_count >= 1),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  constraint canonical_event_source_evidence_ledger_fkey
+    foreign key (canonical_idempotency_key)
+    references marketing.event_ledger(idempotency_key)
+    on delete restrict
+);
+comment on table marketing.canonical_event_source_evidence is
+  'Provider-neutral commerce source correlation. Raw bodies, authentication material and customer data are forbidden.';
+create index if not exists canonical_event_source_evidence_event_idx
+  on marketing.canonical_event_source_evidence (
+    canonical_event_id,
+    source_observed_at desc
+  );
+create index if not exists canonical_event_source_evidence_object_idx
+  on marketing.canonical_event_source_evidence (
+    source_system,
+    source_object_type,
+    source_object_id,
+    source_observed_at desc
+  );
+create index if not exists canonical_event_source_evidence_source_event_idx
+  on marketing.canonical_event_source_evidence (
+    source_system,
+    source_event_id
+  )
+  where source_event_id is not null;
 create table if not exists marketing.meta_quality_snapshots (
   id uuid primary key default gen_random_uuid(),
   dataset_id text not null,
@@ -181,6 +226,8 @@ create table if not exists marketing.checkout_attribution_lookup_tokens (
 create index if not exists checkout_attribution_lookup_tokens_snapshot_idx on marketing.checkout_attribution_lookup_tokens (snapshot_id, updated_at desc);
 revoke all on table marketing.checkout_attribution_snapshots from anon, authenticated;
 revoke all on table marketing.checkout_attribution_lookup_tokens from anon, authenticated;
+revoke all on table marketing.canonical_event_source_evidence from public, anon, authenticated, service_role;
 grant usage on schema marketing to service_role;
 grant select, insert, update on marketing.checkout_attribution_snapshots to service_role;
 grant select, insert, update on marketing.checkout_attribution_lookup_tokens to service_role;
+grant select, insert, update on marketing.canonical_event_source_evidence to service_role;

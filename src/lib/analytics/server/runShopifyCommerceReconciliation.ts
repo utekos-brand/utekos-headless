@@ -2,6 +2,7 @@ import 'server-only'
 
 import { createHash } from 'node:crypto'
 import { z } from 'zod'
+import { SHOPIFY_ADMIN_API_VERSION } from '@/lib/shopify/shopifyAdminGraphql'
 
 import type { AcceptCanonicalPurchaseResult } from './acceptCanonicalPurchase'
 import { acceptCanonicalPurchase } from './acceptCanonicalPurchase'
@@ -20,6 +21,10 @@ import {
 } from './fetchShopifyCommerceReconciliationOrders'
 import { getVerifiedShopifyCustomerContext } from './getVerifiedShopifyCustomerContext'
 import { postgresCanonicalEventStore } from './postgresCanonicalPageViewStore'
+import {
+  createShopifyReconciliationCommerceSourceEvidence,
+  type ShopifyCommerceSourceEvent
+} from './shopifyCommerceSourceEvidence'
 import {
   releaseShopifyCommerceReconciliationLease,
   type ReleaseShopifyCommerceReconciliationLeaseInput,
@@ -42,6 +47,7 @@ import {
 import { shopifyGraphqlOrderToCanonicalPurchase } from './shopifyGraphqlOrderToCanonicalPurchase'
 import { shopifyGraphqlRefundToCanonicalRefund } from './shopifyGraphqlRefundToCanonicalRefund'
 import type { CanonicalEventStore } from './canonicalEventStore'
+import type { CanonicalEventSourceEvidence } from './canonicalEventSourceEvidence'
 
 const isoDateTimeSchema = z.string().datetime({ offset: true })
 
@@ -290,13 +296,16 @@ export type RunShopifyCommerceReconciliationDependencies = {
     requestContext: ReturnType<
       typeof getVerifiedShopifyCustomerContext
     >
+    sourceEvidence: CanonicalEventSourceEvidence
     store: CanonicalEventStore
   }) => Promise<AcceptCanonicalPurchaseResult>
   acceptRefund: (input: {
     payload: unknown
     requestContext: Record<string, never>
+    sourceEvidence: CanonicalEventSourceEvidence
     store: CanonicalEventStore
   }) => Promise<AcceptCanonicalRefundResult>
+  createSourceEvidence: typeof createShopifyReconciliationCommerceSourceEvidence
   mapPurchase: typeof shopifyGraphqlOrderToCanonicalPurchase
   mapRefund: typeof shopifyGraphqlRefundToCanonicalRefund
   store: CanonicalEventStore
@@ -313,6 +322,8 @@ const defaultDependencies: RunShopifyCommerceReconciliationDependencies =
       fetchShopifyCommerceReconciliationOrdersPage,
     acceptPurchase: acceptCanonicalPurchase,
     acceptRefund: acceptCanonicalRefund,
+    createSourceEvidence:
+      createShopifyReconciliationCommerceSourceEvidence,
     mapPurchase: shopifyGraphqlOrderToCanonicalPurchase,
     mapRefund: shopifyGraphqlRefundToCanonicalRefund,
     store: postgresCanonicalEventStore,
@@ -533,10 +544,17 @@ export async function runShopifyCommerceReconciliation(
 
           if (runMode === 'accept') {
             try {
+              const sourceEvidence =
+                dependencies.createSourceEvidence({
+                  apiVersion: SHOPIFY_ADMIN_API_VERSION,
+                  event: purchase as ShopifyCommerceSourceEvent,
+                  observedAt: runStartedAt
+                })
               const result = await dependencies.acceptPurchase({
                 payload: purchase,
                 requestContext:
                   getVerifiedShopifyCustomerContext(purchase),
+                sourceEvidence,
                 store: dependencies.store
               })
 
@@ -605,9 +623,17 @@ export async function runShopifyCommerceReconciliation(
 
           if (runMode === 'accept') {
             try {
+              const sourceEvidence =
+                dependencies.createSourceEvidence({
+                  apiVersion: SHOPIFY_ADMIN_API_VERSION,
+                  event:
+                    canonicalRefund as ShopifyCommerceSourceEvent,
+                  observedAt: runStartedAt
+                })
               const result = await dependencies.acceptRefund({
                 payload: canonicalRefund,
                 requestContext: {},
+                sourceEvidence,
                 store: dependencies.store
               })
 

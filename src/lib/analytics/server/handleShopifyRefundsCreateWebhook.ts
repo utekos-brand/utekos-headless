@@ -3,6 +3,7 @@ import 'server-only'
 import { ZodError } from 'zod'
 import { acceptCanonicalRefund } from '@/lib/analytics/server/acceptCanonicalRefund'
 import { postgresCanonicalEventStore } from '@/lib/analytics/server/postgresCanonicalPageViewStore'
+import { createShopifyWebhookCommerceSourceEvidence } from '@/lib/analytics/server/shopifyCommerceSourceEvidence'
 import { shopifyRefundToCanonicalRefund } from '@/lib/analytics/server/shopifyRefundToCanonicalRefund'
 import type { ShopifyRefundWebhook } from '@/lib/analytics/server/shopifyRefundWebhookPayload'
 import { verifyShopifyWebhook } from '@/lib/shopify/verifyShopifyWebhook'
@@ -14,11 +15,16 @@ const NO_STORE_HEADERS = {
 
 type ShopifyRefundsCreateWebhookDependencies = {
   acceptRefund?: typeof acceptCanonicalRefund
+  createSourceEvidence?: typeof createShopifyWebhookCommerceSourceEvidence
   mapRefund?: typeof shopifyRefundToCanonicalRefund
+  now?: () => Date
   verifyWebhook?: typeof verifyShopifyWebhook
 }
 
-function jsonResponse(body: Record<string, unknown>, status: number) {
+function jsonResponse(
+  body: Record<string, unknown>,
+  status: number
+) {
   return Response.json(body, {
     headers: NO_STORE_HEADERS,
     status
@@ -35,6 +41,10 @@ export async function handleShopifyRefundsCreateWebhook(
     dependencies.mapRefund ?? shopifyRefundToCanonicalRefund
   const acceptRefund =
     dependencies.acceptRefund ?? acceptCanonicalRefund
+  const createSourceEvidence =
+    dependencies.createSourceEvidence ??
+    createShopifyWebhookCommerceSourceEvidence
+  const now = dependencies.now ?? (() => new Date())
 
   const hmac = request.headers.get('x-shopify-hmac-sha256') ?? ''
   let rawBody: string
@@ -46,7 +56,10 @@ export async function handleShopifyRefundsCreateWebhook(
   }
 
   if (!verifyWebhook(rawBody, hmac)) {
-    return jsonResponse({ error: 'invalid_webhook_signature' }, 401)
+    return jsonResponse(
+      { error: 'invalid_webhook_signature' },
+      401
+    )
   }
 
   let refundPayload: unknown
@@ -58,18 +71,23 @@ export async function handleShopifyRefundsCreateWebhook(
   }
 
   try {
-    const canonicalRefund = mapRefund(refundPayload as ShopifyRefundWebhook)
+    const canonicalRefund = mapRefund(
+      refundPayload as ShopifyRefundWebhook
+    )
+    const sourceEvidence = createSourceEvidence({
+      event: canonicalRefund,
+      headers: request.headers,
+      observedAt: now()
+    })
     const result = await acceptRefund({
       payload: canonicalRefund,
       requestContext: {},
+      sourceEvidence,
       store: postgresCanonicalEventStore
     })
 
     return jsonResponse(
-      {
-        event_id: result.event_id,
-        status: result.status
-      },
+      { event_id: result.event_id, status: result.status },
       result.status === 'accepted' ? 202 : 200
     )
   } catch (error) {

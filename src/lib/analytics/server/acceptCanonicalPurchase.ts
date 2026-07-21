@@ -1,5 +1,6 @@
 import type { CanonicalPurchase } from '../purchaseEvent'
 import type { CanonicalEventStore } from './canonicalEventStore'
+import type { CanonicalEventSourceEvidence } from './canonicalEventSourceEvidence'
 import {
   normalizeCanonicalPurchase,
   type CanonicalPurchaseRequestContext
@@ -11,6 +12,7 @@ export type CanonicalPurchaseStore = CanonicalEventStore
 type AcceptCanonicalPurchaseInput = {
   payload: unknown
   requestContext: CanonicalPurchaseRequestContext
+  sourceEvidence: CanonicalEventSourceEvidence
   store: CanonicalPurchaseStore
 }
 
@@ -28,7 +30,8 @@ export async function acceptCanonicalPurchase(
   )
   const result = await input.store.accept({
     dispatches: planCanonicalEventDispatch(event),
-    event: event as CanonicalPurchase
+    event: event as CanonicalPurchase,
+    sourceEvidence: input.sourceEvidence
   })
 
   return {

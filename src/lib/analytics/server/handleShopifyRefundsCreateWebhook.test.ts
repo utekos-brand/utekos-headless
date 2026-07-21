@@ -22,24 +22,43 @@ moduleWithLoad._load = (request, parent, isMain) => {
 }
 
 const require = createRequire(import.meta.url)
-const { handleShopifyRefundsCreateWebhook } = require(
-  './handleShopifyRefundsCreateWebhook.ts'
-) as {
-  handleShopifyRefundsCreateWebhook: (
-    request: Request,
-    dependencies?: {
-      acceptRefund?: (input: unknown) => Promise<{
-        event_id: string
-        status: 'accepted' | 'duplicate'
-      }>
-      mapRefund?: (payload: unknown) => unknown
-      verifyWebhook?: (rawBody: string, hmac: string) => boolean
-    }
-  ) => Promise<Response>
-}
+const { handleShopifyRefundsCreateWebhook } =
+  require('./handleShopifyRefundsCreateWebhook.ts') as {
+    handleShopifyRefundsCreateWebhook: (
+      request: Request,
+      dependencies?: {
+        acceptRefund?: (
+          input: unknown
+        ) => Promise<{
+          event_id: string
+          status: 'accepted' | 'duplicate'
+        }>
+        createSourceEvidence?: (input: unknown) => unknown
+        mapRefund?: (payload: unknown) => unknown
+        now?: () => Date
+        verifyWebhook?: (
+          rawBody: string,
+          hmac: string
+        ) => boolean
+      }
+    ) => Promise<Response>
+  }
 
 const EVENT_ID = 'refund_evt_test_001'
 const REFUND_BODY = JSON.stringify({ id: 67890 })
+const SOURCE_EVIDENCE = {
+  canonical_event_id: EVENT_ID,
+  source_system: 'shopify',
+  source_method: 'webhook',
+  source_object_type: 'refund',
+  source_object_id: '67890',
+  source_topic: 'refunds/create',
+  source_delivery_id: 'refund-delivery-1',
+  source_event_id: 'refund-event-1',
+  source_api_version: '2026-04',
+  source_triggered_at: '2026-07-21T21:00:00.000Z',
+  source_observed_at: '2026-07-21T21:00:01.000Z'
+}
 
 function throwIfCalled(name: string) {
   return () => {
@@ -53,7 +72,12 @@ function createRequest(body: string, hmac = 'valid-hmac') {
     {
       method: 'POST',
       headers: {
-        'x-shopify-hmac-sha256': hmac
+        'x-shopify-api-version': '2026-04',
+        'x-shopify-event-id': 'refund-event-1',
+        'x-shopify-hmac-sha256': hmac,
+        'x-shopify-topic': 'refunds/create',
+        'x-shopify-triggered-at': '2026-07-21T21:00:00.000Z',
+        'x-shopify-webhook-id': 'refund-delivery-1'
       },
       body
     }
@@ -68,6 +92,7 @@ test('accepted refund returns 202', async () => {
     {
       verifyWebhook: () => true,
       mapRefund: payload => payload,
+      createSourceEvidence: () => SOURCE_EVIDENCE,
       acceptRefund: async input => {
         acceptCalls.push(input)
         return { event_id: EVENT_ID, status: 'accepted' }
@@ -81,6 +106,11 @@ test('accepted refund returns 202', async () => {
     status: 'accepted'
   })
   assert.equal(acceptCalls.length, 1)
+  assert.deepEqual(
+    (acceptCalls[0] as { sourceEvidence: unknown })
+      .sourceEvidence,
+    SOURCE_EVIDENCE
+  )
 })
 
 test('duplicate refund returns 200', async () => {
@@ -89,6 +119,7 @@ test('duplicate refund returns 200', async () => {
     {
       verifyWebhook: () => true,
       mapRefund: payload => payload,
+      createSourceEvidence: () => SOURCE_EVIDENCE,
       acceptRefund: async () => ({
         event_id: EVENT_ID,
         status: 'duplicate'
@@ -108,6 +139,9 @@ test('invalid HMAC returns 401 and does not map or accept', async () => {
     createRequest(REFUND_BODY, 'bad-hmac'),
     {
       verifyWebhook: () => false,
+      createSourceEvidence: throwIfCalled(
+        'createSourceEvidence'
+      ) as never,
       mapRefund: throwIfCalled('mapRefund') as never,
       acceptRefund: throwIfCalled('acceptRefund') as never
     }
@@ -124,13 +158,18 @@ test('invalid JSON returns 400 and does not accept', async () => {
     createRequest('{not-json'),
     {
       verifyWebhook: () => true,
+      createSourceEvidence: throwIfCalled(
+        'createSourceEvidence'
+      ) as never,
       mapRefund: throwIfCalled('mapRefund') as never,
       acceptRefund: throwIfCalled('acceptRefund') as never
     }
   )
 
   assert.equal(response.status, 400)
-  assert.deepEqual(await response.json(), { error: 'invalid_json' })
+  assert.deepEqual(await response.json(), {
+    error: 'invalid_json'
+  })
 })
 
 test('Zod invalid event returns 400', async () => {
@@ -138,6 +177,9 @@ test('Zod invalid event returns 400', async () => {
     createRequest(REFUND_BODY),
     {
       verifyWebhook: () => true,
+      createSourceEvidence: throwIfCalled(
+        'createSourceEvidence'
+      ) as never,
       mapRefund: () => {
         throw new ZodError([])
       },
@@ -146,7 +188,9 @@ test('Zod invalid event returns 400', async () => {
   )
 
   assert.equal(response.status, 400)
-  assert.deepEqual(await response.json(), { error: 'invalid_event' })
+  assert.deepEqual(await response.json(), {
+    error: 'invalid_event'
+  })
 })
 
 test('accept failure returns 500', async () => {
@@ -155,6 +199,7 @@ test('accept failure returns 500', async () => {
     {
       verifyWebhook: () => true,
       mapRefund: payload => payload,
+      createSourceEvidence: () => SOURCE_EVIDENCE,
       acceptRefund: async () => {
         throw new Error('persist failed')
       }
@@ -162,13 +207,18 @@ test('accept failure returns 500', async () => {
   )
 
   assert.equal(response.status, 500)
-  assert.deepEqual(await response.json(), { error: 'internal_error' })
+  assert.deepEqual(await response.json(), {
+    error: 'internal_error'
+  })
 })
 
 test('handler module does not import request-path provider dispatch', async () => {
   const { readFile } = await import('node:fs/promises')
   const source = await readFile(
-    new URL('./handleShopifyRefundsCreateWebhook.ts', import.meta.url),
+    new URL(
+      './handleShopifyRefundsCreateWebhook.ts',
+      import.meta.url
+    ),
     'utf8'
   )
   assert.equal(
@@ -180,14 +230,13 @@ test('handler module does not import request-path provider dispatch', async () =
 })
 
 test('2026-04 numeric subtotal fixture maps then accepts without dispatch', async () => {
-  const { shopifyRefundToCanonicalRefund } = require(
-    './shopifyRefundToCanonicalRefund.ts'
-  ) as {
-    shopifyRefundToCanonicalRefund: (payload: unknown) => {
-      event_id: string
-      custom_data: { value: number; currency: string }
+  const { shopifyRefundToCanonicalRefund } =
+    require('./shopifyRefundToCanonicalRefund.ts') as {
+      shopifyRefundToCanonicalRefund: (payload: unknown) => {
+        event_id: string
+        custom_data: { value: number; currency: string }
+      }
     }
-  }
 
   const payload = {
     id: 890088186,
@@ -265,8 +314,8 @@ test('2026-04 numeric subtotal fixture maps then accepts without dispatch', asyn
   assert.equal(mapped.custom_data.currency, 'NOK')
   assert.equal(accepted.status, 202)
   assert.equal(duplicate.status, 200)
-  assert.deepEqual(acceptCalls.map(call => call.status), [
-    'accepted',
-    'duplicate'
-  ])
+  assert.deepEqual(
+    acceptCalls.map(call => call.status),
+    ['accepted', 'duplicate']
+  )
 })

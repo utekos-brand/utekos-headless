@@ -19,6 +19,7 @@ import {
   SHOPIFY_COMMERCE_RECONCILIATION_JOB_NAME,
   type ShopifyCommerceReconciliationLease
 } from './shopifyCommerceReconciliationTypes'
+import { createShopifyReconciliationCommerceSourceEvidence } from './shopifyCommerceSourceEvidence'
 
 const moduleWithLoad = Module as typeof Module & {
   _load: (
@@ -217,6 +218,16 @@ function baseDependencies(
   const storeTracker = createStoreTracker()
   const fetchCalls: unknown[] = []
   const releaseCalls: unknown[] = []
+  const purchaseAcceptanceInputs: Array<
+    Parameters<
+      RunShopifyCommerceReconciliationDependencies['acceptPurchase']
+    >[0]
+  > = []
+  const refundAcceptanceInputs: Array<
+    Parameters<
+      RunShopifyCommerceReconciliationDependencies['acceptRefund']
+    >[0]
+  > = []
 
   const dependencies: RunShopifyCommerceReconciliationDependencies =
     {
@@ -234,6 +245,7 @@ function baseDependencies(
         return { nodes: [], hasNextPage: false, endCursor: null }
       },
       acceptPurchase: async input => {
+        purchaseAcceptanceInputs.push(input)
         const result = await storeTracker.accept({
           event: input.payload as { event_id: string }
         })
@@ -245,6 +257,7 @@ function baseDependencies(
         }
       },
       acceptRefund: async input => {
+        refundAcceptanceInputs.push(input)
         const result = await storeTracker.accept({
           event: input.payload as { event_id: string }
         })
@@ -324,12 +337,21 @@ function baseDependencies(
           ]
         }
       }),
+      createSourceEvidence:
+        createShopifyReconciliationCommerceSourceEvidence,
       store: { accept: storeTracker.accept },
       now: () => new Date('2026-07-01T12:00:00.000Z'),
       ...overrides
     }
 
-  return { dependencies, fetchCalls, releaseCalls, storeTracker }
+  return {
+    dependencies,
+    fetchCalls,
+    purchaseAcceptanceInputs,
+    refundAcceptanceInputs,
+    releaseCalls,
+    storeTracker
+  }
 }
 
 test('computeShopifyCommerceReconciliationWindow uses 24h without watermark', () => {
@@ -556,6 +578,9 @@ test('runner defaults to dry-run inspection without canonical acceptance', async
     },
     acceptRefund: async () => {
       throw new Error('dry-run must not accept refund')
+    },
+    createSourceEvidence: () => {
+      throw new Error('dry-run must not create source evidence')
     }
   })
 
@@ -658,6 +683,58 @@ test('red gate 1: repeated window accepts then duplicates with same event ids', 
       .sort()
       .join(',')
   )
+})
+
+test('accept mode passes provider-neutral reconciliation evidence for purchases and refunds', async () => {
+  const paid = order({
+    legacyResourceId: '100',
+    displayFinancialStatus: 'PAID',
+    refunds: [refundNode('900', '10.00')]
+  })
+  const {
+    dependencies,
+    purchaseAcceptanceInputs,
+    refundAcceptanceInputs
+  } = baseDependencies({
+    fetchOrdersPage: async () => ({
+      nodes: [paid],
+      hasNextPage: false,
+      endCursor: null
+    })
+  })
+
+  const summary = await runShopifyCommerceReconciliation(
+    { runMode: 'accept' },
+    dependencies
+  )
+
+  assert.equal(summary.status, 'completed')
+  assert.deepEqual(purchaseAcceptanceInputs[0]?.sourceEvidence, {
+    canonical_event_id: deterministicPurchaseEventId('100'),
+    source_system: 'shopify',
+    source_method: 'reconciliation',
+    source_object_type: 'order',
+    source_object_id: '100',
+    source_topic: 'orders/paid',
+    source_delivery_id: null,
+    source_event_id: null,
+    source_api_version: '2026-04',
+    source_triggered_at: '2026-07-01T10:00:00.000Z',
+    source_observed_at: '2026-07-01T12:00:00.000Z'
+  })
+  assert.deepEqual(refundAcceptanceInputs[0]?.sourceEvidence, {
+    canonical_event_id: deterministicRefundEventId('900'),
+    source_system: 'shopify',
+    source_method: 'reconciliation',
+    source_object_type: 'refund',
+    source_object_id: '900',
+    source_topic: 'refunds/create',
+    source_delivery_id: null,
+    source_event_id: null,
+    source_api_version: '2026-04',
+    source_triggered_at: '2026-07-01T11:00:00.000Z',
+    source_observed_at: '2026-07-01T12:00:00.000Z'
+  })
 })
 
 test('red gate 2: overlapping window creates no new semantic events', async () => {

@@ -1,7 +1,7 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.17.0 **Oppdatert:**
-2026-07-21T23:55:14+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.18.0 **Oppdatert:**
+2026-07-22T00:39:06+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
@@ -287,3 +287,107 @@ worktree. Default execution is sequential.
 No CE-2.6 replay/backfill scripts belong in the CE-2.4/CE-2.5
 allowlist. Reconciliation scheduling, the first 24-hour run,
 backfill, provider mutation, push and deploy remain unauthorized.
+
+## 16. CE-2.4P1 runtime gate — IMPLEMENTED, VERIFICATION PENDING
+
+```text
+Task: CE-2.4P1 — provider-neutral commerce source evidence
+Start SHA: fdba6fdc7664279f8aa3b6a6ab21134b826b7eab
+Branch: codex/ce-2.4p1-source-evidence
+Writer: sole writer in this worktree
+Writer overlap: NONE
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+```
+
+Exact no-glob allowlist frozen before the first runtime write:
+
+```text
+docs/analytics/current-handoff.md
+docs/analytics/program-state.json
+docs/analytics/tasks/CE-2.4P1-persist-canonical-commerce-source-evidence.md
+src/lib/shopify/shopifyAdminGraphql.ts
+src/lib/analytics/server/canonicalEventSourceEvidence.ts
+src/lib/analytics/server/canonicalEventSourceEvidence.test.ts
+src/lib/analytics/server/canonicalEventSourceEvidenceMigration.test.ts
+src/lib/analytics/server/shopifyCommerceSourceEvidence.ts
+src/lib/analytics/server/shopifyCommerceSourceEvidence.test.ts
+src/lib/analytics/server/canonicalEventStore.ts
+src/lib/analytics/server/createCanonicalEventStore.ts
+src/lib/analytics/server/createCanonicalPageViewStore.test.ts
+src/lib/analytics/server/canonicalEventDeliveryContract.test.ts
+src/lib/analytics/server/postgresCanonicalPageViewStore.ts
+src/lib/analytics/server/acceptCanonicalPurchase.ts
+src/lib/analytics/server/acceptCanonicalRefund.ts
+src/lib/analytics/server/handleShopifyOrdersPaidWebhook.ts
+src/lib/analytics/server/handleShopifyOrdersPaidWebhook.test.ts
+src/lib/analytics/server/handleShopifyRefundsCreateWebhook.ts
+src/lib/analytics/server/handleShopifyRefundsCreateWebhook.test.ts
+src/lib/analytics/server/runShopifyCommerceReconciliation.ts
+src/lib/analytics/server/runShopifyCommerceReconciliation.test.ts
+src/types/supabase/database.types.ts
+supabase/migrations/20260722001500_add_canonical_event_source_evidence.sql
+supabase/schemas/20_marketing.sql
+supabase/schemas/90_rls.sql
+```
+
+No path outside this list may change. CE-3.3R, CE-2.4 and CE-2.5
+runtime files remain out of scope. Production migration apply,
+remote Supabase mutation, reconciliation execution, backfill,
+provider mutation, push and deploy remain unauthorized.
+
+Implementation conclusion:
+
+```text
+CANONICAL_COMMERCE_SOURCE_EVIDENCE_IMPLEMENTED
+Runtime commit: THIS COMMIT — RESOLVE FULL SHA AFTER CREATION
+Fresh verifier: PENDING
+Owner acceptance: PENDING
+CE-2.4: STOPPED
+CE-2.5: STOPPED
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+```
+
+Verified behavior:
+
+- provider-neutral source evidence is linked to the existing
+  ledger by canonical idempotency key;
+- new ledger acceptance, source evidence and outbox planning use
+  the same Postgres transaction;
+- duplicate webhook/reconciliation observations retain one
+  canonical event and create no duplicate provider attempts;
+- HMAC verification precedes use of Shopify source headers;
+- delivery ID, merchant event ID, API version and source
+  timestamps are persisted without body, HMAC, secret or PII;
+- webhook and reconciliation evidence preserve the same
+  deterministic Purchase-/Refund-ID;
+- reconciliation has explicit null delivery/event IDs and no
+  fabricated metadata;
+- no request-path provider dispatch was introduced.
+
+Verification on Node `24.17.0`:
+
+```text
+focused CE-2.4P1 tests: 61/61 PASS
+analytics + cron: 425/425 PASS
+targeted ESLint for hand-authored TypeScript: PASS
+next typegen: PASS
+tsc --noEmit: PASS
+production build: PASS with existing ignored local env
+isolated local migration apply: PASS
+Supabase marketing schema lint: PASS, no schema errors
+production tracking gateway smoke: PASS
+```
+
+Known unrelated gate blockers:
+
+```text
+mcp:build: scripts/mcp/build-config.ts is absent
+mcp:doctor: scripts/mcp/doctor.ts is absent
+full local Supabase start: pre-existing 20260712102148 migration
+  references absent marketing.customer_source_meta_2025_raw
+```
+
+No production migration, remote Supabase mutation, reconciliation
+run, schedule, backfill, replay, provider mutation, push or
+deploy was performed. Stop after the required commit and one
+fresh read-only verifier; do not begin CE-2.4 automatically.

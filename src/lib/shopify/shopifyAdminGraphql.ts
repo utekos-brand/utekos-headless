@@ -1,7 +1,7 @@
 const SHOPIFY_ADMIN_API_TOKEN =
   process.env.SHOPIFY_ADMIN_API_TOKEN
 const SHOPIFY_STORE_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
-const API_VERSION = '2026-04'
+export const SHOPIFY_ADMIN_API_VERSION = '2026-04'
 
 type ShopifyAdminGraphqlError = { message: string }
 
@@ -15,7 +15,7 @@ export function getShopifyAdminGraphqlUrl(): string {
     throw new Error('Missing SHOPIFY_STORE_DOMAIN')
   }
 
-  return `https://${SHOPIFY_STORE_DOMAIN}/admin/api/${API_VERSION}/graphql.json`
+  return `https://${SHOPIFY_STORE_DOMAIN}/admin/api/${SHOPIFY_ADMIN_API_VERSION}/graphql.json`
 }
 
 export async function shopifyAdminGraphql<TData>(

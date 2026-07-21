@@ -54,9 +54,7 @@ function viewItem() {
       source: 'cookiebot',
       version: '1'
     },
-    browserId: {
-      ga_client_id: '123456789.1784201643'
-    },
+    browserId: { ga_client_id: '123456789.1784201643' },
     environment: 'test',
     eventId: 'c3289453-e760-43ab-aaf5-10c3d233843a',
     eventTime: '2026-07-17T12:00:00.000Z',
@@ -69,7 +67,8 @@ function viewItem() {
 test('one canonical event_id creates one row and one stable provider dedupe key per route', async () => {
   const event = viewItem()
   const ledgerKeys = new Set<string>()
-  const dispatchRows: Array<{ key: string; payload: unknown }> = []
+  const dispatchRows: Array<{ key: string; payload: unknown }> =
+    []
   const store = createCanonicalEventStore(work =>
     work({
       insertLedger: async row => {
@@ -77,6 +76,7 @@ test('one canonical event_id creates one row and one stable provider dedupe key 
         ledgerKeys.add(row.idempotency_key)
         return true
       },
+      upsertSourceEvidence: async () => {},
       insertDispatch: async row => {
         dispatchRows.push({
           key: `${row.provider}:${row.idempotency_key}`,
@@ -95,19 +95,26 @@ test('one canonical event_id creates one row and one stable provider dedupe key 
     store.accept(input)
   ])
 
-  assert.deepEqual(acceptResults.sort(), ['duplicate', 'inserted'])
+  assert.deepEqual(acceptResults.sort(), [
+    'duplicate',
+    'inserted'
+  ])
   assert.equal(ledgerKeys.size, 1)
   assert.equal(dispatchRows.length, 2)
-  assert.deepEqual(dispatchRows.map(row => row.key), [
-    `google:view_item:${event.event_id}`,
-    `meta:view_item:${event.event_id}`
-  ])
+  assert.deepEqual(
+    dispatchRows.map(row => row.key),
+    [
+      `google:view_item:${event.event_id}`,
+      `meta:view_item:${event.event_id}`
+    ]
+  )
 
   const browserEvent = buildViewItemDataLayerEvent(event)
-  const googleEvent = mapCanonicalViewItemToGoogleDataManager(event)
-  const metaEvent = mapCanonicalViewItemToMeta(event).normalize() as {
-    event_id: string
-  }
+  const googleEvent =
+    mapCanonicalViewItemToGoogleDataManager(event)
+  const metaEvent = mapCanonicalViewItemToMeta(
+    event
+  ).normalize() as { event_id: string }
 
   assert.equal(browserEvent.transaction_id, event.event_id)
   assert.equal(googleEvent.transactionId, event.event_id)

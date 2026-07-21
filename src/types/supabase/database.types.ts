@@ -140,6 +140,77 @@ export type Database = {
         }
         Relationships: []
       }
+      canonical_event_source_evidence: {
+        Row: {
+          canonical_event_id: string
+          canonical_event_name: string
+          canonical_idempotency_key: string
+          created_at: string
+          id: string
+          observation_count: number
+          observation_key: string
+          source_api_version: string
+          source_delivery_id: string | null
+          source_event_id: string | null
+          source_method: string
+          source_object_id: string
+          source_object_type: string
+          source_observed_at: string
+          source_system: string
+          source_topic: string
+          source_triggered_at: string
+          updated_at: string
+        }
+        Insert: {
+          canonical_event_id: string
+          canonical_event_name: string
+          canonical_idempotency_key: string
+          created_at?: string
+          id?: string
+          observation_count?: number
+          observation_key: string
+          source_api_version: string
+          source_delivery_id?: string | null
+          source_event_id?: string | null
+          source_method: string
+          source_object_id: string
+          source_object_type: string
+          source_observed_at: string
+          source_system: string
+          source_topic: string
+          source_triggered_at: string
+          updated_at?: string
+        }
+        Update: {
+          canonical_event_id?: string
+          canonical_event_name?: string
+          canonical_idempotency_key?: string
+          created_at?: string
+          id?: string
+          observation_count?: number
+          observation_key?: string
+          source_api_version?: string
+          source_delivery_id?: string | null
+          source_event_id?: string | null
+          source_method?: string
+          source_object_id?: string
+          source_object_type?: string
+          source_observed_at?: string
+          source_system?: string
+          source_topic?: string
+          source_triggered_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'canonical_event_source_evidence_ledger_fkey'
+            columns: ['canonical_idempotency_key']
+            isOneToOne: false
+            referencedRelation: 'event_ledger'
+            referencedColumns: ['idempotency_key']
+          }
+        ]
+      }
       leads: {
         Row: {
           campaign: string | null

@@ -1,6 +1,6 @@
 import type { CanonicalEvent } from '../canonicalEvent'
-import type { CanonicalRefund } from '../refundEvent'
 import type { CanonicalEventStore } from './canonicalEventStore'
+import type { CanonicalEventSourceEvidence } from './canonicalEventSourceEvidence'
 import {
   normalizeCanonicalRefund,
   type CanonicalRefundRequestContext
@@ -12,6 +12,7 @@ export type CanonicalRefundStore = CanonicalEventStore
 type AcceptCanonicalRefundInput = {
   payload: unknown
   requestContext: CanonicalRefundRequestContext
+  sourceEvidence: CanonicalEventSourceEvidence
   store: CanonicalRefundStore
 }
 
@@ -30,7 +31,8 @@ export async function acceptCanonicalRefund(
   const storedEvent = event as unknown as CanonicalEvent
   const result = await input.store.accept({
     dispatches: planCanonicalEventDispatch(storedEvent),
-    event: storedEvent
+    event: storedEvent,
+    sourceEvidence: input.sourceEvidence
   })
 
   return {
