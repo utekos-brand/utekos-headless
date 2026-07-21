@@ -148,7 +148,8 @@ eller endring får ny oppføring som refererer den gamle.
 ## DEC-010 — Authoritative Purchase and Refund owners
 
 - **Dato:** 2026-07-21
-- **Status:** `APPROVED`
+- **Status:** `APPROVED` (owner-model portion amended by DEC-011
+  / CE-2.2A — pending ACCEPTED of DEC-011)
 - **Berører:** INV-001, INV-002, INV-003, INV-010, INV-014,
   INV-015, INV-017, INV-020, INV-021; SAFE-001, SAFE-002,
   DEV-018; `STOP_ACTIVE_DOUBLE_COUNT_RISK`
@@ -182,6 +183,47 @@ eller endring får ny oppføring som refererer den gamle.
   `STOP_ACTIVE_DOUBLE_COUNT_RISK` forblir interlock til purchase
   cutover + replay containment.
 - **Godkjent av:** Prosjekteier (ACCEPTED 2026-07-21).
+
+## DEC-011 — Amend DEC-010: shop-specific webhook owner for custom Admin app
+
+- **Dato:** 2026-07-21
+- **Status:** `PROPOSED_FOR_OWNER_APPROVAL`
+- **Berører:** INV-002, INV-019, INV-021; SAFE-002; CE-2.2A;
+  CE-2.3A Mode B; DEC-010
+- **Tidligere beslutning, hvis relevant:** DEC-010 ACCEPTED
+  valgte `APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION` for
+  purchase/refund.
+- **Nytt funn og primærevidens:** Eier bekreftet produksjonsappen
+  **Utekos Storefront** som custom app opprettet i Shopify Admin
+  for shop `erling-7921.myshopify.com`. Slike apper kan ikke
+  bruke `shopify.app.toml` / `shopify app deploy` for webhook-
+  abonnementer. CE-2.3A Mode A stoppet korrekt med
+  `STOP_WRONG_APP_OR_SHOP` fordi toml mangler.
+- **Beslutning:**
+  - purchase: `SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION`
+  - refund: `SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION`
+  - ADR-0006 amended accordingly; ADR-konklusjon forblir
+    `APPROVED_WITH_PRECONDITIONS`
+  - CE-2.3A Mode A: `NOT_APPLICABLE`
+  - CE-2.3A Mode B: GraphQL Admin API `webhookSubscriptionCreate`
+    / `webhookSubscriptionUpdate`
+  - Påkrevd read-only identitet før mutation:
+    `app.title = Utekos Storefront` og
+    `shop.myshopifyDomain = erling-7921.myshopify.com`
+  - Eksplisitt eiergodkjenning kreves før enhver Shopify-mutasjon
+  - Uendret: canonical semantics, deterministic event IDs,
+    reconciliation, browser/server cutover, provider ownership,
+    replay interlocks
+- **Alternativer:** beholde app-specific/toml (avvist — ikke
+  mulig for custom Admin-app); reconciliation-only (uendret
+  avvist).
+- **Begrunnelse:** implementeringsmodellen må matche faktisk
+  produksjonsapp-klasse; shop-specific Admin GraphQL er den
+  støttede subscription-mekanismen.
+- **Konsekvens for roadmap/DoD:** etter ACCEPTED av DEC-011 /
+  CE-2.2A kan CE-2.3A gjenopptas i Mode B uten automatisk
+  mutation. Mode A forblir `NOT_APPLICABLE`.
+- **Godkjent av:** _pending owner ACCEPTED_
 
 ## Mal for ny beslutning
 

@@ -2,14 +2,18 @@
 
 ```text
 Charter-version: 1.0.0
-Roadmap task: CE-2.2
+Roadmap task: CE-2.2 / CE-2.2A
 Affected invariants: INV-001, INV-002, INV-003, INV-010, INV-014,
   INV-015, INV-017, INV-020, INV-021
-Decision-log entry: DEC-010
-Status: PROPOSED_FOR_OWNER_APPROVAL
+Decision-log entry: DEC-010 (amended by DEC-011)
+Status: APPROVED_WITH_PRECONDITIONS (amended CE-2.2A —
+  pending owner ACCEPTED of amendment)
 Date: 2026-07-21
+Amended: 2026-07-21 (CE-2.2A)
 Primary evidence: docs/analytics/evidence/
   ce-2.1-shopify-commerce-delivery-source-inventory.md
+Owner app fact (CE-2.2A): custom Admin app "Utekos Storefront"
+  on shop erling-7921.myshopify.com — cannot use shopify.app.toml
 ```
 
 ## Context
@@ -23,18 +27,40 @@ refund   → NO_SOURCE
 program  → STOP_ACTIVE_DOUBLE_COUNT_RISK
 ```
 
-Shop-specific Admin `webhookSubscriptions` and REST webhooks are
-empty (including `ORDERS_PAID` / `REFUNDS_CREATE`), while
-production still receives live
+Shop-specific Admin `webhookSubscriptions` and REST webhooks were
+empty at audit time (including `ORDERS_PAID` / `REFUNDS_CREATE`),
+while production still received live
 `POST /api/shopify/webhooks/orders-paid` (202/200). Subscription
-ownership is therefore **app-specific / UNKNOWN** (SAFE-002), not
-shop-specific.
+ownership remained SAFE-002 until the production app class was
+clarified.
+
+### CE-2.2A amendment — production app class
+
+Owner clarified the production integration:
+
+```text
+App: Utekos Storefront
+Type: custom app created in Shopify Admin
+Shop: Utekos
+Domain: erling-7921.myshopify.com
+```
+
+A custom Admin-created app **cannot** manage webhook
+subscriptions via `shopify.app.toml` / `shopify app deploy`.
+Subscriptions must be created and updated with GraphQL Admin API
+(`webhookSubscriptionCreate` / `webhookSubscriptionUpdate`) using
+the app’s existing Admin API token.
+
+Therefore CE-2.2’s initial
+`APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION` choice is **amended**.
+Mode A (`shopify.app.toml`) is `NOT_APPLICABLE`. CE-2.3A proceeds
+as **Mode B** only.
 
 Three `payload.custom_data.transaction_id` values appear under
 both `webhook` and `server` with **distinct** `event_id`s (Meta
 purchase replay / DEV-018 / SAFE-001). That active double-count
-risk is the problem this ADR binds a cutover decision for — not a
-reason to refuse an owner model.
+risk remains the cutover problem — not a reason to refuse an
+owner model.
 
 DEC-007 remains binding: a webhook **route** is not a proven
 production owner until subscription, delivery, and identity are
@@ -45,13 +71,13 @@ established.
 ### Purchase owner model
 
 ```text
-APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
+SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
 ```
 
 ### Refund owner model
 
 ```text
-APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
+SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
 ```
 
 ### ADR conclusion
@@ -63,17 +89,24 @@ APPROVED_WITH_PRECONDITIONS
 `STOP_ACTIVE_DOUBLE_COUNT_RISK` remains the active program
 interlock until the independent gates **purchase cutover** and
 **replay containment** close webhook ∩ server overlaps with
-distinct `event_id`s. The owner **models** above are approved
-under the preconditions in this ADR.
+distinct `event_id`s.
+
+### Implementation mode (CE-2.3A)
+
+```text
+Mode A (shopify.app.toml / shopify app deploy): NOT_APPLICABLE
+Mode B (GraphQL Admin API webhookSubscriptionCreate /
+        webhookSubscriptionUpdate): REQUIRED
+```
 
 ## Alternatives considered
 
-### `SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION`
+### `APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION`
 
-Rejected for both events. CE-2.1 shows zero shop-specific
-subscriptions while live `orders-paid` traffic exists. Choosing
-shop-specific would invent an owner that is not live and would
-conflict with the observed delivery path.
+Initially selected in CE-2.2; **superseded by CE-2.2A**. Rejected
+for this production app because Utekos Storefront is a custom
+Admin app without released `shopify.app.toml` / Partner deploy
+surface. Mode A is `NOT_APPLICABLE`.
 
 ### `RECONCILIATION_ONLY`
 
@@ -104,17 +137,64 @@ Shopify Refund ID → exactly one canonical `refund`.
 
 ### Webhook subscription method
 
-**App-specific** HTTPS callbacks for `ORDERS_PAID` and
+**Shop-specific** HTTPS callbacks for `ORDERS_PAID` and
 `REFUNDS_CREATE` targeting the existing accept-only routes:
 
 - `/api/shopify/webhooks/orders-paid`
 - `/api/shopify/webhooks/refunds-create`
 
-CE-2.3A must prove or establish the Partner/app-released
-subscription config (closes SAFE-002). Shop-specific Admin
-subscriptions are not the chosen owner path.
+CE-2.3A **Mode B** must create/update subscriptions via GraphQL
+Admin API `webhookSubscriptionCreate` /
+`webhookSubscriptionUpdate` using the production
+`SHOPIFY_ADMIN_API_TOKEN` after read-only identity verification
+and **separate explicit owner approval** for mutation.
+
+Do **not** use:
+
+```text
+shopify.app.toml
+shopify app config link
+shopify app deploy
+```
 
 HMAC verification on the existing handlers remains mandatory.
+
+### Required production identity (read-only before mutation)
+
+Verify with the runtime Admin token before any mutation:
+
+```graphql
+query CanonicalProductionAppIdentity {
+  app {
+    id
+    apiKey
+    title
+    handle
+    webhookApiVersion
+  }
+  currentAppInstallation {
+    id
+    accessScopes {
+      handle
+    }
+  }
+  shop {
+    id
+    name
+    myshopifyDomain
+  }
+}
+```
+
+Required match:
+
+```text
+app.title = Utekos Storefront
+shop.myshopifyDomain = erling-7921.myshopify.com
+```
+
+Stop with `STOP_WRONG_APP_OR_SHOP` if the token identifies a
+different app or shop.
 
 ### Reconciliation query/source
 
@@ -181,7 +261,7 @@ refund transaction_id:
 ### Purchase paid-state definition
 
 `ORDERS_PAID` is the authoritative paid trigger once the
-app-specific subscription is proven/established.
+shop-specific subscription is proven/established.
 
 - Partial payment / later edits after the first paid acceptance
   do **not** mint a second canonical purchase.
@@ -229,15 +309,15 @@ not be re-activated.
 
 ### Existing backfill / replay disposition
 
-| Source                                     | Disposition                                                       |
-| ------------------------------------------ | ----------------------------------------------------------------- |
-| App-specific ORDERS_PAID / REFUNDS_CREATE  | `KEEP_AUTHORITATIVE` (after CE-2.3A prove/establish)              |
-| Shop-specific webhook                      | `ARCHIVE_NO_EXECUTION`                                            |
-| Browser purchase                           | `ARCHIVE_NO_EXECUTION`                                            |
-| Server meta-purchase-replay / force-resend | `DISABLE_BEFORE_CUTOVER` then `ARCHIVE_NO_EXECUTION` until CE-2.6 |
-| `ops_backfill` competing purchase inserts  | `HISTORICAL_ONLY` / `DISABLE_BEFORE_CUTOVER` for new execution    |
-| Reconciliation job                         | `KEEP_RECONCILIATION`                                             |
-| Meta / Google / Microsoft / GTM / GA       | provider derivation / corroboration only — never owner            |
+| Source                                     | Disposition                                                         |
+| ------------------------------------------ | ------------------------------------------------------------------- |
+| Shop-specific ORDERS_PAID / REFUNDS_CREATE | `KEEP_AUTHORITATIVE` (after CE-2.3A Mode B prove/establish)         |
+| App-specific toml / Partner deploy path    | `NOT_APPLICABLE` / `ARCHIVE_NO_EXECUTION` for this custom Admin app |
+| Browser purchase                           | `ARCHIVE_NO_EXECUTION`                                              |
+| Server meta-purchase-replay / force-resend | `DISABLE_BEFORE_CUTOVER` then `ARCHIVE_NO_EXECUTION` until CE-2.6   |
+| `ops_backfill` competing purchase inserts  | `HISTORICAL_ONLY` / `DISABLE_BEFORE_CUTOVER` for new execution      |
+| Reconciliation job                         | `KEEP_RECONCILIATION`                                               |
+| Meta / Google / Microsoft / GTM / GA       | provider derivation / corroboration only — never owner              |
 
 Any path that mints a **new** purchase `event_id` for an order
 already accepted under the deterministic webhook ID is forbidden
@@ -249,7 +329,7 @@ that preserves or explicitly maps identity.
 Do not combine into one deployment:
 
 ```text
-1. subscription/source establishment   (CE-2.3A)
+1. subscription/source establishment   (CE-2.3A Mode B)
 2. reconciliation implementation       (CE-2.3B)
 3. purchase cutover                    (CE-2.4)
 4. refund cutover                      (CE-2.5)
@@ -262,7 +342,7 @@ Do not combine into one deployment:
 Until CE-2.4/2.5 production proof, rollback means:
 
 - leave accept-only routes in place;
-- do not register competing shop-specific owners;
+- do not create competing duplicate shop-specific subscriptions;
 - keep replay/force-resend disabled;
 - revert only the specific subscription/reconciliation change
   under explicit owner approval.
@@ -275,7 +355,8 @@ live webhook orders.
 
 Required before closing `STOP_ACTIVE_DOUBLE_COUNT_RISK`:
 
-- proven app-specific subscription ownership (SAFE-002);
+- proven shop-specific subscription ownership via Admin GraphQL
+  for Utekos Storefront @ `erling-7921.myshopify.com` (SAFE-002);
 - at least one live deterministic `purchase` ledger row from
   webhook or reconciliation with no competing server UUID for the
   same `transaction_id`;
@@ -311,8 +392,9 @@ Required before closing `STOP_ACTIVE_DOUBLE_COUNT_RISK`:
 
 ## Preconditions (must hold before claiming live ownership)
 
-1. CE-2.3A proves or establishes app-specific `ORDERS_PAID` /
-   `REFUNDS_CREATE` delivery to the existing routes (SAFE-002).
+1. CE-2.3A Mode B proves or establishes shop-specific
+   `ORDERS_PAID` / `REFUNDS_CREATE` delivery to the existing
+   routes after identity match (SAFE-002).
 2. Force-resend / UUID-minting purchase replay remains disabled
    for orders already present as webhook purchases (SAFE-001 /
    DEV-018).
@@ -320,28 +402,34 @@ Required before closing `STOP_ACTIVE_DOUBLE_COUNT_RISK`:
    before purchase/refund cutover.
 4. CE-2.4/2.5/2.6 execute as separate gates; no combined deploy.
 5. DEC-007 is respected until precondition (1) is evidenced.
+6. Explicit owner approval is required before any Shopify
+   subscription mutation (separate from this ADR amendment
+   ACCEPTED).
 
 ## Compatibility with DEC-007
 
 This ADR approves the **target** owner model. It does **not**
 claim that webhook delivery is already a fully proven production
-owner. CE-2.1’s UNKNOWN app-config gap remains until CE-2.3A
-evidence.
+owner. SAFE-002 remains open until CE-2.3A Mode B evidence.
 
 ## Consequences
 
-- CE-2.3A may proceed after owner ACCEPTED of this ADR/DEC-010.
-- Roadmap points for CE-2.2 become accepted only after owner
-  ACCEPTED — not at commit time.
+- After owner ACCEPTED of CE-2.2A (this amendment / DEC-011),
+  CE-2.3A may start in **Mode B only** — still without automatic
+  mutation; mutation requires a further explicit owner order.
+- Mode A remains `NOT_APPLICABLE`.
 - `STOP_ACTIVE_DOUBLE_COUNT_RISK` stays in program state /
   handoff until purchase cutover + replay containment are proven.
 - No runtime, schema, env, Shopify subscription mutation, push,
-  or deploy is authorized by this ADR alone.
+  or deploy is authorized by this amendment alone.
 
 ## References
 
 - CE-2.1 evidence inventory (ACCEPTED)
+- CE-2.2 ACCEPTED @ `2c0c3c6fd…` (superseded owner-model portion)
+- CE-2.2A amendment (this revision)
 - DEC-006 Meta purchase replay fail-closed
 - DEC-007 Shopify webhook route ≠ production owner
+- DEC-010 / DEC-011
 - SAFE-001 / SAFE-002 / DEV-018
 - Target architecture §2 commerce webhook owner class

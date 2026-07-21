@@ -1,7 +1,7 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.5.0 **Oppdatert:**
-2026-07-21T15:45:25+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.6.0 **Oppdatert:**
+2026-07-21T16:04:12+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
@@ -14,123 +14,86 @@ deployment- og livefakta før enhver handling
 5. dette dokumentet
 6. den konkrete autoritative task-filen
 
-Task-filer under `docs/analytics/tasks/` er autoritative.
-
 ## 2. Git- og produksjonsstatus
 
 - `origin/main`: `0a800b1ae169eab8af12c21b3595fe99a667d54c`
-- lokal `main` tip: `2c0c3c6fd67dc9a4098fac71c8f20d7046828f2e`
-  (før ACCEPTED-statuscommit)
-- lokal `main`: **9 commits ahead of `origin/main`** (docs-only;
-  ikke pushet)
-- produksjons-SHA: `0a800b1ae169eab8af12c21b3595fe99a667d54c`
+- expected parent for CE-2.2A:
+  `96b1ac84f83d36bcc0c5d72c8d5b2d226d42527d`
+- CE-2.2A tip: se `git rev-parse HEAD` etter commit
+- lokale docs-commits er **ikke pushet**
 - produksjonsdeploy: `dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1` **READY**
-- rollback-SHA: `ee781aed52474eb6bdecee63e43ffabec9d0cea2`
+  @ `0a800b1ae…`
 
-## 3. CE-2.2 — ACCEPTED
+## 3. CE-2.2 — ACCEPTED (owner model amended by CE-2.2A)
 
 ```text
 ACCEPTED @ 2c0c3c6fd67dc9a4098fac71c8f20d7046828f2e
-ADR-0006 / DEC-010
-purchase: APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
-refund:   APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
-conclusion: APPROVED_WITH_PRECONDITIONS
 ```
 
-`STOP_ACTIVE_DOUBLE_COUNT_RISK` forblir aktiv interlock.
+Original DEC-010 chose app-specific; **CE-2.2A** amends to
+shop-specific for the custom Admin app.
 
-## 4. CE-2.1 / CE-GOV-001A / Phase 1 — ACCEPTED
-
-Uendret. Se tidligere handoff-seksjoner i git-historikk ved
-behov.
-
-## 5. CE-2.3A — START BLOKKERT (fail-closed)
-
-Task:
+## 4. CE-2.2A — amend in progress (this commit)
 
 ```text
-docs/analytics/tasks/
-CE-2.3A-establish-selected-shopify-webhook-subscriptions.md
+purchase: SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
+refund:   SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION
+Mode A:   NOT_APPLICABLE
+Mode B:   REQUIRED (GraphQL webhookSubscriptionCreate/Update)
+DEC-011:  PROPOSED_FOR_OWNER_APPROVAL
 ```
 
-Mode fra ADR-0006: **Mode A**
-(`APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION`).
-
-Tillatt fil: `shopify.app.toml` only.
-
-### Stop conclusion
+Production app fact:
 
 ```text
-STOP_WRONG_APP_OR_SHOP
+App: Utekos Storefront (custom Admin app)
+Shop domain: erling-7921.myshopify.com
 ```
 
-(alternativt/samtidig: mangler frigitt produksjons-app-config)
+No webhook subscriptions created in CE-2.2A. No Mode B start.
 
-Begrunnelse (CE-2.1 + repo preflight 2026-07-21):
+## 5. CE-2.3A — awaiting CE-2.2A ACCEPTED; then Mode B only
 
-- `shopify.app.toml` **finnes ikke** i repository
-- task Mode A: _Stop if shopify.app.toml is not the released
-  production app configuration_
-- Partner/released app version forblir **UNKNOWN** (SAFE-002)
-- Live `orders-paid` leveres allerede fra ukjent app-specific
-  eier — å opprette en ny toml uten bevist released config
-  risikerer duplikat-subscriptions
-  (`STOP_DUPLICATE_SUBSCRIPTIONS`)
+Previous Mode A block (`STOP_WRONG_APP_OR_SHOP` / missing toml)
+is explained by app class: Mode A is now `NOT_APPLICABLE`.
 
-### Ikke gjort
+After CE-2.2A ACCEPTED, CE-2.3A may implement Mode B scripts —
+still **without** mutation until explicit owner mutation approval
+and identity match:
 
-- ingen `shopify.app.toml` opprettet
-- ingen Shopify mutation
-- ingen `shopify app deploy`
-- CE-2.3B / CE-2.3C ikke startet
-
-### Eier må levere før CE-2.3A kan fortsette
-
-1. Identitet for den **frigitte** produksjonsappen som allerede
-   leverer (eller skal eie) `orders/paid` / `refunds/create` (app
-   name/gid, client_id, shop).
-2. Eksisterende Partner/CLI `shopify.app.toml` (eller eksplisitt
-   godkjenning til å bootstrap en ny toml som _blir_ released
-   config).
-3. Godkjent webhook `api_version` (ADR peker ikke eksplisitt;
-   CE-2.1 Admin-lesninger brukte `2025-07`).
-4. Eksplisitt godkjenning i handoff for:
-   - toml-commit
-   - senere `shopify app deploy` / subscription mutation
-5. Bekreftelse på at vi ikke lager parallell subscription mot
-   samme URI fra en annen app.
-
-Expected parent når CE-2.3A gjenopptas: lokal tip etter ACCEPTED-
-statuscommit (kjør `git rev-parse HEAD`).
+```text
+app.title = Utekos Storefront
+shop.myshopifyDomain = erling-7921.myshopify.com
+```
 
 ## 6. Aktive interlocks
 
 - SAFE-001 / DEV-018
-- SAFE-002 (uendret — app owner unproven)
+- SAFE-002 (subscription not yet established under amended model)
 - SAFE-003
 - `STOP_ACTIVE_DOUBLE_COUNT_RISK`
 
 ## 7. Rekkefølge
 
 ```text
-CE-2.3A  ← BLOKKERT til eier leverer app-config/mutation-godkjenning
-CE-2.3B
-CE-2.3C
-CE-2.4 …
+CE-2.2A
+→ fresh verifier
+→ owner ACCEPTED  ← HER
+
+CE-2.3A Mode B (script commit)
+→ verifier
+→ owner ACCEPTED
+→ separate explicit mutation approval
 ```
 
 ## 8. Ingen autorisasjon
 
-- push/deploy
 - Shopify subscription create/update/delete
-- `shopify app deploy`
-- bootstrap av `shopify.app.toml` uten punktene i §5
-- CE-2.3B/C
+- `shopify.app.toml` / `shopify app deploy`
+- push/deploy
+- automatic Mode B start or mutation after this amend
 
 ## 9. Dokumentasjonsstatus
 
-- CE-2.2: **ACCEPTED**
-- CE-2.3A: autorisert å starte, men **fail-closed stop** på
-  manglende released `shopify.app.toml` / app-identitet
-- nok docs til å stanse korrekt; ikke nok til Mode
-  A-implementasjon
+- CE-2.2A docs amend ready for verifier + owner ACCEPTED
+- nok til å rette owner-modellen; ikke nok til å mutere Shopify

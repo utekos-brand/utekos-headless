@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "program": "CanonicalEvent",
+  "charter_version": "1.0.0",
+  "roadmap_version": "1.0.0",
+  "as_of": "2026-07-21T16:04:12+02:00",
+  "repository": "utekos-brand/utekos-headless",
+  "git": {
+    "origin_main_reported": "0a800b1ae169eab8af12c21b3595fe99a667d54c",
+    "local_head_reported": "96b1ac84f83d36bcc0c5d72c8d5b2d226d42527d",
+    "local_ahead_by_reported": 10,
+    "expected_parent_for_next_task": "96b1ac84f83d36bcc0c5d72c8d5b2d226d42527d",
+    "local_head_pushed": false,
+    "local_head_deployed": false,
+    "production_deployment_id": "dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1",
+    "production_deployment_sha": "0a800b1ae169eab8af12c21b3595fe99a667d54c",
+    "production_deployment_state": "READY",
+    "rollback_sha": "ee781aed52474eb6bdecee63e43ffabec9d0cea2",
+    "ce_1_6c_evidence_push_deferred": true,
+    "ce_2_1_evidence_push_deferred": true,
+    "ce_2_2_evidence_push_deferred": true,
+    "verification_required_before_write": true
+  },
+  "progress": {
+    "accepted_points": 29,
+    "implemented_points": 29,
+    "production_verified_points": 25,
+    "total_points": 100,
+    "phase_1_status": "ACCEPTED_WITH_NONBLOCKING_OBSERVATIONS",
+    "phase_2_status": "IN_PROGRESS"
+  },
+  "current_governance_task": "CE-2.2A",
+  "next_runtime_task": "CE-2.3A",
+  "current_runtime_status": "CE_2_2A_AWAITING_OWNER_ACCEPTED",
+  "last_accepted_runtime_task": "CE-2.2",
+  "last_accepted_runtime_sha": "2c0c3c6fd67dc9a4098fac71c8f20d7046828f2e",
+  "last_accepted_controlled_event_id": "60058a37-571b-4eb2-a59e-418a6d77689b",
+  "ce_2_1": {
+    "status": "ACCEPTED",
+    "tip_sha": "95e8d38090e97e4aa0fe08def47d8be01173d8a2",
+    "purchase": "MULTIPLE_SOURCES",
+    "refund": "NO_SOURCE",
+    "program": "STOP_ACTIVE_DOUBLE_COUNT_RISK",
+    "owner_accepted": true
+  },
+  "ce_2_2": {
+    "status": "ACCEPTED_AMENDED_BY_CE_2_2A",
+    "tip_sha": "2c0c3c6fd67dc9a4098fac71c8f20d7046828f2e",
+    "adr": "0006",
+    "decision": "DEC-010",
+    "purchase_original": "APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION",
+    "refund_original": "APP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION",
+    "conclusion": "APPROVED_WITH_PRECONDITIONS",
+    "owner_accepted": true,
+    "owner_accepted_at": "2026-07-21T15:45:25+02:00"
+  },
+  "ce_2_2a": {
+    "status": "AWAITING_OWNER_ACCEPTED",
+    "purchase": "SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION",
+    "refund": "SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION",
+    "mode_a": "NOT_APPLICABLE",
+    "mode_b": "REQUIRED",
+    "decision_amendment": "DEC-011",
+    "production_app_title": "Utekos Storefront",
+    "production_shop_domain": "erling-7921.myshopify.com",
+    "mutation_performed": false
+  },
+  "ce_2_3a": {
+    "status": "PENDING_CE_2_2A_ACCEPTED",
+    "mode": "B_SHOP_SPECIFIC",
+    "mode_a": "NOT_APPLICABLE",
+    "mutation_performed": false,
+    "prior_block": "Mode A STOP_WRONG_APP_OR_SHOP explained by custom Admin app class"
+  },
+  "active_interlocks": [
+    "SAFE-001_META_PURCHASE_REPLAY",
+    "SAFE-002_SHOPIFY_OWNER_UNPROVEN",
+    "SAFE-003_GOOGLE_NATIVE_ADS_OWNER_UNKNOWN",
+    "STOP_ACTIVE_DOUBLE_COUNT_RISK"
+  ],
+  "known_release_blockers": [
+    "Local docs commits deferred from separate push (docs-only redeploy risk)",
+    "CE-2.2A awaiting owner ACCEPTED before CE-2.3A Mode B",
+    "STOP_ACTIVE_DOUBLE_COUNT_RISK webhook∩server distinct event_ids"
+  ],
+  "verified_worker_count": {
+    "total": 33,
+    "google": 24,
+    "meta": 8,
+    "microsoft_uet": 1
+  },
+  "authoritative_files": [
+    "docs/analytics/program-charter.md",
+    "docs/analytics/roadmap.md",
+    "docs/analytics/decision-log.md",
+    "docs/analytics/current-handoff.md"
+  ]
+}
