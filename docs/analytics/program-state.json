@@ -3,13 +3,13 @@
   "program": "CanonicalEvent",
   "charter_version": "1.0.0",
   "roadmap_version": "1.0.0",
-  "as_of": "2026-07-21T17:20:00+02:00",
+  "as_of": "2026-07-21T17:25:00+02:00",
   "repository": "utekos-brand/utekos-headless",
   "git": {
     "origin_main_reported": "0a800b1ae169eab8af12c21b3595fe99a667d54c",
-    "local_head_reported": "0787af63a25fe71375b555854e8384743c9020f5",
-    "local_ahead_by_reported": 13,
-    "expected_parent_for_next_task": "0787af63a25fe71375b555854e8384743c9020f5",
+    "local_head_reported": "b445e9f8cfbc17bc4f01b576e23d3bfa2b407422",
+    "local_ahead_by_reported": 14,
+    "expected_parent_for_next_task": "b445e9f8cfbc17bc4f01b576e23d3bfa2b407422",
     "local_head_pushed": false,
     "local_head_deployed": false,
     "production_deployment_id": "dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1",
@@ -20,18 +20,20 @@
     "verification_required_before_write": true
   },
   "progress": {
-    "accepted_points": 29,
-    "implemented_points": 29,
-    "production_verified_points": 25,
+    "accepted_points": 31,
+    "implemented_points": 30,
+    "production_verified_points": 26,
     "total_points": 100,
     "phase_1_status": "ACCEPTED_WITH_NONBLOCKING_OBSERVATIONS",
     "phase_2_status": "IN_PROGRESS"
   },
-  "current_governance_task": "CE-2.2B",
-  "next_runtime_task": "CE-2.3A",
-  "current_runtime_status": "CE_2_2B_AWAITING_OWNER_ACCEPTED",
-  "last_accepted_runtime_task": "CE-2.2",
-  "last_accepted_runtime_sha": "2c0c3c6fd67dc9a4098fac71c8f20d7046828f2e",
+  "current_governance_task": null,
+  "next_runtime_task": null,
+  "current_runtime_status": "AWAITING_EXPLICIT_START_ORDER",
+  "last_accepted_runtime_task": "CE-2.3A",
+  "last_accepted_runtime_sha": "0787af63a25fe71375b555854e8384743c9020f5",
+  "last_accepted_governance_task": "CE-2.2B",
+  "last_accepted_governance_sha": "b445e9f8cfbc17bc4f01b576e23d3bfa2b407422",
   "ce_2_2": {
     "status": "ACCEPTED_SUPERSEDED_FOR_IMPLEMENTATION",
     "decision": "DEC-010",
@@ -45,10 +47,14 @@
     "refund": "SHOP_SPECIFIC_WEBHOOK_PLUS_RECONCILIATION"
   },
   "ce_2_2b": {
-    "status": "AWAITING_OWNER_ACCEPTED",
+    "status": "ACCEPTED",
+    "owner_accepted": true,
+    "accepted_at": "2026-07-21T17:21:00+02:00",
+    "accepted_commit": "b445e9f8cfbc17bc4f01b576e23d3bfa2b407422",
     "purchase": "SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION",
     "refund": "SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION",
     "decision": "DEC-012",
+    "decision_status": "APPROVED",
     "decision_title": "Shopify Admin notification webhooks own Purchase and Refund",
     "orders_paid": {
       "surface": "Shopify Admin → Settings → Notifications → Webhooks",
@@ -58,7 +64,7 @@
       "webhook_api_version": "2026-04",
       "signing_secret_env": "SHOPIFY_WEBHOOK_SECRET",
       "visible_in_webhookSubscriptions": false,
-      "status": "LIVE_TECHNICALLY_VERIFIED"
+      "status": "LIVE_PRODUCTION_PROVEN"
     },
     "refunds_create": {
       "surface": "Shopify Admin → Settings → Notifications → Webhooks",
@@ -77,16 +83,19 @@
     "mutation_performed": false
   },
   "ce_2_3a": {
-    "status": "VERIFIED_AWAITING_GOVERNANCE_ACCEPTANCE",
+    "status": "ACCEPTED_WITH_PAYLOAD_BLOCKER",
     "conclusion": "SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER",
     "evidence": "docs/analytics/evidence/ce-2.3a-notification-webhook-post-mutation-verification.md",
+    "evidence_commit": "0787af63a25fe71375b555854e8384743c9020f5",
     "secret_fingerprint_prefix": "8a75081095f1",
     "payload_blocker": "refunds/create Zod expects string subtotal and non-null currency; Shopify 2026-04 sample uses number subtotal and null currency",
     "orders_paid_live": true,
+    "refunds_create_live_subscription": true,
     "refunds_create_ledger_rows": 0,
     "graphql_subscription_create": "FORBIDDEN",
     "mutation_performed_by_agent": false,
-    "owner_accepted": false
+    "owner_accepted": true,
+    "accepted_at": "2026-07-21T17:21:00+02:00"
   },
   "active_interlocks": [
     "SAFE-001_META_PURCHASE_REPLAY",
@@ -97,7 +106,6 @@
   ],
   "known_release_blockers": [
     "Local docs commits deferred from separate push",
-    "CE-2.2B / DEC-012 awaiting owner ACCEPTED",
     "STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE",
     "STOP_ACTIVE_DOUBLE_COUNT_RISK webhook∩server distinct event_ids"
   ],

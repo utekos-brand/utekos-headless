@@ -6,10 +6,11 @@ Roadmap task: CE-2.2 / CE-2.2A / CE-2.2B
 Affected invariants: INV-001, INV-002, INV-003, INV-010, INV-014,
   INV-015, INV-017, INV-020, INV-021
 Decision-log entry: DEC-010 (amended by DEC-011, DEC-012)
-Status: APPROVED_WITH_PRECONDITIONS (amended CE-2.2B —
-  pending owner ACCEPTED of DEC-012)
+Status: APPROVED (CE-2.2B / DEC-012 ACCEPTED 2026-07-21;
+  preconditions remain for cutover + refund schema remediation)
 Date: 2026-07-21
-Amended: 2026-07-21 (CE-2.2A, CE-2.2B; CE-2.3A evidence folded in)
+Amended: 2026-07-21 (CE-2.2A, CE-2.2B; CE-2.3A ACCEPTED with
+  payload blocker)
 Primary evidence:
   docs/analytics/evidence/ce-2.1-shopify-commerce-delivery-source-inventory.md
   docs/analytics/evidence/ce-2.3a-notification-webhook-post-mutation-verification.md
@@ -116,7 +117,7 @@ SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION
 ### ADR conclusion
 
 ```text
-APPROVED_WITH_PRECONDITIONS
+APPROVED
 ```
 
 ### CE-2.3A status (folded into CE-2.2B)
@@ -126,10 +127,10 @@ Technical conclusion:
   SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER
 
 Governance status:
-  VERIFIED_AWAITING_GOVERNANCE_ACCEPTANCE
+  ACCEPTED_WITH_PAYLOAD_BLOCKER
 
 orders-paid:
-  LIVE — technically verified; do not create; do not duplicate
+  LIVE — production-proven; do not create; do not duplicate
 
 refunds-create:
   LIVE subscription — canonical accept blocked until separate
@@ -331,18 +332,20 @@ Unchanged Sev-1 treatment for webhook ∩ server distinct
 
 ## Consequences
 
-- After owner ACCEPTED of CE-2.2B / DEC-012, CE-2.3A may receive
-  governance ACCEPTED at
-  `VERIFIED_AWAITING_GOVERNANCE_ACCEPTANCE` → ACCEPTED only when
-  owner explicitly accepts (payload blocker remains tracked).
-- No runtime or schema mutation is authorized by this amendment.
-- Do not auto-start CE-2.3B or refund schema fix.
+- CE-2.2B / DEC-012 and CE-2.3A are owner-ACCEPTED
+  (`SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER`).
+- Active blockers remain: `STOP_ACTIVE_DOUBLE_COUNT_RISK` and
+  `STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE`.
+- No runtime or schema mutation is authorized by this acceptance.
+- Do not auto-start CE-2.3B or refund schema fix without a new
+  explicit start order.
 
 ## References
 
 - CE-2.1 evidence (ACCEPTED)
-- CE-2.3A evidence (verifier APPROVE; not owner ACCEPTED)
-- CE-2.2 / CE-2.2A / CE-2.2B
+- CE-2.3A evidence (verifier APPROVE; owner ACCEPTED with payload
+  blocker)
+- CE-2.2 / CE-2.2A / CE-2.2B (DEC-012 ACCEPTED)
 - DEC-006, DEC-007, DEC-010, DEC-011, DEC-012
 - SAFE-001 / SAFE-002 / DEV-018
 - `src/lib/shopify/verifyWebhook.ts` (`SHOPIFY_WEBHOOK_SECRET`)

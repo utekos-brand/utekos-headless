@@ -149,7 +149,7 @@ eller endring får ny oppføring som refererer den gamle.
 
 - **Dato:** 2026-07-21
 - **Status:** `APPROVED` (owner-model portion amended by DEC-011
-  then DEC-012 / CE-2.2B — pending ACCEPTED of DEC-012)
+  then DEC-012 / CE-2.2B — DEC-012 ACCEPTED 2026-07-21)
 - **Berører:** INV-001, INV-002, INV-003, INV-010, INV-014,
   INV-015, INV-017, INV-020, INV-021; SAFE-001, SAFE-002,
   DEV-018; `STOP_ACTIVE_DOUBLE_COUNT_RISK`
@@ -228,7 +228,7 @@ eller endring får ny oppføring som refererer den gamle.
 ## DEC-012 — Shopify Admin notification webhooks own Purchase and Refund
 
 - **Dato:** 2026-07-21
-- **Status:** `PROPOSED_FOR_OWNER_APPROVAL`
+- **Status:** `APPROVED`
 - **Berører:** INV-002, INV-019, INV-021; SAFE-002; CE-2.2B;
   CE-2.3A; DEC-010; DEC-011; `STOP_ACTIVE_DOUBLE_COUNT_RISK`;
   `STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE`
@@ -256,8 +256,7 @@ eller endring får ny oppføring som refererer den gamle.
   - purchase:
     `SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION`
   - refund: `SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION`
-  - ADR-0006 amended; konklusjon forblir
-    `APPROVED_WITH_PRECONDITIONS`
+  - ADR-0006 amended; konklusjon `APPROVED` (DEC-012 ACCEPTED)
   - `webhookSubscriptionCreate` / `Update`, `shopify.app.toml`,
     and `shopify app deploy` do **not** own these subscriptions
   - GraphQL create for these topics: **FORBIDDEN**
@@ -280,11 +279,14 @@ eller endring får ny oppføring som refererer den gamle.
 - **Begrunnelse:** owner-modellen må beskrive den faktiske
   management surface, HMAC-hemmeligheten og CE-2.3A-verifiserte
   destinations i produksjon.
-- **Konsekvens for roadmap/DoD:** etter ACCEPTED av DEC-012 /
-  CE-2.2B kan CE-2.3A governance ACCEPTED vurderes; refund
-  schema-fiks og CE-2.3B krever separate startordrer. Ingen
-  Shopify-/runtime-mutasjon i CE-2.2B.
-- **Godkjent av:** _pending owner ACCEPTED_
+- **Konsekvens for roadmap/DoD:** CE-2.2B / DEC-012 ACCEPTED;
+  CE-2.3A governance ACCEPTED with
+  `SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER`. Refund
+  schema-fiks og CE-2.3B krever separate startordrer. Aktive
+  blockers: `STOP_ACTIVE_DOUBLE_COUNT_RISK`,
+  `STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE`.
+- **Godkjent av:** Prosjekteier (ACCEPTED 2026-07-21; commit
+  `b445e9f8c`; verifier APPROVE).
 
 ## Mal for ny beslutning
 
