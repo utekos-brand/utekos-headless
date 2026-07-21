@@ -3,6 +3,7 @@ import {
   canonicalEventEnvelopeSchema,
   type ConsentSnapshot
 } from './canonicalEventEnvelope'
+import type { CanonicalClickIds } from './canonicalSignalContract'
 import { parseOrderConsentFromNoteAttributes } from './checkoutConsentSnapshot'
 
 const CONSENT_ATTRIBUTE = 'utekos_consent'
@@ -56,7 +57,10 @@ export type CheckoutAttributionSnapshot = z.infer<
 
 type CheckoutAttributionSource = {
   browser_id?: Record<string, string> | undefined
-  click_id?: Record<string, string> | undefined
+  click_id?:
+    | CanonicalClickIds
+    | Record<string, string>
+    | undefined
   consent: ConsentSnapshot
   external_id?: string | undefined
   page_url?: string | undefined
@@ -89,7 +93,7 @@ function parseAttributionUrl(value: string | undefined) {
 }
 
 function selectIdentifiers(
-  identifiers: Record<string, string> | undefined,
+  identifiers: Record<string, string | undefined> | undefined,
   keys: Record<string, string>
 ) {
   const selected: Record<string, string> = {}
