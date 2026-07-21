@@ -16,8 +16,6 @@ const NO_STORE_HEADERS = {
 type ShopifyOrdersPaidWebhookDependencies = {
   acceptPurchase?: typeof acceptCanonicalPurchase
   mapOrder?: typeof shopifyOrderToCanonicalPurchase
-  runBatch?: (input: { maxItems: number }) => Promise<unknown>
-  scheduleAfter?: (task: () => Promise<void>) => void
   verifyWebhook?: typeof verifyShopifyWebhook
 }
 

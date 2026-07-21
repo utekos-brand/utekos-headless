@@ -33,8 +33,6 @@ const { handleShopifyOrdersPaidWebhook } = require(
         status: 'accepted' | 'duplicate'
       }>
       mapOrder?: (payload: unknown) => unknown
-      runBatch?: (input: { maxItems: number }) => Promise<unknown>
-      scheduleAfter?: (task: () => Promise<void>) => void
       verifyWebhook?: (rawBody: string, hmac: string) => boolean
     }
   ) => Promise<Response>
@@ -62,10 +60,8 @@ function createRequest(body: string, hmac = 'valid-hmac') {
   )
 }
 
-test('accepted purchase returns 202 without scheduling outbox drain', async () => {
+test('accepted purchase returns 202', async () => {
   const acceptCalls: unknown[] = []
-  let runBatchCalled = false
-  let scheduleAfterCalled = false
 
   const response = await handleShopifyOrdersPaidWebhook(
     createRequest(ORDER_BODY),
@@ -75,12 +71,6 @@ test('accepted purchase returns 202 without scheduling outbox drain', async () =
       acceptPurchase: async input => {
         acceptCalls.push(input)
         return { event_id: EVENT_ID, status: 'accepted' }
-      },
-      runBatch: async () => {
-        runBatchCalled = true
-      },
-      scheduleAfter: () => {
-        scheduleAfterCalled = true
       }
     }
   )
@@ -91,14 +81,9 @@ test('accepted purchase returns 202 without scheduling outbox drain', async () =
     status: 'accepted'
   })
   assert.equal(acceptCalls.length, 1)
-  assert.equal(runBatchCalled, false)
-  assert.equal(scheduleAfterCalled, false)
 })
 
-test('duplicate purchase returns 200 without scheduling outbox drain', async () => {
-  let runBatchCalled = false
-  let scheduleAfterCalled = false
-
+test('duplicate purchase returns 200', async () => {
   const response = await handleShopifyOrdersPaidWebhook(
     createRequest(ORDER_BODY),
     {
@@ -107,13 +92,7 @@ test('duplicate purchase returns 200 without scheduling outbox drain', async () 
       acceptPurchase: async () => ({
         event_id: EVENT_ID,
         status: 'duplicate'
-      }),
-      runBatch: async () => {
-        runBatchCalled = true
-      },
-      scheduleAfter: () => {
-        scheduleAfterCalled = true
-      }
+      })
     }
   )
 
@@ -122,8 +101,6 @@ test('duplicate purchase returns 200 without scheduling outbox drain', async () 
     event_id: EVENT_ID,
     status: 'duplicate'
   })
-  assert.equal(runBatchCalled, false)
-  assert.equal(scheduleAfterCalled, false)
 })
 
 test('invalid HMAC returns 401 and does not map or accept', async () => {
@@ -132,9 +109,7 @@ test('invalid HMAC returns 401 and does not map or accept', async () => {
     {
       verifyWebhook: () => false,
       mapOrder: throwIfCalled('mapOrder') as never,
-      acceptPurchase: throwIfCalled('acceptPurchase') as never,
-      runBatch: throwIfCalled('runBatch') as never,
-      scheduleAfter: throwIfCalled('scheduleAfter') as never
+      acceptPurchase: throwIfCalled('acceptPurchase') as never
     }
   )
 
@@ -150,9 +125,7 @@ test('invalid JSON returns 400 and does not accept', async () => {
     {
       verifyWebhook: () => true,
       mapOrder: throwIfCalled('mapOrder') as never,
-      acceptPurchase: throwIfCalled('acceptPurchase') as never,
-      runBatch: throwIfCalled('runBatch') as never,
-      scheduleAfter: throwIfCalled('scheduleAfter') as never
+      acceptPurchase: throwIfCalled('acceptPurchase') as never
     }
   )
 
@@ -168,9 +141,7 @@ test('Zod invalid event returns 400', async () => {
       mapOrder: () => {
         throw new ZodError([])
       },
-      acceptPurchase: throwIfCalled('acceptPurchase') as never,
-      runBatch: throwIfCalled('runBatch') as never,
-      scheduleAfter: throwIfCalled('scheduleAfter') as never
+      acceptPurchase: throwIfCalled('acceptPurchase') as never
     }
   )
 
@@ -186,9 +157,7 @@ test('accept failure returns 500', async () => {
       mapOrder: payload => payload,
       acceptPurchase: async () => {
         throw new Error('persist failed')
-      },
-      runBatch: throwIfCalled('runBatch') as never,
-      scheduleAfter: throwIfCalled('scheduleAfter') as never
+      }
     }
   )
 

@@ -15,8 +15,6 @@ const NO_STORE_HEADERS = {
 type ShopifyRefundsCreateWebhookDependencies = {
   acceptRefund?: typeof acceptCanonicalRefund
   mapRefund?: typeof shopifyRefundToCanonicalRefund
-  runBatch?: (input: { maxItems: number }) => Promise<unknown>
-  scheduleAfter?: (task: () => Promise<void>) => void
   verifyWebhook?: typeof verifyShopifyWebhook
 }
 
