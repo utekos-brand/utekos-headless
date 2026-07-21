@@ -1,4 +1,4 @@
 import { createBrowserEventRouteHandler } from './createBrowserEventRouteHandler'
 
 export const handleCanonicalFilterApplyRoute =
-  createBrowserEventRouteHandler('filter-apply')
+  createBrowserEventRouteHandler()
