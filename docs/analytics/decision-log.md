@@ -149,7 +149,7 @@ eller endring får ny oppføring som refererer den gamle.
 
 - **Dato:** 2026-07-21
 - **Status:** `APPROVED` (owner-model portion amended by DEC-011
-  / CE-2.2A — pending ACCEPTED of DEC-011)
+  then DEC-012 / CE-2.2B — pending ACCEPTED of DEC-012)
 - **Berører:** INV-001, INV-002, INV-003, INV-010, INV-014,
   INV-015, INV-017, INV-020, INV-021; SAFE-001, SAFE-002,
   DEV-018; `STOP_ACTIVE_DOUBLE_COUNT_RISK`
@@ -225,52 +225,65 @@ eller endring får ny oppføring som refererer den gamle.
   mutation. Mode A forblir `NOT_APPLICABLE`.
 - **Godkjent av:** _pending owner ACCEPTED_
 
-## DEC-012 — Amend DEC-010/011: Shopify Admin notification webhooks
+## DEC-012 — Shopify Admin notification webhooks own Purchase and Refund
 
 - **Dato:** 2026-07-21
 - **Status:** `PROPOSED_FOR_OWNER_APPROVAL`
 - **Berører:** INV-002, INV-019, INV-021; SAFE-002; CE-2.2B;
-  CE-2.3A; DEC-010; DEC-011
+  CE-2.3A; DEC-010; DEC-011; `STOP_ACTIVE_DOUBLE_COUNT_RISK`;
+  `STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE`
 - **Tidligere beslutning, hvis relevant:** DEC-010
-  (app-specific); DEC-011 (shop-specific GraphQL subscriptions).
-- **Nytt funn og primærevidens:** Eier verifiserte at live
-  `orders-paid` leveres fra Shopify Admin → Settings →
-  Notifications → Webhooks (Event: Order payment; destination
-  `https://utekos.no/api/shopify/webhooks/orders-paid`; JSON;
-  shop-level signing secret → `SHOPIFY_WEBHOOK_SECRET`). Slike
-  notification-webhooks returneres ikke av
-  `webhookSubscriptions`. Tom GraphQL-liste forklarer CE-2.1 uten
-  å bety «ingen webhook».
+  (app-specific); DEC-011 (shop-specific GraphQL subscriptions —
+  `SUPERSEDED_BY_DEC-012`).
+- **Nytt funn og primærevidens:**
+  - Live Admin notification webhooks (owner-created): Order
+    payment →
+    `https://utekos.no/api/shopify/webhooks/orders-paid`; Refund
+    create →
+    `https://utekos.no/api/shopify/webhooks/refunds-create`; both
+    JSON, Webhook API `2026-04`, same shop-level signing secret →
+    `SHOPIFY_WEBHOOK_SECRET`.
+  - Notification webhooks returneres ikke av
+    `webhookSubscriptions`; tom GraphQL-liste ≠ «ingen webhook».
+  - CE-2.3A evidence
+    `docs/analytics/evidence/ce-2.3a-notification-webhook-post-mutation-verification.md`
+    (verifier APPROVE): technical conclusion
+    `SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER`.
+  - `orders-paid` live and ledger-proven; `refunds-create`
+    subscription live but canonical accept blocked by Zod vs
+    2026-04 (`subtotal` number; `currency` null).
 - **Beslutning:**
   - purchase:
     `SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION`
   - refund: `SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION`
   - ADR-0006 amended; konklusjon forblir
     `APPROVED_WITH_PRECONDITIONS`
-  - eksisterende orders-paid: verify only; ikke dupliser via
-    `webhookSubscriptionCreate`
-  - refunds-create: plan manuell Admin notification-creation;
-    ikke auto-opprett
-  - GraphQL `webhookSubscriptionCreate`/`Update` for disse
-    topics: **FORBIDDEN** under denne owner-modellen
+  - `webhookSubscriptionCreate` / `Update`, `shopify.app.toml`,
+    and `shopify app deploy` do **not** own these subscriptions
+  - GraphQL create for these topics: **FORBIDDEN**
   - Mode A toml/deploy: `NOT_APPLICABLE`
-  - Mode B GraphQL create: `FORBIDDEN` for disse topics
-  - `SHOPIFY_WEBHOOK_SECRET` forblir shop notification secret;
-    app API secret key skal ikke erstatte den
+  - Mode B GraphQL create: `FORBIDDEN`
+  - `SHOPIFY_WEBHOOK_SECRET` remains the shop notification
+    secret; app API secret must not replace it
   - Utekos Storefront Admin token: identity + reconciliation +
-    fremtidige Admin API-ops — ikke eier av notification-webhook
-  - `STOP_ACTIVE_DOUBLE_COUNT_RISK` forblir aktiv til cutover
-  - Uendret: deterministic event IDs, reconciliation, browser/
-    server cutover, provider ownership, replay interlocks,
-    separat eiergodkjenning før Shopify-endring
+    future Admin API ops — does **not** represent notification
+    webhooks
+  - CE-2.3A governance status:
+    `VERIFIED_AWAITING_GOVERNANCE_ACCEPTANCE`
+  - Keep active: `STOP_ACTIVE_DOUBLE_COUNT_RISK`
+  - Add active: `STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE`
+  - Unchanged: deterministic event IDs, reconciliation,
+    browser/server cutover, provider ownership, replay
+    interlocks; no runtime/schema change in CE-2.2B
 - **Alternativer:** GraphQL shop-specific create (avvist —
   duplikatrisiko / feil surface); app-specific toml (avvist).
 - **Begrunnelse:** owner-modellen må beskrive den faktiske
-  management surface og HMAC-hemmeligheten som allerede er i
-  produksjon.
+  management surface, HMAC-hemmeligheten og CE-2.3A-verifiserte
+  destinations i produksjon.
 - **Konsekvens for roadmap/DoD:** etter ACCEPTED av DEC-012 /
-  CE-2.2B blir CE-2.3A verify+plan (ikke GraphQL create). Ingen
-  Shopify-mutasjon i CE-2.2B.
+  CE-2.2B kan CE-2.3A governance ACCEPTED vurderes; refund
+  schema-fiks og CE-2.3B krever separate startordrer. Ingen
+  Shopify-/runtime-mutasjon i CE-2.2B.
 - **Godkjent av:** _pending owner ACCEPTED_
 
 ## Mal for ny beslutning

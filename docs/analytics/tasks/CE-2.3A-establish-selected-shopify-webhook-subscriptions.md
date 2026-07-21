@@ -11,6 +11,7 @@ Non-goals: GraphQL webhookSubscriptionCreate/Update, Mode A toml,
   deploy storefront code, forged HMAC, schema remediation in this task
 Primary role: canonical-event-implementer / evidence-auditor
 Supporting role: canonical-event-verifier (read-only)
+Status: VERIFIED_AWAITING_GOVERNANCE_ACCEPTANCE
 ```
 
 ## Preconditions
@@ -19,9 +20,8 @@ Supporting role: canonical-event-verifier (read-only)
   `SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION`.
 - Owner manually created both Admin notification webhooks
   (mutation already done outside agent).
-- This task is **read-only verification** after that mutation.
-- Final CE-2.3A owner ACCEPTED requires CE-2.2B/DEC-012 ACCEPTED
-  plus evidence verifier APPROVE.
+- Technical verification is complete; governance ACCEPTED waits
+  on CE-2.2B / DEC-012 owner ACCEPTED.
 
 ## Approved destinations
 
@@ -44,6 +44,14 @@ Shop-level notification webhook secret
 fingerprint (sha256 prefix): 8a75081095f1
 ```
 
+Not owned by:
+
+```text
+webhookSubscriptionCreate / webhookSubscriptionUpdate
+shopify.app.toml / shopify app deploy
+Utekos Storefront Admin API token (reconciliation/identity only)
+```
+
 ## Posture
 
 ```text
@@ -51,6 +59,7 @@ GraphQL webhookSubscriptionCreate/Update: FORBIDDEN
 Mode A (toml/deploy): NOT_APPLICABLE
 Mode B GraphQL create: FORBIDDEN
 Agent Shopify/env mutation: NONE
+Runtime / refund schema change: NOT in this task
 ```
 
 ## Verification result (2026-07-21)
@@ -62,22 +71,45 @@ docs/analytics/evidence/ce-2.3a-notification-webhook-post-mutation-verification.
 ```
 
 ```text
-Owner conclusion:
+Technical conclusion:
 SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER
+
+Governance status:
+VERIFIED_AWAITING_GOVERNANCE_ACCEPTANCE
 ```
 
 Summary:
 
-- Owner-attested: one Order payment + one Refund create notification
-  webhook, JSON, API 2026-04, same signing secret.
+- Owner-attested: one Order payment + one Refund create
+  notification webhook, JSON, API 2026-04, same signing secret.
 - Production routes deployed; unsigned POST → 401.
-- HMAC: raw body + `SHOPIFY_WEBHOOK_SECRET` + `X-Shopify-Hmac-Sha256`.
-- orders/paid live-compatible; deterministic purchase ID matched;
-  atomic ledger + provider attempts; cron `server_retry` only.
-- refunds/create schema incompatible with 2026-04 sample
-  (`subtotal` number; `currency` null) → payload blocker.
+- HMAC: raw body + `SHOPIFY_WEBHOOK_SECRET` +
+  `X-Shopify-Hmac-Sha256`.
+- `orders-paid`: live and technically verified (deterministic
+  purchase ID + atomic attempts).
+- `refunds-create`: live subscription; canonical acceptance
+  blocked by payload schema vs 2026-04.
 - Handler/mapper tests: 17/17 pass.
 - No refund ledger rows yet.
+
+## Active blockers
+
+```text
+STOP_ACTIVE_DOUBLE_COUNT_RISK
+STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE
+```
+
+Refund blocker:
+
+```text
+Shopify refunds/create 2026-04:
+  subtotal may be number
+  currency may be null
+
+Current repository schema:
+  subtotal required as string
+  currency rejects null
+```
 
 ## Required conclusions vocabulary
 
@@ -91,19 +123,8 @@ STOP_ROUTE_NOT_DEPLOYED
 STOP_TEST_DELIVERY_CAUSED_SIDE_EFFECT
 ```
 
-(`STOP_2026_04_PAYLOAD_INCOMPATIBLE` would apply if subscriptions
-themselves were unproven; here destinations are attested and purchase
-is live — blocker is refund payload schema.)
-
-## Active risk (unchanged)
-
-```text
-STOP_ACTIVE_DOUBLE_COUNT_RISK
-```
-
 ## Commit / stop
 
-Evidence + docs commit only. Fresh verifier. Stop.
-
-Do not auto-start CE-2.3B. Do not treat CE-2.3A as ACCEPTED until
-CE-2.2B/DEC-012 is ACCEPTED and verifier APPROVEs.
+CE-2.2B governance amend only updates this status for alignment.
+Do not auto-start CE-2.3B or refund schema fix. Stop for owner
+ACCEPTED of DEC-012.

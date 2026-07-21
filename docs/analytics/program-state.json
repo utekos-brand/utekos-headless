@@ -3,13 +3,13 @@
   "program": "CanonicalEvent",
   "charter_version": "1.0.0",
   "roadmap_version": "1.0.0",
-  "as_of": "2026-07-21T16:40:00+02:00",
+  "as_of": "2026-07-21T17:20:00+02:00",
   "repository": "utekos-brand/utekos-headless",
   "git": {
     "origin_main_reported": "0a800b1ae169eab8af12c21b3595fe99a667d54c",
-    "local_head_reported": "6d60c8e4c5cc5edf164b4de691f05907defa42e2",
-    "local_ahead_by_reported": 12,
-    "expected_parent_for_next_task": "6d60c8e4c5cc5edf164b4de691f05907defa42e2",
+    "local_head_reported": "0787af63a25fe71375b555854e8384743c9020f5",
+    "local_ahead_by_reported": 13,
+    "expected_parent_for_next_task": "0787af63a25fe71375b555854e8384743c9020f5",
     "local_head_pushed": false,
     "local_head_deployed": false,
     "production_deployment_id": "dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1",
@@ -29,7 +29,7 @@
   },
   "current_governance_task": "CE-2.2B",
   "next_runtime_task": "CE-2.3A",
-  "current_runtime_status": "CE_2_3A_EVIDENCE_AWAITING_VERIFIER",
+  "current_runtime_status": "CE_2_2B_AWAITING_OWNER_ACCEPTED",
   "last_accepted_runtime_task": "CE-2.2",
   "last_accepted_runtime_sha": "2c0c3c6fd67dc9a4098fac71c8f20d7046828f2e",
   "ce_2_2": {
@@ -48,27 +48,36 @@
     "status": "AWAITING_OWNER_ACCEPTED",
     "purchase": "SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION",
     "refund": "SHOP_ADMIN_NOTIFICATION_WEBHOOK_PLUS_RECONCILIATION",
-    "decision_amendment": "DEC-012",
+    "decision": "DEC-012",
+    "decision_title": "Shopify Admin notification webhooks own Purchase and Refund",
     "orders_paid": {
       "surface": "Shopify Admin → Settings → Notifications → Webhooks",
       "event": "Order payment",
       "destination": "https://utekos.no/api/shopify/webhooks/orders-paid",
       "format": "JSON",
+      "webhook_api_version": "2026-04",
       "signing_secret_env": "SHOPIFY_WEBHOOK_SECRET",
       "visible_in_webhookSubscriptions": false,
-      "action": "OWNER_CREATED_VERIFY"
+      "status": "LIVE_TECHNICALLY_VERIFIED"
     },
     "refunds_create": {
-      "action": "OWNER_CREATED_VERIFY",
+      "surface": "Shopify Admin → Settings → Notifications → Webhooks",
+      "event": "Refund create",
       "destination": "https://utekos.no/api/shopify/webhooks/refunds-create",
+      "format": "JSON",
+      "webhook_api_version": "2026-04",
+      "signing_secret_env": "SHOPIFY_WEBHOOK_SECRET",
+      "status": "LIVE_SUBSCRIPTION_ACCEPT_SCHEMA_BLOCKED",
       "graphql_create": "FORBIDDEN"
     },
     "mode_a": "NOT_APPLICABLE",
     "mode_b_graphql_create": "FORBIDDEN",
+    "toml_or_app_deploy_owns_subscriptions": false,
+    "utekos_storefront_token_role": "identity_and_reconciliation_not_notification_owner",
     "mutation_performed": false
   },
   "ce_2_3a": {
-    "status": "EVIDENCE_COMPLETE_AWAITING_VERIFIER",
+    "status": "VERIFIED_AWAITING_GOVERNANCE_ACCEPTANCE",
     "conclusion": "SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER",
     "evidence": "docs/analytics/evidence/ce-2.3a-notification-webhook-post-mutation-verification.md",
     "secret_fingerprint_prefix": "8a75081095f1",
@@ -83,12 +92,13 @@
     "SAFE-001_META_PURCHASE_REPLAY",
     "SAFE-002_SHOPIFY_OWNER_UNPROVEN",
     "SAFE-003_GOOGLE_NATIVE_ADS_OWNER_UNKNOWN",
-    "STOP_ACTIVE_DOUBLE_COUNT_RISK"
+    "STOP_ACTIVE_DOUBLE_COUNT_RISK",
+    "STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE"
   ],
   "known_release_blockers": [
     "Local docs commits deferred from separate push",
-    "CE-2.2B awaiting owner ACCEPTED",
-    "CE-2.3A refund 2026-04 payload schema blocker",
+    "CE-2.2B / DEC-012 awaiting owner ACCEPTED",
+    "STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE",
     "STOP_ACTIVE_DOUBLE_COUNT_RISK webhook∩server distinct event_ids"
   ],
   "authoritative_files": [
