@@ -1,3 +1,13 @@
+import type {
+  CanonicalEventSignalPolicy,
+  ProviderSignalDeliveryPolicy
+} from './canonicalSignalContract'
+import {
+  attachEventSignalContracts,
+  resolveProviderSignalDelivery,
+  type EventSignalProfile
+} from './eventCatalogSignalContracts'
+
 export type CatalogLifecycle =
   | 'active'
   | 'planned'
@@ -64,6 +74,7 @@ type ProviderCatalogEntry = {
   productionStatus: ProviderProductionStatus
   productionDetail: string
   serverOutbox: ServerOutboxStatus
+  signalDelivery: ProviderSignalDeliveryPolicy
 }
 
 type ConsentBasis = 'analytics' | 'marketing' | 'operational'
@@ -77,7 +88,9 @@ type EventConsentPolicy = {
   canonicalLedger: readonly ConsentBasis[]
   analyticsExport: readonly ['analytics']
   marketingExport: readonly ['marketing'] | readonly []
-  googleCookielessPing: 'allowed_by_consent_mode' | 'not_applicable'
+  googleCookielessPing:
+    | 'allowed_by_consent_mode'
+    | 'not_applicable'
   operationalPurpose:
     | 'none'
     | 'commerce_mutation'
@@ -118,13 +131,16 @@ type EventCatalogEntry = {
   dedupe: EventDedupePolicy
   consent: EventConsentPolicy
   providers: Readonly<Record<ProviderId, ProviderCatalogEntry>>
+  signals: CanonicalEventSignalPolicy
 }
+
+type EventCatalogEntryBase = Omit<EventCatalogEntry, 'signals'>
 
 export const technicalRetentionCaveat =
   'Retention values apply only to minimal, non-PII dedupe keys. They are a technical proposal, not a legal retention conclusion for event payloads, consent snapshots, or provider data.'
 
 export const providerIdentifierPolicy =
-  'Direct contact fields and free text are forbidden. Hashed contact identifiers, external IDs, browser/click IDs, and request-context IP addresses may be present only when required by an approved provider mapping and gated by the documented consent policy.'
+  'Direct contact fields and free text are forbidden. Hashed contact identifiers, external IDs, browser/click IDs, and request-context IP addresses may be present only when required by an approved provider mapping and gated by the documented consent policy. Every eligible provider mapping must emit every available signal declared by its eventCatalog signalDelivery contract; unavailable signals must retain an explicit audited reason and must never be fabricated.'
 
 const analyticsExport = ['analytics'] as const
 const marketingExport = ['marketing'] as const
@@ -203,12 +219,20 @@ const baseCanonicalParameters = [
   'consent'
 ] as const
 
-const baseProviderParameters = ['event_id', 'event_time'] as const
+const baseProviderParameters = [
+  'event_id',
+  'event_time'
+] as const
 
 function providerMapping(
-  input: ProviderCatalogEntry
+  input: Omit<ProviderCatalogEntry, 'signalDelivery'>
 ): ProviderCatalogEntry {
-  return input
+  return {
+    ...input,
+    signalDelivery: resolveProviderSignalDelivery(
+      input.transport
+    )
+  }
 }
 
 function notRelevantProvider(
@@ -356,7 +380,6 @@ function plannedProviders(
   }
 }
 
-
 type ActiveProviderInput = PlannedProviderInput & {
   commerce?: boolean
   firstPartyRequired?: readonly string[]
@@ -393,7 +416,8 @@ function activeEventProviders(
         'analytics_or_marketing',
       adapterVersion: 1,
       productionStatus: 'active',
-      productionDetail: 'Canonical first-party persistence is active.',
+      productionDetail:
+        'Canonical first-party persistence is active.',
       serverOutbox: 'disabled'
     }),
     google: providerMapping({
@@ -407,7 +431,8 @@ function activeEventProviders(
         ...baseProviderParameters,
         ...googleRequired
       ],
-      dedupeField: input.commerce ? 'transaction_id' : 'event_id',
+      dedupeField:
+        input.commerce ? 'transaction_id' : 'event_id',
       consentRequirement: 'analytics',
       adapterVersion: 1,
       productionStatus: 'active',
@@ -545,7 +570,8 @@ const pageViewProviders = {
     consentRequirement: 'analytics_or_marketing',
     adapterVersion: 1,
     productionStatus: 'active',
-    productionDetail: 'Canonical first-party persistence is active.',
+    productionDetail:
+      'Canonical first-party persistence is active.',
     serverOutbox: 'disabled'
   }),
   google: providerMapping({
@@ -638,7 +664,8 @@ const viewItemProviders = {
     consentRequirement: 'analytics_or_marketing',
     adapterVersion: 1,
     productionStatus: 'active',
-    productionDetail: 'Canonical first-party persistence is active.',
+    productionDetail:
+      'Canonical first-party persistence is active.',
     serverOutbox: 'disabled'
   }),
   google: providerMapping({
@@ -682,7 +709,8 @@ const viewItemProviders = {
     consentRequirement: 'marketing',
     adapterVersion: 1,
     productionStatus: 'active',
-    productionDetail: 'Meta CAPI delivery is active in production.',
+    productionDetail:
+      'Meta CAPI delivery is active in production.',
     serverOutbox: 'active'
   }),
   microsoft_uet: providerMapping({
@@ -741,7 +769,8 @@ const addToCartProviders = {
     consentRequirement: 'analytics_or_marketing',
     adapterVersion: 1,
     productionStatus: 'active',
-    productionDetail: 'Canonical first-party persistence is active.',
+    productionDetail:
+      'Canonical first-party persistence is active.',
     serverOutbox: 'disabled'
   }),
   google: providerMapping({
@@ -784,7 +813,8 @@ const addToCartProviders = {
     consentRequirement: 'marketing',
     adapterVersion: 1,
     productionStatus: 'active',
-    productionDetail: 'Meta CAPI delivery is active for add_to_cart.',
+    productionDetail:
+      'Meta CAPI delivery is active for add_to_cart.',
     serverOutbox: 'active'
   }),
   microsoft_uet: providerMapping({
@@ -844,7 +874,8 @@ const beginCheckoutProviders = {
     consentRequirement: 'analytics_or_marketing',
     adapterVersion: 1,
     productionStatus: 'active',
-    productionDetail: 'Canonical first-party persistence is active.',
+    productionDetail:
+      'Canonical first-party persistence is active.',
     serverOutbox: 'disabled'
   }),
   google: providerMapping({
@@ -887,7 +918,8 @@ const beginCheckoutProviders = {
     consentRequirement: 'marketing',
     adapterVersion: 1,
     productionStatus: 'active',
-    productionDetail: 'Meta CAPI delivery is active for begin_checkout.',
+    productionDetail:
+      'Meta CAPI delivery is active for begin_checkout.',
     serverOutbox: 'active'
   }),
   microsoft_uet: providerMapping({
@@ -954,10 +986,7 @@ const purchaseProviders = {
   google: providerMapping({
     support: 'supported',
     eventName: 'purchase',
-    transport: {
-      browser: null,
-      server: 'google_data_manager'
-    },
+    transport: { browser: null, server: 'google_data_manager' },
     requiredParameters: [
       ...baseProviderParameters,
       'client_id',
@@ -996,10 +1025,7 @@ const purchaseProviders = {
   microsoft_uet: providerMapping({
     support: 'supported',
     eventName: 'purchase',
-    transport: {
-      browser: null,
-      server: 'microsoft_uet_capi'
-    },
+    transport: { browser: null, server: 'microsoft_uet_capi' },
     requiredParameters: [
       ...baseProviderParameters,
       'revenue_value',
@@ -1058,10 +1084,7 @@ const refundProviders = {
   google: providerMapping({
     support: 'supported',
     eventName: 'refund',
-    transport: {
-      browser: null,
-      server: 'google_data_manager'
-    },
+    transport: { browser: null, server: 'google_data_manager' },
     requiredParameters: [
       ...baseProviderParameters,
       'transaction_id',
@@ -1090,7 +1113,7 @@ const refundProviders = {
   Record<ProviderId, ProviderCatalogEntry>
 >
 
-export const eventCatalog = {
+const eventCatalogBase = {
   page_view: {
     version: 1,
     name: 'page_view',
@@ -1145,7 +1168,11 @@ export const eventCatalog = {
     providers: activeEventProviders('view_item_list', {
       commerce: true,
       googleRequired: ['item_list_id', 'items'],
-      firstPartyRequired: ['page_view_id', 'item_list_id', 'items'],
+      firstPartyRequired: [
+        'page_view_id',
+        'item_list_id',
+        'items'
+      ],
       microsoft: {
         eventName: 'view_item_list',
         requiredParameters: ['items']
@@ -1161,7 +1188,8 @@ export const eventCatalog = {
       description:
         'Create when an accepted product selection initiates navigation from a resolved list.',
       sources: ['browser'],
-      repeatability: 'Each accepted product-selection interaction is new.',
+      repeatability:
+        'Each accepted product-selection interaction is new.',
       eventTime: 'The accepted interaction timestamp.',
       prerequisites: [
         'interaction_id',
@@ -1223,7 +1251,11 @@ export const eventCatalog = {
       sources: ['browser', 'server'],
       repeatability: 'Each successful wishlist mutation is new.',
       eventTime: 'The successful persistence timestamp.',
-      prerequisites: ['mutation_id', 'item', 'updated wishlist state']
+      prerequisites: [
+        'mutation_id',
+        'item',
+        'updated wishlist state'
+      ]
     },
     dedupe: dedupe(
       'wishlist_mutation_id',
@@ -1253,7 +1285,8 @@ export const eventCatalog = {
       description:
         'Create after Shopify accepts the cart mutation and returns the updated cart containing the line.',
       sources: ['browser', 'server'],
-      repeatability: 'Each successful Shopify cart mutation is new.',
+      repeatability:
+        'Each successful Shopify cart mutation is new.',
       eventTime: 'The successful Shopify response timestamp.',
       prerequisites: [
         'cart_mutation_id',
@@ -1280,7 +1313,8 @@ export const eventCatalog = {
       description:
         'Create after Shopify accepts removal and returns an updated cart without the targeted quantity.',
       sources: ['browser', 'server'],
-      repeatability: 'Each successful Shopify removal mutation is new.',
+      repeatability:
+        'Each successful Shopify removal mutation is new.',
       eventTime: 'The successful Shopify response timestamp.',
       prerequisites: [
         'cart_mutation_id',
@@ -1314,7 +1348,8 @@ export const eventCatalog = {
       description:
         'Create when the cart page or drawer and its resolved cart contents are actually visible.',
       sources: ['browser'],
-      repeatability: 'May repeat for a new qualifying cart view sequence.',
+      repeatability:
+        'May repeat for a new qualifying cart view sequence.',
       eventTime: 'The qualifying cart-visibility timestamp.',
       prerequisites: [
         'page_view_id',
@@ -1332,7 +1367,12 @@ export const eventCatalog = {
     providers: activeEventProviders('view_cart', {
       commerce: true,
       googleRequired: ['currency', 'value', 'items'],
-      firstPartyRequired: ['page_view_id', 'currency', 'value', 'items'],
+      firstPartyRequired: [
+        'page_view_id',
+        'currency',
+        'value',
+        'items'
+      ],
       microsoft: {
         eventName: 'view_cart',
         requiredParameters: ['items', 'currency', 'value']
@@ -1349,7 +1389,8 @@ export const eventCatalog = {
         'Create after Shopify returns a valid checkout token or URL for the resolved cart.',
       sources: ['browser', 'server'],
       repeatability: 'Each newly created checkout is new.',
-      eventTime: 'The successful checkout-creation response timestamp.',
+      eventTime:
+        'The successful checkout-creation response timestamp.',
       prerequisites: [
         'cart_id',
         'checkout_id or token',
@@ -1393,7 +1434,12 @@ export const eventCatalog = {
     ),
     consent: mutationConsent,
     providers: plannedProviders('add_shipping_info', {
-      googleRequired: ['currency', 'value', 'shipping_tier', 'items'],
+      googleRequired: [
+        'currency',
+        'value',
+        'shipping_tier',
+        'items'
+      ],
       microsoft: {
         eventName: 'add_shipping_info',
         requiredParameters: ['shipping_tier']
@@ -1410,7 +1456,8 @@ export const eventCatalog = {
         'Create only after an authoritative Shopify checkout event confirms an accepted payment step.',
       sources: ['browser', 'server'],
       repeatability: 'Each accepted payment revision is new.',
-      eventTime: 'The authoritative accepted-payment-step timestamp.',
+      eventTime:
+        'The authoritative accepted-payment-step timestamp.',
       prerequisites: [
         'approved Shopify Customer Events or Web Pixels source',
         'checkout_id',
@@ -1426,7 +1473,12 @@ export const eventCatalog = {
     ),
     consent: mutationConsent,
     providers: plannedProviders('add_payment_info', {
-      googleRequired: ['currency', 'value', 'payment_type', 'items'],
+      googleRequired: [
+        'currency',
+        'value',
+        'payment_type',
+        'items'
+      ],
       meta: {
         eventName: 'AddPaymentInfo',
         requiredParameters: ['content_ids', 'currency', 'value']
@@ -1479,7 +1531,8 @@ export const eventCatalog = {
         'Create from a verified Shopify refund webhook after the refund exists.',
       sources: ['webhook'],
       repeatability: 'Each Shopify refund record is new.',
-      eventTime: 'The authoritative Shopify refund created_at timestamp.',
+      eventTime:
+        'The authoritative Shopify refund created_at timestamp.',
       prerequisites: [
         'verified webhook',
         'refund_id',
@@ -1510,7 +1563,11 @@ export const eventCatalog = {
       sources: ['browser', 'server'],
       repeatability: 'Each explicit resolved search is new.',
       eventTime: 'The resolved search-result timestamp.',
-      prerequisites: ['search_id', 'normalized search term', 'result state']
+      prerequisites: [
+        'search_id',
+        'normalized search term',
+        'result state'
+      ]
     },
     dedupe: dedupe(
       'search_id',
@@ -1520,7 +1577,10 @@ export const eventCatalog = {
     consent: behaviorConsent,
     providers: activeEventProviders('search', {
       googleRequired: ['search_term'],
-      meta: { eventName: 'Search', requiredParameters: ['search_string'] },
+      meta: {
+        eventName: 'Search',
+        requiredParameters: ['search_string']
+      },
       microsoft: {
         eventName: 'search',
         requiredParameters: ['search_term']
@@ -1564,8 +1624,10 @@ export const eventCatalog = {
       description:
         'Create when a promotion is at least 50 percent visible for at least one continuous second.',
       sources: ['browser'],
-      repeatability: 'Each qualifying promotion impression on a page view is new.',
-      eventTime: 'The timestamp at which the visibility threshold is met.',
+      repeatability:
+        'Each qualifying promotion impression on a page view is new.',
+      eventTime:
+        'The timestamp at which the visibility threshold is met.',
       prerequisites: [
         'page_view_id',
         'promotion_id',
@@ -1593,7 +1655,8 @@ export const eventCatalog = {
       description:
         'Create when an accepted promotion selection initiates its intended action or navigation.',
       sources: ['browser'],
-      repeatability: 'Each accepted promotion interaction is new.',
+      repeatability:
+        'Each accepted promotion interaction is new.',
       eventTime: 'The accepted interaction timestamp.',
       prerequisites: [
         'interaction_id',
@@ -1654,7 +1717,11 @@ export const eventCatalog = {
       sources: ['browser'],
       repeatability: 'Once per form and page view.',
       eventTime: 'The first meaningful value-change timestamp.',
-      prerequisites: ['form_id', 'page_view_id', 'field category without value']
+      prerequisites: [
+        'form_id',
+        'page_view_id',
+        'field category without value'
+      ]
     },
     dedupe: dedupe(
       'form_id + page_view_id',
@@ -1678,7 +1745,11 @@ export const eventCatalog = {
       sources: ['server'],
       repeatability: 'Each accepted submission is new.',
       eventTime: 'The authoritative acceptance timestamp.',
-      prerequisites: ['submission_id', 'form_id', 'result without PII']
+      prerequisites: [
+        'submission_id',
+        'form_id',
+        'result without PII'
+      ]
     },
     dedupe: dedupe(
       'submission_id',
@@ -1730,7 +1801,8 @@ export const eventCatalog = {
       description:
         'Create after the selected filters have produced and committed an updated product result revision.',
       sources: ['browser'],
-      repeatability: 'Each committed filter result revision is new.',
+      repeatability:
+        'Each committed filter result revision is new.',
       eventTime: 'The result-commit timestamp.',
       prerequisites: [
         'interaction_id',
@@ -1759,7 +1831,8 @@ export const eventCatalog = {
       description:
         'Create after the selected sort has produced and committed an updated product result revision.',
       sources: ['browser'],
-      repeatability: 'Each committed sort result revision is new.',
+      repeatability:
+        'Each committed sort result revision is new.',
       eventTime: 'The result-commit timestamp.',
       prerequisites: [
         'interaction_id',
@@ -1790,7 +1863,12 @@ export const eventCatalog = {
       sources: ['browser'],
       repeatability: 'Each committed variant selection is new.',
       eventTime: 'The variant-state commit timestamp.',
-      prerequisites: ['interaction_id', 'product_id', 'variant_id', 'availability']
+      prerequisites: [
+        'interaction_id',
+        'product_id',
+        'variant_id',
+        'availability'
+      ]
     },
     dedupe: dedupe(
       'interaction_id + variant_id',
@@ -1814,7 +1892,11 @@ export const eventCatalog = {
       sources: ['browser'],
       repeatability: 'Each qualifying open sequence is new.',
       eventTime: 'The qualifying visibility timestamp.',
-      prerequisites: ['page_view_id', 'guide_id', 'open_sequence']
+      prerequisites: [
+        'page_view_id',
+        'guide_id',
+        'open_sequence'
+      ]
     },
     dedupe: dedupe(
       'page_view_id + guide_id + open_sequence',
@@ -1897,7 +1979,11 @@ export const eventCatalog = {
       sources: ['browser'],
       repeatability: 'Once per page view and threshold.',
       eventTime: 'The first threshold-crossing timestamp.',
-      prerequisites: ['page_view_id', 'threshold', 'document height']
+      prerequisites: [
+        'page_view_id',
+        'threshold',
+        'document height'
+      ]
     },
     dedupe: dedupe(
       'page_view_id + threshold',
@@ -1942,11 +2028,54 @@ export const eventCatalog = {
         'video_percent',
         'video_title'
       ],
-      firstPartyRequired: ['page_view_id', 'video_id', 'milestone'],
+      firstPartyRequired: [
+        'page_view_id',
+        'video_id',
+        'milestone'
+      ],
       posthog: true
     })
   }
-} as const satisfies Record<string, EventCatalogEntry>
+} as const satisfies Record<string, EventCatalogEntryBase>
+
+export const eventSignalProfiles = {
+  page_view: 'website',
+  view_item_list: 'website',
+  select_item: 'website',
+  view_item: 'website',
+  add_to_wishlist: 'website',
+  add_to_cart: 'server_mutation',
+  remove_from_cart: 'server_mutation',
+  view_cart: 'website',
+  begin_checkout: 'server_mutation',
+  add_shipping_info: 'blocked_browser',
+  add_payment_info: 'blocked_browser',
+  purchase: 'transaction_attribution',
+  refund: 'transaction_attribution',
+  search: 'website',
+  view_search_results: 'website',
+  view_promotion: 'website',
+  select_promotion: 'website',
+  generate_lead: 'server_mutation',
+  form_start: 'website',
+  form_submit: 'server_mutation',
+  form_error: 'server_mutation',
+  filter_apply: 'website',
+  sort_apply: 'website',
+  variant_select: 'website',
+  size_guide_view: 'website',
+  checkout_error: 'blocked_mixed',
+  payment_error: 'blocked_mixed',
+  scroll_depth: 'website',
+  video_progress: 'website'
+} as const satisfies {
+  readonly [K in keyof typeof eventCatalogBase]: EventSignalProfile
+}
+
+export const eventCatalog = attachEventSignalContracts(
+  eventCatalogBase,
+  eventSignalProfiles
+)
 
 export type CatalogEventName = keyof typeof eventCatalog
 
@@ -1956,7 +2085,7 @@ export const canonicalEventNames = Object.freeze(
 
 export const activeCanonicalEventNames = Object.freeze(
   canonicalEventNames.filter(
-    (name) => eventCatalog[name].lifecycle === 'active'
+    name => eventCatalog[name].lifecycle === 'active'
   )
 )
 
@@ -2010,7 +2139,11 @@ export const gaAutomaticEventDecisions = {
       'Disable DOM-derived form events when success-aware canonical form events are active.'
   },
   video_engagement: {
-    gaEvents: ['video_start', 'video_progress', 'video_complete'],
+    gaEvents: [
+      'video_start',
+      'video_progress',
+      'video_complete'
+    ],
     decision: 'keep_until_canonical_active_then_disable',
     canonicalReplacement: ['video_progress'],
     rationale:
@@ -2027,18 +2160,21 @@ export const gaAutomaticEventDecisions = {
     gaEvents: ['session_start'],
     decision: 'keep_ga_derived_system_event',
     canonicalReplacement: [],
-    rationale: 'GA owns session derivation; this is not a canonical event.'
+    rationale:
+      'GA owns session derivation; this is not a canonical event.'
   },
   first_visit: {
     gaEvents: ['first_visit'],
     decision: 'keep_ga_derived_system_event',
     canonicalReplacement: [],
-    rationale: 'GA owns first-visit derivation; this is not a canonical event.'
+    rationale:
+      'GA owns first-visit derivation; this is not a canonical event.'
   },
   user_engagement: {
     gaEvents: ['user_engagement'],
     decision: 'keep_ga_derived_system_event',
     canonicalReplacement: [],
-    rationale: 'GA owns engagement derivation; this is not a canonical event.'
+    rationale:
+      'GA owns engagement derivation; this is not a canonical event.'
   }
 } as const

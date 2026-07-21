@@ -1,4 +1,8 @@
 import { z } from 'zod'
+import {
+  canonicalClickIdsSchema,
+  canonicalSignalAuditSchema
+} from './canonicalSignalContract'
 
 const consentValueSchema = z.enum(['denied', 'granted'])
 
@@ -66,7 +70,7 @@ export const canonicalEventEnvelopeSchema = z.strictObject({
   ]),
   consent: consentSnapshotSchema,
   user_data: userDataSchema.optional(),
-  click_id: identifierMapSchema.optional(),
+  click_id: canonicalClickIdsSchema.optional(),
   external_id: z.string().min(1).optional(),
   browser_id: identifierMapSchema.optional(),
   client_ip_address: z.string().min(1).optional(),
@@ -74,7 +78,8 @@ export const canonicalEventEnvelopeSchema = z.strictObject({
   region_code: z.string().min(1).optional(),
   impression_id: z.string().min(1).optional(),
   page_url: z.string().url().optional(),
-  location: locationSchema.optional()
+  location: locationSchema.optional(),
+  signal_audit: canonicalSignalAuditSchema.optional()
 })
 
 export type CanonicalEventEnvelope = z.infer<
@@ -82,3 +87,7 @@ export type CanonicalEventEnvelope = z.infer<
 >
 
 export type ConsentSnapshot = CanonicalEventEnvelope['consent']
+export type {
+  CanonicalSignalAudit,
+  CanonicalSignalAuditEntry
+} from './canonicalSignalContract'

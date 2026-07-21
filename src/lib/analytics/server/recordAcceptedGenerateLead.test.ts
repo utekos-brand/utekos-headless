@@ -3,11 +3,14 @@ import Module from 'node:module'
 import { createRequire } from 'node:module'
 import test from 'node:test'
 import type { ConsentSnapshot } from '../canonicalEventEnvelope'
+import type { CanonicalGenerateLead } from '../generateLeadEvent'
+import { normalizeCanonicalGenerateLead } from './normalizeCanonicalGenerateLead'
 import type {
   RecordAcceptedGenerateLeadInput,
   RecordAcceptedGenerateLeadResult
 } from './recordAcceptedGenerateLead'
 import type { CanonicalGenerateLeadRequestContext } from './normalizeCanonicalGenerateLead'
+import { validateCanonicalSignalContract } from './validateCanonicalSignalContract'
 
 const afterCalls: Array<() => Promise<void>> = []
 const runBatchCalls: Array<{ maxItems: number }> = []
@@ -60,7 +63,12 @@ moduleWithLoad._load = (request, parent, isMain) => {
     }
   }
 
-  if (isRelativeRequest(request, 'runRegisteredProviderOutboxBatch')) {
+  if (
+    isRelativeRequest(
+      request,
+      'runRegisteredProviderOutboxBatch'
+    )
+  ) {
     return {
       runRegisteredProviderOutboxBatch: async (input: {
         maxItems: number
@@ -70,7 +78,9 @@ moduleWithLoad._load = (request, parent, isMain) => {
     }
   }
 
-  if (isRelativeRequest(request, 'acceptCanonicalGenerateLead')) {
+  if (
+    isRelativeRequest(request, 'acceptCanonicalGenerateLead')
+  ) {
     return {
       acceptCanonicalGenerateLead: async (input: {
         payload: unknown
@@ -83,9 +93,13 @@ moduleWithLoad._load = (request, parent, isMain) => {
     }
   }
 
-  if (isRelativeRequest(request, 'postgresCanonicalPageViewStore')) {
+  if (
+    isRelativeRequest(request, 'postgresCanonicalPageViewStore')
+  ) {
     return {
-      postgresCanonicalEventStore: { accept: async () => 'inserted' }
+      postgresCanonicalEventStore: {
+        accept: async () => 'inserted'
+      }
     }
   }
 
@@ -93,13 +107,12 @@ moduleWithLoad._load = (request, parent, isMain) => {
 }
 
 const require = createRequire(import.meta.url)
-const { recordAcceptedGenerateLead } = require(
-  './recordAcceptedGenerateLead.ts'
-) as {
-  recordAcceptedGenerateLead: (
-    input: RecordAcceptedGenerateLeadInput
-  ) => Promise<RecordAcceptedGenerateLeadResult>
-}
+const { recordAcceptedGenerateLead } =
+  require('./recordAcceptedGenerateLead.ts') as {
+    recordAcceptedGenerateLead: (
+      input: RecordAcceptedGenerateLeadInput
+    ) => Promise<RecordAcceptedGenerateLeadResult>
+  }
 
 const SUBMISSION_ID = '22222222-2222-4222-8222-222222222222'
 const PAGE_VIEW_ID = '11111111-1111-4111-8111-111111111111'
@@ -139,6 +152,7 @@ function baseInput(
     consent: grantedConsent,
     formId: 'newsletter_signup',
     leadType: 'newsletter',
+    pageUrl: 'https://utekos.no/nyhetsbrev',
     requestContext,
     submissionId: SUBMISSION_ID,
     ...overrides
@@ -217,7 +231,7 @@ test('acceptance error propagates without scheduling registry dispatch', async (
 
   await assert.rejects(
     recordAcceptedGenerateLead(baseInput()),
-    (error) => error === expectedError
+    error => error === expectedError
   )
 
   assert.equal(afterCalls.length, 0)
@@ -237,27 +251,119 @@ test('generated canonical event retains submissionId and current context', async
       pageUrl: 'https://utekos.no/venteliste?fbclid=abc123',
       pageViewId: PAGE_VIEW_ID,
       cookieHeader:
-        'utekos_external_id=anon_aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee; _fbp=fb.1.1'
+        'utekos_external_id=anon_aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee; _fbp=fb.1.1; _fbc=fb.1.1753099200000.abc123'
     })
   )
 
   assert.equal(acceptCalls.length, 1)
-  const { payload, requestContext: capturedContext } = acceptCalls[0]!
+  const { payload, requestContext: capturedContext } =
+    acceptCalls[0]!
   const event = payload as {
     event_id: string
     page_view_id?: string
-    page_url?: string
+    page_url: string
     custom_data: { submission_id: string; form_id: string }
-    event_device_info?: { userAgent?: string; user_agent?: string }
+    event_device_info?: {
+      userAgent?: string
+      user_agent?: string
+    }
   }
 
   assert.equal(event.event_id, SUBMISSION_ID)
   assert.equal(event.custom_data.submission_id, SUBMISSION_ID)
   assert.equal(event.custom_data.form_id, 'newsletter_signup')
   assert.equal(event.page_view_id, PAGE_VIEW_ID)
-  assert.equal(event.page_url, 'https://utekos.no/venteliste?fbclid=abc123')
+  assert.equal(
+    event.page_url,
+    'https://utekos.no/venteliste?fbclid=abc123'
+  )
   assert.equal(capturedContext, requestContext)
-  assert.equal(capturedContext.userAgent, 'UtekosLeadTestAgent/1.0')
+  assert.equal(
+    capturedContext.userAgent,
+    'UtekosLeadTestAgent/1.0'
+  )
   assert.equal(afterCalls.length, 0)
   assert.equal(runBatchCalls.length, 0)
+})
+
+test('migrated generate_lead populates signal_audit that validates after normalize', async () => {
+  resetSpies()
+  acceptImpl = async input => {
+    const payload = input.payload as { event_id: string }
+    return { event_id: payload.event_id, status: 'accepted' }
+  }
+
+  await recordAcceptedGenerateLead(
+    baseInput({
+      email: 'signal@example.com',
+      pageUrl: 'https://utekos.no/venteliste?fbclid=AbCdEf-123',
+      pageViewId: PAGE_VIEW_ID,
+      cookieHeader:
+        'utekos_external_id=anon_aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee; _fbp=fb.1.1753099200000.123456789; _fbc=fb.1.1753099200000.AbCdEf-123'
+    })
+  )
+
+  assert.equal(acceptCalls.length, 1)
+  const payload = acceptCalls[0]!
+    .payload as CanonicalGenerateLead
+  assert.ok(payload.signal_audit)
+
+  const normalized = normalizeCanonicalGenerateLead(
+    payload,
+    acceptCalls[0]!.requestContext
+  )
+  assert.deepEqual(validateCanonicalSignalContract(normalized), {
+    ok: true,
+    issues: []
+  })
+})
+
+test('denied marketing lead audits marketing signals as consent_denied', async () => {
+  resetSpies()
+  acceptImpl = async input => {
+    const payload = input.payload as { event_id: string }
+    return { event_id: payload.event_id, status: 'accepted' }
+  }
+
+  await recordAcceptedGenerateLead(
+    baseInput({
+      consent: {
+        analytics: 'granted',
+        marketing: 'denied',
+        preferences: 'denied',
+        source: 'cookiebot',
+        version: '1'
+      },
+      pageUrl:
+        'https://utekos.no/nyhetsbrev?fbclid=denied-click',
+      cookieHeader: '_fbp=fb.1.1; _fbc=fb.1.2.denied-click'
+    })
+  )
+
+  assert.equal(acceptCalls.length, 1)
+  const payload = acceptCalls[0]!
+    .payload as CanonicalGenerateLead
+  assert.equal(payload.click_id, undefined)
+  assert.equal(payload.external_id, undefined)
+  assert.equal(
+    payload.signal_audit?.external_id.state,
+    'unavailable'
+  )
+  if (
+    payload.signal_audit?.external_id.state === 'unavailable'
+  ) {
+    assert.equal(
+      payload.signal_audit.external_id.reason,
+      'consent_denied'
+    )
+  }
+
+  const normalized = normalizeCanonicalGenerateLead(
+    payload,
+    acceptCalls[0]!.requestContext
+  )
+  assert.deepEqual(validateCanonicalSignalContract(normalized), {
+    ok: true,
+    issues: []
+  })
 })

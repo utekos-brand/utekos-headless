@@ -80,8 +80,14 @@ test('defines the required owner, trigger, dedupe, consent, and provider contrac
       `${name}: lifecycle`
     )
 
-    assert.ok(entry.trigger.description.length > 0, `${name}: trigger`)
-    assert.ok(entry.trigger.sources.length > 0, `${name}: sources`)
+    assert.ok(
+      entry.trigger.description.length > 0,
+      `${name}: trigger`
+    )
+    assert.ok(
+      entry.trigger.sources.length > 0,
+      `${name}: sources`
+    )
     assert.ok(
       entry.trigger.repeatability.length > 0,
       `${name}: repeatability`
@@ -95,9 +101,15 @@ test('defines the required owner, trigger, dedupe, consent, and provider contrac
       `${name}: prerequisites`
     )
 
-    assert.ok(entry.dedupe.eventId.length > 0, `${name}: event id`)
+    assert.ok(
+      entry.dedupe.eventId.length > 0,
+      `${name}: event id`
+    )
     assert.ok(entry.dedupe.reuse.length > 0, `${name}: reuse`)
-    assert.ok(entry.dedupe.newEvent.length > 0, `${name}: new event`)
+    assert.ok(
+      entry.dedupe.newEvent.length > 0,
+      `${name}: new event`
+    )
     assert.equal(
       entry.dedupe.ledgerIdempotencyKey,
       'event_name + event_id'
@@ -106,14 +118,22 @@ test('defines the required owner, trigger, dedupe, consent, and provider contrac
       entry.dedupe.providerIdempotencyKey,
       'provider + event_name + event_id'
     )
-    assert.equal(typeof entry.dedupe.browserServerShareEventId, 'boolean')
-    assert.ok(entry.dedupe.retention.value > 0, `${name}: retention`)
+    assert.equal(
+      typeof entry.dedupe.browserServerShareEventId,
+      'boolean'
+    )
+    assert.ok(
+      entry.dedupe.retention.value > 0,
+      `${name}: retention`
+    )
     assert.equal(entry.dedupe.retention.scope, 'dedupe_key_only')
 
     assert.ok(entry.consent.browserCreation.length > 0)
     assert.ok(entry.consent.firstPartyCollection.length > 0)
     assert.ok(entry.consent.canonicalLedger.length > 0)
-    assert.deepEqual(entry.consent.analyticsExport, ['analytics'])
+    assert.deepEqual(entry.consent.analyticsExport, [
+      'analytics'
+    ])
     assert.equal(
       entry.consent.piiPolicy,
       'consent_gated_provider_identifiers_only'
@@ -156,7 +176,7 @@ test('defines the required owner, trigger, dedupe, consent, and provider contrac
 
 test('keeps blocked_source events isolated from active lifecycle', () => {
   const blockedSources = canonicalEventNames.filter(
-    (name) => eventCatalog[name].lifecycle === 'blocked_source'
+    name => eventCatalog[name].lifecycle === 'blocked_source'
   )
 
   assert.deepEqual(blockedSources, [
@@ -169,7 +189,7 @@ test('keeps blocked_source events isolated from active lifecycle', () => {
 
 test('marks all non-blocked catalog events as active', () => {
   const inactiveEvents = canonicalEventNames.filter(
-    (name) => eventCatalog[name].lifecycle !== 'active'
+    name => eventCatalog[name].lifecycle !== 'active'
   )
 
   assert.deepEqual(inactiveEvents, [
@@ -181,10 +201,12 @@ test('marks all non-blocked catalog events as active', () => {
 })
 
 test('allows active Google, Meta, and Microsoft purchase server outboxes', () => {
-  const activeOutboxes = canonicalEventNames.flatMap((eventName) =>
-    providerIds.flatMap((providerId) =>
-      eventCatalog[eventName].providers[providerId].serverOutbox ===
-      'active' ?
+  const activeOutboxes = canonicalEventNames.flatMap(eventName =>
+    providerIds.flatMap(providerId =>
+      (
+        eventCatalog[eventName].providers[providerId]
+          .serverOutbox === 'active'
+      ) ?
         [`${providerId}:${eventName}`]
       : []
     )
@@ -231,7 +253,8 @@ test('records current mixed Microsoft delivery and historical page_view backlog 
     )
   )
   assert.equal(
-    eventCatalog.view_item.providers.microsoft_uet.transport.browser,
+    eventCatalog.view_item.providers.microsoft_uet.transport
+      .browser,
     'microsoft_uet'
   )
   assert.equal(
@@ -251,7 +274,8 @@ test('records current mixed Microsoft delivery and historical page_view backlog 
     /Historical blocked rows/
   )
   assert.match(
-    eventCatalog.page_view.providers.microsoft_uet.productionDetail,
+    eventCatalog.page_view.providers.microsoft_uet
+      .productionDetail,
     /must not be replayed/
   )
 })
@@ -286,7 +310,8 @@ test('classifies every GA automatic-event decision explicitly', () => {
     ['search', 'view_search_results']
   )
   assert.deepEqual(
-    gaAutomaticEventDecisions.form_interactions.canonicalReplacement,
+    gaAutomaticEventDecisions.form_interactions
+      .canonicalReplacement,
     ['form_start', 'form_submit']
   )
 
@@ -299,7 +324,10 @@ test('classifies every GA automatic-event decision explicitly', () => {
 
 test('states that retention is technical and limited to dedupe keys', () => {
   assert.match(technicalRetentionCaveat, /dedupe keys/)
-  assert.match(technicalRetentionCaveat, /not a legal retention conclusion/)
+  assert.match(
+    technicalRetentionCaveat,
+    /not a legal retention conclusion/
+  )
 })
 
 test('keeps operational first-party persistence separate from provider export consent', () => {
@@ -312,7 +340,8 @@ test('keeps operational first-party persistence separate from provider export co
     'operational'
   )
   assert.equal(
-    eventCatalog.form_error.providers.supabase.consentRequirement,
+    eventCatalog.form_error.providers.supabase
+      .consentRequirement,
     'analytics_or_operational'
   )
   assert.match(providerIdentifierPolicy, /Direct contact fields/)

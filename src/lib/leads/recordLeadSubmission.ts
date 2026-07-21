@@ -8,7 +8,11 @@ import {
 import { getLeadRequestContextFromHeaders } from '@/lib/analytics/server/getLeadRequestContextFromHeaders'
 import { recordAcceptedGenerateLead } from '@/lib/analytics/server/recordAcceptedGenerateLead'
 import { logToAppLogs } from '@/lib/utils/logToAppLogs'
-import type { LeadFormId, LeadSource, LeadType } from './leadFormIds'
+import type {
+  LeadFormId,
+  LeadSource,
+  LeadType
+} from './leadFormIds'
 import { insertMarketingLead } from './insertMarketingLead'
 
 export type RecordLeadSubmissionInput = {
@@ -75,8 +79,22 @@ export async function recordLeadSubmission(
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : 'Unknown error'
-    await logToAppLogs('ERROR', 'Marketing Lead Persist Failed', {
-      error: message,
+    await logToAppLogs(
+      'ERROR',
+      'Marketing Lead Persist Failed',
+      {
+        error: message,
+        formId: input.formId,
+        leadId: input.leadId
+      }
+    )
+    return { leadId: input.leadId }
+  }
+
+  const pageUrl = input.trackingContext?.page_url
+  if (!pageUrl) {
+    await logToAppLogs('ERROR', 'Generate Lead Record Skipped', {
+      reason: 'missing_page_url',
       formId: input.formId,
       leadId: input.leadId
     })
@@ -84,17 +102,16 @@ export async function recordLeadSubmission(
   }
 
   try {
-    const requestContext = await getLeadRequestContextFromHeaders()
+    const requestContext =
+      await getLeadRequestContextFromHeaders()
     const result = await recordAcceptedGenerateLead({
       consent,
       submissionId: input.leadId,
       formId: input.formId,
       leadType: input.leadType,
       email: input.email,
+      pageUrl,
       ...(input.phone ? { phone: input.phone } : {}),
-      ...(input.trackingContext?.page_url ?
-        { pageUrl: input.trackingContext.page_url }
-      : {}),
       ...(input.trackingContext?.page_view_id ?
         { pageViewId: input.trackingContext.page_view_id }
       : {}),
