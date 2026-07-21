@@ -3,13 +3,13 @@
   "program": "CanonicalEvent",
   "charter_version": "1.0.0",
   "roadmap_version": "1.0.0",
-  "as_of": "2026-07-21T16:25:01+02:00",
+  "as_of": "2026-07-21T16:40:00+02:00",
   "repository": "utekos-brand/utekos-headless",
   "git": {
     "origin_main_reported": "0a800b1ae169eab8af12c21b3595fe99a667d54c",
-    "local_head_reported": "998a22efd414309e1cb1187535cebc0768c9dac9",
-    "local_ahead_by_reported": 11,
-    "expected_parent_for_next_task": "998a22efd414309e1cb1187535cebc0768c9dac9",
+    "local_head_reported": "6d60c8e4c5cc5edf164b4de691f05907defa42e2",
+    "local_ahead_by_reported": 12,
+    "expected_parent_for_next_task": "6d60c8e4c5cc5edf164b4de691f05907defa42e2",
     "local_head_pushed": false,
     "local_head_deployed": false,
     "production_deployment_id": "dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1",
@@ -29,7 +29,7 @@
   },
   "current_governance_task": "CE-2.2B",
   "next_runtime_task": "CE-2.3A",
-  "current_runtime_status": "CE_2_2B_AWAITING_OWNER_ACCEPTED",
+  "current_runtime_status": "CE_2_3A_EVIDENCE_AWAITING_VERIFIER",
   "last_accepted_runtime_task": "CE-2.2",
   "last_accepted_runtime_sha": "2c0c3c6fd67dc9a4098fac71c8f20d7046828f2e",
   "ce_2_2": {
@@ -56,10 +56,11 @@
       "format": "JSON",
       "signing_secret_env": "SHOPIFY_WEBHOOK_SECRET",
       "visible_in_webhookSubscriptions": false,
-      "action": "VERIFY_ONLY"
+      "action": "OWNER_CREATED_VERIFY"
     },
     "refunds_create": {
-      "action": "PLAN_MANUAL_ADMIN_CREATE",
+      "action": "OWNER_CREATED_VERIFY",
+      "destination": "https://utekos.no/api/shopify/webhooks/refunds-create",
       "graphql_create": "FORBIDDEN"
     },
     "mode_a": "NOT_APPLICABLE",
@@ -67,10 +68,16 @@
     "mutation_performed": false
   },
   "ce_2_3a": {
-    "status": "PENDING_CE_2_2B_ACCEPTED",
-    "posture": "VERIFY_ORDERS_PAID_PLAN_REFUNDS_CREATE",
+    "status": "EVIDENCE_COMPLETE_AWAITING_VERIFIER",
+    "conclusion": "SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER",
+    "evidence": "docs/analytics/evidence/ce-2.3a-notification-webhook-post-mutation-verification.md",
+    "secret_fingerprint_prefix": "8a75081095f1",
+    "payload_blocker": "refunds/create Zod expects string subtotal and non-null currency; Shopify 2026-04 sample uses number subtotal and null currency",
+    "orders_paid_live": true,
+    "refunds_create_ledger_rows": 0,
     "graphql_subscription_create": "FORBIDDEN",
-    "mutation_performed": false
+    "mutation_performed_by_agent": false,
+    "owner_accepted": false
   },
   "active_interlocks": [
     "SAFE-001_META_PURCHASE_REPLAY",
@@ -80,7 +87,8 @@
   ],
   "known_release_blockers": [
     "Local docs commits deferred from separate push",
-    "CE-2.2B awaiting owner ACCEPTED before CE-2.3A verify/plan",
+    "CE-2.2B awaiting owner ACCEPTED",
+    "CE-2.3A refund 2026-04 payload schema blocker",
     "STOP_ACTIVE_DOUBLE_COUNT_RISK webhook∩server distinct event_ids"
   ],
   "authoritative_files": [
