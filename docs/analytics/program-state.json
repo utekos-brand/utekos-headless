@@ -3,11 +3,13 @@
   "program": "CanonicalEvent",
   "charter_version": "1.0.0",
   "roadmap_version": "1.0.0",
-  "as_of": "2026-07-21T17:40:00+02:00",
+  "as_of": "2026-07-21T18:50:00+02:00",
   "repository": "utekos-brand/utekos-headless",
   "git": {
     "origin_main_reported": "0a800b1ae169eab8af12c21b3595fe99a667d54c",
-    "local_ahead_by_reported": 17,
+    "local_head_reported": "3071e57320b084800764f4529f225233abf354df",
+    "local_ahead_by_reported": 19,
+    "expected_parent_for_next_task": "3071e57320b084800764f4529f225233abf354df",
     "local_head_pushed": false,
     "local_head_deployed": false,
     "production_deployment_id": "dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1",
@@ -15,12 +17,10 @@
     "production_deployment_state": "READY",
     "rollback_sha": "ee781aed52474eb6bdecee63e43ffabec9d0cea2",
     "docs_push_deferred": true,
-    "verification_required_before_write": true,
-    "local_head_reported": "b2cd690372bf8ee188f0a711abe60dc200039cef",
-    "expected_parent_for_next_task": "b2cd690372bf8ee188f0a711abe60dc200039cef"
+    "verification_required_before_write": true
   },
   "progress": {
-    "accepted_points": 31,
+    "accepted_points": 32,
     "implemented_points": 31,
     "production_verified_points": 26,
     "total_points": 100,
@@ -28,11 +28,12 @@
     "phase_2_status": "IN_PROGRESS"
   },
   "current_governance_task": null,
-  "next_runtime_task": "CE-2.3B",
-  "current_runtime_status": "CE_2_3B_AUTHORIZED",
+  "next_runtime_task": "CE-2.3C",
+  "current_runtime_status": "CE_2_3C_AUTHORIZED",
   "last_accepted_runtime_task": "CE-2.3A-F1",
   "last_accepted_runtime_sha": "59c130c2ee9c93c3f62332fa03763d27e5168b05",
-  "last_accepted_governance_task": "CE-2.3A-F1",
+  "last_accepted_governance_task": "CE-2.3B",
+  "last_accepted_governance_sha": "3071e57320b084800764f4529f225233abf354df",
   "ce_2_2": {
     "status": "ACCEPTED_SUPERSEDED_FOR_IMPLEMENTATION",
     "decision": "DEC-010",
@@ -106,6 +107,18 @@
     "accepted_at": "2026-07-21T17:40:00+02:00",
     "status_commit_sha": "b2cd690372bf8ee188f0a711abe60dc200039cef"
   },
+  "ce_2_3b": {
+    "status": "ACCEPTED",
+    "conclusion": "READY_FOR_CE_2_3C",
+    "evidence": "docs/analytics/evidence/ce-2.3b-shopify-commerce-reconciliation-design.md",
+    "evidence_commit": "3071e57320b084800764f4529f225233abf354df",
+    "verifier": "APPROVE",
+    "owner_accepted": true,
+    "accepted_at": "2026-07-21T18:50:00+02:00",
+    "stop_active_double_count_risk": "ACTIVE",
+    "ce_2_3c_authorized": true,
+    "vercel_json_in_ce_2_3c": false
+  },
   "active_interlocks": [
     "SAFE-001_META_PURCHASE_REPLAY",
     "SAFE-002_SHOPIFY_OWNER_UNPROVEN",
@@ -121,6 +134,5 @@
     "docs/analytics/roadmap.md",
     "docs/analytics/decision-log.md",
     "docs/analytics/current-handoff.md"
-  ],
-  "last_accepted_governance_sha": "b2cd690372bf8ee188f0a711abe60dc200039cef"
+  ]
 }

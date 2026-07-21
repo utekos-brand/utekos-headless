@@ -1,7 +1,7 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.11.0 **Oppdatert:**
-2026-07-21T17:40:00+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.12.0 **Oppdatert:**
+2026-07-21T18:50:00+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
@@ -16,9 +16,10 @@ deployment- og livefakta før enhver handling
 ## 2. Git- og produksjonsstatus
 
 - `origin/main`: `0a800b1ae169eab8af12c21b3595fe99a667d54c`
-- ACCEPTED CE-2.3A-F1 tip: se `git rev-parse HEAD` after this
-  status commit
-- Accepted runtime SHA:
+- ACCEPTED CE-2.3B design tip:
+  `3071e57320b084800764f4529f225233abf354df`
+- tip: se `git rev-parse HEAD` after this status commit
+- Accepted runtime SHA (CE-2.3A-F1):
   `59c130c2ee9c93c3f62332fa03763d27e5168b05`
 - lokale docs-commits **ikke pushet**
 - produksjonsdeploy: `dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1` READY
@@ -50,24 +51,26 @@ STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE: CLOSED
 STOP_ACTIVE_DOUBLE_COUNT_RISK: fortsatt ACTIVE
 ```
 
-Prior CE-2.3A (unchanged technical base):
+## 5. CE-2.3B — ACCEPTED
 
 ```text
-Conclusion: SUBSCRIPTIONS_ESTABLISHED_WITH_PAYLOAD_BLOCKER
-Evidence: docs/analytics/evidence/ce-2.3a-notification-webhook-post-mutation-verification.md
-orders-paid: active + production-proven
-refunds-create: active subscription
-Both: JSON + Webhook API 2026-04 + same SHOPIFY_WEBHOOK_SECRET
+CE-2.3B: ACCEPTED
+Conclusion: READY_FOR_CE_2_3C
+Evidence: docs/analytics/evidence/ce-2.3b-shopify-commerce-reconciliation-design.md
+Evidence commit: 3071e57320b084800764f4529f225233abf354df
+Verifier: APPROVE
+Owner: ACCEPTED
+STOP_ACTIVE_DOUBLE_COUNT_RISK: fortsatt ACTIVE
 ```
 
-## 5. Prior decisions
+## 6. Prior decisions
 
 - CE-2.2 ACCEPTED (app-specific) — superseded for implementation
 - CE-2.2A / DEC-011 — `SUPERSEDED_BY_DEC-012`
 - Mode A toml: `NOT_APPLICABLE`
 - Mode B GraphQL create: `FORBIDDEN` for these topics
 
-## 6. Interlocks / blockers (still active)
+## 7. Interlocks / blockers (still active)
 
 ```text
 STOP_ACTIVE_DOUBLE_COUNT_RISK
@@ -82,24 +85,27 @@ Closed:
 STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE
 ```
 
-## 7. Rekkefølge
+## 8. Rekkefølge
 
 ```text
 CE-2.2B / DEC-012 ACCEPTED ✓
 CE-2.3A ACCEPTED_WITH_PAYLOAD_BLOCKER ✓
 CE-2.3A-F1 ACCEPTED ✓
-CE-2.3B — next authorized task (expected parent = this status tip)
+CE-2.3B ACCEPTED ✓
+CE-2.3C — AUTHORIZED (expected parent = this status tip)
 ```
 
-## 8. Ingen autorisasjon uten ny startordre
+## 9. Ingen autorisasjon uten ny startordre
 
 - push/deploy
 - Shopify Admin mutation
 - GraphQL webhookSubscriptionCreate/Update for these topics
-- CE-2.3C without CE-2.3B owner acceptance
+- production 24h reconciliation run
+- vercel.json cron schedule for shopify-commerce-reconciliation
+- CE-2.3C production invocation
 
-## 9. Dokumentasjonsstatus
+## 10. Dokumentasjonsstatus
 
-- CE-2.3A-F1 er eiergodkjent og statusregistrert
-- CE-2.3B er neste autoriserte task
+- CE-2.3B er eiergodkjent (verifier APPROVE)
+- CE-2.3C er autorisert
 - `STOP_ACTIVE_DOUBLE_COUNT_RISK` forblir ACTIVE

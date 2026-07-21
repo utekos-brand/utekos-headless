@@ -312,6 +312,30 @@ STOP_ACTIVE_DOUBLE_COUNT_RISK: fortsatt ACTIVE
 - **Godkjent av:** Prosjekteier (eiergodkjent F1; mekanisk
   statusregistrering)
 
+## Status — CE-2.3B ACCEPTED (mekanisk registrering)
+
+- **Dato:** 2026-07-21
+- **Status:** `ACCEPTED` (ingen ny beslutning; ingen omtolkning)
+- **Berører:** CE-2.3B; CE-2.3C; `STOP_ACTIVE_DOUBLE_COUNT_RISK`
+- **Registrert eksakt:**
+
+```text
+CE-2.3B: ACCEPTED
+Conclusion: READY_FOR_CE_2_3C
+Evidence commit: 3071e57320b084800764f4529f225233abf354df
+Verifier: APPROVE
+STOP_ACTIVE_DOUBLE_COUNT_RISK: fortsatt ACTIVE
+```
+
+- **Evidence:**
+  `docs/analytics/evidence/ce-2.3b-shopify-commerce-reconciliation-design.md`
+- **Konsekvens:** CE-2.3C er autorisert. Expected parent for
+  CE-2.3C er denne statuscommitens fulle SHA. CE-2.3C følger
+  exact allowlist i CE-2.3B-evidence; ingen `vercel.json`; ingen
+  produksjonskjøring uten separat gate.
+- **Godkjent av:** Prosjekteier (eiergodkjent CE-2.3B; mekanisk
+  statusregistrering)
+
 ## Mal for ny beslutning
 
 ```text
