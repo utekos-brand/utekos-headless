@@ -1,7 +1,7 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.15.0 **Oppdatert:**
-2026-07-21T21:45:00+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.16.0 **Oppdatert:**
+2026-07-21T23:42:35+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
@@ -113,7 +113,8 @@ CE-2.3A-F1 ACCEPTED ✓
 CE-2.3B ACCEPTED ✓
 CE-2.3C ACCEPTED ✓
 Signal-contract integration ACCEPTED ✓
-CE-2.4/CE-2.5 — AUTHORIZED AS ONE RUNTIME PACKAGE
+CE-2.4/CE-2.5 — AUTHORIZED AS ONE RUNTIME PACKAGE;
+  START GATE STOPPED pending section 15
 ```
 
 CE-2.4/CE-2.5 startes i en ny clean worktree fra denne
@@ -153,7 +154,9 @@ STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
 Release readiness:
 
 ```text
-RELEASE_READINESS_PENDING_CLEAN_BASELINE_CHECK
+RELEASE_READINESS_PENDING_CLEAN_BASELINE_CHECK: SUPERSEDED
+CLEAN_BASELINE_PREREQUISITE: COMPLETED at 3b9937f87
+CE-2.4/CE-2.5_START_GATE: STOPPED pending section 15
 ```
 
 Repository-wide TypeScript/build må reproduseres fra clean
@@ -172,3 +175,90 @@ denne kontrollen.
 - dirty `program-charter.md` og `roadmap.md` håndteres separat og
   skal ikke kopieres inn i runtime-worktree-en
 - `STOP_ACTIVE_DOUBLE_COUNT_RISK` forblir ACTIVE
+
+## 14. Clean-baseline prerequisite — COMPLETED
+
+```text
+Conclusion: META_CLICK_ID_COMPATIBILITY_FIXED
+Runtime commit: 3b9937f87f3d40cfcdeda82a0f60f462302260b7
+Start SHA: de6ef96141a8ce6b953d049f45daabc2589e4aeb
+Fresh reviewer: APPROVE
+Push/deploy: NOT AUTHORIZED
+```
+
+Exact prerequisite allowlist:
+
+```text
+src/lib/analytics/checkoutAttributionSnapshot.ts
+src/lib/analytics/enrichCanonicalEventWithMetaAttribution.ts
+src/lib/analytics/enrichCanonicalEventWithMetaAttribution.test.ts
+```
+
+Verification on Node `24.14.0`:
+
+```text
+focused analytics tests: 19/19 PASS
+pnpm exec next typegen: PASS
+pnpm exec tsc --noEmit: PASS
+pnpm build: PASS with existing ignored local env
+production tracking:gateway:smoke: PASS
+```
+
+Blocked unrelated repository gates:
+
+```text
+npm run mcp:build:
+  ERR_MODULE_NOT_FOUND scripts/mcp/build-config.ts
+npm run mcp:doctor:
+  ERR_MODULE_NOT_FOUND scripts/mcp/doctor.ts
+```
+
+The package scripts point at files that are absent from the
+clean, versioned worktree. Ignored copies from the dirty parent
+checkout were not copied into this runtime worktree.
+
+## 15. CE-2.4/CE-2.5 start gate — STOPPED
+
+```text
+Conclusion: STOP_REFUND_SCHEMA_REMEDIATION_REQUIRED
+Combined runtime allowlist: NOT_AUTHORIZABLE_YET
+CE-2.4/CE-2.5 runtime edits: NOT STARTED
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+```
+
+Fresh read-only production evidence from canonical Supabase
+project `hkoawfbomhnzupcsdggb` at 2026-07-21T23:42:35+02:00:
+
+```text
+canonical refund rows: 0
+purchase transaction_id groups with multiple event_id values: 3
+purchase payload sources observed:
+  missing: 14
+  ops_backfill: 3
+  server: 3
+  shopify: 45
+  webhook: 15
+latest webhook purchase occurred_at: 2026-07-21T16:46:12Z
+```
+
+Two contract decisions require approval before implementation:
+
+1. `canonicalRefundCommerceSchema.items` and the Shopify refund
+   payload schema both require at least one line item. Shopify
+   permits valid shipping-only refunds. CE-2.5 requires a
+   separately scoped and owner-approved CE-3.3 schema-remediation
+   task instead of fabricated items.
+2. CE-2.4 requires Shopify delivery/event/API-version/timestamp
+   source evidence. The current webhook handlers discard those
+   correlation headers, and no approved canonical or operational
+   carrier exists.
+
+After those decisions, runtime edits still require:
+
+- an approved production cutover and rollback plan;
+- one writer for the combined package;
+- an exact, non-overlapping allowlist written into this handoff.
+
+No CE-2.6 replay/backfill scripts belong in the CE-2.4/CE-2.5
+allowlist. Reconciliation scheduling, the first 24-hour run,
+backfill, provider mutation, push and deploy remain unauthorized.
