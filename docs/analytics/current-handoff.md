@@ -1,7 +1,7 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.12.0 **Oppdatert:**
-2026-07-21T18:50:00+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.13.0 **Oppdatert:**
+2026-07-21T20:46:00+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
@@ -16,12 +16,10 @@ deployment- og livefakta før enhver handling
 ## 2. Git- og produksjonsstatus
 
 - `origin/main`: `0a800b1ae169eab8af12c21b3595fe99a667d54c`
-- ACCEPTED CE-2.3B design tip:
-  `3071e57320b084800764f4529f225233abf354df`
+- ACCEPTED CE-2.3C runtime:
+  `fde892700b9090a9db9b42ff19d3655444c7b60e`
 - tip: se `git rev-parse HEAD` after this status commit
-- Accepted runtime SHA (CE-2.3A-F1):
-  `59c130c2ee9c93c3f62332fa03763d27e5168b05`
-- lokale docs-commits **ikke pushet**
+- lokale commits **ikke pushet**
 - produksjonsdeploy: `dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1` READY
 
 ## 3. CE-2.2B / DEC-012 — ACCEPTED
@@ -63,14 +61,32 @@ Owner: ACCEPTED
 STOP_ACTIVE_DOUBLE_COUNT_RISK: fortsatt ACTIVE
 ```
 
-## 6. Prior decisions
+## 6. CE-2.3C — ACCEPTED
+
+```text
+CE-2.3C: ACCEPTED
+Conclusion: SHOPIFY_COMMERCE_RECONCILIATION_IMPLEMENTED
+Accepted runtime SHA: fde892700b9090a9db9b42ff19d3655444c7b60e
+Fresh verifier: APPROVE
+
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+Vercel cron schedule: DISABLED
+Initial 24h production run: NOT AUTHORIZED
+Push/deploy: NOT AUTHORIZED
+```
+
+Den repository-wide TypeScript-/buildblokkeringen er en urelatert
+signal-contract-baseline utenfor CE-2.3C-allowlisten. Den
+blokkerer release readiness, men ikke CE-2.3C-aksepten.
+
+## 7. Prior decisions
 
 - CE-2.2 ACCEPTED (app-specific) — superseded for implementation
 - CE-2.2A / DEC-011 — `SUPERSEDED_BY_DEC-012`
 - Mode A toml: `NOT_APPLICABLE`
 - Mode B GraphQL create: `FORBIDDEN` for these topics
 
-## 7. Interlocks / blockers (still active)
+## 8. Interlocks / blockers (still active)
 
 ```text
 STOP_ACTIVE_DOUBLE_COUNT_RISK
@@ -85,17 +101,28 @@ Closed:
 STOP_REFUND_2026_04_PAYLOAD_INCOMPATIBLE
 ```
 
-## 8. Rekkefølge
+## 9. Rekkefølge
 
 ```text
 CE-2.2B / DEC-012 ACCEPTED ✓
 CE-2.3A ACCEPTED_WITH_PAYLOAD_BLOCKER ✓
 CE-2.3A-F1 ACCEPTED ✓
 CE-2.3B ACCEPTED ✓
-CE-2.3C — AUTHORIZED (expected parent = this status tip)
+CE-2.3C ACCEPTED ✓
+CE-2.4/CE-2.5 — AUTHORIZED AS ONE RUNTIME PACKAGE
 ```
 
-## 9. Ingen autorisasjon uten ny startordre
+CE-2.4/CE-2.5 kan ikke starte i denne urene worktree-en mens
+signal-contract-filene har en aktiv eller uavklart writer.
+Tillatt startmodell er:
+
+```text
+A. samme worktree etter at signal-contract-writeren er ferdig og
+   baseline er avklart; eller
+B. separat clean worktree fra governance-akseptcommitten.
+```
+
+## 10. Ingen autorisasjon uten ny startordre
 
 - push/deploy
 - Shopify Admin mutation
@@ -103,9 +130,27 @@ CE-2.3C — AUTHORIZED (expected parent = this status tip)
 - production 24h reconciliation run
 - vercel.json cron schedule for shopify-commerce-reconciliation
 - CE-2.3C production invocation
+- `*/10` reconciliation schedule
+- CE-2.4/CE-2.5 implementation with writer/file overlap
 
-## 10. Dokumentasjonsstatus
+## 11. Separat P0-incident
 
-- CE-2.3B er eiergodkjent (verifier APPROVE)
-- CE-2.3C er autorisert
+Provider-/Purchase-reparasjon kan bare fortsette med en eksakt,
+ikke-overlappende allowlist. Den kan ikke:
+
+```text
+- opprette nye canonical events
+- generere nye event-ID-er
+- resend accepted Meta-kjøp
+- utføre bred provider-backfill
+- endre CE-2.3C-filene
+```
+
+## 12. Dokumentasjonsstatus
+
+- CE-2.3C er eiergodkjent (fresh verifier `APPROVE`)
+- reconciliation er implementert, men ikke produksjonsaktivert
+- CE-2.4/CE-2.5 er neste autoriserte samlede runtimepakke
+- signal-contract-baseline blokkerer release readiness, ikke
+  CE-2.3C-aksepten
 - `STOP_ACTIVE_DOUBLE_COUNT_RISK` forblir ACTIVE

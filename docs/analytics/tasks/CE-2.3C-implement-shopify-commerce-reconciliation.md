@@ -7,8 +7,11 @@ Affected invariants: INV-002, INV-003, INV-006, INV-008, INV-010, INV-014, INV-0
 Goal: implement duplicate-safe recovery of missed purchase/refund source events
 Non-goals: change event semantics, provider mappings, historical replay, execute production reconciliation, push/deploy
 Primary role: canonical-event-implementer
-Status: AUTHORIZED
+Status: ACCEPTED
 Authorized parent tip: see current-handoff after CE-2.3B acceptance
+Conclusion: SHOPIFY_COMMERCE_RECONCILIATION_IMPLEMENTED
+Accepted runtime SHA: fde892700b9090a9db9b42ff19d3655444c7b60e
+Fresh verifier: APPROVE
 Evidence contract:
   docs/analytics/evidence/ce-2.3b-shopify-commerce-reconciliation-design.md
   @ 3071e57320b084800764f4529f225233abf354df
@@ -162,3 +165,21 @@ git commit -m "feat(analytics): add Shopify commerce reconciliation"
 
 No push, deploy, Shopify mutation or production reconciliation
 run. Stop after fresh verifier and owner acceptance.
+
+## Acceptance registration
+
+```text
+CE-2.3C: ACCEPTED
+Conclusion: SHOPIFY_COMMERCE_RECONCILIATION_IMPLEMENTED
+Accepted runtime SHA: fde892700b9090a9db9b42ff19d3655444c7b60e
+Fresh verifier: APPROVE
+
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+Vercel cron schedule: DISABLED
+Initial 24h production run: NOT AUTHORIZED
+Push/deploy: NOT AUTHORIZED
+```
+
+The repository-wide TypeScript/typecheck and build blocker is an
+unrelated signal-contract baseline outside this task's allowlist.
+It blocks release readiness, not CE-2.3C acceptance.

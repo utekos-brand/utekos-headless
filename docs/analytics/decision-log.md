@@ -336,6 +336,41 @@ STOP_ACTIVE_DOUBLE_COUNT_RISK: fortsatt ACTIVE
 - **Godkjent av:** Prosjekteier (eiergodkjent CE-2.3B; mekanisk
   statusregistrering)
 
+## Status — CE-2.3C ACCEPTED (mekanisk registrering)
+
+- **Dato:** 2026-07-21
+- **Status:** `ACCEPTED` (ingen ny beslutning; ingen omtolkning)
+- **Berører:** CE-2.3C; CE-2.4; CE-2.5;
+  `STOP_ACTIVE_DOUBLE_COUNT_RISK`
+- **Registrert eksakt:**
+
+```text
+CE-2.3C: ACCEPTED
+Conclusion: SHOPIFY_COMMERCE_RECONCILIATION_IMPLEMENTED
+Accepted runtime SHA: fde892700b9090a9db9b42ff19d3655444c7b60e
+Fresh verifier: APPROVE
+
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+Vercel cron schedule: DISABLED
+Initial 24h production run: NOT AUTHORIZED
+Push/deploy: NOT AUTHORIZED
+```
+
+- **Release-baseline:** Repository-wide TypeScript/typecheck og
+  build er blokkert av en urelatert signal-contract-baseline
+  utenfor CE-2.3C-allowlisten. Dette blokkerer release readiness,
+  men ikke CE-2.3C-aksepten.
+- **Konsekvens:** Neste autoriserte runtimepakke er samlet
+  `CE-2.4/CE-2.5 — Shopify Purchase and Refund ownership cutover`.
+  Den kan bare starte etter avklart signal-contract-writer i
+  samme worktree eller i en separat clean worktree fra
+  governance-akseptcommitten. En separat provider-/Purchase-P0-
+  incident må ha ikke-overlappende allowlist og kan ikke opprette
+  canonical events, generere event-ID-er, resend accepted Meta-
+  kjøp, kjøre bred provider-backfill eller endre CE-2.3C-filene.
+- **Godkjent av:** Prosjekteier (eiergodkjent CE-2.3C; fresh
+  verifier `APPROVE`; mekanisk statusregistrering)
+
 ## Mal for ny beslutning
 
 ```text
