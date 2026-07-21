@@ -371,6 +371,42 @@ Push/deploy: NOT AUTHORIZED
 - **Godkjent av:** Prosjekteier (eiergodkjent CE-2.3C; fresh
   verifier `APPROVE`; mekanisk statusregistrering)
 
+## Status — P0 inactive / signal ownership retained
+
+- **Dato:** 2026-07-21
+- **Status:** `APPROVED` (owner clarification; no runtime change)
+- **Berører:** CE-2.4; CE-2.5; INV-021; INV-022;
+  `STOP_CONCURRENT_RUNTIME_OWNERSHIP`
+- **Registrert eksakt:**
+
+```text
+P0 provider/Purchase incident: INACTIVE
+Active P0 writer: NONE
+Owned paths: NONE
+Allowlist overlap with CE-2.4/2.5: NONE
+```
+
+- **Signal-contract ownership:** Hele den aktive signal-contract-
+  pakken forblir hos nåværende writer. `eventCatalog.ts` og
+  `eventCatalog.test.ts` overføres ikke separat.
+- **Ferdigstillingsgate:** Signal-writeren skal fryse eksakt
+  allowlist, fullføre bare den, kjøre relevante tester,
+  TypeScript, ESLint, Prettier og `git diff --check`, committe,
+  få fresh verifier og stoppe annen skriving. Rapporten skal
+  inneholde full commit-SHA, parent-SHA, eksakte filer, tester,
+  verifierdom og gjenværende dirty filer utenfor commiten.
+- **Konsekvens:** Den urørte CE-2.4/CE-2.5-worktree-en fra
+  `da10ac2f851cbdd330367c2647e747e3de7c7358` er fjernet.
+  `STOP_CONCURRENT_RUNTIME_OWNERSHIP` forblir `ACTIVE` til
+  signal-contract-commiten er verifisert og eierakseptert.
+  Deretter opprettes en ny clean worktree fra den nye
+  autoritative SHA-en og CE-2.4/CE-2.5 fortsetter uten ny
+  designrunde.
+- **Urelaterte dokumenter:** Dirty `program-charter.md` og
+  `roadmap.md` håndteres separat; de kopieres ikke til runtime-
+  worktree-en og blokkerer ikke senere runtimearbeid.
+- **Godkjent av:** Prosjekteier
+
 ## Mal for ny beslutning
 
 ```text

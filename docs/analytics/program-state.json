@@ -3,13 +3,14 @@
   "program": "CanonicalEvent",
   "charter_version": "1.0.0",
   "roadmap_version": "1.0.0",
-  "as_of": "2026-07-21T20:46:00+02:00",
+  "as_of": "2026-07-21T21:13:00+02:00",
   "repository": "utekos-brand/utekos-headless",
   "git": {
     "origin_main_reported": "0a800b1ae169eab8af12c21b3595fe99a667d54c",
     "local_head_reported": "a652cfee0540134dca791a206b0a008c29e3134f",
     "local_ahead_by_reported": 23,
-    "expected_parent_for_next_task": "a652cfee0540134dca791a206b0a008c29e3134f",
+    "expected_parent_for_next_task": null,
+    "expected_parent_status": "PENDING_VERIFIED_SIGNAL_CONTRACT_ACCEPTANCE_SHA",
     "local_head_pushed": false,
     "local_head_deployed": false,
     "production_deployment_id": "dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1",
@@ -29,7 +30,7 @@
   },
   "current_governance_task": null,
   "next_runtime_task": "CE-2.4/CE-2.5",
-  "current_runtime_status": "CE_2_4_CE_2_5_AUTHORIZED_PENDING_WRITER_ISOLATION",
+  "current_runtime_status": "CE_2_4_CE_2_5_BLOCKED_SIGNAL_CONTRACT_WRITER",
   "last_accepted_runtime_task": "CE-2.3C",
   "last_accepted_runtime_sha": "fde892700b9090a9db9b42ff19d3655444c7b60e",
   "last_accepted_governance_task": "CE-2.3C",
@@ -134,7 +135,7 @@
     "release_readiness": "BLOCKED_UNRELATED_SIGNAL_CONTRACT_BASELINE",
     "next_runtime_package": "CE-2.4/CE-2.5",
     "same_worktree_start": "BLOCKED_PENDING_SIGNAL_CONTRACT_WRITER_COMPLETION",
-    "clean_worktree_start": "AUTHORIZED_FROM_GOVERNANCE_ACCEPTANCE_COMMIT",
+    "clean_worktree_start": "BLOCKED_UNTIL_VERIFIED_SIGNAL_CONTRACT_ACCEPTANCE_SHA",
     "governance_acceptance_sha": "a652cfee0540134dca791a206b0a008c29e3134f",
     "status_commit_sha": "a652cfee0540134dca791a206b0a008c29e3134f"
   },
@@ -143,25 +144,46 @@
     "scope": "OUTSIDE_CE_2_3C_ALLOWLIST",
     "blocks_ce_2_3c_acceptance": false,
     "blocks_release_readiness": true,
-    "blocks_same_worktree_ce_2_4_ce_2_5_start": true
+    "blocks_same_worktree_ce_2_4_ce_2_5_start": true,
+    "stop_concurrent_runtime_ownership": "ACTIVE",
+    "ownership_transfer": "NOT_AUTHORIZED",
+    "required_completion": [
+      "EXACT_ALLOWLIST",
+      "TARGETED_TESTS",
+      "TYPESCRIPT",
+      "ESLINT",
+      "PRETTIER",
+      "GIT_DIFF_CHECK",
+      "COMMIT",
+      "FRESH_VERIFIER",
+      "OWNER_ACCEPTANCE",
+      "WRITER_STOPPED"
+    ],
+    "next_clean_worktree_parent": "PENDING"
   },
   "separate_p0_provider_purchase_incident": {
-    "status": "CONDITIONALLY_ALLOWED_WITH_NON_OVERLAPPING_ALLOWLIST",
+    "status": "INACTIVE",
+    "active_writer": "NONE",
+    "owned_paths": [],
+    "allowlist_overlap_with_ce_2_4_ce_2_5": "NONE",
     "may_create_canonical_events": false,
     "may_generate_event_ids": false,
     "may_resend_accepted_meta_purchases": false,
     "may_run_broad_provider_backfill": false,
-    "may_change_ce_2_3c_files": false
+    "may_change_ce_2_3c_files": false,
+    "start_authorized": false
   },
   "active_interlocks": [
     "SAFE-001_META_PURCHASE_REPLAY",
     "SAFE-002_SHOPIFY_OWNER_UNPROVEN",
     "SAFE-003_GOOGLE_NATIVE_ADS_OWNER_UNKNOWN",
-    "STOP_ACTIVE_DOUBLE_COUNT_RISK"
+    "STOP_ACTIVE_DOUBLE_COUNT_RISK",
+    "STOP_CONCURRENT_RUNTIME_OWNERSHIP"
   ],
   "known_release_blockers": [
     "Local docs commits deferred from separate push",
     "Repository-wide signal-contract typecheck/build baseline outside CE-2.3C allowlist",
+    "Signal-contract writer must finish, commit, pass fresh verifier, and stop before CE-2.4/CE-2.5",
     "STOP_ACTIVE_DOUBLE_COUNT_RISK webhook∩server distinct event_ids"
   ],
   "authoritative_files": [

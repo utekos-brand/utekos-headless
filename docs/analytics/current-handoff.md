@@ -1,7 +1,7 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.13.0 **Oppdatert:**
-2026-07-21T20:46:00+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.14.0 **Oppdatert:**
+2026-07-21T21:13:00+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
@@ -133,24 +133,52 @@ B. separat clean worktree fra governance-akseptcommitten.
 - `*/10` reconciliation schedule
 - CE-2.4/CE-2.5 implementation with writer/file overlap
 
-## 11. Separat P0-incident
-
-Provider-/Purchase-reparasjon kan bare fortsette med en eksakt,
-ikke-overlappende allowlist. Den kan ikke:
+## 11. P0 provider/Purchase incident — INACTIVE
 
 ```text
-- opprette nye canonical events
-- generere nye event-ID-er
-- resend accepted Meta-kjøp
-- utføre bred provider-backfill
-- endre CE-2.3C-filene
+P0 provider/Purchase incident: INACTIVE
+Active P0 writer: NONE
+Owned paths: NONE
+Allowlist overlap with CE-2.4/2.5: NONE
 ```
 
-## 12. Dokumentasjonsstatus
+Den tidligere P0-instruksen var en foreslått incidentjobb, ikke
+bevis på at jobben ble startet. Ikke opprett eller start P0-
+jobben. Purchase-reparasjon og event ownership håndteres gjennom
+CE-2.4/CE-2.5; eventuell provider repair krever en senere,
+eksplisitt bounded operasjon.
+
+## 12. Signal-contract ownership gate
+
+```text
+STOP_CONCURRENT_RUNTIME_OWNERSHIP: ACTIVE
+```
+
+Hele den aktive signal-contract-pakken forblir hos nåværende
+writer til den:
+
+1. fryser og rapporterer eksakt allowlist;
+2. fullfører bare den allowlisten;
+3. kjører relevante tester, TypeScript, ESLint, Prettier og
+   `git diff --check`;
+4. committer endringene;
+5. får fresh verifier-resultat;
+6. stopper annen skriving i filene.
+
+Den urørte CE-2.4/CE-2.5-worktree-en fra `da10ac2f...` er
+fjernet. Etter verifisert og eierakseptert signal-contract-
+commit skal en ny clean worktree opprettes direkte fra den nye
+autoritative SHA-en uten ny designrunde.
+
+## 13. Dokumentasjonsstatus
 
 - CE-2.3C er eiergodkjent (fresh verifier `APPROVE`)
 - reconciliation er implementert, men ikke produksjonsaktivert
 - CE-2.4/CE-2.5 er neste autoriserte samlede runtimepakke
 - signal-contract-baseline blokkerer release readiness, ikke
   CE-2.3C-aksepten
+- CE-2.4/CE-2.5 runtimearbeid er stoppet til signal-contract-
+  writeren har levert en verifisert og eierakseptert commit
+- dirty `program-charter.md` og `roadmap.md` håndteres separat og
+  skal ikke kopieres inn i neste runtime-worktree
 - `STOP_ACTIVE_DOUBLE_COUNT_RISK` forblir ACTIVE
