@@ -171,7 +171,7 @@ consent snapshot.
 ### 2.2 Shop-specific subscriptions
 
 Paginated GraphQL `webhookSubscriptions(first:50)` → **0
-nodes**.  
+nodes**.
 REST `webhooks.json?limit=250` → **0 webhooks**.
 
 Relevant topics `ORDERS_PAID` / `REFUNDS_CREATE`: **none
@@ -194,11 +194,11 @@ HTTP logs + ledger correlation.
 | X-Shopify-Webhook-Id / Event-Id / Triggered-At | **not present** in Vercel MCP log summaries                                                                         |
 | Ledger correlation                             | webhook `purchase` rows created through 2026-07-21T00:36:12Z                                                        |
 
-Deployments that served orders-paid in 7d (counts):  
+Deployments that served orders-paid in 7d (counts):
 `dpl_8mmJZonf…`×3, `dpl_2QFySg9x…`×3, `dpl_Ft3wSZfu…`×2, plus
 single hits on several other main deploys including
 `dpl_9AFed1ZS…` (`ed16dfd06…`) and `dpl_54ubTSu6…`
-(`ee781aed5…`).  
+(`ee781aed5…`).
 Current production `dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1`
 (`0a800b1ae…`): **no** orders-paid rows in the 24h
 deployment-scoped sample (no new paid orders observed on that
@@ -216,7 +216,7 @@ deploy yet).
 | `/api/webhooks/refunds-create`         | not observed              | legacy absent             |
 
 Project: `prj_MpZN3Z0PDp8rfwpdzAeplGe4Di0s` / team
-`team_0B8gWWIxT2hGVIJnK8CwanAi`.  
+`team_0B8gWWIxT2hGVIJnK8CwanAi`.
 30d group_by queries timed out / 400 for some broad filters; 7d
 path evidence is sufficient for CE-2.1.
 
@@ -277,8 +277,8 @@ represented in ledger.
 
 Canonical `purchase` attempts exist for google / meta /
 microsoft_uet (statuses include succeeded, accepted_unverified,
-skipped_unqualified).  
-`purchase` without any provider attempt: **1** webhook row.  
+skipped_unqualified).
+`purchase` without any provider attempt: **1** webhook row.
 Duplicate provider idempotency keys in the naive group-by are
 **cross-provider** (same `purchase:{event_id}` key reused across
 google+meta[+microsoft_uet]), not duplicate same-provider rows.
@@ -288,10 +288,10 @@ No `refund` provider attempts.
 ### 4.5 Checkout attribution linkage
 
 `marketing.checkout_attribution_snapshots`: 9 rows (captured_at
-2026-07-08 → 2026-07-14).  
+2026-07-08 → 2026-07-14).
 Join by `browser_id` ↔ `primary_storage_token` /
 `storage_tokens`: **0** matches for current canonical purchase
-sources.  
+sources.
 Snapshots predate the 2026-07-17+ webhook purchase window —
 linkage for recent webhook purchases is **not proven** via this
 table.
@@ -412,9 +412,9 @@ push/deploy, no HMAC/PII/payload dumps.
 
 Dokumentasjonsstatus: **sufficient to inventory CE-2.1** with
 explicit UNKNOWN gaps (app-specific Shopify config; Shopify
-delivery-log headers; Meta EMQ).  
+delivery-log headers; Meta EMQ).
 Primary evidence used: live Shopify Admin API, Vercel runtime
 logs, Supabase aggregates, repository HEAD `3dc697792`, GTM
-inventory artifact 2026-07-20, GA Data API.  
+inventory artifact 2026-07-20, GA Data API.
 Does **not** authorize CE-2.2 implementation or webhook
 registration.
