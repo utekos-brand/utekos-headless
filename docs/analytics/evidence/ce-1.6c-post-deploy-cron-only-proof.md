@@ -53,8 +53,8 @@ this file.
 ### 2.1 HTTP acceptance
 
 **Source/tool:** `curl` →
-`https://utekos.no/api/events/view-item`  
-**Timestamp:** 2026-07-21T06:52:58Z (response `Date`)
+`https://utekos.no/api/events/view-item` **Timestamp:**
+2026-07-21T06:52:58Z (response `Date`)
 
 | Check                  | Result                                                                    |
 | ---------------------- | ------------------------------------------------------------------------- |
@@ -67,9 +67,8 @@ this file.
 
 ### 2.2 Vercel runtime (request path)
 
-**Source/tool:** plugin-vercel `get_runtime_logs`  
-**Deployment:** `dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1`  
-**Window:** ~06:27Z–06:57Z
+**Source/tool:** plugin-vercel `get_runtime_logs` **Deployment:**
+`dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1` **Window:** ~06:27Z–06:57Z
 
 | Observation                            | Result                                                               |
 | -------------------------------------- | -------------------------------------------------------------------- |
@@ -82,8 +81,8 @@ this file.
 
 **Source/tool:** read-only SQL via local
 `SUPABASE_VERCEL_POSTGRES_URL_NON_POOLING` (pink-lens
-`hkoawfbomhnzupcsdggb`)  
-**Captured:** 2026-07-21T06:53:42Z (`now()`)
+`hkoawfbomhnzupcsdggb`) **Captured:** 2026-07-21T06:53:42Z
+(`now()`)
 
 | Surface                          | Sanitized result                                                                                                                                                |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -187,8 +186,7 @@ No manufactured order or refund.
 ### 5.2 Runtime errors
 
 **Source/tool:** plugin-vercel `get_runtime_logs`
-level=`error|fatal`  
-**Query:** `orders-paid` / `refunds-create`  
+level=`error|fatal` **Query:** `orders-paid` / `refunds-create`
 **Window:** ~2h ending 2026-07-21T06:57Z
 
 | Route          | New production errors       |
