@@ -134,8 +134,8 @@ Event-ID derivation (code):
 - purchase:
   `sha256("utekos:purchase:{shopifyOrderLegacyId}:paid")` → UUID
 - refund: `sha256("utekos:refund:{refundId}:created")` → UUID
-- transaction*id purchase: `shopify_order*{legacyId}`
-- refund*id: `shopify_refund*{legacyId}`
+- purchase `transaction_id`: `shopify_order_{legacyId}`
+- refund id: `shopify_refund_{legacyId}`
 
 Consent/attribution for webhook purchase: checkout note
 attributes via `parseOrderAttributionFromNoteAttributes`;
@@ -253,6 +253,11 @@ ops_backfill 3.
 
 ### 4.3 Same-order multi-source (active double-count risk)
 
+Overlap join path (read-only):
+`payload->'custom_data'->>'transaction_id'`
+(`payload.transaction_id` top-level is null on the webhook/server
+rows inspected). Values are `shopify_order_{legacyId}`.
+
 Three `transaction_id` values appear under **both** `webhook` and
 `server` with **different** `event_id`s:
 
@@ -266,10 +271,12 @@ Server rows match
 `scripts/ops/force-resend-meta-purchases-jul19.ts` (DEV-018 /
 SAFE-001).
 
-ops*backfill rows use non-UUID `event_id` =
-`shopify_order*{legacyId}`and idempotency`backfill:purchase:{legacyId}`— producer **not** found as`ops_backfill`string in current repo scripts (scripts emit`source:'server'`).
-Treat producer as **UNKNOWN** historical/backfill path still
-represented in ledger.
+`ops_backfill` rows use non-UUID `event_id` =
+`shopify_order_{legacyId}` and idempotency
+`backfill:purchase:{legacyId}` — producer **not** found as
+`ops_backfill` string in current repo scripts (scripts emit
+`source:'server'`). Treat producer as **UNKNOWN**
+historical/backfill path still represented in ledger.
 
 ### 4.4 Provider attempts
 
