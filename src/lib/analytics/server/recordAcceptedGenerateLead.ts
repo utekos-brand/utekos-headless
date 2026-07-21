@@ -1,6 +1,5 @@
 import 'server-only'
 
-import { after } from 'next/server'
 import {
   buildGenerateLeadDataLayerEvent,
   createCanonicalGenerateLead,
@@ -18,9 +17,6 @@ import { acceptCanonicalGenerateLead } from './acceptCanonicalGenerateLead'
 import type { CanonicalGenerateLeadRequestContext } from './normalizeCanonicalGenerateLead'
 import { postgresCanonicalEventStore } from './postgresCanonicalPageViewStore'
 import { resolveCanonicalEnvironment } from './resolveCanonicalEnvironment'
-import { runRegisteredProviderOutboxBatch } from './runRegisteredProviderOutboxBatch'
-
-const IMMEDIATE_BATCH_SIZE = 1
 
 function readCookie(
   cookieHeader: string,
@@ -113,14 +109,6 @@ export async function recordAcceptedGenerateLead(
 
   if (result.status === 'rejected') {
     return { reason: 'consent_denied', status: 'skipped' }
-  }
-
-  if (result.status === 'accepted') {
-    after(async () => {
-      await runRegisteredProviderOutboxBatch({
-        maxItems: IMMEDIATE_BATCH_SIZE
-      })
-    })
   }
 
   return {
