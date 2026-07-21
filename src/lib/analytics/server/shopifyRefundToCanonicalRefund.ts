@@ -14,14 +14,19 @@ import {
 
 const deniedConsentSnapshot = parseOrderConsentFromNoteAttributes([])
 
-function parseDecimal(value: string | null | undefined) {
-  const parsed = Number(value)
-  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0
+function parseDecimal(value: number | string) {
+  const parsed = typeof value === 'number' ? value : Number(value)
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    throw new Error('invalid_refund_decimal_amount')
+  }
+  return parsed
 }
 
 function resolveRefundCurrency(refund: ShopifyRefundWebhook) {
   const transactionCurrency = refund.transactions.find(
-    transaction => transaction.currency
+    transaction =>
+      typeof transaction.currency === 'string' &&
+      transaction.currency.length > 0
   )?.currency
 
   if (transactionCurrency) return transactionCurrency.toUpperCase()

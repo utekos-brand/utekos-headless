@@ -164,3 +164,109 @@ test('accept failure returns 500', async () => {
   assert.equal(response.status, 500)
   assert.deepEqual(await response.json(), { error: 'internal_error' })
 })
+
+test('handler module does not import request-path provider dispatch', async () => {
+  const { readFile } = await import('node:fs/promises')
+  const source = await readFile(
+    new URL('./handleShopifyRefundsCreateWebhook.ts', import.meta.url),
+    'utf8'
+  )
+  assert.equal(
+    /runRegisteredProviderOutboxBatch|dispatchCanonical|send.*Meta|send.*Google|send.*Microsoft/.test(
+      source
+    ),
+    false
+  )
+})
+
+test('2026-04 numeric subtotal fixture maps then accepts without dispatch', async () => {
+  const { shopifyRefundToCanonicalRefund } = require(
+    './shopifyRefundToCanonicalRefund.ts'
+  ) as {
+    shopifyRefundToCanonicalRefund: (payload: unknown) => {
+      event_id: string
+      custom_data: { value: number; currency: string }
+    }
+  }
+
+  const payload = {
+    id: 890088186,
+    order_id: 820982911,
+    created_at: '2021-12-31T19:00:00-05:00',
+    refund_line_items: [
+      {
+        id: 1,
+        line_item_id: 2,
+        quantity: 1,
+        subtotal: 499.5,
+        line_item: {
+          id: 2,
+          name: 'Utekos TechDown',
+          price: '499.50',
+          quantity: 1,
+          sku: 'UTEKOS-1',
+          title: 'Utekos TechDown',
+          variant_id: 3
+        }
+      }
+    ],
+    transactions: [
+      {
+        id: 10,
+        order_id: 820982911,
+        amount: '499.50',
+        currency: null,
+        kind: 'refund',
+        gateway: 'bogus',
+        status: 'success',
+        created_at: '2021-12-31T19:00:00-05:00'
+      },
+      {
+        id: 11,
+        order_id: 820982911,
+        amount: '0.00',
+        currency: 'NOK',
+        kind: 'refund',
+        gateway: 'bogus',
+        status: 'success',
+        created_at: '2021-12-31T19:00:00-05:00'
+      }
+    ]
+  }
+
+  const acceptCalls: Array<{ status: string }> = []
+  const body = JSON.stringify(payload)
+  const mapped = shopifyRefundToCanonicalRefund(payload)
+
+  const accepted = await handleShopifyRefundsCreateWebhook(
+    createRequest(body),
+    {
+      verifyWebhook: () => true,
+      mapRefund: shopifyRefundToCanonicalRefund,
+      acceptRefund: async () => {
+        acceptCalls.push({ status: 'accepted' })
+        return { event_id: mapped.event_id, status: 'accepted' }
+      }
+    }
+  )
+  const duplicate = await handleShopifyRefundsCreateWebhook(
+    createRequest(body),
+    {
+      verifyWebhook: () => true,
+      mapRefund: shopifyRefundToCanonicalRefund,
+      acceptRefund: async () => {
+        acceptCalls.push({ status: 'duplicate' })
+        return { event_id: mapped.event_id, status: 'duplicate' }
+      }
+    }
+  )
+
+  assert.equal(mapped.custom_data.value, 499.5)
+  assert.equal(mapped.custom_data.currency, 'NOK')
+  assert.equal(accepted.status, 202)
+  assert.equal(duplicate.status, 200)
+  assert.deepEqual(acceptCalls.map(call => call.status), [
+    'accepted',
+    'duplicate'
+  ])
+})
