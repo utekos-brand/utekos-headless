@@ -1,10 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
 import { KlarnaExpressCheckoutButton } from '@/components/klarna/components/KlarnaExpressCheckoutButton'
 import { buildKlarnaExpressOrderPayloadFromProductLine } from '@/components/klarna/utils/buildKlarnaExpressOrderPayload'
+import { prepareKlarnaExpressBeginCheckout } from '@/components/klarna/utils/prepareKlarnaExpressBeginCheckout'
 import type { KlarnaExpressOrderPayload } from '@/components/klarna/schemas/klarnaExpressOrderSchema'
+import { getCartIdFromCookie } from '@/lib/actions/getCartIdFromCookie'
+import { reportCanonicalAddToCart } from '@/lib/analytics/addToCartReporter'
+import { reportCanonicalBeginCheckout } from '@/lib/analytics/beginCheckoutReporter'
+import { CartIdContext } from '@/lib/context/CartIdContext'
+import { useCartMutations } from '@/hooks/useCartMutations'
 import type { ShopifyProduct } from 'types/product/ShopifyProduct'
 import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
 
@@ -23,6 +29,8 @@ export function KlarnaProductExpressCheckout({
   className,
   buttonContainerClassName
 }: KlarnaProductExpressCheckoutProps) {
+  const { addLines } = useCartMutations()
+  const contextCartId = useContext(CartIdContext)
   const [errorMessage, setErrorMessage] = useState<
     string | null
   >(null)
@@ -55,6 +63,35 @@ export function KlarnaProductExpressCheckout({
         {...(buttonContainerClassName ?
           { buttonContainerClassName }
         : {})}
+        onPrepareAuthorize={async () => {
+          if (!selectedVariant) {
+            return null
+          }
+
+          const prepared = await prepareKlarnaExpressBeginCheckout(
+            {
+              product,
+              variant: selectedVariant,
+              quantity,
+              contextCartId,
+              addLines,
+              getCartIdFromCookie,
+              reportAddToCart: reportCanonicalAddToCart,
+              reportBeginCheckout: reportCanonicalBeginCheckout
+            }
+          )
+
+          if (!prepared.ok) {
+            setErrorMessage(prepared.message)
+            return null
+          }
+
+          setErrorMessage(null)
+          return {
+            orderPayload: prepared.orderPayload,
+            shopifyCartId: prepared.shopifyCartId
+          }
+        }}
         onError={message => {
           setErrorMessage(message)
         }}
