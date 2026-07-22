@@ -391,3 +391,98 @@ No production migration, remote Supabase mutation, reconciliation
 run, schedule, backfill, replay, provider mutation, push or
 deploy was performed. Stop after the required commit and one
 fresh read-only verifier; do not begin CE-2.4 automatically.
+
+## 17. CE-2.4 Purchase ownership cutover — FRESH VERIFIED, RELEASE APPROVAL PENDING
+
+Section 16 is the immutable CE-2.4P1 implementation snapshot. Its
+pending verifier/owner fields were resolved by the later
+docs-only acceptance commit:
+
+```text
+CE-2.4P1 runtime SHA: ef1facd38816fc106071672a29d5391b336b8999
+Fresh verifier: APPROVE
+Owner acceptance: ACCEPTED
+CE-2.4P1 acceptance/start SHA: 87f56488f9f5c03e60fe182b622c593f23ba8545
+```
+
+CE-2.4 start gate:
+
+```text
+Task: CE-2.4 — authoritative Purchase owner cutover
+Start SHA: 87f56488f9f5c03e60fe182b622c593f23ba8545
+Branch: codex/ce-2.4-purchase-owner
+Worktree: /Users/kristofferohnstadhjelmeland/utekos-headless/.worktrees/ce-2.4-purchase-owner
+Writer: /root — sole writer
+Writer overlap: NONE
+Baseline tests: 65/65 PASS on Node 24.17.0
+Status: FRESH VERIFIED — PENDING RELEASE APPROVAL
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+```
+
+Exact no-glob allowlist frozen before the first runtime write:
+
+```text
+docs/analytics/current-handoff.md
+docs/analytics/program-state.json
+docs/analytics/tasks/CE-2.4-cut-over-authoritative-purchase-owner.md
+docs/analytics/event-matrix.md
+docs/analytics/provider-matrix.md
+src/lib/analytics/eventCatalog.ts
+src/lib/analytics/eventCatalog.test.ts
+src/lib/analytics/server/assertCanonicalPurchaseIdentity.ts
+src/lib/analytics/server/getVerifiedShopifyCustomerContext.test.ts
+src/lib/analytics/server/normalizeCanonicalPurchase.ts
+src/lib/analytics/server/normalizeCanonicalPurchase.test.ts
+scripts/ops/backfill-july16-google-data-manager-purchases.ts
+scripts/ops/force-resend-meta-purchases-jul19.ts
+scripts/ops/purchaseBackfillExecutionDisabled.test.ts
+```
+
+The prior CE-2.4P1 writer is closed. Shared governance files are
+reused serially; no runtime file overlaps CE-2.4P1, CE-3.3R or an
+active provider/Purchase incident.
+
+The first full analytics/cron run exposed one pre-existing
+customer-context test fixture whose arbitrary UUID no longer met
+the enforced order-derived Purchase identity. Before changing
+that fixture, the exact allowlist was amended with only
+`src/lib/analytics/server/getVerifiedShopifyCustomerContext.test.ts`.
+The file has no runtime behavior, no active writer and no
+overlap; the production identity assertion was not weakened.
+
+The implementation may only:
+
+- enforce the order-derived deterministic Purchase identity
+  before canonical acceptance;
+- record Shopify Admin notification Order payment as the Purchase
+  owner and reconciliation as duplicate-safe recovery;
+- disable the two historical direct-dispatch/backfill entrypoints
+  before cutover;
+- add targeted ownership tests and update bounded owner/catalog
+  documentation.
+
+Production migration, push/deploy, reconciliation execution,
+backfill/replay, provider mutation and closing
+`STOP_ACTIVE_DOUBLE_COUNT_RISK` remain unauthorized.
+
+Local implementation evidence:
+
+```text
+TDD red: 7 expected failures
+TDD green: 19/19 PASS
+Expanded Purchase suite: 101/101 PASS
+Full analytics/cron suite: 430/430 PASS
+Next typegen: PASS
+TypeScript: PASS
+Production build: PASS
+Tracking gateway smoke: PASS (read-only, https://utekos.no)
+MCP build/doctor: BLOCKED — package scripts reference absent files that are also absent at Start SHA
+Canonical Purchase owner: shopify_admin_notification_order_payment
+Reconciliation: duplicate-safe missed-delivery recovery
+Alternative order-derived event_id: FAIL CLOSED
+Historical provider resend/backfill scripts: DISABLED_FAIL_CLOSED
+Provider plan: at most one attempt per provider/idempotency key
+Production activation: NOT PERFORMED
+Fresh verifier: APPROVE — 99/99 verifier suite PASS
+Candidate commit: THIS COMMIT
+```

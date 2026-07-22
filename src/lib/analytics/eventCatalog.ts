@@ -1493,13 +1493,13 @@ const eventCatalogBase = {
     version: 1,
     name: 'purchase',
     lifecycle: 'active',
-    owner: 'shopify_order_paid_webhook',
+    owner: 'shopify_admin_notification_order_payment',
     trigger: {
       description:
-        'Create from a verified Shopify order-paid webhook after the order reaches the accepted financial state.',
-      sources: ['webhook'],
+        'Create from the verified Shopify Admin Order payment notification webhook; reconciliation is duplicate-safe missed-delivery recovery.',
+      sources: ['webhook', 'server'],
       repeatability:
-        'One event for each relevant order financial-state transition.',
+        'Webhook retries and reconciliation observations for the same order reuse the same event_id and become duplicates.',
       eventTime: 'The authoritative Shopify paid timestamp.',
       prerequisites: [
         'verified webhook',
@@ -1513,10 +1513,9 @@ const eventCatalogBase = {
       ]
     },
     dedupe: dedupe(
-      'order_id + financial_state',
-      'Only a new relevant financial-state transition receives a new event_id.',
-      retain7Years,
-      false
+      'Shopify order legacy ID + paid state',
+      'Only a different paid Shopify order receives a new event_id.',
+      retain7Years
     ),
     consent: transactionConsent,
     providers: purchaseProviders

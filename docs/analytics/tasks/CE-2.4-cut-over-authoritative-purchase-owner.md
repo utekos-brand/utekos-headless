@@ -7,8 +7,13 @@ Affected invariants: INV-001, INV-002, INV-003, INV-006, INV-010, INV-013, INV-0
 Goal: ensure one paid Shopify order creates one canonical purchase under the approved owner
 Non-goals: provider finality redesign, historical replay, unrelated signal/schema work
 Primary role: canonical-event-implementer
-Status: STOPPED_PENDING_CE-2.4P1_ACCEPTANCE
+Status: FRESH VERIFIED — PENDING RELEASE APPROVAL
 Package: CE-2.4 — standalone Purchase owner cutover
+Accepted CE-2.4P1 parent: 87f56488f9f5c03e60fe182b622c593f23ba8545
+Implementation branch: codex/ce-2.4-purchase-owner
+Implementation worktree: /Users/kristofferohnstadhjelmeland/utekos-headless/.worktrees/ce-2.4-purchase-owner
+Writer: /root — sole writer
+Writer overlap: NONE
 ```
 
 ## Preconditions
@@ -34,6 +39,38 @@ Package: CE-2.4 — standalone Purchase owner cutover
   provider/Purchase incident.
 
 ## Allowed files
+
+The exact no-glob allowlist was frozen before the first CE-2.4
+runtime write:
+
+```text
+docs/analytics/current-handoff.md
+docs/analytics/program-state.json
+docs/analytics/tasks/CE-2.4-cut-over-authoritative-purchase-owner.md
+docs/analytics/event-matrix.md
+docs/analytics/provider-matrix.md
+src/lib/analytics/eventCatalog.ts
+src/lib/analytics/eventCatalog.test.ts
+src/lib/analytics/server/assertCanonicalPurchaseIdentity.ts
+src/lib/analytics/server/getVerifiedShopifyCustomerContext.test.ts
+src/lib/analytics/server/normalizeCanonicalPurchase.ts
+src/lib/analytics/server/normalizeCanonicalPurchase.test.ts
+scripts/ops/backfill-july16-google-data-manager-purchases.ts
+scripts/ops/force-resend-meta-purchases-jul19.ts
+scripts/ops/purchaseBackfillExecutionDisabled.test.ts
+```
+
+The prior CE-2.4P1 writer is closed. Shared governance paths are
+reused serially; no runtime path overlaps CE-2.4P1, CE-3.3R or an
+active provider incident.
+
+The first full analytics/cron run exposed one existing
+customer-context test fixture with an arbitrary Purchase UUID.
+Before that test-only fixture was changed, the allowlist was
+amended by the exact path
+`src/lib/analytics/server/getVerifiedShopifyCustomerContext.test.ts`.
+No runtime path or behavior was added, no active writer owns the
+file, and the deterministic identity gate remains fail-closed.
 
 The plan guardian must create an exact allowlist from CE-2.1 and
 CE-2.2 before implementation. It must include only files required
@@ -137,6 +174,12 @@ competing canonical purchase.
 No UI success page may create a second purchase because of
 refresh/navigation.
 
+The two historical direct-dispatch/backfill scripts are retained
+as named operational tombstones that fail closed before reading
+credentials or reaching database, network or provider surfaces.
+Re-enabling historical replay belongs to CE-2.6 and requires a
+separate owner-approved contract.
+
 ## Commerce correctness
 
 Preserve and test:
@@ -202,6 +245,27 @@ and build.
 
 Run PII-free SQL assertions against a test database or isolated
 fixture.
+
+## Local implementation evidence
+
+```text
+TDD red: 7 expected failures proved the prior owner and replay gaps
+TDD green: 19/19 targeted identity/catalog/backfill tests PASS
+Expanded Purchase suite: 101/101 PASS
+Full analytics/cron suite: 430/430 PASS
+Next typegen: PASS
+TypeScript: PASS
+Production build: PASS
+Tracking gateway smoke: PASS (read-only, https://utekos.no)
+MCP build/doctor: BLOCKED — referenced scripts absent at accepted parent
+Fresh verifier: APPROVE — 99/99 verifier suite PASS
+Authoritative owner: shopify_admin_notification_order_payment
+Recovery source: reconciliation
+Identity: deterministicPurchaseEventId(order legacy ID)
+Historical direct dispatch/backfill: DISABLED_FAIL_CLOSED
+Production activation: NOT PERFORMED
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+```
 
 ## Commit and stop
 

@@ -226,6 +226,22 @@ test('allows active Google, Meta, and Microsoft purchase server outboxes', () =>
   )
 })
 
+test('records Shopify Admin order payment as the sole Purchase owner with reconciliation recovery', () => {
+  const purchase = eventCatalog.purchase
+
+  assert.equal(
+    purchase.owner,
+    'shopify_admin_notification_order_payment'
+  )
+  assert.deepEqual(purchase.trigger.sources, [
+    'webhook',
+    'server'
+  ])
+  assert.match(purchase.trigger.repeatability, /same event_id/)
+  assert.match(purchase.trigger.repeatability, /duplicate/)
+  assert.equal(purchase.dedupe.browserServerShareEventId, true)
+})
+
 test('records current mixed Microsoft delivery and historical page_view backlog truth', () => {
   assert.equal(
     eventCatalog.view_item.providers.google.productionStatus,

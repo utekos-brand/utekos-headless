@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { canonicalPurchaseSchema } from '../purchaseEvent'
+import {
+  canonicalPurchaseSchema,
+  deterministicPurchaseEventId
+} from '../purchaseEvent'
 import { getVerifiedShopifyCustomerContext } from './getVerifiedShopifyCustomerContext'
 import { normalizeCanonicalPurchase } from './normalizeCanonicalPurchase'
 
@@ -8,7 +11,7 @@ test('uses verified Shopify customer context instead of webhook-request geolocat
   const purchase = canonicalPurchaseSchema.parse({
     schema_version: 1,
     event_name: 'purchase',
-    event_id: '550e8400-e29b-41d4-a716-446655440000',
+    event_id: deterministicPurchaseEventId('12345'),
     event_time: '2026-07-18T10:06:00.000Z',
     source: 'webhook',
     environment: 'test',

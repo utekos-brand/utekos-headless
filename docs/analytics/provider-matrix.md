@@ -175,13 +175,17 @@
 
 ## Shopify
 
-- **Owner:** authoritative purchase/refund event source; product
-  webhook routes own cache invalidation.
+- **Owner:** Shopify Admin notification `Order payment` owns
+  Purchase. Shopify Admin reconciliation is duplicate-safe
+  missed-delivery recovery. `Refund create` remains the intended
+  Refund owner pending CE-3.3R and CE-2.5.
 - **Transport:** HTTPS webhooks to Next.js routes.
 - **Events:** order-paid -> purchase; refund-created -> refund.
-- **Dedupe:** deterministic canonical event ID plus ledger
-  uniqueness. Current code does not use `X-Shopify-Webhook-Id` as
-  a separate key.
+- **Dedupe:** Purchase uses the order legacy ID through
+  `deterministicPurchaseEventId`; webhook, retry and
+  reconciliation converge on that identity. Verified Shopify
+  delivery/event IDs are source evidence only and never create an
+  alternative canonical or provider event ID.
 - **Consent:** operational ledger; provider export depends on
   captured checkout attribution/consent.
 - **Retry:** Shopify delivery retry plus idempotent receiver;
@@ -192,11 +196,12 @@
   GraphQL 2025-07: **zero** `webhookSubscriptions` for the app
   token (2026-07-20). Delivery logs for any other subscriber
   remain unavailable.
-- **Status:** routes/HMAC verified; the token's app has no
-  subscriptions, yet purchases keep reaching the ledger via the
-  browser route and a concurrent backfill (DEV-008, DEV-018).
-  Whether any webhook traffic reaches the routes is an open
-  question.
+- **Status:** CE-2.4 local release candidate implemented. The
+  historical direct provider-resend/backfill entrypoints are
+  fail-closed before credentials, database or network access.
+  Production activation and the one-ledger-row/provider-attempt
+  proof are pending release approval;
+  `STOP_ACTIVE_DOUBLE_COUNT_RISK` remains active.
 
 ## Provider status comparison
 
