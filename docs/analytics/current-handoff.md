@@ -731,3 +731,20 @@ STOP: do not auto-continue to begin_checkout / CE-2.4 / CE-2.5
 `add_to_cart` meets the equal paid-media bar for Meta, Google, and
 Microsoft server delivery on one consented journey with `msclkid`.
 
+## 23. add_to_cart Meta browser/server dedupe
+
+```text
+Task: Meta Pixel/OpenBridge AddToCart eid === ledger/CAPI event_id
+Conclusion: LIVE_ATC_META_BROWSER_SERVER_DEDUPE_PROVEN
+Primary event_id: 4032dbf1-d588-4d95-ab84-aa5d14f74191
+  dataLayer = Pixel eid = OpenBridge = POST = ledger = Meta CAPI
+  Meta eventsReceived=1 fbTraceId=ANBPwKcn-jpu24oX1hKth27
+Smoke: scripts/tracking/verify-meta-add-to-cart-dedupe.mjs
+Evidence: docs/analytics/evidence/ce-add-to-cart-meta-browser-server-dedupe.md
+STOP: do not auto-continue to begin_checkout / CE-2.4 / CE-2.5
+```
+
+Note: this Meta-dedupe run omitted `msclkid` by design; Microsoft
+row was `skipped_unqualified` / `missing_msclkid`. Three-provider
+server proof remains §22.
+
