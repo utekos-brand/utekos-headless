@@ -11,17 +11,42 @@ Non-goals: Purchase cutover, Refund cutover, provider changes,
   production schema apply, reconciliation execution, replay,
   push or deploy
 Primary role: canonical-event-implementer
-Status: IMPLEMENTED — PENDING FRESH VERIFICATION AND OWNER ACCEPTANCE
+Status: ACCEPTED — FRESH VERIFIED AND OWNER ACCEPTED 2026-07-22
 Authorized start: fdba6fdc7664279f8aa3b6a6ab21134b826b7eab
 Implementation branch: codex/ce-2.4p1-source-evidence
-Runtime commit: this commit; resolve and report its full SHA after creation
+Runtime commit: ef1facd38816fc106071672a29d5391b336b8999
+Verified main HEAD: de6ef96141a8ce6b953d049f45daabc2589e4aeb
+Runtime worktree: /Users/kristofferohnstadhjelmeland/utekos-headless/.worktrees/ce-2.4-2.5-ownership-cutover
+Task file: /Users/kristofferohnstadhjelmeland/utekos-headless/.worktrees/ce-2.4-2.5-ownership-cutover/docs/analytics/tasks/CE-2.4P1-persist-canonical-commerce-source-evidence.md
+Program state file: /Users/kristofferohnstadhjelmeland/utekos-headless/.worktrees/ce-2.4-2.5-ownership-cutover/docs/analytics/program-state.json
+Owner acceptance source: /Users/kristofferohnstadhjelmeland/.codex/attachments/9fc07233-cea2-4a7f-8e64-d23053f05051/goal-objective.md
+Fresh verifier: APPROVE
+Owner acceptance: ACCEPTED
 ```
 
 ## Owner decision
 
 The project owner authorized CE-2.4P1 on 2026-07-21 as a
-standalone prerequisite. It must complete, receive a fresh
-verifier verdict and be owner-accepted before CE-2.4 starts.
+standalone prerequisite and requested fresh verification and
+owner acceptance on 2026-07-22 through the owner-acceptance
+source recorded above.
+
+Current Git verification resolved the runtime identity before
+acceptance:
+
+- local `main` HEAD is
+  `de6ef96141a8ce6b953d049f45daabc2589e4aeb`;
+- runtime commit `ef1facd38816fc106071672a29d5391b336b8999`
+  exists as a commit object on `codex/ce-2.4p1-source-evidence`;
+- `main` HEAD is an ancestor of the runtime commit;
+- the runtime commit is not on local `main`; this acceptance task
+  did not push or deploy it.
+
+The fresh read-only verifier returned `APPROVE` with no blocking
+or non-blocking findings. The owner therefore accepts the exact
+runtime commit recorded above. CE-2.4 may begin only from the
+resulting docs-only acceptance commit in a new clean worktree
+with its own exact no-glob allowlist and sole writer.
 
 CE-2.4P1 is not part of a combined CE-2.4/CE-2.5 runtime package.
 CE-3.3R is a separate task with a separate writer, worktree and
@@ -150,16 +175,20 @@ Commit only the frozen CE-2.4P1 allowlist:
 git commit -m "feat(analytics): persist commerce source evidence"
 ```
 
-Then stop for fresh verification and owner acceptance. Do not
-start CE-2.4 automatically.
+The runtime commit stopped for fresh verification and owner
+acceptance. Both gates are now satisfied. This docs-only
+acceptance record does not authorize push, deploy, production
+migration, reconciliation execution, backfill/replay or provider
+mutation.
 
 ## Implementation result
 
 ```text
 Conclusion: CANONICAL_COMMERCE_SOURCE_EVIDENCE_IMPLEMENTED
-Fresh verifier: PENDING
-Owner acceptance: PENDING
-CE-2.4: STOPPED
+Runtime commit: ef1facd38816fc106071672a29d5391b336b8999
+Fresh verifier: APPROVE
+Owner acceptance: ACCEPTED
+CE-2.4: AUTHORIZED — NOT STARTED
 CE-2.5: STOPPED
 STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
 ```

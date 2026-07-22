@@ -3,14 +3,18 @@
   "program": "CanonicalEvent",
   "charter_version": "1.0.0",
   "roadmap_version": "1.0.0",
-  "as_of": "2026-07-22T00:39:06+02:00",
+  "as_of": "2026-07-22T03:46:32+02:00",
   "repository": "utekos-brand/utekos-headless",
   "git": {
     "origin_main_reported": "0a800b1ae169eab8af12c21b3595fe99a667d54c",
-    "local_head_reported": "dc1fd3e611a7c3e4c15f3220e8c546d13d008242",
-    "local_ahead_by_reported": null,
-    "expected_parent_for_next_task": "CE_2_4P1_RUNTIME_COMMIT_AFTER_OWNER_ACCEPTANCE",
-    "expected_parent_status": "CE_2_4P1_IMPLEMENTED_PENDING_FRESH_VERIFIER_AND_OWNER_ACCEPTANCE",
+    "local_head_reported": "de6ef96141a8ce6b953d049f45daabc2589e4aeb",
+    "local_ahead_by_reported": 28,
+    "main_head_verified_at": "2026-07-22T03:46:32+02:00",
+    "ce_2_4p1_runtime_commit": "ef1facd38816fc106071672a29d5391b336b8999",
+    "ce_2_4p1_runtime_commit_exists": true,
+    "ce_2_4p1_runtime_commit_contains_main_head": true,
+    "expected_parent_for_next_task": "CE_2_4P1_OWNER_ACCEPTANCE_DOCS_COMMIT_AFTER_CREATION",
+    "expected_parent_status": "CE_2_4P1_ACCEPTED_RUNTIME_VERIFIED",
     "local_head_pushed": false,
     "local_head_deployed": false,
     "production_deployment_id": "dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1",
@@ -29,10 +33,10 @@
     "phase_2_status": "IN_PROGRESS"
   },
   "current_governance_task": null,
-  "next_runtime_task": "CE-2.4P1",
-  "current_runtime_status": "CE_2_4P1_IMPLEMENTED_PENDING_FRESH_VERIFIER_AND_OWNER_ACCEPTANCE",
-  "last_accepted_runtime_task": "meta-click-id-compatibility",
-  "last_accepted_runtime_sha": "3b9937f87f3d40cfcdeda82a0f60f462302260b7",
+  "next_runtime_task": "CE-2.4",
+  "current_runtime_status": "CE_2_4P1_ACCEPTED_CE_2_4_AUTHORIZED_NOT_STARTED",
+  "last_accepted_runtime_task": "CE-2.4P1",
+  "last_accepted_runtime_sha": "ef1facd38816fc106071672a29d5391b336b8999",
   "last_accepted_governance_task": "signal-contract-integration",
   "last_accepted_governance_sha": "06f41152bc62415057626618f5550c1f2f6d240b",
   "ce_2_2": {
@@ -171,14 +175,20 @@
     "push_deploy": "NOT_AUTHORIZED"
   },
   "ce_2_4p1": {
-    "status": "IMPLEMENTED_PENDING_FRESH_VERIFIER_AND_OWNER_ACCEPTANCE",
+    "status": "ACCEPTED",
     "conclusion": "CANONICAL_COMMERCE_SOURCE_EVIDENCE_IMPLEMENTED",
     "decision": "DEC-013",
     "start_sha": "fdba6fdc7664279f8aa3b6a6ab21134b826b7eab",
     "branch": "codex/ce-2.4p1-source-evidence",
-    "runtime_commit": "THIS_COMMIT_RESOLVE_FULL_SHA_AFTER_CREATION",
-    "fresh_verifier": "PENDING",
-    "owner_accepted": false,
+    "runtime_commit": "ef1facd38816fc106071672a29d5391b336b8999",
+    "main_head_at_acceptance": "de6ef96141a8ce6b953d049f45daabc2589e4aeb",
+    "runtime_worktree": "/Users/kristofferohnstadhjelmeland/utekos-headless/.worktrees/ce-2.4-2.5-ownership-cutover",
+    "task_file": "/Users/kristofferohnstadhjelmeland/utekos-headless/.worktrees/ce-2.4-2.5-ownership-cutover/docs/analytics/tasks/CE-2.4P1-persist-canonical-commerce-source-evidence.md",
+    "program_state_file": "/Users/kristofferohnstadhjelmeland/utekos-headless/.worktrees/ce-2.4-2.5-ownership-cutover/docs/analytics/program-state.json",
+    "owner_acceptance_source": "/Users/kristofferohnstadhjelmeland/.codex/attachments/9fc07233-cea2-4a7f-8e64-d23053f05051/goal-objective.md",
+    "fresh_verifier": "APPROVE",
+    "owner_accepted": true,
+    "accepted_at": "2026-07-22T03:46:32+02:00",
     "exact_allowlist": "FROZEN_IN_CURRENT_HANDOFF_SECTION_16",
     "targeted_tests": "61_OF_61_PASS",
     "analytics_cron_tests": "425_OF_425_PASS",
@@ -203,7 +213,7 @@
     "refund_production_test": "NOT_AUTHORIZED"
   },
   "ce_2_4": {
-    "status": "STOPPED_PENDING_CE_2_4P1_ACCEPTANCE"
+    "status": "AUTHORIZED_NOT_STARTED_PENDING_NEW_CLEAN_WORKTREE_AND_EXACT_ALLOWLIST"
   },
   "ce_2_5": {
     "status": "STOPPED_PENDING_CE_2_4_PRODUCTION_PROOF_AND_CE_3_3R_ACCEPTANCE"
