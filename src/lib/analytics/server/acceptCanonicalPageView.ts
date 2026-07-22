@@ -47,6 +47,16 @@ export async function acceptCanonicalPageView(
     normalized.consent.marketing === 'granted'
 
   if (!hasPermittedPurpose) {
+    console.info(
+      '[tracking] page_view rejected: consent denied',
+      JSON.stringify({
+        event_id: normalized.event_id,
+        page_view_id: normalized.page_view_id,
+        page_url: normalized.page_url,
+        environment: normalized.environment,
+        consent: normalized.consent
+      })
+    )
     return {
       cookiesToSet: [],
       reason: 'consent_denied',
@@ -82,10 +92,26 @@ export async function acceptCanonicalPageView(
     dispatches: planCanonicalEventDispatch(event),
     event
   })
+  const status = result === 'inserted' ? 'accepted' : 'duplicate'
+
+  console.info(
+    '[tracking] page_view store result',
+    JSON.stringify({
+      event_id: event.event_id,
+      page_view_id: event.page_view_id,
+      page_url: event.page_url,
+      environment: event.environment,
+      status,
+      cookies_to_set: ensured.cookiesToSet.map(cookie => cookie.name),
+      has_fbp: Boolean(event.browser_id?.fbp),
+      has_fbc: Boolean(event.browser_id?.fbc),
+      has_external_id: Boolean(event.external_id)
+    })
+  )
 
   return {
     cookiesToSet: ensured.cookiesToSet,
     event_id: event.event_id,
-    status: result === 'inserted' ? 'accepted' : 'duplicate'
+    status
   }
 }

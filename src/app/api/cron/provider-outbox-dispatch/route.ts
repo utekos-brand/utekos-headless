@@ -4,7 +4,7 @@ import {
 } from '../../../../lib/analytics/server/runRegisteredProviderOutboxBatch'
 import { hasValidCronAuthorization } from '../../../../lib/security/hasValidCronAuthorization'
 
-const CRON_BATCH_SIZE = 1
+const CRON_BATCH_SIZE = 10
 
 export const maxDuration = 60
 
