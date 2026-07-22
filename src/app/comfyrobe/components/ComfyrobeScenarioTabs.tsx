@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState, type KeyboardEvent } from 'react'
 import Image from 'next/image'
 import { CheckCircle2 } from 'lucide-react'
 import { PageSection } from '@/components/layout/PageSection'
@@ -11,11 +11,43 @@ export function ComfyrobeScenarioTabs() {
   const [activeScenarioId, setActiveScenarioId] = useState(
     COMFYROBE_SCENARIOS[0].id
   )
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
 
   const activeScenario =
     COMFYROBE_SCENARIOS.find(
       scenario => scenario.id === activeScenarioId
     ) ?? COMFYROBE_SCENARIOS[0]
+
+  const selectTabByIndex = (index: number) => {
+    const scenario = COMFYROBE_SCENARIOS[index]
+    if (!scenario) return
+
+    setActiveScenarioId(scenario.id)
+    tabRefs.current[index]?.focus()
+  }
+
+  const handleTabKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    const lastIndex = COMFYROBE_SCENARIOS.length - 1
+    let nextIndex: number | null = null
+
+    if (event.key === 'ArrowRight') {
+      nextIndex = index === lastIndex ? 0 : index + 1
+    } else if (event.key === 'ArrowLeft') {
+      nextIndex = index === 0 ? lastIndex : index - 1
+    } else if (event.key === 'Home') {
+      nextIndex = 0
+    } else if (event.key === 'End') {
+      nextIndex = lastIndex
+    }
+
+    if (nextIndex === null) return
+
+    event.preventDefault()
+    selectTabByIndex(nextIndex)
+  }
 
   return (
     <PageSection
@@ -45,12 +77,15 @@ export function ComfyrobeScenarioTabs() {
         aria-label='Velg bruksområde for Comfyrobe'
         className='mt-8 flex snap-x gap-2 overflow-x-auto pb-2 sm:mt-10 sm:flex-wrap sm:justify-center sm:overflow-visible'
       >
-        {COMFYROBE_SCENARIOS.map(scenario => {
+        {COMFYROBE_SCENARIOS.map((scenario, index) => {
           const isActive = scenario.id === activeScenario.id
 
           return (
             <button
               key={scenario.id}
+              ref={element => {
+                tabRefs.current[index] = element
+              }}
               id={`comfyrobe-tab-${scenario.id}`}
               type='button'
               role='tab'
@@ -58,6 +93,7 @@ export function ComfyrobeScenarioTabs() {
               aria-controls={`comfyrobe-panel-${scenario.id}`}
               tabIndex={isActive ? 0 : -1}
               onClick={() => setActiveScenarioId(scenario.id)}
+              onKeyDown={event => handleTabKeyDown(event, index)}
               className={cn(
                 'font-utekos-text-medium min-h-11 shrink-0 snap-start rounded-full border px-5 py-2.5 text-sm text-foreground transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 motion-reduce:transition-none',
                 isActive ?
