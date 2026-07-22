@@ -748,3 +748,16 @@ Note: this Meta-dedupe run omitted `msclkid` by design; Microsoft
 row was `skipped_unqualified` / `missing_msclkid`. Three-provider
 server proof remains §22.
 
+## 24. Microsoft UET CAPI begin_checkout worker
+
+```text
+Task: microsoft_uet begin_checkout server outbox (equal diligence)
+Conclusion: CODE_CONTRACT_PROVEN
+Catalog: microsoft_uet begin_checkout serverOutbox=active
+Worker key: microsoft_uet:begin_checkout
+CAPI: eventName=begin_checkout, pageType=cart, event_id dedupe
+Evidence: docs/analytics/evidence/microsoft-uet-capi-begin-checkout-worker.md
+STOP: await push/deploy + live three-provider begin_checkout smoke
+  before claiming production Microsoft accept; do not auto-start CE-2.4/2.5
+```
+

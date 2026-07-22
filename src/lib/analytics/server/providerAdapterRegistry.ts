@@ -31,6 +31,7 @@ import { metaPurchaseProviderAdapter } from './providerAdapters/metaPurchaseProv
 import { metaSearchProviderAdapter } from './providerAdapters/metaSearchProviderAdapter'
 import { metaViewItemProviderAdapter } from './providerAdapters/metaViewItemProviderAdapter'
 import { microsoftUetAddToCartProviderAdapter } from './providerAdapters/microsoftUetAddToCartProviderAdapter'
+import { microsoftUetBeginCheckoutProviderAdapter } from './providerAdapters/microsoftUetBeginCheckoutProviderAdapter'
 import { microsoftUetPurchaseProviderAdapter } from './providerAdapters/microsoftUetPurchaseProviderAdapter'
 import type { ProviderAdapterKey } from './providerAdapter'
 
@@ -70,6 +71,8 @@ export const providerAdapterRegistry = {
   'meta:search': metaSearchProviderAdapter,
   'meta:view_item': metaViewItemProviderAdapter,
   'microsoft_uet:add_to_cart': microsoftUetAddToCartProviderAdapter,
+  'microsoft_uet:begin_checkout':
+    microsoftUetBeginCheckoutProviderAdapter,
   'microsoft_uet:purchase': microsoftUetPurchaseProviderAdapter
 } as const satisfies Partial<Record<ProviderAdapterKey, unknown>>
 

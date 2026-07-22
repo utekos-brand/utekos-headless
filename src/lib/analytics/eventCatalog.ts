@@ -941,8 +941,8 @@ const beginCheckoutProviders = {
     adapterVersion: 1,
     productionStatus: 'active',
     productionDetail:
-      'Browser UET is active; server delivery is blocked because no UET CAPI worker exists.',
-    serverOutbox: 'blocked_no_worker'
+      'Browser UET is active; Microsoft UET CAPI outbox worker is active for begin_checkout.',
+    serverOutbox: 'active'
   }),
   posthog: providerMapping({
     support: 'planned',
