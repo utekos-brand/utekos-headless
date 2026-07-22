@@ -1,21 +1,22 @@
 import type { CookieSettings } from 'capi-param-builder-nodejs'
 import type { ConsentSnapshot } from '../canonicalEventEnvelope'
+import type { CanonicalClickIds } from '../canonicalSignalContract'
 import { extractFbclidFromFbc } from '../extractFbclidFromFbc'
 import { processMetaParameterContext } from './processMetaParameterContext'
 
 export type EnsureCanonicalMetaBrowserIdsInput = {
-  browserId?: Record<string, string>
-  clickId?: Record<string, string>
-  clientIpAddress?: string
+  browserId?: Record<string, string> | undefined
+  clickId?: CanonicalClickIds | undefined
+  clientIpAddress?: string | undefined
   consent: ConsentSnapshot
-  cookieHeader?: string
+  cookieHeader?: string | undefined
   pageUrl: string
-  requestUrl?: string
+  requestUrl?: string | undefined
 }
 
 export type EnsureCanonicalMetaBrowserIdsResult = {
-  browserId?: Record<string, string>
-  clickId?: Record<string, string>
+  browserId?: Record<string, string> | undefined
+  clickId?: CanonicalClickIds | undefined
   cookiesToSet: CookieSettings[]
 }
 

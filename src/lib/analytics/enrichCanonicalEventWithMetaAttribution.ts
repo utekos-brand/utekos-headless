@@ -3,13 +3,14 @@
 import { captureException } from '@sentry/nextjs'
 import { buildMetaParameterContextRequestUrl } from './buildMetaParameterContextRequestUrl'
 import type { ConsentSnapshot } from './canonicalEventEnvelope'
+import type { CanonicalClickIds } from './canonicalSignalContract'
 import { extractFbclidFromFbc } from './extractFbclidFromFbc'
 import { browserFirstPartyExternalIdStore } from './firstPartyExternalId'
 import { metaParameterContextResponseSchema } from './metaParameterContextContract'
 
 type MetaAttributionEvent = {
   browser_id?: Record<string, string> | undefined
-  click_id?: Record<string, string> | undefined
+  click_id?: CanonicalClickIds | undefined
   consent: ConsentSnapshot
   external_id?: string | undefined
   page_url?: string | undefined
