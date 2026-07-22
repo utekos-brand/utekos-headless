@@ -426,42 +426,45 @@
 ## DEV-023
 
 - **Priority:** P1
-- **Status:** OPEN (2026-07-23 inventory)
-- **Description:** Klarna Express Checkout authorizes a product-line
-  payload and completes without calling
-  `reportCanonicalBeginCheckout({ cart })`, so GA4/Meta/Microsoft
-  checkout funnels can miss Klarna Express starts.
+- **Status:** CLOSED (2026-07-23 code; awaiting deploy / live Klarna smoke)
+- **Description:** Klarna Express Checkout authorized a product-line
+  payload without calling
+  `reportCanonicalBeginCheckout({ cart })`.
 - **Evidence:**
   `docs/analytics/evidence/ce-begin-checkout-complete-traceability.md`
-  (Gap 2); `KlarnaProductExpressCheckout.tsx` /
-  `KlarnaExpressCheckoutButton.tsx` pre-remediation.
-- **Consequence:** Purchase may occur without a preceding canonical
-  `begin_checkout`; funnel asymmetry vs Shopify Checkout.
+  (Gap 2); remediations in
+  `src/components/klarna/utils/prepareKlarnaExpressBeginCheckout.ts`,
+  `src/components/klarna/components/KlarnaProductExpressCheckout.tsx`,
+  `src/components/klarna/components/KlarnaExpressCheckoutButton.tsx`
+  (`onPrepareAuthorize`); SHA
+  `90c5e53a261690dc0cdc1213c54ccb8843e13281`.
+- **Consequence (pre-fix):** Purchase could occur without a preceding
+  canonical `begin_checkout`; funnel asymmetry vs Shopify Checkout.
 - **Systems:** Klarna Express UI, begin_checkout reporter, provider
   outbox.
-- **Recommended next action:** Cart-backed prepare path —
-  `addLines` + `buildKlarnaExpressOrderPayloadFromCart` +
-  `reportCanonicalBeginCheckout` + pass `shopifyCartId`.
+- **Recommended next action:** Deploy branch; optional live BankID
+  Klarna smoke with explicit approval. Do not claim production-proven
+  until verified.
 - **Target task:** SAFE — begin_checkout UI remediations.
 
 ## DEV-024
 
 - **Priority:** P2
-- **Status:** OPEN (2026-07-23 inventory)
-- **Description:** `usePurchaseLogic.handleGoToCheckout` already
-  reports canonical `begin_checkout` and redirects to Shopify
-  Checkout, and `PurchaseClientViewProps` exposes
-  `handleGoToCheckout?`, but `PurchaseClientView` never renders a
-  «Gå til kassen» CTA — dead path on
-  `/skreddersy-varmen/utekos-orginal`.
+- **Status:** CLOSED (2026-07-23 code; awaiting deploy)
+- **Description:** `usePurchaseLogic.handleGoToCheckout` reported
+  canonical `begin_checkout`, but `PurchaseClientView` did not render
+  a «Gå til kassen» CTA on `/skreddersy-varmen/utekos-orginal`.
 - **Evidence:**
   `docs/analytics/evidence/ce-begin-checkout-complete-traceability.md`
-  (Gap 1); `usePurchaseLogic.ts`; `PurchaseClientView.tsx`.
-- **Consequence:** Dead code / misleading coverage; skreddersy users
-  only reach checkout via cart drawer after add-to-cart.
+  (Gap 1); wired in
+  `src/app/skreddersy-varmen/utekos-orginal/components/PurchaseClientView.tsx`
+  (`data-track=SkreddersyVarmenGoToCheckout`); SHA
+  `90c5e53a261690dc0cdc1213c54ccb8843e13281`.
+- **Consequence (pre-fix):** Dead path; skreddersy users only reached
+  checkout via cart drawer after add-to-cart.
 - **Systems:** Skreddersy purchase UI, begin_checkout reporter.
-- **Recommended next action:** Wire «Gå til kassen» to
-  `handleGoToCheckout` with distinct `data-track`.
+- **Recommended next action:** Deploy; confirm CTA in browser smoke
+  after release.
 - **Target task:** SAFE — begin_checkout UI remediations.
 
 ## Previously requested hypotheses
