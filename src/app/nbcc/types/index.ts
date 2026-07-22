@@ -1,5 +1,6 @@
 import type { Route } from 'next'
 import { z } from 'zod'
+import type { ShopifyProduct } from 'types/product/ShopifyProduct'
 
 export type NbccTrackingData = Record<string, string>
 
@@ -105,6 +106,7 @@ export type NbccProductVariant = {
 }
 
 export type NbccProductCardActionsProps = {
+  product: ShopifyProduct
   variants: NbccProductVariant[]
   href: Route
   productTitle: string

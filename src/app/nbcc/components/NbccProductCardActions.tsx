@@ -2,15 +2,15 @@
 
 import { MoveRightIcon } from '@/components/animate-icons/icons/move-right'
 import { Button } from '@/components/ui/button'
-import { CartMutationContext } from '@/lib/context/CartMutationContext'
-import { cartStore } from '@/lib/state/cartStore'
+import { useCanonicalAddToCart } from '@/hooks/useCanonicalAddToCart'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import type { NbccProductCardActionsProps } from '../types'
 
 export function NbccProductCardActions({
+  product,
   variants,
   href,
   productTitle,
@@ -20,19 +20,7 @@ export function NbccProductCardActions({
     variants[0]?.label ?? ''
   )
 
-  const cartActor = CartMutationContext.useActorRef()
-  const isPending = CartMutationContext.useSelector(state =>
-    state.matches('mutating')
-  )
-  const lastError = CartMutationContext.useSelector(
-    state => state.context.error
-  )
-
-  useEffect(() => {
-    if (lastError) {
-      toast.error(lastError)
-    }
-  }, [lastError])
+  const { addToCart, isPending } = useCanonicalAddToCart()
 
   const selectedVariant = variants.find(
     v => v.label === selectedLabel
@@ -50,21 +38,34 @@ export function NbccProductCardActions({
       toast.warning('Denne størrelsen er dessverre utsolgt.')
       return
     }
-    cartActor.send({
-      type: 'ADD_LINES',
-      input: [
-        { variantId: selectedVariant.variantId, quantity: 1 }
-      ]
-    })
-    toast.success(
-      `${productTitle} (${selectedVariant.label}) er lagt i handlekurven!`
-    )
-    cartStore.send({ type: 'OPEN' })
+
+    const shopifyVariant = product.variants.edges
+      .map(edge => edge.node)
+      .find(variant => variant.id === selectedVariant.variantId)
+
+    if (!shopifyVariant) {
+      toast.error('Kunne ikke finne valgt variant. Prøv igjen.')
+      return
+    }
+
+    void (async () => {
+      const { success } = await addToCart({
+        product,
+        variant: shopifyVariant,
+        quantity: 1,
+        openCart: true
+      })
+
+      if (success) {
+        toast.success(
+          `${productTitle} (${selectedVariant.label}) er lagt i handlekurven!`
+        )
+      }
+    })()
   }
 
   return (
     <div className='flex flex-col gap-4'>
-      {/* Size selector */}
       <div>
         <p className='mb-2 text-xs font-medium tracking-widest text-foreground uppercase'>
           Størrelse
@@ -91,7 +92,6 @@ export function NbccProductCardActions({
         </div>
       </div>
 
-      {/* Price */}
       <div className='flex items-center justify-between'>
         <span className='text-xl font-semibold text-foreground'>
           {price}
@@ -101,7 +101,6 @@ export function NbccProductCardActions({
         </span>
       </div>
 
-      {/* CTAs */}
       <div className='flex flex-col gap-2'>
         <Button
           onClick={handleAddToCart}

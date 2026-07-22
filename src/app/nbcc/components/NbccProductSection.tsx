@@ -77,12 +77,18 @@ export async function NbccProductSection() {
                     {product.title}
                   </CardTitle>
                   <div className='mt-5'>
-                    <NbccProductCardActions
-                      variants={variants}
-                      href={product.href}
-                      productTitle={product.title}
-                      tracking={product.tracking}
-                    />
+                    {shopifyProduct ?
+                      <NbccProductCardActions
+                        product={shopifyProduct}
+                        variants={variants}
+                        href={product.href}
+                        productTitle={product.title}
+                        tracking={product.tracking}
+                      />
+                    : <p className='text-sm text-muted-foreground'>
+                        Produktet er midlertidig utilgjengelig.
+                      </p>
+                    }
                   </div>
                 </CardContent>
                 <CardFooter className='p-6' />
