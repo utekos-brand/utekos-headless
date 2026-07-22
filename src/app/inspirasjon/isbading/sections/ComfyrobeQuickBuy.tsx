@@ -14,8 +14,7 @@ import {
   CarouselPrevious
 } from '@/components/ui/carousel'
 import { NewsletterForm } from '@/components/form/components/NewsLetterForm'
-import { CartMutationContext } from '@/lib/context/CartMutationContext'
-import { cartStore } from '@/lib/state/cartStore'
+import { useCanonicalAddToCart } from '@/hooks/useCanonicalAddToCart'
 import { VippsLogo } from '@/components/payments/VippsLogo'
 import { KlarnaLogo } from '@/components/payments/KlarnaLogo'
 import { ShoppingBag } from 'lucide-react'
@@ -35,7 +34,7 @@ export function ComfyrobeQuickBuy({ product }: Props) {
   const selectedVariant = variants.find(
     v => v.id === selectedVariantId
   )
-  const cartActor = CartMutationContext.useActorRef()
+  const { addToCart, isPending } = useCanonicalAddToCart()
   const [isAdding, setIsAdding] = useState(false)
 
   const handleAddToCart = () => {
@@ -43,16 +42,22 @@ export function ComfyrobeQuickBuy({ product }: Props) {
 
     setIsAdding(true)
 
-    cartActor.send({
-      type: 'ADD_LINES',
-      input: [{ variantId: selectedVariant.id, quantity: 1 }]
-    })
+    void (async () => {
+      try {
+        const { success } = await addToCart({
+          product,
+          variant: selectedVariant,
+          quantity: 1,
+          openCart: true
+        })
 
-    setTimeout(() => {
-      setIsAdding(false)
-      cartStore.send({ type: 'OPEN' })
-      toast.success('Lagt i handlekurven!')
-    }, 600)
+        if (success) {
+          toast.success('Lagt i handlekurven!')
+        }
+      } finally {
+        setIsAdding(false)
+      }
+    })()
   }
 
   const images = product.images.edges
@@ -214,7 +219,7 @@ export function ComfyrobeQuickBuy({ product }: Props) {
             <button
               type='button'
               onClick={handleAddToCart}
-              disabled={!selectedVariant || isAdding}
+              disabled={!selectedVariant || isAdding || isPending}
             >
               {isAdding ?
                 <span className='animate-pulse'>

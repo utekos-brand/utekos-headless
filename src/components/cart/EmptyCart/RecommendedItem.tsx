@@ -1,8 +1,10 @@
+'use client'
+
 import { getInitialAvailableOptions } from '@/components/ProductCard/getInitialAvailableOptions'
 import { findMatchingVariant } from '@/components/ProductCard/findMatchingVariant'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Button } from '@/components/ui/button'
-import { CartMutationContext } from '@/lib/context/CartMutationContext'
+import { useCanonicalAddToCart } from '@/hooks/useCanonicalAddToCart'
 import { cartStore } from '@/lib/state/cartStore'
 import { formatPrice } from '@/lib/utils/formatPrice'
 import type { ShopifyProduct } from 'types/product'
@@ -14,7 +16,7 @@ export function RecommendedItem({
 }: {
   product: ShopifyProduct
 }) {
-  const cartActor = CartMutationContext.useActorRef()
+  const { addToCart, isPending } = useCanonicalAddToCart()
   const selectedOptions = getInitialAvailableOptions(product)
   const selectedVariant = findMatchingVariant(
     product,
@@ -22,12 +24,14 @@ export function RecommendedItem({
   )
 
   const handleAddToCart = () => {
-    if (selectedVariant) {
-      cartActor.send({
-        type: 'ADD_LINES',
-        input: [{ variantId: selectedVariant.id, quantity: 1 }]
-      })
-    }
+    if (!selectedVariant) return
+
+    void addToCart({
+      product,
+      variant: selectedVariant,
+      quantity: 1,
+      openCart: false
+    })
   }
 
   return (
@@ -72,7 +76,7 @@ export function RecommendedItem({
         size='sm'
         variant='secondary'
         onClick={handleAddToCart}
-        disabled={!selectedVariant}
+        disabled={!selectedVariant || isPending}
       >
         Legg til
       </Button>

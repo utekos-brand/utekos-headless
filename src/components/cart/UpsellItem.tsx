@@ -1,7 +1,9 @@
+'use client'
+
 import { getInitialAvailableOptions } from '@/components/ProductCard/getInitialAvailableOptions'
 import { findMatchingVariant } from '@/components/ProductCard/findMatchingVariant'
 import { Button } from '@/components/ui/button'
-import { CartMutationContext } from '@/lib/context/CartMutationContext'
+import { useCanonicalAddToCart } from '@/hooks/useCanonicalAddToCart'
 import { cn } from '@/lib/utils/className'
 import { formatPrice } from '@/lib/utils/formatPrice'
 import type { UpsellItemProps } from 'types/cart'
@@ -12,7 +14,7 @@ export function UpsellItem({
   product,
   showDiscountHint
 }: UpsellItemProps) {
-  const cartActor = CartMutationContext.useActorRef()
+  const { addToCart, isPending } = useCanonicalAddToCart()
 
   const selectedOptions = getInitialAvailableOptions(product)
   const selectedVariant = findMatchingVariant(
@@ -26,12 +28,14 @@ export function UpsellItem({
   const discountedPrice = originalPrice * 0.9
 
   const handleAddToCart = () => {
-    if (selectedVariant) {
-      cartActor.send({
-        type: 'ADD_LINES',
-        input: [{ variantId: selectedVariant.id, quantity: 1 }]
-      })
-    }
+    if (!selectedVariant) return
+
+    void addToCart({
+      product,
+      variant: selectedVariant,
+      quantity: 1,
+      openCart: false
+    })
   }
 
   return (
@@ -89,7 +93,7 @@ export function UpsellItem({
             size='sm'
             variant='secondary'
             onClick={handleAddToCart}
-            disabled={!selectedVariant}
+            disabled={!selectedVariant || isPending}
             className='w-full sm:w-auto sm:shrink-0'
           >
             Legg til <ArrowRightIcon className='ml-2 h-4 w-4' />

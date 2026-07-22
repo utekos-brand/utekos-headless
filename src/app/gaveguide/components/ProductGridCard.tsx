@@ -4,15 +4,14 @@
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { CartMutationContext } from '@/lib/context/CartMutationContext'
-import { cartStore } from '@/lib/state/cartStore'
+import { useCanonicalAddToCart } from '@/hooks/useCanonicalAddToCart'
 import type { ProductCardProps } from '@types'
 import { ShoppingBagIcon } from 'lucide-react'
 import type { Route } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import type React from 'react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import { findMatchingVariant } from '@/components/ProductCard/findMatchingVariant'
 import { getInitialOptionsForProduct } from '@/components/ProductCard/getInitialOptionsForProduct'
@@ -32,7 +31,7 @@ export function ProductGridCard({
     () => initialOptions ?? getInitialOptionsForProduct(product)
   )
 
-  const cartActor = CartMutationContext.useActorRef()
+  const { addToCart } = useCanonicalAddToCart()
 
   const selectedVariant = findMatchingVariant(
     product,
@@ -63,24 +62,20 @@ export function ProductGridCard({
       toast.warning('Denne varianten er dessverre utsolgt.')
       return
     }
-    // ENDRET: Pakket inn input i en array []
-    cartActor.send({
-      type: 'ADD_LINES',
-      input: [{ variantId: selectedVariant.id, quantity: 1 }]
-    })
-    toast.success(`${product.title} er lagt i handlekurven!`)
-    cartStore.send({ type: 'OPEN' })
+
+    void (async () => {
+      const { success } = await addToCart({
+        product,
+        variant: selectedVariant,
+        quantity: 1,
+        openCart: true
+      })
+
+      if (success) {
+        toast.success(`${product.title} er lagt i handlekurven!`)
+      }
+    })()
   }
-
-  const lastError = CartMutationContext.useSelector(
-    state => state.context.error
-  )
-
-  useEffect(() => {
-    if (lastError) {
-      toast.error(lastError)
-    }
-  }, [lastError])
 
   return (
     <Card className='group relative flex h-full flex-col overflow-hidden border-none bg-transparent shadow-none'>

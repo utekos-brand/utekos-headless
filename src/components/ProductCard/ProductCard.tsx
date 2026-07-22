@@ -5,8 +5,7 @@ import { AspectRatio } from '@/components/ui/aspect-ratio'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { CartMutationContext } from '@/lib/context/CartMutationContext'
-import { cartStore } from '@/lib/state/cartStore'
+import { useCanonicalAddToCart } from '@/hooks/useCanonicalAddToCart'
 import { formatPrice } from '@/lib/utils/formatPrice'
 import { cn } from '@/lib/utils/className'
 import type { ProductCardProps } from '@types'
@@ -14,7 +13,7 @@ import type { Route } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import type React from 'react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import { findMatchingVariant } from './findMatchingVariant'
 import { getInitialOptionsForProduct } from './getInitialOptionsForProduct'
@@ -45,10 +44,7 @@ export function ProductCard({
     () => initialOptions ?? getInitialOptionsForProduct(product)
   )
 
-  const cartActor = CartMutationContext.useActorRef()
-  const isPending = CartMutationContext.useSelector(state =>
-    state.matches('mutating')
-  )
+  const { addToCart, isPending } = useCanonicalAddToCart()
 
   const selectedVariant = findMatchingVariant(
     product,
@@ -119,25 +115,21 @@ export function ProductCard({
       return
     }
 
-    cartActor.send({
-      type: 'ADD_LINES',
-      input: [{ variantId: selectedVariant.id, quantity: 1 }]
-    })
-    toast.success(
-      `${selectedVariant.title} er lagt i handlekurven!`
-    )
-    cartStore.send({ type: 'OPEN' })
+    void (async () => {
+      const { success } = await addToCart({
+        product,
+        variant: selectedVariant,
+        quantity: 1,
+        openCart: true
+      })
+
+      if (success) {
+        toast.success(
+          `${selectedVariant.title} er lagt i handlekurven!`
+        )
+      }
+    })()
   }
-
-  const lastError = CartMutationContext.useSelector(
-    state => state.context.error
-  )
-
-  useEffect(() => {
-    if (lastError) {
-      toast.error(lastError)
-    }
-  }, [lastError])
 
   const compactProductCardContent =
     compactMobile ?
