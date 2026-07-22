@@ -713,3 +713,21 @@ STOP: do not auto-continue to begin_checkout or CE-2.4/2.5
 
 Owner approved view_item and directed add_to_cart next with
 Microsoft CAPI worker (not browser-only).
+
+## 22. add_to_cart three-provider live proof
+
+```text
+Task: live Meta + Google + Microsoft add_to_cart after PR #53
+Runtime tip: 1537e28df / dpl_EZMuJTEFAv3umzkodHCdm2WXDxyV READY
+Conclusion: LIVE_THREE_PROVIDER_ATC_PROVEN
+Primary event_id: 1b788154-1e7b-433b-a930-f8b5f529ce34
+  meta accepted_unverified eventsReceived=1
+  google accepted_unverified Data Manager requestId present
+  microsoft_uet accepted_unverified CAPI status=200 eventName=add_to_cart
+Evidence: docs/analytics/evidence/ce-add-to-cart-three-provider-live.md
+STOP: do not auto-continue to begin_checkout / CE-2.4 / CE-2.5
+```
+
+`add_to_cart` meets the equal paid-media bar for Meta, Google, and
+Microsoft server delivery on one consented journey with `msclkid`.
+
