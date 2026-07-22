@@ -32,6 +32,7 @@ import { metaPageViewProviderAdapter } from './providerAdapters/metaPageViewProv
 import { metaPurchaseProviderAdapter } from './providerAdapters/metaPurchaseProviderAdapter'
 import { metaSearchProviderAdapter } from './providerAdapters/metaSearchProviderAdapter'
 import { metaViewItemProviderAdapter } from './providerAdapters/metaViewItemProviderAdapter'
+import { microsoftUetAddToCartProviderAdapter } from './providerAdapters/microsoftUetAddToCartProviderAdapter'
 import { microsoftUetPurchaseProviderAdapter } from './providerAdapters/microsoftUetPurchaseProviderAdapter'
 import type { ProviderOutboxBatchSummary } from './runProviderOutboxWorker'
 
@@ -131,6 +132,9 @@ export const providerOutboxWorkerRegistry = {
   ),
   'meta:view_item': createPostgresProviderOutboxWorker(
     metaViewItemProviderAdapter
+  ),
+  'microsoft_uet:add_to_cart': createPostgresProviderOutboxWorker(
+    microsoftUetAddToCartProviderAdapter
   ),
   'microsoft_uet:purchase': createPostgresProviderOutboxWorker(
     microsoftUetPurchaseProviderAdapter

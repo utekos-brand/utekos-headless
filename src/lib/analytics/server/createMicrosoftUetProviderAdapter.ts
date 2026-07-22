@@ -4,11 +4,23 @@ import type {
   ProviderAdapter,
   ProviderAdapterKey
 } from './providerAdapter'
-import type { MicrosoftUetPurchaseDispatchReceipt } from './dispatchCanonicalPurchaseToMicrosoftUet'
 import {
   MicrosoftUetCapiConfigError,
   MicrosoftUetCapiHttpError
 } from './sendMicrosoftUetCapiPurchase'
+
+type MicrosoftUetCapiDispatchReceipt = {
+  eventId: string
+  eventName: string
+  provider: 'microsoft_uet'
+  result: {
+    eventId: string
+    eventName: string
+    requestId: string | null
+    status: number
+    tagId: string
+  }
+}
 
 const RETRYABLE_NETWORK_CODES = new Set([
   'ECONNRESET',
@@ -96,7 +108,7 @@ function summarizeMicrosoftUetError(error: unknown) {
 
 export function createMicrosoftUetProviderAdapter<
   E extends CanonicalEvent,
-  R extends MicrosoftUetPurchaseDispatchReceipt
+  R extends MicrosoftUetCapiDispatchReceipt
 >(input: {
   dispatch: (event: E) => Promise<R>
   eventName: E['event_name']

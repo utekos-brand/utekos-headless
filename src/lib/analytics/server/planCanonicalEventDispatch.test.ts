@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { CanonicalEvent } from '../canonicalEvent'
+import { canonicalAddToCartSchema } from '../addToCartEvent'
 import { canonicalPageViewSchema } from '../pageViewEvent'
 import { canonicalPurchaseSchema } from '../purchaseEvent'
 import { canonicalRefundSchema } from '../refundEvent'
@@ -307,4 +308,147 @@ test('itemless refund plans at most one attempt per eligible provider', () => {
     ).size,
     intents.length
   )
+})
+
+test('routes consented add_to_cart with msclkid and UET token to Microsoft outbox', () => {
+  const previous = process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN
+  process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN = 'test-uet-token'
+
+  try {
+    const event = canonicalAddToCartSchema.parse({
+      schema_version: 1,
+      event_name: 'add_to_cart',
+      event_id: '61c2ef59-6e6f-4f56-a63a-567ca398f9de',
+      event_time: '2026-07-17T10:05:00.000Z',
+      source: 'web',
+      environment: 'test',
+      page_url: 'https://utekos.no/produkter/utekos-dun',
+      page_title: 'Utekos Dun',
+      browser_id: { ga_client_id: '123456789.1784201643' },
+      click_id: { msclkid: 'dd4afcccb1c9a4cad9544dd7e5006' },
+      consent,
+      custom_data: {
+        currency: 'NOK',
+        value: 100,
+        gross_value: 100,
+        tax_value: 20,
+        cart_id: 'cart_1',
+        cart_mutation_id: 'mutation_1',
+        items: [
+          {
+            available_for_sale: true,
+            collection_ids: [],
+            collection_titles: [],
+            currently_not_in_stock: false,
+            gross_unit_price: 100,
+            item_id: '1',
+            item_name: 'Item',
+            price_includes_tax: true,
+            product_handle: 'item',
+            product_id: 'gid://shopify/Product/1',
+            quantity: 1,
+            quantity_available: 1,
+            selected_options: [],
+            tax_amount: 20,
+            tax_rate: 0.25,
+            taxable: true,
+            unit_price: 100,
+            variant_id: 'gid://shopify/ProductVariant/1'
+          }
+        ]
+      }
+    })
+
+    assert.deepEqual(planCanonicalEventDispatch(event), [
+      {
+        dispatch_mode: 'server_retry',
+        event_id: event.event_id,
+        provider: 'google'
+      },
+      {
+        dispatch_mode: 'server_retry',
+        event_id: event.event_id,
+        provider: 'meta'
+      },
+      {
+        dispatch_mode: 'server_retry',
+        event_id: event.event_id,
+        provider: 'microsoft_uet'
+      }
+    ])
+  } finally {
+    if (previous === undefined) {
+      delete process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN
+    } else {
+      process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN = previous
+    }
+  }
+})
+
+test('skips Microsoft add_to_cart without msclkid as unqualified', () => {
+  const previous = process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN
+  process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN = 'test-uet-token'
+
+  try {
+    const event = canonicalAddToCartSchema.parse({
+      schema_version: 1,
+      event_name: 'add_to_cart',
+      event_id: '61c2ef59-6e6f-4f56-a63a-567ca398f9de',
+      event_time: '2026-07-17T10:05:00.000Z',
+      source: 'web',
+      environment: 'test',
+      page_url: 'https://utekos.no/produkter/utekos-dun',
+      page_title: 'Utekos Dun',
+      browser_id: { ga_client_id: '123456789.1784201643' },
+      consent,
+      custom_data: {
+        currency: 'NOK',
+        value: 100,
+        gross_value: 100,
+        tax_value: 20,
+        cart_id: 'cart_1',
+        cart_mutation_id: 'mutation_1',
+        items: [
+          {
+            available_for_sale: true,
+            collection_ids: [],
+            collection_titles: [],
+            currently_not_in_stock: false,
+            gross_unit_price: 100,
+            item_id: '1',
+            item_name: 'Item',
+            price_includes_tax: true,
+            product_handle: 'item',
+            product_id: 'gid://shopify/Product/1',
+            quantity: 1,
+            quantity_available: 1,
+            selected_options: [],
+            tax_amount: 20,
+            tax_rate: 0.25,
+            taxable: true,
+            unit_price: 100,
+            variant_id: 'gid://shopify/ProductVariant/1'
+          }
+        ]
+      }
+    })
+
+    const microsoft = planCanonicalEventDispatch(event).find(
+      intent => intent.provider === 'microsoft_uet'
+    )
+
+    assert.deepEqual(microsoft, {
+      dispatch_mode: 'server_retry',
+      event_id: event.event_id,
+      provider: 'microsoft_uet',
+      skip_reason: 'missing_msclkid',
+      status: 'skipped_unqualified'
+    })
+  } finally {
+    if (previous === undefined) {
+      delete process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN
+    } else {
+      process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN = previous
+    }
+  }
 })

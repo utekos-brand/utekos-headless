@@ -100,22 +100,22 @@
 ## Microsoft
 
 - **Owner:** Web GTM for browser UET; analytics server outbox for
-  UET CAPI purchase.
+  UET CAPI `purchase` and `add_to_cart`.
 - **Transport:** browser UET + server Conversions API
-  (`capi.uet.microsoft.com`) for `purchase` only.
+  (`capi.uet.microsoft.com`) for `purchase` and `add_to_cart`.
 - **Events:** canonical Microsoft names in the catalog; live
-  published container contains UET. Server worker registered for
-  `purchase` only; other Microsoft `serverOutbox` values remain
-  `blocked_no_worker`.
+  published container contains UET. Server workers registered for
+  `purchase` and `add_to_cart`; other Microsoft `serverOutbox`
+  values remain `blocked_no_worker`.
 - **Destination:** UET tag `97247724`.
 - **Auth:** UET tag ApiToken (`MICROSOFT_UET_CAPI_*` aliases),
   not Ads OAuth.
 - **Dedupe:** catalog `event_id`; live `pageLoadId`
   browser-server pairing still unverified (purchase-first path
   does not emit pageLoad).
-- **Retry:** provider outbox retry for purchase CAPI HTTP/network
+- **Retry:** provider outbox retry for CAPI HTTP/network
   failures; qualification skips are terminal.
-- **Finality:** purchase CAPI HTTP 200 → generic
+- **Finality:** CAPI HTTP 200 → generic
   `accepted_unverified`; missing `msclkid`/token →
   `skipped_unqualified`.
 - **Diagnostics:** Microsoft Ads audit green 2026-07-20; browser
@@ -123,9 +123,10 @@
   `view_item` post-consent only (`asc=G`), Clarity `wupwleuv2e`
   linked.
 - **Status:** browser verified; purchase CAPI production-verified
-  2026-07-20 (`#6ULWCDZT5` → `accepted_unverified`). Historical
-  222 skipped Microsoft rows remain historical; non-purchase
-  server events still `blocked_no_worker`.
+  2026-07-20 (`#6ULWCDZT5` → `accepted_unverified`). `add_to_cart`
+  CAPI worker code-contract proven pending production deploy.
+  Remaining non-purchase events (e.g. `page_view`, `view_item`)
+  still `blocked_no_worker`.
 
 ## Supabase
 
