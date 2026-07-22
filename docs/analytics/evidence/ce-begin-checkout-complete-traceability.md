@@ -4,7 +4,7 @@
 **Start SHA:** `78d67e25cf6d71fa99e75b68544fbff3517172a1`
 **Task:** SAFE — begin_checkout UI remediations (not CE-2.4/2.5)
 **Source:** Source-based inventory report (user-supplied 2026-07-23)
-**Conclusion:** `BEGIN_CHECKOUT_TRACEABILITY_INVENTORIED` + Gap 1/2 remediations on branch `feat/begin-checkout-remediations`
+**Conclusion:** `BEGIN_CHECKOUT_TRACEABILITY_INVENTORIED` + Gap 1/2 **REMEDIATED** on branch `feat/begin-checkout-remediations` (awaiting deploy; live BankID Klarna smoke blocked)
 
 ## Remediation (Gaps 1–2)
 
@@ -13,7 +13,15 @@
 | Gap 1 | Unused `handleGoToCheckout` on skreddersy purchase view | CLOSED (DEV-024) | `PurchaseClientView.tsx` → `handleGoToCheckout` |
 | Gap 2 | Klarna Express missing canonical `begin_checkout` | CLOSED (DEV-023) | `prepareKlarnaExpressBeginCheckout.ts` + `KlarnaProductExpressCheckout.tsx` |
 
-Commit SHAs for remediation will be recorded after merge of Tasks 2–3 on this branch.
+Remediation commits on `feat/begin-checkout-remediations`:
+
+| Commit | SHA | Purpose |
+| --- | --- | --- |
+| Evidence + DEV stubs | `c4ba4dc0d33f8c104b2ab505cf789132cbf7c351` | Persist inventory; open DEV-023/024 |
+| Code remediations | `90c5e53a261690dc0cdc1213c54ccb8843e13281` | Wire Gap 1 + cart-backed Klarna Gap 2 |
+
+Docs close-out (DEV-023/024 CLOSED) is on this branch tip after the
+code remediations commit above.
 
 Gaps 3–7 remain open / expected qualification (out of scope for this SAFE task).
 
