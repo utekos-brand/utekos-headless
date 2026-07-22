@@ -64,7 +64,7 @@ type PageViewNavigationInput = {
   previousUrl: string | null
 }
 
-type PageViewNavigation = {
+export type PageViewNavigation = {
   pageUrl: string
   referrerUrl?: string
 }
