@@ -4,19 +4,11 @@ import type {
   CatalogSyncVariant,
   CatalogSyncWeightUnit
 } from '@/lib/catalog-sync/types'
+import { getShopifyAdminConfig } from '@/lib/shopify/getShopifyAdminConfig'
 
-const SHOPIFY_ADMIN_API_TOKEN = process.env.SHOPIFY_ADMIN_API_TOKEN
-const SHOPIFY_STORE_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
-const API_VERSION = '2026-04'
 const PRODUCT_PAGE_SIZE = 100
 const VARIANT_PAGE_SIZE = 250
 const CUSTOMER_PAGE_SIZE = 250
-
-if (!SHOPIFY_ADMIN_API_TOKEN || !SHOPIFY_STORE_DOMAIN) {
-  throw new Error('Missing Shopify Admin API credentials')
-}
-
-const SHOPIFY_GRAPHQL_URL = `https://${SHOPIFY_STORE_DOMAIN}/admin/api/${API_VERSION}/graphql.json`
 
 type ShopifyWeightUnit =
   | 'KILOGRAMS'
@@ -206,6 +198,7 @@ function mapProduct(node: ShopifyCatalogSyncProductNode): CatalogSyncProduct {
 }
 
 async function fetchCatalogSyncProductPage(cursor: string | null) {
+  const { accessToken, graphqlUrl } = getShopifyAdminConfig()
   const query = `
     query getCatalogSyncProducts($cursor: String) {
       products(first: ${PRODUCT_PAGE_SIZE}, after: $cursor) {
@@ -282,11 +275,11 @@ async function fetchCatalogSyncProductPage(cursor: string | null) {
     }
   `
 
-  const response = await fetch(SHOPIFY_GRAPHQL_URL, {
+  const response = await fetch(graphqlUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Shopify-Access-Token': SHOPIFY_ADMIN_API_TOKEN as string
+      'X-Shopify-Access-Token': accessToken
     },
     body: JSON.stringify({
       query,
@@ -347,6 +340,7 @@ function mapCustomerMatchCustomer(
 }
 
 async function fetchCustomerMatchCustomerPage(cursor: string | null) {
+  const { accessToken, graphqlUrl } = getShopifyAdminConfig()
   const query = `
     query getCustomerMatchCustomers($cursor: String) {
       customers(first: ${CUSTOMER_PAGE_SIZE}, after: $cursor, sortKey: UPDATED_AT, reverse: true) {
@@ -373,11 +367,11 @@ async function fetchCustomerMatchCustomerPage(cursor: string | null) {
     }
   `
 
-  const response = await fetch(SHOPIFY_GRAPHQL_URL, {
+  const response = await fetch(graphqlUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Shopify-Access-Token': SHOPIFY_ADMIN_API_TOKEN as string
+      'X-Shopify-Access-Token': accessToken
     },
     body: JSON.stringify({
       query,
