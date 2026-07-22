@@ -7,10 +7,12 @@ import { PageSection } from '@/components/layout/PageSection'
 import { cn } from '@/lib/utils/className'
 import { COMFYROBE_SCENARIOS } from '../data/comfyrobeLandingContent'
 
+type ComfyrobeScenarioId =
+  (typeof COMFYROBE_SCENARIOS)[number]['id']
+
 export function ComfyrobeScenarioTabs() {
-  const [activeScenarioId, setActiveScenarioId] = useState(
-    COMFYROBE_SCENARIOS[0].id
-  )
+  const [activeScenarioId, setActiveScenarioId] =
+    useState<ComfyrobeScenarioId>(COMFYROBE_SCENARIOS[0].id)
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
 
   const activeScenario =
