@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-22  
 **Start SHA:** `184086af7b5378522b59c40ac262ddd6898198fd`  
-**Tip SHA:** `d0f8cf3f8f1b5d85fd8b1a3ca76e1df2a2c6a502`  
+**Tip SHA:** `95551dafd` (docs commit; runtime tip `d0f8cf3f8`)  
 **Task:** SAFE — AddToCart UI call-site coverage (not CE-\*)  
 **Conclusion:** `ATC_UI_CALL_SITE_COVERAGE_CLOSED`
 
