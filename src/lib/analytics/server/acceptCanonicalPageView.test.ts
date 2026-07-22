@@ -45,6 +45,7 @@ test('rejects fully denied events without calling storage', async () => {
   })
 
   assert.deepEqual(result, {
+    cookiesToSet: [],
     reason: 'consent_denied',
     status: 'rejected'
   })
@@ -64,16 +65,56 @@ test('accepts the event and its provider intents through one storage call', asyn
 
   const result = await acceptCanonicalPageView({
     payload: pageView('granted', 'granted'),
-    requestContext: {},
+    requestContext: {
+      clientIpAddress: '203.0.113.10',
+      cookieHeader: ''
+    },
     store
   })
 
   assert.equal(result.status, 'accepted')
   assert.equal(writes.length, 1)
+  assert.ok(writes[0]?.event.browser_id?.fbp)
   assert.deepEqual(
     writes[0]?.dispatches.map(dispatch => dispatch.provider),
     ['meta']
   )
+})
+
+test('mints fbp and fbc from landing page_url fbclid before persist', async () => {
+  const writes: Parameters<
+    CanonicalPageViewStore['accept']
+  >[0][] = []
+  const store: CanonicalPageViewStore = {
+    accept: async input => {
+      writes.push(input)
+      return 'inserted'
+    }
+  }
+
+  const payload = {
+    ...pageView('granted', 'granted'),
+    page_url:
+      'https://utekos.no/?fbclid=IwAR2F4-dbP0l7Mn1IawQQGCINEz7PYXQvwjNwB_qa2ofrHyiLjcbCRxTDMgk'
+  }
+
+  const result = await acceptCanonicalPageView({
+    payload,
+    requestContext: { clientIpAddress: '203.0.113.10' },
+    store
+  })
+
+  assert.equal(result.status, 'accepted')
+  assert.ok(writes[0]?.event.browser_id?.fbp)
+  assert.equal(
+    writes[0]?.event.browser_id?.fbc?.split('.')[3],
+    'IwAR2F4-dbP0l7Mn1IawQQGCINEz7PYXQvwjNwB_qa2ofrHyiLjcbCRxTDMgk'
+  )
+  assert.equal(
+    writes[0]?.event.click_id?.fbclid,
+    'IwAR2F4-dbP0l7Mn1IawQQGCINEz7PYXQvwjNwB_qa2ofrHyiLjcbCRxTDMgk'
+  )
+  assert.ok(result.status !== 'rejected' && result.cookiesToSet.length >= 1)
 })
 
 test('reports an idempotent duplicate returned by storage', async () => {
@@ -87,8 +128,9 @@ test('reports an idempotent duplicate returned by storage', async () => {
     store
   })
 
-  assert.deepEqual(result, {
-    event_id: '61c2ef59-6e6f-4f56-a63a-567ca398f9de',
-    status: 'duplicate'
-  })
+  assert.equal(result.status, 'duplicate')
+  assert.equal(
+    result.status !== 'rejected' && result.event_id,
+    '61c2ef59-6e6f-4f56-a63a-567ca398f9de'
+  )
 })

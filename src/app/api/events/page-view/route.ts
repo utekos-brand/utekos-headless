@@ -14,10 +14,13 @@ export function POST(request: Request) {
           const clientIpAddress = ipAddress(requestWithContext)
           const userAgent =
             requestWithContext.headers.get('user-agent')
+          const cookieHeader =
+            requestWithContext.headers.get('cookie') ?? undefined
 
           return {
             ...(geo.city ? { city: geo.city } : {}),
             ...(clientIpAddress ? { clientIpAddress } : {}),
+            ...(cookieHeader ? { cookieHeader } : {}),
             ...(geo.country ? { countryCode: geo.country } : {}),
             ...(geo.postalCode ?
               { postalCode: geo.postalCode }
@@ -25,6 +28,7 @@ export function POST(request: Request) {
             ...(geo.countryRegion ?
               { regionCode: geo.countryRegion }
             : {}),
+            requestUrl: requestWithContext.url,
             ...(userAgent ? { userAgent } : {})
           }
         },

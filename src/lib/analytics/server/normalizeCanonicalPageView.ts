@@ -6,9 +6,11 @@ import {
 export type CanonicalPageViewRequestContext = {
   city?: string
   clientIpAddress?: string
+  cookieHeader?: string
   countryCode?: string
   postalCode?: string
   regionCode?: string
+  requestUrl?: string
   userAgent?: string
 }
 

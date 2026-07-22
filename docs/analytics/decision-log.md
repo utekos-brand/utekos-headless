@@ -548,6 +548,41 @@ docs-only stop commit
   `STOP_ACTIVE_DOUBLE_COUNT_RISK`.
 - **Godkjent av:** Prosjekteier
 
+## DEC-015 — Meta PageView Event Enhancement via first-party cookies (not Firestore/Sheets)
+
+- **Dato:** 2026-07-22
+- **Status:** `APPROVED`
+- **Berører:** CE-5.2D; INV-001; INV-002; Meta Parameter Builder;
+  `page_view` accept path; DEV-021
+- **Tidligere beslutning, hvis relevant:** DEC-001 canonical
+  pipeline; ADR-0004 request-context boundaries
+- **Nytt funn og primærevidens:** Live 7d ledger showed marketing
+  `page_view` with `fbclid` and `has_fbp=0` (265 rows; landing
+  race). Meta guidance requires server-side `fbclid` read from the
+  document URL query string, first-party `_fbp`/`_fbc`, and Event
+  Enhancement via cookies — not a parallel warehouse.
+- **Beslutning:** Implement Event Enhancement
+  (hendelsesberikelse) for Meta click/browser IDs only through:
+  (1) CanonicalEvent accept-path ParamBuilder
+  (`ensureCanonicalMetaBrowserIds`),
+  (2) first-party `_fbp`/`_fbc` cookies on the page-view response,
+  (3) existing durable click-id session store,
+  (4) Supabase ledger/outbox as truth. **Reject** Firestore and
+  Google Sheets / Google Regneark as Meta identity or click-id
+  enrichment stores for this stream.
+- **Alternativer:** Firestore user profile store; Google Sheets
+  offline enhancement; sGTM-only Meta identity (rejected — Meta
+  CAPI owned by cron outbox).
+- **Begrunnelse:** Parallel stores violate INV-001 single pipeline
+  and add freshness/consistency risk for RealTime PageView match
+  keys (`event_id` + `external_id` + `fbp`).
+- **Konsekvens for roadmap/DoD:** CE-5.2D may ship server ensure +
+  cookie `Set-Cookie`. GTG/sGTM remain Google delivery/collection.
+  Production deploy requires owner merge/PR approval. No
+  Firestore/Sheets dependency.
+- **Godkjent av:** Prosjekteier (startordre 2026-07-22 PageView
+  fbp/fbc + «gå videre» for PR)
+
 ## Mal for ny beslutning
 
 ```text
