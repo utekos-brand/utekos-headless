@@ -1,36 +1,20 @@
-import { useState, useTransition, useContext } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 import { toast } from 'sonner'
-import { CartMutationContext } from '@/lib/context/CartMutationContext'
-import { CartIdContext } from '@/lib/context/CartIdContext'
-import { cartStore } from '@/lib/state/cartStore'
-import { useCartMutations } from '@/hooks/useCartMutations'
-import { useOptimisticCartUpdate } from '@/hooks/useOptimisticCartUpdate'
-import { getCartIdFromCookie } from '@/lib/actions/getCartIdFromCookie'
 import { GID_PREFIX } from '@/api/constants'
 import { scrollToElement } from '@/lib/motion/scrollToElement'
 import { variantMap } from '@/app/skreddersy-varmen/utekos-orginal/utils/variantMap'
 import { productConfig } from '@/app/skreddersy-varmen/utekos-orginal/utils/productConfig'
+import { useCanonicalAddToCart } from '@/hooks/useCanonicalAddToCart'
 import type {
   ShopifyProduct,
-  ShopifyProductVariant,
   MicrofiberColor,
   MicrofiberSize
 } from 'types/product'
 
-export function useMicrofiberLogic() {
+export function useMicrofiberLogic(product: ShopifyProduct | null) {
   const [color, setColor] = useState<MicrofiberColor>('fjellbla')
   const [size, setSize] = useState<MicrofiberSize>('large')
-  const [isTransitioning, startTransition] = useTransition()
-
-  const { addLines } = useCartMutations()
-  const { updateCartCache } = useOptimisticCartUpdate()
-  const contextCartId = useContext(CartIdContext)
-  const queryClient = useQueryClient()
-
-  const isPendingFromMachine = CartMutationContext.useSelector(state =>
-    state.matches('mutating')
-  )
+  const { addToCart, isPending } = useCanonicalAddToCart()
 
   const activeImage = productConfig.colors.find(
     c => c.id === (color as unknown)
@@ -41,6 +25,13 @@ export function useMicrofiberLogic() {
   }
 
   const handleAddToCart = () => {
+    if (!product) {
+      toast.error(
+        'Produktet er midlertidig utilgjengelig. Prøv igjen senere.'
+      )
+      return
+    }
+
     const variantIdRaw = variantMap[color]?.[size]
 
     if (!variantIdRaw) {
@@ -49,77 +40,27 @@ export function useMicrofiberLogic() {
     }
 
     const variantId = `${GID_PREFIX}${variantIdRaw}`
+    const selectedVariant = product.variants.edges
+      .map(edge => edge.node)
+      .find(variant => variant.id === variantId)
 
-    startTransition(async () => {
-      try {
-        const cartId = contextCartId || (await getCartIdFromCookie())
+    if (!selectedVariant) {
+      toast.error('Kunne ikke finne valgt variant. Prøv igjen.')
+      return
+    }
 
-        if (cartId) {
-          const mockProduct = {
-            id: 'utekos-mikrofiber-base',
-            title: 'Utekos Mikrofiber™',
-            handle: 'utekos-mikrofiber',
-            featuredImage: {
-              url: activeImage || '',
-              altText: 'Utekos Mikrofiber',
-              width: 1000,
-              height: 1000
-            },
-            productType: 'Robe'
-          } as unknown as ShopifyProduct
+    void (async () => {
+      const { success } = await addToCart({
+        product,
+        variant: selectedVariant,
+        quantity: 1,
+        openCart: true
+      })
 
-          const mockVariant = {
-            id: variantId,
-            title: `${productConfig.colors.find(c => c.id === (color as unknown))?.name} / ${productConfig.sizes.find(s => s.id === (size as unknown))?.name}`,
-            image: {
-              url: activeImage || '',
-              altText: 'Variant',
-              width: 1000,
-              height: 1000
-            },
-            price: {
-              amount: productConfig.price.toString(),
-              currencyCode: 'NOK'
-            },
-            availableForSale: true,
-            selectedOptions: [
-              { name: 'Farge', value: color },
-              { name: 'Størrelse', value: size }
-            ]
-          } as unknown as ShopifyProductVariant
-          await updateCartCache({
-            cartId,
-            items: [
-              {
-                product: mockProduct,
-                variant: mockVariant,
-                quantity: 1
-              }
-            ]
-          })
-
-          cartStore.send({ type: 'OPEN' })
-        }
-
-        await addLines([{ variantId, quantity: 1 }])
-
-        if (cartId) {
-          queryClient.invalidateQueries({ queryKey: ['cart', cartId] })
-        }
-
-        if (!cartId) {
-          cartStore.send({ type: 'OPEN' })
-        }
-      } catch (error) {
-        console.error('Kunne ikke legge til vare:', error)
-        toast.error('Noe gikk galt. Prøv igjen.')
-
-        const cartId = contextCartId || (await getCartIdFromCookie())
-        if (cartId) {
-          queryClient.invalidateQueries({ queryKey: ['cart', cartId] })
-        }
+      if (success) {
+        toast.success('Lagt i handlekurven!')
       }
-    })
+    })()
   }
 
   return {
@@ -130,6 +71,6 @@ export function useMicrofiberLogic() {
     activeImage,
     handleAddToCart,
     scrollToSizeGuide,
-    isPending: isTransitioning || isPendingFromMachine
+    isPending: isPending || !product
   }
 }
