@@ -19,7 +19,6 @@ Remediation commits on `feat/begin-checkout-remediations`:
 | --- | --- | --- |
 | Evidence + DEV stubs | `c4ba4dc0d33f8c104b2ab505cf789132cbf7c351` | Persist inventory; open DEV-023/024 |
 | Code remediations | `90c5e53a261690dc0cdc1213c54ccb8843e13281` | Wire Gap 1 + cart-backed Klarna Gap 2 |
-
 | Docs close-out | `71e4ca21ba3996d3dc10a894d725fc9fa199c2a6` | Close DEV-023/024; record remediation SHAs |
 
 Gaps 3–7 remain open / expected qualification (out of scope for this SAFE task).
