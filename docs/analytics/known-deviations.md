@@ -335,9 +335,10 @@
   parity proven; UI Overlap badge still unverified)
 - **Status:** SHARED_EVENT_ID_PROVEN_UI_OVERLAP_OPEN
 - **Description:** Meta browser/server **shared `event_id`** for
-  PageView and ViewContent is proven on production wire + ledger
-  + CAPI accept. Events Manager Deduplication **Overlap UI** is
-  still not API-readable and remains `blocked_verification`.
+  PageView, ViewContent, and AddToCart is proven on production
+  wire + ledger + CAPI accept. Events Manager Deduplication
+  **Overlap UI** is still not API-readable and remains
+  `blocked_verification`.
 - **Evidence (2026-07-22 CE-5.2C):** Smoke
   `verify-meta-pixel-parity.mjs` `ok: true` on `utekos.no`.
   Product ViewContent
@@ -346,12 +347,19 @@
   (`accepted_unverified`, `eventsReceived=1`,
   `fbTraceId=AB2THDOhh7jzIowVJHiZ8mZ`). See
   `docs/analytics/evidence/ce-5.2c-meta-live-dedupe.md`.
+- **Evidence (2026-07-22 AddToCart):** Smoke
+  `verify-meta-add-to-cart-dedupe.mjs` `ok: true`.
+  AddToCart `4032dbf1-d588-4d95-ab84-aa5d14f74191` identical
+  across dataLayer, Pixel `/tr`, OpenBridge, first-party POST,
+  ledger, and Meta attempt (`eventsReceived=1`,
+  `fbTraceId=ANBPwKcn-jpu24oX1hKth27`). See
+  `docs/analytics/evidence/ce-add-to-cart-meta-browser-server-dedupe.md`.
 - **Historical (2026-07-20):** Events Manager showed ViewContent
   «Deduplication has not been set up»; Test Events (`TEST46149`)
   had mismatched browser/server IDs — superseded for operational
   shared-ID claim.
 - **Consequence:** Residual risk is UI/Overlap visibility lag,
-  not missing shared `event_id` on PageView/ViewContent.
+  not missing shared `event_id` on PageView/ViewContent/AddToCart.
 - **Systems:** Browser Meta Pixel (GTM), Meta CAPI adapters,
   Events Manager Dataset Quality.
 - **Recommended next action:** Optional manual Events Manager
