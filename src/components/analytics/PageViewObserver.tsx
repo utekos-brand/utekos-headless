@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
+import { claimPageViewNavigation } from '@/lib/analytics/claimPageViewNavigation'
 import { emitCanonicalPageView } from '@/lib/analytics/emitCanonicalPageView'
 import {
   extractBrowserIds,
@@ -15,9 +16,9 @@ import {
 } from '@/lib/analytics/pageViewCollectorTransport'
 import {
   createCanonicalPageView,
-  resolvePageViewNavigation,
   type TrackingEnvironment
 } from '@/lib/analytics/pageViewEvent'
+import { browserPageViewSession } from '@/lib/analytics/pageViewSession'
 
 type PageViewObserverProps = { environment: TrackingEnvironment }
 
@@ -38,7 +39,6 @@ export function PageViewObserver({
 }: PageViewObserverProps) {
   const pathname = usePathname()
   const search = useSearchParams().toString()
-  const previousUrl = useRef<string | null>(null)
 
   useEffect(() => {
     const handleConsentUpdate = () => {
@@ -62,14 +62,22 @@ export function PageViewObserver({
   }, [])
 
   useEffect(() => {
-    const navigation = resolvePageViewNavigation({
+    const navigation = claimPageViewNavigation({
       currentUrl: window.location.href,
-      documentReferrer: document.referrer,
-      previousUrl: previousUrl.current
+      documentReferrer: document.referrer
     })
     if (!navigation) return
 
-    previousUrl.current = navigation.pageUrl
+    const pageView = browserPageViewSession.ensure({
+      pageUrl: navigation.pageUrl,
+      ...(navigation.referrerUrl ?
+        { documentReferrer: navigation.referrerUrl }
+      : {})
+    })
+
+    if (browserPageViewSession.hasEmitted(pageView.pageViewId)) {
+      return
+    }
 
     const consent = getConsentSnapshot(
       getCookiebotState()?.consent
@@ -87,7 +95,7 @@ export function PageViewObserver({
     const event = createCanonicalPageView({
       environment,
       eventId: crypto.randomUUID(),
-      pageViewId: crypto.randomUUID(),
+      pageViewId: pageView.pageViewId,
       eventTime: new Date().toISOString(),
       pageUrl: navigation.pageUrl,
       ...(navigation.referrerUrl ?
