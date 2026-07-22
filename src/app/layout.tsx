@@ -147,6 +147,7 @@ export default function RootLayout({
           </Suspense>
         </ThemeProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
