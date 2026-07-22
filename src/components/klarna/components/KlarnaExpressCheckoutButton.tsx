@@ -16,6 +16,11 @@ import type {
   KlarnaExpressCheckoutAuthorize
 } from '../types'
 
+export type KlarnaExpressPreparedAuthorize = {
+  orderPayload: KlarnaExpressOrderPayload
+  shopifyCartId: string
+}
+
 type KlarnaExpressCheckoutButtonProps = {
   orderPayload: KlarnaExpressOrderPayload
   shopifyCartId?: string
@@ -24,6 +29,7 @@ type KlarnaExpressCheckoutButtonProps = {
   buttonContainerClassName?: string
   onError?: (message: string) => void
   onAuthorizing?: () => void
+  onPrepareAuthorize?: () => Promise<KlarnaExpressPreparedAuthorize | null>
 }
 
 function parseCollectedShippingAddress(
@@ -49,7 +55,8 @@ export function KlarnaExpressCheckoutButton({
   className,
   buttonContainerClassName,
   onError,
-  onAuthorizing
+  onAuthorizing,
+  onPrepareAuthorize
 }: KlarnaExpressCheckoutButtonProps) {
   const containerSuffix = useId().replace(/:/g, '')
   const containerId = `klarna-express-checkout-${containerSuffix}`
@@ -57,6 +64,7 @@ export function KlarnaExpressCheckoutButton({
   const cartIdRef = useRef(shopifyCartId)
   const onErrorRef = useRef(onError)
   const onAuthorizingRef = useRef(onAuthorizing)
+  const onPrepareAuthorizeRef = useRef(onPrepareAuthorize)
   const hasInitializedRef = useRef(false)
 
   useEffect(() => {
@@ -64,7 +72,14 @@ export function KlarnaExpressCheckoutButton({
     cartIdRef.current = shopifyCartId
     onErrorRef.current = onError
     onAuthorizingRef.current = onAuthorizing
-  }, [onAuthorizing, onError, orderPayload, shopifyCartId])
+    onPrepareAuthorizeRef.current = onPrepareAuthorize
+  }, [
+    onAuthorizing,
+    onError,
+    onPrepareAuthorize,
+    orderPayload,
+    shopifyCartId
+  ])
 
   useEffect(() => {
     if (disabled) {
@@ -98,63 +113,94 @@ export function KlarnaExpressCheckoutButton({
             on_click: (
               authorize: KlarnaExpressCheckoutAuthorize
             ) => {
-              onAuthorizingRef.current?.()
+              void (async () => {
+                onAuthorizingRef.current?.()
 
-              authorize(
-                {
-                  auto_finalize: true,
-                  collect_shipping_address: true
-                },
-                payloadRef.current,
-                async (
-                  result: KlarnaExpressCheckoutAuthorizationResult
-                ) => {
-                  if (
-                    !result.approved ||
-                    !result.authorization_token
-                  ) {
-                    onErrorRef.current?.(
-                      'Klarna authorization was not approved'
-                    )
-                    return
-                  }
+                let authorizePayload = payloadRef.current
+                let authorizeCartId = cartIdRef.current
 
-                  const parsedAddress =
-                    parseCollectedShippingAddress(result)
-
-                  if (!parsedAddress.success) {
-                    onErrorRef.current?.(
-                      'Klarna did not return a valid shipping address'
-                    )
-                    return
-                  }
-
+                if (onPrepareAuthorizeRef.current) {
                   try {
-                    const completion =
-                      await completeKlarnaExpressCheckout({
-                        authorizationToken:
-                          result.authorization_token,
-                        orderPayload: payloadRef.current,
-                        collectedShippingAddress:
-                          parsedAddress.data,
-                        ...(cartIdRef.current ?
-                          { shopifyCartId: cartIdRef.current }
-                        : {})
-                      })
+                    const prepared =
+                      await onPrepareAuthorizeRef.current()
 
-                    window.location.assign(
-                      completion.redirect_url
-                    )
+                    if (!prepared) {
+                      onErrorRef.current?.(
+                        'Klarna-kassen kunne ikke forberedes'
+                      )
+                      return
+                    }
+
+                    authorizePayload = prepared.orderPayload
+                    authorizeCartId = prepared.shopifyCartId
+                    payloadRef.current = authorizePayload
+                    cartIdRef.current = authorizeCartId
                   } catch (error) {
-                    const message =
+                    onErrorRef.current?.(
                       error instanceof Error ?
                         error.message
-                      : 'Klarna express checkout failed'
-
-                    onErrorRef.current?.(message)
+                      : 'Klarna-kassen kunne ikke forberedes'
+                    )
+                    return
                   }
                 }
-              )
+
+                authorize(
+                  {
+                    auto_finalize: true,
+                    collect_shipping_address: true
+                  },
+                  authorizePayload,
+                  async (
+                    result: KlarnaExpressCheckoutAuthorizationResult
+                  ) => {
+                    if (
+                      !result.approved ||
+                      !result.authorization_token
+                    ) {
+                      onErrorRef.current?.(
+                        'Klarna authorization was not approved'
+                      )
+                      return
+                    }
+
+                    const parsedAddress =
+                      parseCollectedShippingAddress(result)
+
+                    if (!parsedAddress.success) {
+                      onErrorRef.current?.(
+                        'Klarna did not return a valid shipping address'
+                      )
+                      return
+                    }
+
+                    try {
+                      const completion =
+                        await completeKlarnaExpressCheckout({
+                          authorizationToken:
+                            result.authorization_token,
+                          orderPayload: authorizePayload,
+                          collectedShippingAddress:
+                            parsedAddress.data,
+                          ...(authorizeCartId ?
+                            { shopifyCartId: authorizeCartId }
+                          : {})
+                        })
+
+                      window.location.assign(
+                        completion.redirect_url
+                      )
+                    } catch (error) {
+                      const message =
+                        error instanceof Error ?
+                          error.message
+                        : 'Klarna express checkout failed'
+
+                      onErrorRef.current?.(message)
+                    }
+                  }
+                )
+              })()
             }
           },
           loadResult => {
