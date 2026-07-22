@@ -40,6 +40,19 @@ const GOOGLE_ADS_ORIGINS = [
   'https://pagead2.googlesyndication.com'
 ] as const
 
+const GA4_COLLECTION_ORIGINS = [
+  'https://*.google-analytics.com',
+  'https://*.analytics.google.com'
+] as const
+
+const GA4_ADVERTISING_ORIGINS = [
+  'https://*.g.doubleclick.net',
+  'https://*.google.com',
+  'https://*.google.no'
+] as const
+
+const KLARNA_ASSET_ORIGINS = ['https://x.klarnacdn.net'] as const
+
 const VERCEL_LIVE_ORIGINS = [
   'https://vercel.live'
 ] as const
@@ -70,8 +83,8 @@ export function buildReportOnlyCsp(): string {
     ...META_PIXEL_EVENT_ORIGINS,
     ...GOOGLE_ADS_ORIGINS,
     ...VERCEL_LIVE_ORIGINS,
-    'https://*.google-analytics.com',
-    'https://www.google.com',
+    ...GA4_COLLECTION_ORIGINS,
+    ...GA4_ADVERTISING_ORIGINS,
     'https://*.ingest.sentry.io',
     'https://*.ingest.de.sentry.io'
   ]
@@ -84,8 +97,8 @@ export function buildReportOnlyCsp(): string {
     ...MICROSOFT_TRACKING_ORIGINS,
     ...META_PIXEL_EVENT_ORIGINS,
     ...GOOGLE_ADS_ORIGINS,
-    'https://*.google-analytics.com',
-    'https://www.google.com',
+    ...GA4_COLLECTION_ORIGINS,
+    ...GA4_ADVERTISING_ORIGINS,
     'https://cdn.sanity.io',
     'https://cdn.shopify.com'
   ]
@@ -100,8 +113,8 @@ export function buildReportOnlyCsp(): string {
   return [
     'default-src \'self\'',
     `script-src ${joinOrigins(scriptSrc)}`,
-    'style-src \'self\' \'unsafe-inline\'',
-    'font-src \'self\' data:',
+    `style-src ${joinOrigins(['\'self\'', '\'unsafe-inline\'', ...KLARNA_ASSET_ORIGINS])}`,
+    `font-src ${joinOrigins(['\'self\'', 'data:', ...KLARNA_ASSET_ORIGINS])}`,
     'object-src \'none\'',
     'base-uri \'self\'',
     'frame-ancestors \'none\'',
