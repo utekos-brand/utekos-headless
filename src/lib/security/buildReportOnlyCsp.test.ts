@@ -50,3 +50,22 @@ test('permits the third-party scripts and frames observed during report-only rol
   assert.match(csp, /img-src[^;]*https:\/\/www\.facebook\.com/)
   assert.match(csp, /frame-src[^;]*https:\/\/vercel\.live/)
 })
+
+test('permits GA4 advertising hosts and Klarna CDN assets required by report-only rollout', () => {
+  const csp = buildReportOnlyCsp()
+
+  assert.match(csp, /connect-src[^;]*https:\/\/\*\.analytics\.google\.com/)
+  assert.match(csp, /connect-src[^;]*https:\/\/\*\.g\.doubleclick\.net/)
+  assert.match(csp, /connect-src[^;]*https:\/\/\*\.google\.com/)
+  assert.match(csp, /connect-src[^;]*https:\/\/\*\.google\.no/)
+  assert.match(csp, /img-src[^;]*https:\/\/\*\.analytics\.google\.com/)
+  assert.match(csp, /img-src[^;]*https:\/\/\*\.g\.doubleclick\.net/)
+  assert.match(csp, /img-src[^;]*https:\/\/\*\.google\.com/)
+  assert.match(csp, /img-src[^;]*https:\/\/\*\.google\.no/)
+  assert.match(csp, /style-src[^;]*https:\/\/x\.klarnacdn\.net/)
+  assert.match(csp, /font-src[^;]*https:\/\/x\.klarnacdn\.net/)
+
+  assert.doesNotMatch(csp, /connect-src[^;]*https:\/\/www\.google\.com(?:\s|;|$)/)
+  assert.doesNotMatch(csp, /img-src[^;]*https:\/\/www\.google\.com(?:\s|;|$)/)
+  assert.doesNotMatch(csp, /(?:^|;\s)(?:default-src|connect-src|img-src|script-src|style-src|font-src)[^;]*\shttps:(?:\s|;|$)/)
+})
