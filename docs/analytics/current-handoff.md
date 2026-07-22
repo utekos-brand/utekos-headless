@@ -762,3 +762,16 @@ Primary event_id: 71e61762-9def-4899-8262-446a521ad3bd
 STOP: do not auto-continue to CE-2.4 / CE-2.5
 ```
 
+## 25. begin_checkout Meta browser/server dedupe
+
+```text
+Task: Meta Pixel/OpenBridge InitiateCheckout eid === ledger/CAPI event_id
+Conclusion: LIVE_BC_META_BROWSER_SERVER_DEDUPE_PROVEN
+Primary event_id: e4d043ee-34af-47ac-8102-22bf2a907b05
+  POST = Pixel eid = OpenBridge = ledger = Meta CAPI
+  Meta eventsReceived=1 fbTraceId=AlnCXoK4YDKgFQAzFNRdkYF
+Smoke: scripts/tracking/verify-meta-begin-checkout-dedupe.mjs
+Evidence: docs/analytics/evidence/ce-begin-checkout-meta-browser-server-dedupe.md
+STOP: do not auto-continue to CE-2.4 / CE-2.5
+```
+
