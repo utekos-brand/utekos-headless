@@ -33,7 +33,7 @@
   Meta CAPI path.
 - **Systems:** Server GTM, Meta Events Manager, Meta adapters.
 - **Recommended next action:** Keep inventory artifact current;
-  pursue DEV-020 for dedupe Overlap.
+  DEV-020 shared event_id proven; Overlap UI still open.
 - **Target task:** Documentation/ops hygiene (not Oppgave 1
   blocker).
 
@@ -331,31 +331,34 @@
 
 ## DEV-020
 
-- **Priority:** P1
-- **Description:** Meta browser/server deduplication is **not
-  proven** and Events Manager reports ViewContent dedupe as not
-  set up.
-- **Evidence (2026-07-20):** Events Manager Deduplication for
-  `1092362672918571` — ViewContent: «Deduplication has not been
-  set up» / improve event ID coverage; PageView, AddToCart,
-  InitiateCheckout: «Still Parsing Your Data». Graph
-  `dataset_quality` omits `dedupe_key_feedback` (docs
-  `dedup_key_feedback` is a nonexisting field). Test Events
-  (`TEST46149`) showed separate browser and server ViewContent
-  rows with different `event_id`s and products — channel reach
-  only, not shared-ID dedupe. Probe:
-  `.agent-artifacts/analytics/meta-dedupe-field-probe-2026-07-20.json`.
-- **Consequence:** Risk of double-counting or weak event coverage
-  for redundant Pixel + CAPI ViewContent until Overlap/`event_id`
-  parity is proven in Events Manager.
+- **Priority:** P2 (downgraded from P1 on 2026-07-22 — wire
+  parity proven; UI Overlap badge still unverified)
+- **Status:** SHARED_EVENT_ID_PROVEN_UI_OVERLAP_OPEN
+- **Description:** Meta browser/server **shared `event_id`** for
+  PageView and ViewContent is proven on production wire + ledger
+  + CAPI accept. Events Manager Deduplication **Overlap UI** is
+  still not API-readable and remains `blocked_verification`.
+- **Evidence (2026-07-22 CE-5.2C):** Smoke
+  `verify-meta-pixel-parity.mjs` `ok: true` on `utekos.no`.
+  Product ViewContent
+  `01c38322-5264-4eb4-9c58-5221ce5e3a29` identical across
+  dataLayer, Pixel `/tr`, OpenBridge, ledger, and Meta attempt
+  (`accepted_unverified`, `eventsReceived=1`,
+  `fbTraceId=AB2THDOhh7jzIowVJHiZ8mZ`). See
+  `docs/analytics/evidence/ce-5.2c-meta-live-dedupe.md`.
+- **Historical (2026-07-20):** Events Manager showed ViewContent
+  «Deduplication has not been set up»; Test Events (`TEST46149`)
+  had mismatched browser/server IDs — superseded for operational
+  shared-ID claim.
+- **Consequence:** Residual risk is UI/Overlap visibility lag,
+  not missing shared `event_id` on PageView/ViewContent.
 - **Systems:** Browser Meta Pixel (GTM), Meta CAPI adapters,
   Events Manager Dataset Quality.
-- **Recommended next action:** Deferred remediation — prove one
-  live product-view with identical Pixel `eventID` and CAPI
-  `event_id`, then re-check Deduplication Overlap. Do not block
-  Oppgave 1 or UET CAPI on a Test Events script.
-- **Target task:** Separate Meta dedupe remediation after
-  Oppgave 1.
+- **Recommended next action:** Optional manual Events Manager
+  Overlap re-check when convenient; do not block funnel work on
+  the UI badge. Do not permanently set
+  `META_TEST_EVENT_CODE` on production.
+- **Target task:** CE-5.2C (closed for shared-ID proof).
 
 ## DEV-021
 

@@ -1,7 +1,7 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.18.0 **Oppdatert:**
-2026-07-22T00:39:06+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.19.0 **Oppdatert:**
+2026-07-22T13:15:00+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
@@ -15,14 +15,14 @@ deployment- og livefakta før enhver handling
 
 ## 2. Git- og produksjonsstatus
 
-- `origin/main`: `0a800b1ae169eab8af12c21b3595fe99a667d54c`
+- `origin/main`: `ae2c831b01736a8a4eecdd4e120f128d37f5b24e` (PR #51)
 - ACCEPTED CE-2.3C runtime:
   `fde892700b9090a9db9b42ff19d3655444c7b60e`
 - ACCEPTED signal-contract runtime:
   `85b552a95d063e227232861bb226658ec653d960`
 - tip: se `git rev-parse HEAD` after this status commit
-- lokale commits **ikke pushet**
-- produksjonsdeploy: `dpl_ETtmNLjSG4vjUSj1owVEUmhScEw1` READY
+- CE-5.2C docs branch: `docs/ce-5.2c-viewcontent-parity` (not pushed)
+- produksjonsdeploy: READY on tip including PR #51
 
 ## 3. CE-2.2B / DEC-012 — ACCEPTED
 
@@ -675,3 +675,22 @@ STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE (unchanged; no purchase/refund owner chang
 
 Owner authorized continuation («gå videre») for PR path. Direct
 `--prod` without PR merge is not used.
+
+## 20. CE-5.2C — Meta live shared event_id (PageView + ViewContent)
+
+```text
+Task: CE-5.2C — Meta live browser/server dedupe proof
+Decision: DEC-013
+Runtime tip: ae2c831b0 (PR #51)
+Conclusion: LIVE_SHARED_EVENT_ID_PROVEN
+Primary ViewContent: 01c38322-5264-4eb4-9c58-5221ce5e3a29
+  dataLayer = Pixel eid = OpenBridge = ledger = Meta CAPI
+  Meta status accepted_unverified; eventsReceived=1
+DEV-020: SHARED_EVENT_ID_PROVEN_UI_OVERLAP_OPEN (P2)
+Evidence: docs/analytics/evidence/ce-5.2c-meta-live-dedupe.md
+Events Manager Overlap UI: blocked_verification
+STOP: do not auto-continue to add_to_cart / CE-2.4 / CE-2.5
+```
+
+`view_item` / ViewContent meets the same live UUID parity bar as
+`page_view`. Residual only: visual Overlap badge in Events Manager.
