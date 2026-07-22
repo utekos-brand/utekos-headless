@@ -398,6 +398,28 @@
   `pct_fbc_given_fbclid` and `has_fbp=0` for marketing `page_view`.
 - **Target task:** CE-5.2D.
 
+## DEV-022
+
+- **Priority:** P1
+- **Status:** CLOSED (2026-07-22)
+- **Description:** Seven UI paths called Shopify `ADD_LINES`
+  without `reportCanonicalAddToCart` (ProductCard, Gaveguide,
+  Comfyrobe, RecommendedItem, UpsellItem, NBCC, mikrofiber
+  `useMicrofiberLogic`). Canonical ATC only fired from three
+  purchase hooks.
+- **Evidence:**
+  `docs/analytics/evidence/ce-add-to-cart-ui-coverage.md`;
+  shared helper
+  `src/lib/analytics/addProductLineAndReportAddToCart.ts`;
+  hook `src/hooks/useCanonicalAddToCart.ts`.
+- **Consequence:** Under-counted Meta/Google/Microsoft AddToCart
+  for quick-buy and cart-suggestion surfaces.
+- **Systems:** Browser ATC reporter, cart mutation actor, listed
+  UI CTAs.
+- **Recommended next action:** Deploy tip; optional live smoke on
+  ProductCard quick-buy after deploy.
+- **Target task:** SAFE — AddToCart UI call-site coverage.
+
 ## Previously requested hypotheses
 
 | Hypothesis                                               | Verdict                                                                                                       |
