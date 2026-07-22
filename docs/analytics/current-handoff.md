@@ -752,12 +752,13 @@ server proof remains §22.
 
 ```text
 Task: microsoft_uet begin_checkout server outbox (equal diligence)
-Conclusion: CODE_CONTRACT_PROVEN
+Conclusion: CODE_CONTRACT_PROVEN then LIVE_THREE_PROVIDER_BEGIN_CHECKOUT_PROVEN
 Catalog: microsoft_uet begin_checkout serverOutbox=active
 Worker key: microsoft_uet:begin_checkout
 CAPI: eventName=begin_checkout, pageType=cart, event_id dedupe
 Evidence: docs/analytics/evidence/microsoft-uet-capi-begin-checkout-worker.md
-STOP: await push/deploy + live three-provider begin_checkout smoke
-  before claiming production Microsoft accept; do not auto-start CE-2.4/2.5
+Evidence live: docs/analytics/evidence/ce-begin-checkout-three-provider-live.md
+Primary event_id: 71e61762-9def-4899-8262-446a521ad3bd
+STOP: do not auto-continue to CE-2.4 / CE-2.5
 ```
 
