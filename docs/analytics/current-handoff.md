@@ -658,3 +658,20 @@ Refund-created semantics independent of transaction settlement status
 Production refund test: NOT PERFORMED
 Push/deploy/reconciliation/backfill/provider mutation: NOT PERFORMED
 ```
+
+## 19. CE-5.2D — PageView landing fbp/fbc (PR path)
+
+```text
+Task: CE-5.2D — page_view landing fbp/fbc server enhancement
+Decision: DEC-015 APPROVED
+Branch: ce-5.2d-page-view-fbp-fbc
+Status: CODE_CONTRACT_PROVEN — awaiting PR merge / production deploy
+DEV-021: CODE_FIXED_AWAITING_DEPLOY
+Evidence: docs/analytics/evidence/ce-5.2d-page-view-landing-fbp-fbc.md
+Unit: ensureCanonicalMetaBrowserIds + acceptCanonicalPageView PASS
+Post-deploy proof: NOT YET (measure has_fbp=0 with fbclid after merge)
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE (unchanged; no purchase/refund owner change)
+```
+
+Owner authorized continuation («gå videre») for PR path. Direct
+`--prod` without PR merge is not used.

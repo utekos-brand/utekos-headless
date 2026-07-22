@@ -357,6 +357,28 @@
 - **Target task:** Separate Meta dedupe remediation after
   Oppgave 1.
 
+## DEV-021
+
+- **Priority:** P1
+- **Status:** CODE_FIXED_AWAITING_DEPLOY (2026-07-22 CE-5.2D)
+- **Description:** Marketing-consented `page_view` could persist
+  with URL/`click_id` `fbclid` while `browser_id.fbp` and
+  `browser_id.fbc` were empty (landing race before ParamBuilder
+  cookies). Live 7d: 265 such rows, all with `has_fbp=0`;
+  contributes to ~50–54% PageView Click ID coverage of *all*
+  PageViews.
+- **Evidence:** pink-lens 7d query; fix evidence
+  `docs/analytics/evidence/ce-5.2d-page-view-landing-fbp-fbc.md`;
+  DEC-015.
+- **Consequence:** Weak Meta match keys on first PageView; later
+  funnel events looked healthier because cookies existed.
+- **Systems:** `acceptCanonicalPageView`,
+  `ensureCanonicalMetaBrowserIds`, `/api/meta/parameter-context`,
+  first-party `_fbp`/`_fbc`.
+- **Recommended next action:** Merge/deploy CE-5.2D; re-measure
+  `pct_fbc_given_fbclid` and `has_fbp=0` for marketing `page_view`.
+- **Target task:** CE-5.2D.
+
 ## Previously requested hypotheses
 
 | Hypothesis                                               | Verdict                                                                                                       |

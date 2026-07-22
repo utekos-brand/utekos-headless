@@ -8,6 +8,7 @@ import type {
 } from './normalizeCanonicalPageView'
 
 const MAX_BODY_BYTES = 32 * 1024
+const PRODUCTION_COOKIE_DOMAIN = 'utekos.no'
 const NO_STORE_HEADERS = {
   'Cache-Control': 'no-store, max-age=0',
   'Content-Type': 'application/json; charset=utf-8'
@@ -22,11 +23,54 @@ type CanonicalPageViewRequestDependencies = {
 
 function jsonResponse(
   body: Record<string, string>,
-  status: number
+  status: number,
+  cookiesToSet: Awaited<
+    ReturnType<typeof acceptCanonicalPageView>
+  >['cookiesToSet'] = [],
+  pageUrl?: string
 ) {
-  return Response.json(body, {
+  const response = Response.json(body, {
     headers: NO_STORE_HEADERS,
     status
+  })
+
+  if (cookiesToSet.length === 0 || !pageUrl) return response
+
+  let hostname: string
+  let secure: boolean
+  try {
+    const parsed = new URL(pageUrl)
+    hostname = parsed.hostname
+    secure = parsed.protocol === 'https:'
+  } catch {
+    return response
+  }
+
+  const domain =
+    (
+      hostname === PRODUCTION_COOKIE_DOMAIN ||
+      hostname.endsWith(`.${PRODUCTION_COOKIE_DOMAIN}`)
+    ) ?
+      PRODUCTION_COOKIE_DOMAIN
+    : undefined
+
+  // Headers() on Response is immutable in some runtimes; rebuild.
+  const headers = new Headers(response.headers)
+  for (const cookie of cookiesToSet) {
+    const parts = [
+      `${cookie.name}=${cookie.value}`,
+      'Path=/',
+      `Max-Age=${cookie.maxAge}`,
+      'SameSite=Lax'
+    ]
+    if (domain) parts.push(`Domain=${domain}`)
+    if (secure) parts.push('Secure')
+    headers.append('Set-Cookie', parts.join('; '))
+  }
+
+  return new Response(response.body, {
+    headers,
+    status: response.status
   })
 }
 
@@ -47,6 +91,19 @@ function hasSameOrigin(request: Request) {
   } catch {
     return false
   }
+}
+
+function readPageUrl(payload: unknown) {
+  if (
+    !payload ||
+    typeof payload !== 'object' ||
+    Array.isArray(payload)
+  ) {
+    return undefined
+  }
+
+  const pageUrl = (payload as { page_url?: unknown }).page_url
+  return typeof pageUrl === 'string' ? pageUrl : undefined
 }
 
 export async function handleCanonicalPageViewRequest(
@@ -99,7 +156,9 @@ export async function handleCanonicalPageViewRequest(
         event_id: result.event_id,
         status: result.status
       },
-      result.status === 'accepted' ? 202 : 200
+      result.status === 'accepted' ? 202 : 200,
+      result.cookiesToSet,
+      readPageUrl(payload)
     )
   } catch (error) {
     if (error instanceof ZodError) {

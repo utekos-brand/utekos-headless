@@ -3,14 +3,13 @@
 import { captureException } from '@sentry/nextjs'
 import { buildMetaParameterContextRequestUrl } from './buildMetaParameterContextRequestUrl'
 import type { ConsentSnapshot } from './canonicalEventEnvelope'
-import type { CanonicalClickIds } from './canonicalSignalContract'
 import { extractFbclidFromFbc } from './extractFbclidFromFbc'
 import { browserFirstPartyExternalIdStore } from './firstPartyExternalId'
 import { metaParameterContextResponseSchema } from './metaParameterContextContract'
 
 type MetaAttributionEvent = {
   browser_id?: Record<string, string> | undefined
-  click_id?: Pick<CanonicalClickIds, 'fbclid'> | undefined
+  click_id?: Record<string, string> | undefined
   consent: ConsentSnapshot
   external_id?: string | undefined
   page_url?: string | undefined
@@ -18,7 +17,7 @@ type MetaAttributionEvent = {
 }
 
 const completedContextKeys = new Set<string>()
-const META_PARAMETER_CONTEXT_TIMEOUT_MS = 1000
+const META_PARAMETER_CONTEXT_TIMEOUT_MS = 2500
 let contextSequence: Promise<void> = Promise.resolve()
 
 function readCookie(name: string): string | undefined {
@@ -62,10 +61,51 @@ function readPersistedMetaIdentifiers(
   return { ...(fbc ? { fbc } : {}), fbp }
 }
 
-async function requestMetaParameterContext(
+async function fetchMetaParameterContext(
   event: MetaAttributionEvent
 ) {
   const pageUrl = event.page_url ?? window.location.href
+  const fbclid = event.click_id?.fbclid
+
+  const response = await fetch(
+    buildMetaParameterContextRequestUrl(fbclid),
+    {
+      body: JSON.stringify({
+        consent: event.consent,
+        ...(fbclid ? { fbclid } : {}),
+        page_url: pageUrl,
+        ...(event.referrer_url ?
+          { referrer_url: event.referrer_url }
+        : {})
+      }),
+      cache: 'no-store',
+      credentials: 'same-origin',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      keepalive: true,
+      method: 'POST',
+      signal: AbortSignal.timeout(
+        META_PARAMETER_CONTEXT_TIMEOUT_MS
+      )
+    }
+  )
+
+  if (!response.ok) {
+    throw new Error(
+      `Meta parameter context returned ${response.status}`
+    )
+  }
+
+  return metaParameterContextResponseSchema.parse(
+    await response.json()
+  )
+}
+
+async function requestMetaParameterContext(
+  event: MetaAttributionEvent
+) {
   const fbclid = event.click_id?.fbclid
   const contextKey = fbclid ? `fbclid:${fbclid}` : 'no-fbclid'
 
@@ -83,42 +123,19 @@ async function requestMetaParameterContext(
       return queuedPersisted
     }
 
-    const response = await fetch(
-      buildMetaParameterContextRequestUrl(fbclid),
-      {
-        body: JSON.stringify({
-          consent: event.consent,
-          ...(fbclid ? { fbclid } : {}),
-          page_url: pageUrl,
-          ...(event.referrer_url ?
-            { referrer_url: event.referrer_url }
-          : {})
-        }),
-        cache: 'no-store',
-        credentials: 'same-origin',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        keepalive: true,
-        method: 'POST',
-        signal: AbortSignal.timeout(
-          META_PARAMETER_CONTEXT_TIMEOUT_MS
-        )
-      }
-    )
+    try {
+      const identifiers = await fetchMetaParameterContext(event)
+      completedContextKeys.add(contextKey)
+      return identifiers
+    } catch (firstError) {
+      // Landing race: retry once so first-party _fbp/_fbc can settle.
+      if (!fbclid) throw firstError
 
-    if (!response.ok) {
-      throw new Error(
-        `Meta parameter context returned ${response.status}`
-      )
+      await new Promise(resolve => setTimeout(resolve, 150))
+      const identifiers = await fetchMetaParameterContext(event)
+      completedContextKeys.add(contextKey)
+      return identifiers
     }
-
-    const identifiers = metaParameterContextResponseSchema.parse(
-      await response.json()
-    )
-    completedContextKeys.add(contextKey)
-    return identifiers
   })
 }
 
