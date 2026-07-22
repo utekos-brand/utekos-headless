@@ -106,15 +106,66 @@ function readPageUrl(payload: unknown) {
   return typeof pageUrl === 'string' ? pageUrl : undefined
 }
 
+function readEventSummary(payload: unknown) {
+  if (
+    !payload ||
+    typeof payload !== 'object' ||
+    Array.isArray(payload)
+  ) {
+    return {
+      event_id: undefined,
+      page_view_id: undefined,
+      page_url: undefined
+    }
+  }
+
+  const record = payload as Record<string, unknown>
+
+  return {
+    event_id:
+      typeof record.event_id === 'string' ?
+        record.event_id
+      : undefined,
+    page_view_id:
+      typeof record.page_view_id === 'string' ?
+        record.page_view_id
+      : undefined,
+    page_url:
+      typeof record.page_url === 'string' ?
+        record.page_url
+      : undefined
+  }
+}
+
+function requestLogMeta(
+  request: Request,
+  fields: Record<string, unknown> = {}
+) {
+  return {
+    path: new URL(request.url).pathname,
+    method: request.method,
+    origin: request.headers.get('origin'),
+    ...fields
+  }
+}
+
 export async function handleCanonicalPageViewRequest(
   request: Request,
   dependencies: CanonicalPageViewRequestDependencies
 ): Promise<Response> {
   if (!hasSameOrigin(request)) {
+    console.warn(
+      '[tracking] page_view request rejected: bad origin',
+      requestLogMeta(request)
+    )
     return jsonResponse({ error: 'forbidden_origin' }, 403)
   }
 
   if (!hasJsonMediaType(request)) {
+    console.warn(
+      '[tracking] page_view request rejected: non-json media type',
+      requestLogMeta(request)
+    )
     return jsonResponse({ error: 'unsupported_media_type' }, 415)
   }
 
@@ -122,11 +173,21 @@ export async function handleCanonicalPageViewRequest(
     request.headers.get('content-length') ?? 0
   )
   if (declaredLength > MAX_BODY_BYTES) {
+    console.warn(
+      '[tracking] page_view request rejected: payload too large',
+      requestLogMeta(request, {
+        declared_length_bytes: declaredLength
+      })
+    )
     return jsonResponse({ error: 'payload_too_large' }, 413)
   }
 
   const body = await request.text()
   if (new TextEncoder().encode(body).byteLength > MAX_BODY_BYTES) {
+    console.warn(
+      '[tracking] page_view request rejected: payload too large',
+      requestLogMeta(request)
+    )
     return jsonResponse({ error: 'payload_too_large' }, 413)
   }
 
@@ -134,8 +195,18 @@ export async function handleCanonicalPageViewRequest(
   try {
     payload = JSON.parse(body)
   } catch {
+    console.warn(
+      '[tracking] page_view request rejected: invalid json',
+      requestLogMeta(request)
+    )
     return jsonResponse({ error: 'invalid_json' }, 400)
   }
+
+  const summary = readEventSummary(payload)
+  console.info(
+    '[tracking] page_view request received',
+    requestLogMeta(request, summary)
+  )
 
   try {
     const result = await acceptCanonicalPageView({
@@ -145,11 +216,32 @@ export async function handleCanonicalPageViewRequest(
     })
 
     if (result.status === 'rejected') {
+      console.info(
+        '[tracking] page_view request rejected by consent',
+        requestLogMeta(request, {
+          ...summary,
+          status: result.status,
+          reason: result.reason
+        })
+      )
       return new Response(null, {
         headers: NO_STORE_HEADERS,
         status: 204
       })
     }
+
+    console.info(
+      '[tracking] page_view request completed',
+      requestLogMeta(request, {
+        event_id: result.event_id,
+        page_view_id: summary.page_view_id,
+        page_url: summary.page_url,
+        status: result.status,
+        cookies_to_set: result.cookiesToSet.map(
+          cookie => cookie.name
+        )
+      })
+    )
 
     return jsonResponse(
       {
@@ -162,9 +254,21 @@ export async function handleCanonicalPageViewRequest(
     )
   } catch (error) {
     if (error instanceof ZodError) {
+      console.error(
+        '[tracking] page_view request rejected: invalid_event',
+        requestLogMeta(request, {
+          ...summary,
+          issue_count: error.issues.length
+        })
+      )
       return jsonResponse({ error: 'invalid_event' }, 400)
     }
 
+    console.error(
+      '[tracking] page_view request failed',
+      requestLogMeta(request, summary),
+      error
+    )
     return jsonResponse({ error: 'internal_error' }, 500)
   }
 }

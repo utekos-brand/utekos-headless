@@ -18,6 +18,10 @@ type AcceptFn = (input: {
   store: CanonicalEventStore
 }) => Promise<AcceptResult>
 
+type HandlerOptions = {
+  eventName?: string
+}
+
 function jsonResponse(body: Record<string, string>, status: number) {
   return Response.json(body, {
     headers: NO_STORE_HEADERS,
@@ -46,7 +50,62 @@ function hasSameOrigin(request: Request) {
   }
 }
 
-export function createBrowserEventRequestHandler(accept: AcceptFn) {
+function getEventSummary(payload: unknown) {
+  if (
+    typeof payload !== 'object' ||
+    payload === null ||
+    Array.isArray(payload)
+  ) {
+    return {
+      event_name: undefined,
+      event_id: undefined,
+      page_view_id: undefined,
+      page_url: undefined
+    }
+  }
+
+  const record = payload as Record<string, unknown>
+
+  return {
+    event_name:
+      typeof record.event_name === 'string' ?
+        record.event_name
+      : undefined,
+    event_id:
+      typeof record.event_id === 'string' ?
+        record.event_id
+      : undefined,
+    page_view_id:
+      typeof record.page_view_id === 'string' ?
+        record.page_view_id
+      : undefined,
+    page_url:
+      typeof record.page_url === 'string' ?
+        record.page_url
+      : undefined
+  }
+}
+
+function requestLogMeta(
+  request: Request,
+  fields: Record<string, unknown> = {}
+) {
+  return {
+    path: new URL(request.url).pathname,
+    method: request.method,
+    contentType: request.headers.get('content-type'),
+    contentLength: request.headers.get('content-length') ?? '0',
+    origin: request.headers.get('origin'),
+    ...fields
+  }
+}
+
+export function createBrowserEventRequestHandler(
+  accept: AcceptFn,
+  options: HandlerOptions = {}
+) {
+  const configuredEventName = options.eventName
+
   return async function handleRequest(
     request: Request,
     dependencies: {
@@ -57,10 +116,22 @@ export function createBrowserEventRequestHandler(accept: AcceptFn) {
     }
   ): Promise<Response> {
     if (!hasSameOrigin(request)) {
+      console.warn(
+        '[tracking] browser event rejected: bad origin',
+        requestLogMeta(request, {
+          event_name: configuredEventName
+        })
+      )
       return jsonResponse({ error: 'forbidden_origin' }, 403)
     }
 
     if (!hasJsonMediaType(request)) {
+      console.warn(
+        '[tracking] browser event rejected: non-json media type',
+        requestLogMeta(request, {
+          event_name: configuredEventName
+        })
+      )
       return jsonResponse({ error: 'unsupported_media_type' }, 415)
     }
 
@@ -68,11 +139,26 @@ export function createBrowserEventRequestHandler(accept: AcceptFn) {
       request.headers.get('content-length') ?? 0
     )
     if (declaredLength > MAX_BODY_BYTES) {
+      console.warn(
+        '[tracking] browser event rejected: payload too large',
+        requestLogMeta(request, {
+          event_name: configuredEventName,
+          declared_length_bytes: declaredLength
+        })
+      )
       return jsonResponse({ error: 'payload_too_large' }, 413)
     }
 
     const body = await request.text()
-    if (new TextEncoder().encode(body).byteLength > MAX_BODY_BYTES) {
+    const bodyLength = new TextEncoder().encode(body).byteLength
+    if (bodyLength > MAX_BODY_BYTES) {
+      console.warn(
+        '[tracking] browser event rejected: payload too large',
+        requestLogMeta(request, {
+          event_name: configuredEventName,
+          body_length_bytes: bodyLength
+        })
+      )
       return jsonResponse({ error: 'payload_too_large' }, 413)
     }
 
@@ -80,8 +166,29 @@ export function createBrowserEventRequestHandler(accept: AcceptFn) {
     try {
       payload = JSON.parse(body)
     } catch {
+      console.warn(
+        '[tracking] browser event rejected: invalid json',
+        requestLogMeta(request, {
+          event_name: configuredEventName,
+          body_length_bytes: bodyLength
+        })
+      )
       return jsonResponse({ error: 'invalid_json' }, 400)
     }
+
+    const summary = getEventSummary(payload)
+    const eventName =
+      configuredEventName ?? summary.event_name ?? 'unknown'
+
+    console.info(
+      '[tracking] browser event received',
+      requestLogMeta(request, {
+        event_name: eventName,
+        event_id: summary.event_id,
+        page_view_id: summary.page_view_id,
+        page_url: summary.page_url
+      })
+    )
 
     try {
       const result = await accept({
@@ -91,11 +198,33 @@ export function createBrowserEventRequestHandler(accept: AcceptFn) {
       })
 
       if (result.status === 'rejected') {
+        console.info(
+          '[tracking] browser event rejected by consent',
+          requestLogMeta(request, {
+            event_name: eventName,
+            event_id: summary.event_id,
+            page_view_id: summary.page_view_id,
+            page_url: summary.page_url,
+            status: result.status,
+            reason: result.reason
+          })
+        )
         return new Response(null, {
           headers: NO_STORE_HEADERS,
           status: 204
         })
       }
+
+      console.info(
+        '[tracking] browser event completed',
+        requestLogMeta(request, {
+          event_name: eventName,
+          event_id: result.event_id,
+          page_view_id: summary.page_view_id,
+          page_url: summary.page_url,
+          status: result.status
+        })
+      )
 
       return jsonResponse(
         {
@@ -106,9 +235,29 @@ export function createBrowserEventRequestHandler(accept: AcceptFn) {
       )
     } catch (error) {
       if (error instanceof ZodError) {
+        console.error(
+          '[tracking] browser event rejected: invalid_event',
+          requestLogMeta(request, {
+            event_name: eventName,
+            event_id: summary.event_id,
+            page_view_id: summary.page_view_id,
+            page_url: summary.page_url,
+            issue_count: error.issues.length
+          })
+        )
         return jsonResponse({ error: 'invalid_event' }, 400)
       }
 
+      console.error(
+        '[tracking] browser event failed',
+        requestLogMeta(request, {
+          event_name: eventName,
+          event_id: summary.event_id,
+          page_view_id: summary.page_view_id,
+          page_url: summary.page_url
+        }),
+        error
+      )
       return jsonResponse({ error: 'internal_error' }, 500)
     }
   }

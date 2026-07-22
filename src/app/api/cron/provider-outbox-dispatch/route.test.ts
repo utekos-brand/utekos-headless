@@ -46,7 +46,7 @@ test('rejects a provider-outbox cron without the configured bearer secret', asyn
   assert.equal(response.headers.get('cache-control'), 'no-store')
 })
 
-test('runs one item per provider to stay inside the function duration budget', async () => {
+test('runs a bounded batch per provider to stay inside the function duration budget', async () => {
   const calls: number[] = []
   const dependencies: ProviderOutboxCronDependencies = {
     getCronSecret: () => 'correct-secret',
@@ -62,5 +62,5 @@ test('runs one item per provider to stay inside the function duration budget', a
   )
 
   assert.equal(response.status, 200)
-  assert.deepEqual(calls, [1])
+  assert.deepEqual(calls, [10])
 })
