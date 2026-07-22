@@ -20,7 +20,7 @@ export type ComfyrobeFaq = {
   answer: string
 }
 
-export const COMFYROBE_SCENARIOS: readonly ComfyrobeScenario[] = [
+export const COMFYROBE_SCENARIOS = [
   {
     id: 'ruskevaer',
     tabLabel: 'Regn og vind',
@@ -84,9 +84,12 @@ export const COMFYROBE_SCENARIOS: readonly ComfyrobeScenario[] = [
       'Diskrete refleksdetaljer'
     ]
   }
-] as const
+] as const satisfies readonly [
+  ComfyrobeScenario,
+  ...ComfyrobeScenario[]
+]
 
-export const COMFYROBE_TECHNICAL_FEATURES: readonly ComfyrobeTechnicalFeature[] = [
+export const COMFYROBE_TECHNICAL_FEATURES = [
   {
     value: '8000 mm',
     label: 'HydroGuard™ vannsøyle',
@@ -111,9 +114,9 @@ export const COMFYROBE_TECHNICAL_FEATURES: readonly ComfyrobeTechnicalFeature[] 
     description:
       'Avslappet snitt med splitter i sidene og bak, utviklet for klær og lag under.'
   }
-] as const
+] as const satisfies readonly ComfyrobeTechnicalFeature[]
 
-export const COMFYROBE_FAQS: readonly ComfyrobeFaq[] = [
+export const COMFYROBE_FAQS = [
   {
     question: 'Er Comfyrobe™ vanntett?',
     answer:
@@ -144,4 +147,4 @@ export const COMFYROBE_FAQS: readonly ComfyrobeFaq[] = [
     answer:
       'Du kan betale trygt med blant annet Vipps, Klarna, Visa, Google Pay og Apple Pay. Utekos tilbyr 14 dagers åpent kjøp; full informasjon finnes på siden for frakt og retur.'
   }
-] as const
+] as const satisfies readonly ComfyrobeFaq[]
