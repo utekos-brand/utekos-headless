@@ -573,3 +573,88 @@ CE-3.3R verifier/owner stop. Commit this logical change, continue
 CE-2.5 in the same sole-writer release-candidate worktree, then
 run one fresh verifier over the complete package. No docs-only
 status commit is inserted between the code commits.
+
+## 19. CE-2.5 Refund ownership cutover — LOCAL IMPLEMENTATION PASS
+
+```text
+Task: CE-2.5 — authoritative Refund owner cutover
+Start SHA: 2755ae7fcfa405d5c9b3f6e495fd680bf5a5df6c
+CE-3.3R commit: 2755ae7fcfa405d5c9b3f6e495fd680bf5a5df6c
+Branch: codex/ce-2.4-purchase-owner
+Worktree: /Users/kristofferohnstadhjelmeland/utekos-headless/.worktrees/ce-2.4-purchase-owner
+Writer: /root — sole writer
+Writer overlap: NONE
+Status: LOCAL VERIFIED
+Integrated fresh verifier: PENDING
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+```
+
+Final exact no-glob allowlist frozen before the first CE-2.5
+write:
+
+```text
+docs/analytics/current-handoff.md
+docs/analytics/program-state.json
+docs/analytics/tasks/CE-2.5-cut-over-authoritative-refund-owner.md
+docs/analytics/event-matrix.md
+docs/analytics/provider-matrix.md
+src/lib/analytics/eventCatalog.ts
+src/lib/analytics/eventCatalog.test.ts
+src/lib/analytics/server/assertCanonicalRefundIdentity.ts
+src/lib/analytics/server/normalizeCanonicalRefund.ts
+src/lib/analytics/server/normalizeCanonicalRefund.test.ts
+src/lib/analytics/server/canonicalRefundOwnershipContract.test.ts
+src/lib/analytics/server/acceptCanonicalRefund.ts
+src/lib/analytics/server/canonicalEventStore.ts
+src/lib/analytics/server/createCanonicalEventStore.ts
+src/lib/analytics/server/postgresCanonicalPageViewStore.ts
+src/lib/analytics/server/enrichCanonicalRefundFromPurchase.ts
+```
+
+`createCanonicalEventStore.ts` was an authorized inspected path
+but required no change. The Purchase-linkage paths were added to
+the final list during pre-write inspection, before any CE-2.5
+write.
+
+Implemented contract:
+
+```text
+Refund owner: shopify_admin_notification_refund_create
+Recovery source: Shopify reconciliation
+event_id: deterministicRefundEventId(refund legacy ID)
+refund_id: shopifyRefundRecordId(refund legacy ID)
+transaction_id: shopifyPurchaseTransactionId(order legacy ID)
+event_time: Shopify Refund created_at
+attribution: resolved from the deterministic canonical Purchase row
+source evidence: verified webhook or reconciliation metadata only
+ledger/outbox: existing atomic canonical acceptor
+provider dispatch: cron-only
+```
+
+TDD and local evidence so far:
+
+```text
+TDD red: 5 expected failures
+Focused ownership/refund/reconciliation/provider suite: 102/102 PASS
+Full analytics/cron suite: 451/451 PASS
+Targeted ESLint and Prettier: PASS
+Next typegen: PASS on Node 24.17.0
+TypeScript: PASS on Node 24.17.0
+Next.js 16.2.9 Turbopack production build: PASS
+Build boundary: NODE_OPTIONS, DOTENV_CONFIG_PATH and
+  SHOPIFY_ADMIN_API_TOKEN unset
+Tracking gateway smoke: PASS (read-only, https://utekos.no)
+MCP build/doctor: BLOCKED — referenced scripts absent at start SHA
+Webhook + reconciliation: same Refund event_id
+Canonical ledger rows: 1
+Source observations: webhook + reconciliation retained
+Qualified provider/idempotency attempts: 1 Google row
+Duplicate provider keys: 0
+Missing Purchase linkage: no fabricated attribution or attempt
+Itemless Refund: items=[]
+Fabricated items: 0
+Alternative Refund/event/order identity: FAIL CLOSED
+Refund-created semantics independent of transaction settlement status
+Production refund test: NOT PERFORMED
+Push/deploy/reconciliation/backfill/provider mutation: NOT PERFORMED
+```

@@ -7,8 +7,13 @@ Affected invariants: INV-001, INV-002, INV-003, INV-006, INV-010, INV-015, INV-0
 Goal: ensure one Shopify Refund record creates one canonical refund under the approved owner
 Non-goals: treat settlement as refund creation, purchase redesign, provider finality redesign, historical replay
 Primary role: canonical-event-implementer
-Status: STOPPED_PENDING_CE-2.4_PRODUCTION_PROOF_AND_CE-3.3R_ACCEPTANCE
+Status: LOCAL_VERIFIED_PENDING_INTEGRATED_FRESH_VERIFIER
 Package: CE-2.5 — standalone Refund owner cutover
+Start SHA: 2755ae7fcfa405d5c9b3f6e495fd680bf5a5df6c
+Branch: codex/ce-2.4-purchase-owner
+Worktree: /Users/kristofferohnstadhjelmeland/utekos-headless/.worktrees/ce-2.4-purchase-owner
+Writer: /root — sole writer
+Writer overlap: NONE
 ```
 
 ## Preconditions
@@ -20,8 +25,8 @@ Package: CE-2.5 — standalone Refund owner cutover
 - `STOP_CONCURRENT_RUNTIME_OWNERSHIP` is `CLOSED`.
 - CE-2.4 is independently verified, owner-accepted, released
   under separate approval and production-proven.
-- CE-3.3R is independently committed, verified and
-  owner-accepted.
+- CE-3.3R is committed and locally verified at
+  `2755ae7fcfa405d5c9b3f6e495fd680bf5a5df6c`.
 - CE-2.5 has its own writer, worktree and exact no-glob
   allowlist.
 - CE-2.3A/CE-2.3C refund source path is available.
@@ -29,12 +34,42 @@ Package: CE-2.5 — standalone Refund owner cutover
 - Current live absence/presence of canonical refund rows is
   freshly verified.
 - Rollback plan is approved.
-- Start in a new clean worktree from the owner-accepted CE-3.3R
-  governance SHA after its fresh verifier gate.
+- The later owner instruction authorizes the same clean,
+  sole-writer release-candidate worktree and one integrated fresh
+  verifier after CE-2.5. It supersedes the older intermediate
+  CE-3.3R governance/verifier stop.
 - A separate provider/Purchase incident must have a frozen
   allowlist that does not overlap this package.
 
 ## Allowed files
+
+The exact no-glob allowlist was frozen before the first CE-2.5
+write. A pre-write inspection found that the required original
+Purchase-attribution linkage needed the existing store/acceptor
+path; the final list was therefore expanded before any write and
+then frozen at exactly these paths:
+
+```text
+docs/analytics/current-handoff.md
+docs/analytics/program-state.json
+docs/analytics/tasks/CE-2.5-cut-over-authoritative-refund-owner.md
+docs/analytics/event-matrix.md
+docs/analytics/provider-matrix.md
+src/lib/analytics/eventCatalog.ts
+src/lib/analytics/eventCatalog.test.ts
+src/lib/analytics/server/assertCanonicalRefundIdentity.ts
+src/lib/analytics/server/normalizeCanonicalRefund.ts
+src/lib/analytics/server/normalizeCanonicalRefund.test.ts
+src/lib/analytics/server/canonicalRefundOwnershipContract.test.ts
+src/lib/analytics/server/acceptCanonicalRefund.ts
+src/lib/analytics/server/canonicalEventStore.ts
+src/lib/analytics/server/createCanonicalEventStore.ts
+src/lib/analytics/server/postgresCanonicalPageViewStore.ts
+src/lib/analytics/server/enrichCanonicalRefundFromPurchase.ts
+```
+
+`createCanonicalEventStore.ts` was inspected and authorized but
+did not require a change. No active writer owns any listed path.
 
 The plan guardian must write an exact allowlist into the task
 handoff from the accepted evidence.
@@ -173,3 +208,36 @@ git commit -m "feat(analytics): cut over authoritative refund owner"
 
 No production push/deploy without explicit approval. Do not begin
 CE-2.6 automatically.
+
+## Local implementation evidence
+
+```text
+TDD red: 5 expected failures
+Focused ownership/refund/reconciliation/provider suite: 102/102 PASS
+Authoritative owner: shopify_admin_notification_refund_create
+Recovery source: reconciliation
+Identity: deterministicRefundEventId(refund legacy ID)
+Alternative event/refund/order identities: FAIL CLOSED
+Canonical Purchase attribution lookup: deterministic order linkage
+Webhook + reconciliation: same event_id, one ledger row
+Source evidence: webhook + reconciliation observations retained
+Provider planning: one Google attempt for one eligible key
+Missing Purchase linkage: operational accept with no fabricated attribution or attempt
+Direct provider send from request path: NONE
+Itemless Refund: items=[]; no fabricated product
+Settlement status: not used as Refund-creation gate
+Full analytics/cron suite: 451/451 PASS
+Targeted ESLint: PASS
+Prettier: PASS
+Next typegen: PASS on Node 24.17.0
+TypeScript: PASS on Node 24.17.0
+Next.js 16.2.9 Turbopack production build: PASS
+Build boundary: NODE_OPTIONS, DOTENV_CONFIG_PATH and
+  SHOPIFY_ADMIN_API_TOKEN unset
+Tracking gateway smoke: PASS (read-only, https://utekos.no)
+MCP build/doctor: BLOCKED — referenced scripts absent at start SHA
+Integrated fresh verifier: PENDING
+Production refund test: NOT PERFORMED
+Push/deploy/reconciliation/backfill/provider mutation: NOT PERFORMED
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+```

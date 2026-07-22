@@ -1,6 +1,12 @@
 import type { CanonicalEvent } from '../canonicalEvent'
+import {
+  canonicalPurchaseSchema,
+  deterministicPurchaseEventId
+} from '../purchaseEvent'
 import type { CanonicalEventStore } from './canonicalEventStore'
 import type { CanonicalEventSourceEvidence } from './canonicalEventSourceEvidence'
+import { readCanonicalRefundShopifyIdentity } from './assertCanonicalRefundIdentity'
+import { enrichCanonicalRefundFromPurchase } from './enrichCanonicalRefundFromPurchase'
 import {
   normalizeCanonicalRefund,
   type CanonicalRefundRequestContext
@@ -24,10 +30,26 @@ export type AcceptCanonicalRefundResult = {
 export async function acceptCanonicalRefund(
   input: AcceptCanonicalRefundInput
 ): Promise<AcceptCanonicalRefundResult> {
-  const event = normalizeCanonicalRefund(
+  const normalizedEvent = normalizeCanonicalRefund(
     input.payload,
     input.requestContext
   )
+  const { orderLegacyId } =
+    readCanonicalRefundShopifyIdentity(normalizedEvent)
+  const linkedPurchase =
+    input.store.find === undefined ?
+      null
+    : await input.store.find({
+        event_id: deterministicPurchaseEventId(orderLegacyId),
+        event_name: 'purchase'
+      })
+  const event =
+    linkedPurchase === null ? normalizedEvent : (
+      enrichCanonicalRefundFromPurchase(
+        normalizedEvent,
+        canonicalPurchaseSchema.parse(linkedPurchase)
+      )
+    )
   const storedEvent = event as unknown as CanonicalEvent
   const result = await input.store.accept({
     dispatches: planCanonicalEventDispatch(storedEvent),

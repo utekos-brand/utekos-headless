@@ -242,6 +242,19 @@ test('records Shopify Admin order payment as the sole Purchase owner with reconc
   assert.equal(purchase.dedupe.browserServerShareEventId, true)
 })
 
+test('records Shopify Admin refund creation as the sole Refund owner with reconciliation recovery', () => {
+  const refund = eventCatalog.refund
+
+  assert.equal(
+    refund.owner,
+    'shopify_admin_notification_refund_create'
+  )
+  assert.deepEqual(refund.trigger.sources, ['webhook', 'server'])
+  assert.match(refund.trigger.repeatability, /same event_id/)
+  assert.match(refund.trigger.repeatability, /duplicate/)
+  assert.equal(refund.dedupe.browserServerShareEventId, true)
+})
+
 test('records current mixed Microsoft delivery and historical page_view backlog truth', () => {
   assert.equal(
     eventCatalog.view_item.providers.google.productionStatus,

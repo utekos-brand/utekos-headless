@@ -1524,12 +1524,13 @@ const eventCatalogBase = {
     version: 1,
     name: 'refund',
     lifecycle: 'active',
-    owner: 'shopify_refund_webhook',
+    owner: 'shopify_admin_notification_refund_create',
     trigger: {
       description:
-        'Create from a verified Shopify refund webhook after the refund exists.',
-      sources: ['webhook'],
-      repeatability: 'Each Shopify refund record is new.',
+        'Create from the verified Shopify Admin Refund create notification webhook; reconciliation is duplicate-safe missed-delivery recovery.',
+      sources: ['webhook', 'server'],
+      repeatability:
+        'Webhook retries and reconciliation observations for the same refund reuse the same event_id and become duplicates.',
       eventTime:
         'The authoritative Shopify refund created_at timestamp.',
       prerequisites: [
@@ -1545,8 +1546,7 @@ const eventCatalogBase = {
     dedupe: dedupe(
       'refund_id',
       'A separate Shopify refund record receives a new event_id.',
-      retain7Years,
-      false
+      retain7Years
     ),
     consent: transactionConsent,
     providers: refundProviders

@@ -1,9 +1,14 @@
 import 'server-only'
 import postgres from 'postgres'
+import { parseCanonicalEvent } from '../canonicalEvent'
 import {
   createCanonicalEventStore,
   type CanonicalEventTransactionRunner
 } from './createCanonicalEventStore'
+import type {
+  CanonicalEventLookup,
+  CanonicalEventStore
+} from './canonicalEventStore'
 
 let trackingSql: ReturnType<typeof postgres> | undefined
 
@@ -165,8 +170,36 @@ const runPostgresTransaction: CanonicalEventTransactionRunner =
       })
     )
 
-export const postgresCanonicalEventStore =
-  createCanonicalEventStore(runPostgresTransaction)
+async function findCanonicalEvent(input: CanonicalEventLookup) {
+  const rows = await getTrackingSql()`
+    select payload
+    from marketing.event_ledger
+    where event_id = ${input.event_id}
+      and event_name = ${input.event_name}
+    limit 2
+  `
+
+  if (rows.length === 0) return null
+  if (rows.length !== 1) {
+    throw new Error('canonical_event_lookup_not_unique')
+  }
+
+  const event = parseCanonicalEvent(rows[0]?.payload)
+
+  if (
+    event.event_id !== input.event_id ||
+    event.event_name !== input.event_name
+  ) {
+    throw new Error('canonical_event_lookup_mismatch')
+  }
+
+  return event
+}
+
+export const postgresCanonicalEventStore: CanonicalEventStore = {
+  ...createCanonicalEventStore(runPostgresTransaction),
+  find: findCanonicalEvent
+}
 
 export const postgresCanonicalPageViewStore =
   postgresCanonicalEventStore

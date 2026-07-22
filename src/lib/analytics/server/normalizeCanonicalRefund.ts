@@ -2,6 +2,7 @@ import {
   canonicalRefundSchema,
   type CanonicalRefund
 } from '../refundEvent'
+import { assertCanonicalRefundIdentity } from './assertCanonicalRefundIdentity'
 import type { CanonicalPurchaseRequestContext } from './normalizeCanonicalPurchase'
 
 export type CanonicalRefundRequestContext =
@@ -12,6 +13,7 @@ export function normalizeCanonicalRefund(
   requestContext: CanonicalRefundRequestContext
 ): CanonicalRefund {
   const parsed = canonicalRefundSchema.parse(payload)
+  assertCanonicalRefundIdentity(parsed)
   const normalized = { ...parsed }
   const deviceInfo = { ...parsed.event_device_info }
 
@@ -28,7 +30,9 @@ export function normalizeCanonicalRefund(
   })
 
   const serverLocation = {
-    ...(requestContext.city ? { city: requestContext.city } : {}),
+    ...(requestContext.city ?
+      { city: requestContext.city }
+    : {}),
     ...(requestContext.countryCode ?
       { country_code: requestContext.countryCode.toUpperCase() }
     : {}),

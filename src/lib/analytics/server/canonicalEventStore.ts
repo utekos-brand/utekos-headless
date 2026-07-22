@@ -10,8 +10,16 @@ export type CanonicalEventStoreInput = {
   sourceEvidence?: CanonicalEventSourceEvidence
 }
 
+export type CanonicalEventLookup = Pick<
+  CanonicalEvent,
+  'event_id' | 'event_name'
+>
+
 export type CanonicalEventStore = {
   accept: (
     input: CanonicalEventStoreInput
   ) => Promise<'duplicate' | 'inserted'>
+  find?: (
+    input: CanonicalEventLookup
+  ) => Promise<CanonicalStoredEvent | null>
 }

@@ -177,17 +177,23 @@
 
 - **Owner:** Shopify Admin notification `Order payment` owns
   Purchase. Shopify Admin reconciliation is duplicate-safe
-  missed-delivery recovery. `Refund create` remains the intended
-  Refund owner pending CE-3.3R and CE-2.5.
+  missed-delivery recovery. Shopify Admin notification
+  `Refund create` owns Refund, with reconciliation as
+  duplicate-safe missed-delivery recovery.
 - **Transport:** HTTPS webhooks to Next.js routes.
 - **Events:** order-paid -> purchase; refund-created -> refund.
 - **Dedupe:** Purchase uses the order legacy ID through
   `deterministicPurchaseEventId`; webhook, retry and
   reconciliation converge on that identity. Verified Shopify
   delivery/event IDs are source evidence only and never create an
-  alternative canonical or provider event ID.
+  alternative canonical or provider event ID. Refund uses its
+  Shopify Refund legacy ID through `deterministicRefundEventId`;
+  alternative event/refund/order identities fail closed.
 - **Consent:** operational ledger; provider export depends on
-  captured checkout attribution/consent.
+  captured checkout attribution/consent. Refund resolves that
+  snapshot through the deterministic canonical Purchase linkage;
+  it does not invent a new browser identifier or reuse webhook
+  transport context.
 - **Retry:** Shopify delivery retry plus idempotent receiver;
   accepted transaction schedules the generic outbox.
 - **Finality:** `refunds/create` means refund created, not
@@ -201,14 +207,16 @@
   GraphQL 2025-07: **zero** `webhookSubscriptions` for the app
   token (2026-07-20). Delivery logs for any other subscriber
   remain unavailable.
-- **Status:** CE-2.4 is production-proven and CE-3.3R is locally
-  verified; CE-2.5 ownership cutover remains the next logical
-  release-candidate commit. The historical direct
-  provider-resend/backfill entrypoints are fail-closed before
-  credentials, database or network access. Production activation
-  and the one-ledger-row/provider-attempt proof are pending
-  release approval; `STOP_ACTIVE_DOUBLE_COUNT_RISK` remains
-  active.
+- **Status:** CE-2.4 is production-proven; CE-3.3R is committed
+  and locally verified; CE-2.5 ownership cutover is locally
+  implemented with the integrated fresh verifier pending. The
+  historical direct provider-resend/backfill entrypoints are
+  fail-closed before credentials, database or network access.
+  Production activation and the one-ledger-row/provider-attempt
+  proof are pending release approval;
+  `STOP_ACTIVE_DOUBLE_COUNT_RISK` remains active until the
+  complete release candidate is verified, owner-approved and
+  production-proven.
 
 ## Provider status comparison
 
