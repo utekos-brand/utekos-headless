@@ -2,9 +2,9 @@
 
 **Date:** 2026-07-22  
 **Start SHA:** `184086af7b5378522b59c40ac262ddd6898198fd`  
-**Tip SHA:** `95551dafd` (docs commit; runtime tip `d0f8cf3f8`)  
+**Runtime tip SHA:** `a9c7b7b3cfdd425ba0a91f2bead1a8e7aa53196c`  
 **Task:** SAFE — AddToCart UI call-site coverage (not CE-\*)  
-**Conclusion:** `ATC_UI_CALL_SITE_COVERAGE_CLOSED`
+**Conclusion:** `ATC_UI_CALL_SITE_COVERAGE_CLOSED_AND_LIVE_VERIFIED`
 
 ## Goal
 
@@ -49,20 +49,56 @@ Remaining `ADD_LINES` only in:
 - `src/lib/state/createCartMutationMachine.ts`
 - `src/hooks/useCartMutations.ts`
 
+## Production deploy
+
+| Field | Value |
+| --- | --- |
+| Deployment | `dpl_BD7FMaeaoiLzdDLiwhXY6yB3rHDz` |
+| State | `READY` |
+| Git SHA | `a9c7b7b3cfdd425ba0a91f2bead1a8e7aa53196c` |
+| Aliases | `utekos.no`, `www.utekos.no`, `feed.utekos.no` |
+| Inspector | https://vercel.com/utekos-marketing-group/utekos-headless/BD7FMaeaoiLzdDLiwhXY6yB3rHDz |
+
+No Supabase migration required.
+
+## Live verification — ProductCard path
+
+Smoke:
+`scripts/tracking/verify-productcard-add-to-cart-coverage.mjs`
+against `https://utekos.no/` clicking
+`[data-track=ProductCardFooterAddToCartClick]`.
+
+| Check | Result |
+| --- | --- |
+| Shared UUID | `7f1a2c03-22b0-47b4-b42a-31d4021f6a18` |
+| dataLayer `add_to_cart` | present |
+| POST `/api/events/add-to-cart` | same UUID |
+| Meta Pixel `/tr` AddToCart | same UUID |
+| OpenBridge AddToCart | same UUID |
+| Ledger `marketing.event_ledger` | accepted `add_to_cart` |
+| Product | Utekos TechDown™ / `utekos-techdown` |
+
+Provider outbox at accept time:
+
+| Provider | Status | Note |
+| --- | --- | --- |
+| `meta` | `pending` | cron drain |
+| `google` | `pending` | cron drain |
+| `microsoft_uet` | `skipped_unqualified` | `missing_msclkid` (expected; smoke used fbclid only) |
+
+Browser Meta Pixel + OpenBridge shared-ID proof is the coverage gate
+for this SAFE task. Full three-provider CAPI accept was already proven
+on the PDP `ModalAddToCart` path.
+
 ## Verification performed
 
 - Unit tests:
   `pnpm exec tsx --test src/lib/analytics/addProductLineAndReportAddToCart.test.ts`
-  → 3 pass (report on success; no report on failure; cookie cartId
-  fallback)
+  → 3 pass
 - Inventory grep for `ADD_LINES` and `reportCanonicalAddToCart`
-  call sites
-
-## Verification not claimed
-
-- Live browser smoke on ProductCard / NBCC / mikrofiber against
-  production providers (not run in this change)
-- Deploy of this tip
+- Production deploy READY on tip SHA
+- Live ProductCard smoke `ok: true`
+- Ledger row for smoke UUID
 
 ## Commits
 
@@ -71,3 +107,4 @@ Remaining `ADD_LINES` only in:
 3. `fix(analytics): report add_to_cart from product card and cart suggestion CTAs`
 4. `fix(analytics): report add_to_cart from NBCC product cards`
 5. `fix(analytics): report add_to_cart from mikrofiber purchase with real Shopify product`
+6. `docs(analytics): record AddToCart UI coverage fix` (+ tip SHA note)
