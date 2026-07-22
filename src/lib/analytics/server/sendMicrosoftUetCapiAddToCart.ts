@@ -1,52 +1,25 @@
+import type { CanonicalAddToCart } from '../addToCartEvent'
 import {
   getMicrosoftUetCapiConfig,
   type MicrosoftUetCapiConfig
 } from './getMicrosoftUetCapiConfig'
 import {
-  buildMicrosoftUetCapiPurchaseRequest,
-  type MicrosoftUetCapiPurchaseEvent,
-  type MicrosoftUetCapiRequest
-} from './mapCanonicalPurchaseToMicrosoftUet'
+  buildMicrosoftUetCapiAddToCartRequest,
+  type MicrosoftUetCapiAddToCartEvent,
+  type MicrosoftUetCapiAddToCartRequest
+} from './mapCanonicalAddToCartToMicrosoftUet'
 import { resolveMicrosoftUetCapiTokenFromEnv } from './microsoftUetCapiTokenEnvKeys'
-import type { CanonicalPurchase } from '../purchaseEvent'
+import {
+  MicrosoftUetCapiConfigError,
+  MicrosoftUetCapiHttpError
+} from './sendMicrosoftUetCapiPurchase'
 
-export type MicrosoftUetCapiSendResult = {
+export type MicrosoftUetCapiAddToCartSendResult = {
   eventId: string
-  eventName: 'PRODUCT_PURCHASE'
+  eventName: 'add_to_cart'
   requestId: string | null
   status: number
   tagId: string
-}
-
-export class MicrosoftUetCapiHttpError extends Error {
-  readonly details: unknown
-  readonly requestId: string | null
-  readonly status: number
-
-  constructor(
-    status: number,
-    message: string,
-    options?: {
-      details?: unknown
-      requestId?: string | null
-    }
-  ) {
-    super(message)
-    this.name = 'MicrosoftUetCapiHttpError'
-    this.status = status
-    this.details = options?.details
-    this.requestId = options?.requestId ?? null
-  }
-}
-
-export class MicrosoftUetCapiConfigError extends Error {
-  readonly reason: 'missing_capi_token' | 'missing_msclkid'
-
-  constructor(reason: 'missing_capi_token' | 'missing_msclkid') {
-    super(`Microsoft UET CAPI skipped: ${reason}`)
-    this.name = 'MicrosoftUetCapiConfigError'
-    this.reason = reason
-  }
 }
 
 type MicrosoftUetFetch = (
@@ -54,13 +27,13 @@ type MicrosoftUetFetch = (
   init: RequestInit
 ) => Promise<Pick<Response, 'headers' | 'ok' | 'status' | 'text'>>
 
-export type MicrosoftUetCapiSendDependencies = {
+export type MicrosoftUetCapiAddToCartSendDependencies = {
   fetchFn: MicrosoftUetFetch
   readConfig: () => MicrosoftUetCapiConfig
   resolveToken: () => string | undefined
 }
 
-const defaultDependencies: MicrosoftUetCapiSendDependencies = {
+const defaultDependencies: MicrosoftUetCapiAddToCartSendDependencies = {
   fetchFn: fetch,
   readConfig: getMicrosoftUetCapiConfig,
   resolveToken: resolveMicrosoftUetCapiTokenFromEnv
@@ -84,10 +57,10 @@ function readRequestId(headers: Headers): string | null {
   )
 }
 
-export async function sendMicrosoftUetCapiPurchase(
-  event: CanonicalPurchase,
-  dependencies: MicrosoftUetCapiSendDependencies = defaultDependencies
-): Promise<MicrosoftUetCapiSendResult> {
+export async function sendMicrosoftUetCapiAddToCart(
+  event: CanonicalAddToCart,
+  dependencies: MicrosoftUetCapiAddToCartSendDependencies = defaultDependencies
+): Promise<MicrosoftUetCapiAddToCartSendResult> {
   const config = dependencies.readConfig()
   const apiToken = config.apiToken ?? dependencies.resolveToken()
 
@@ -95,12 +68,12 @@ export async function sendMicrosoftUetCapiPurchase(
     throw new MicrosoftUetCapiConfigError('missing_capi_token')
   }
 
-  const requestBody: MicrosoftUetCapiRequest =
-    buildMicrosoftUetCapiPurchaseRequest(event)
-  const purchaseEvent: MicrosoftUetCapiPurchaseEvent =
+  const requestBody: MicrosoftUetCapiAddToCartRequest =
+    buildMicrosoftUetCapiAddToCartRequest(event)
+  const addToCartEvent: MicrosoftUetCapiAddToCartEvent =
     requestBody.data[0]!
 
-  if (!purchaseEvent.userData?.msclkid) {
+  if (!addToCartEvent.userData?.msclkid) {
     throw new MicrosoftUetCapiConfigError('missing_msclkid')
   }
 
@@ -130,8 +103,8 @@ export async function sendMicrosoftUetCapiPurchase(
   }
 
   return {
-    eventId: purchaseEvent.eventId,
-    eventName: purchaseEvent.eventName,
+    eventId: addToCartEvent.eventId,
+    eventName: addToCartEvent.eventName,
     requestId,
     status: response.status,
     tagId: config.tagId

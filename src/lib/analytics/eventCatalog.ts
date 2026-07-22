@@ -828,15 +828,16 @@ const addToCartProviders = {
       ...baseProviderParameters,
       'items',
       'currency',
-      'value'
+      'value',
+      'msclkid'
     ],
     dedupeField: 'event_id',
     consentRequirement: 'marketing',
     adapterVersion: 1,
     productionStatus: 'active',
     productionDetail:
-      'Browser UET is active; server delivery is blocked because no UET CAPI worker exists.',
-    serverOutbox: 'blocked_no_worker'
+      'Browser UET is active; Microsoft UET CAPI add_to_cart outbox is active when marketing consent is granted and msclkid is present; missing token or msclkid is skipped_unqualified.',
+    serverOutbox: 'active'
   }),
   posthog: providerMapping({
     support: 'planned',

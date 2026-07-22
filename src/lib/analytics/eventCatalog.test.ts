@@ -216,8 +216,13 @@ test('allows active Google, Meta, and Microsoft purchase server outboxes', () =>
   assert.ok(activeOutboxes.includes('google:add_to_cart'))
   assert.ok(activeOutboxes.includes('meta:search'))
   assert.ok(activeOutboxes.includes('microsoft_uet:purchase'))
+  assert.ok(activeOutboxes.includes('microsoft_uet:add_to_cart'))
   assert.equal(
     eventCatalog.page_view.providers.meta.serverOutbox,
+    'active'
+  )
+  assert.equal(
+    eventCatalog.add_to_cart.providers.microsoft_uet.serverOutbox,
     'active'
   )
   assert.equal(

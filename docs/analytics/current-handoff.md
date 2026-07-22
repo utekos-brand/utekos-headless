@@ -694,3 +694,22 @@ STOP: do not auto-continue to add_to_cart / CE-2.4 / CE-2.5
 
 `view_item` / ViewContent meets the same live UUID parity bar as
 `page_view`. Residual only: visual Overlap badge in Events Manager.
+
+## 21. Microsoft UET CAPI add_to_cart worker
+
+```text
+Task: microsoft_uet add_to_cart server outbox (owner choice: option 2)
+Decision: equal paid-media diligence Meta+Google+Microsoft from add_to_cart+
+Branch: feat/microsoft-uet-capi-add-to-cart
+Start-SHA: 1c31ef784
+Status: CODE_CONTRACT_PROVEN — awaiting PR merge / production deploy
+Catalog: microsoft_uet add_to_cart serverOutbox=active
+Worker key: microsoft_uet:add_to_cart
+CAPI: eventName=add_to_cart, pageType=product, event_id dedupe
+Qualification: missing_msclkid / missing_capi_token → skipped_unqualified
+Non-goals: page_view/view_item Microsoft CAPI; live prod smoke before deploy
+STOP: do not auto-continue to begin_checkout or CE-2.4/2.5
+```
+
+Owner approved view_item and directed add_to_cart next with
+Microsoft CAPI worker (not browser-only).
