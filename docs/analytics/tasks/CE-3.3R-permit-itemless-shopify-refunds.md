@@ -11,17 +11,24 @@ Non-goals: Refund owner cutover, settlement finality, source
   evidence, production mutation, provider activation, replay,
   push or deploy
 Primary role: canonical-event-implementer
-Status: AUTHORIZED — SEQUENCED AFTER CE-2.4 PRODUCTION PROOF
-Authorized start: separate clean worktree and exact no-glob
-  allowlist; do not start from the CE-2.4P1 writer/worktree by default
+Status: IMPLEMENTED — LOCAL VERIFICATION PASS
+Start SHA: b858a9a309abd445fcf2bc40227d5cd608f67db0
+Branch: codex/ce-2.4-purchase-owner
+Worktree: /Users/kristofferohnstadhjelmeland/utekos-headless/.worktrees/ce-2.4-purchase-owner
+Writer: /root — sole writer
+Writer overlap: NONE
+Integrated fresh verifier: PENDING AFTER CE-2.5
 ```
 
 ## Owner decision
 
-The project owner authorized CE-3.3R on 2026-07-21 as a separate
-commerce item/value remediation. It must complete, receive a
-fresh verifier verdict and be owner-accepted before CE-2.5
-starts.
+The project owner authorized CE-3.3R on 2026-07-21. The owner
+later replaced the intermediate stop with one unified Commerce
+Stabilization release candidate: one branch, one sole writer,
+logical commits for source evidence, itemless refunds and
+ownership cutover, then one fresh verifier for the complete
+candidate. This task therefore creates no docs-only stop or
+separate verifier cycle before CE-2.5.
 
 The binding default sequence is:
 
@@ -34,9 +41,10 @@ CE-2.4P1 accepted
 → CE-2.5 Refund cutover
 ```
 
-Parallel development with CE-2.4P1 is forbidden unless an
-explicit overlap gate proves zero shared files and each task has
-its own writer and worktree.
+CE-2.4 production proof completed before this task started. The
+same release-candidate worktree is reused serially after proving
+that the prior writer is closed and no active writer owns an
+allowlisted file.
 
 ## Contract
 
@@ -71,6 +79,29 @@ an empty `cartData.items` list is not valid Data Manager cart
 data. Existing non-empty refund items continue to map normally.
 
 ## Exact allowlist gate
+
+Frozen before the first CE-3.3R write:
+
+```text
+docs/analytics/current-handoff.md
+docs/analytics/program-state.json
+docs/analytics/tasks/CE-3.3R-permit-itemless-shopify-refunds.md
+docs/analytics/event-matrix.md
+docs/analytics/provider-matrix.md
+src/lib/analytics/refundEvent.ts
+src/lib/analytics/canonicalEvent.test.ts
+src/lib/analytics/server/shopifyRefundWebhookPayload.ts
+src/lib/analytics/server/shopifyRefundWebhookPayload.test.ts
+src/lib/analytics/server/shopifyRefundToCanonicalRefund.ts
+src/lib/analytics/server/shopifyRefundToCanonicalRefund.test.ts
+src/lib/analytics/server/shopifyGraphqlRefundToCanonicalRefund.ts
+src/lib/analytics/server/shopifyGraphqlRefundToCanonicalRefund.test.ts
+src/lib/analytics/server/handleShopifyRefundsCreateWebhook.test.ts
+src/lib/analytics/server/runShopifyCommerceReconciliation.test.ts
+src/lib/analytics/server/mapCanonicalRefundToGoogleDataManager.ts
+src/lib/analytics/server/mapCanonicalRefundToGoogleDataManager.test.ts
+src/lib/analytics/server/planCanonicalEventDispatch.test.ts
+```
 
 Before the first runtime write, freeze a separate exact, no-glob
 allowlist in `docs/analytics/current-handoff.md`. It may contain
@@ -124,5 +155,44 @@ Commit only the frozen CE-3.3R allowlist:
 git commit -m "fix(analytics): permit itemless Shopify refunds"
 ```
 
-Then stop for fresh verification and owner acceptance. Do not
-start CE-2.5 automatically.
+The older intermediate stop is superseded by the unified release
+instruction. Create the logical commit, continue CE-2.5 in the
+same sole-writer worktree and run one fresh verifier after the
+complete candidate.
+
+## Local implementation evidence
+
+```text
+TDD red: 10 expected failures
+Focused refund suite: 73/73 PASS
+Full analytics/cron suite: 443/443 PASS
+Targeted ESLint: PASS
+Next typegen: PASS on Node 24.17.0
+TypeScript: PASS on Node 24.17.0
+Next.js 16.2.9 Turbopack production build: PASS on Node 24.17.0
+Build boundary: NODE_OPTIONS, DOTENV_CONFIG_PATH and
+  SHOPIFY_ADMIN_API_TOKEN unset
+Tracking gateway smoke: PASS (https://utekos.no)
+Production refund test: NOT PERFORMED
+Reconciliation execution: NOT PERFORMED
+Provider mutation: NOT PERFORMED
+Runtime commit: THIS COMMIT
+Integrated fresh verifier: PENDING AFTER CE-2.5
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+```
+
+Implementation behavior:
+
+- Shopify webhook and reconciliation retain `items: []` for
+  shipping-only and adjustment-only refunds;
+- webhook total value comes from refund transactions;
+- reconciliation total value and currency come from Shopify
+  `Refund.totalRefundedSet`;
+- line-item refunds retain normal item mapping;
+- Google Data Manager omits serialized `cartData` when no items
+  exist;
+- deterministic Refund identity and original Purchase
+  `transaction_id` are unchanged;
+- transaction status is not used as settlement finality;
+- invalid amount, currency and Shopify identity remain
+  fail-closed.

@@ -319,3 +319,66 @@ test('2026-04 numeric subtotal fixture maps then accepts without dispatch', asyn
     ['accepted', 'duplicate']
   )
 })
+
+test('shipping-only webhook accepts then deduplicates the same itemless refund', async () => {
+  const { shopifyRefundToCanonicalRefund } =
+    require('./shopifyRefundToCanonicalRefund.ts') as {
+      shopifyRefundToCanonicalRefund: (payload: unknown) => {
+        event_id: string
+        custom_data: { items: unknown[]; value: number }
+      }
+    }
+  const payload = {
+    id: 890088187,
+    order_id: 820982911,
+    created_at: '2021-12-31T19:00:00-05:00',
+    refund_line_items: [],
+    refund_shipping_lines: [
+      { id: 1, subtotal_amount: 49, tax_amount: 0 }
+    ],
+    transactions: [
+      {
+        id: 21,
+        order_id: 820982911,
+        amount: '49.00',
+        currency: 'NOK',
+        kind: 'refund',
+        gateway: 'bogus',
+        status: 'success',
+        created_at: '2021-12-31T19:00:00-05:00'
+      }
+    ]
+  }
+  const mapped = shopifyRefundToCanonicalRefund(payload)
+  const statuses: Array<'accepted' | 'duplicate'> = []
+  const body = JSON.stringify(payload)
+
+  const accepted = await handleShopifyRefundsCreateWebhook(
+    createRequest(body),
+    {
+      verifyWebhook: () => true,
+      mapRefund: shopifyRefundToCanonicalRefund,
+      acceptRefund: async () => {
+        statuses.push('accepted')
+        return { event_id: mapped.event_id, status: 'accepted' }
+      }
+    }
+  )
+  const duplicate = await handleShopifyRefundsCreateWebhook(
+    createRequest(body),
+    {
+      verifyWebhook: () => true,
+      mapRefund: shopifyRefundToCanonicalRefund,
+      acceptRefund: async () => {
+        statuses.push('duplicate')
+        return { event_id: mapped.event_id, status: 'duplicate' }
+      }
+    }
+  )
+
+  assert.deepEqual(mapped.custom_data.items, [])
+  assert.equal(mapped.custom_data.value, 49)
+  assert.equal(accepted.status, 202)
+  assert.equal(duplicate.status, 200)
+  assert.deepEqual(statuses, ['accepted', 'duplicate'])
+})

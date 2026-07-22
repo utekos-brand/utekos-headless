@@ -8,7 +8,8 @@ import { z } from 'zod'
 const shopifyRefundDecimalAmountSchema = z
   .union([z.number(), z.string().min(1)])
   .transform((value, ctx) => {
-    const parsed = typeof value === 'number' ? value : Number(value)
+    const parsed =
+      typeof value === 'number' ? value : Number(value)
     if (!Number.isFinite(parsed) || parsed < 0) {
       ctx.addIssue({
         code: 'custom',
@@ -51,10 +52,10 @@ const shopifyRefundTransactionSchema = z.object({
 })
 
 export const shopifyRefundWebhookSchema = z.object({
-  id: z.number(),
-  order_id: z.number(),
+  id: z.number().int().positive().safe(),
+  order_id: z.number().int().positive().safe(),
   created_at: z.string(),
-  refund_line_items: z.array(shopifyRefundLineItemSchema).min(1),
+  refund_line_items: z.array(shopifyRefundLineItemSchema),
   transactions: z.array(shopifyRefundTransactionSchema).min(1)
 })
 

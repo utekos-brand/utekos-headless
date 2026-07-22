@@ -26,17 +26,15 @@ function parseDecimal(value: number) {
 function resolveRefundCurrency(
   refund: ShopifyCommerceReconciliationRefund
 ) {
-  for (const transaction of refund.transactions.nodes) {
-    const presentment =
-      transaction.amountSet.presentmentMoney.currencyCode
-    if (presentment) return presentment.toUpperCase()
+  const presentment =
+    refund.totalRefundedSet.presentmentMoney.currencyCode
+  if (presentment) return presentment.toUpperCase()
 
-    const shop = transaction.amountSet.shopMoney.currencyCode
-    if (shop) return shop.toUpperCase()
-  }
+  const shop = refund.totalRefundedSet.shopMoney.currencyCode
+  if (shop) return shop.toUpperCase()
 
   throw new Error(
-    'Shopify GraphQL refund requires a transaction currency'
+    'Shopify GraphQL refund requires an authoritative currency'
   )
 }
 
@@ -44,32 +42,12 @@ function resolveRefundValue(
   refund: ShopifyCommerceReconciliationRefund,
   currency: string
 ) {
-  const lineItemTotal = refund.refundLineItems.nodes.reduce(
-    (sum, refundLineItem) =>
-      sum +
-      parseDecimal(
-        readShopifyGraphqlMoneyAmount(
-          refundLineItem.subtotalSet,
-          currency,
-          'refund line item subtotal'
-        )
-      ),
-    0
-  )
-
-  if (lineItemTotal > 0) return lineItemTotal
-
-  return refund.transactions.nodes.reduce(
-    (sum, transaction) =>
-      sum +
-      parseDecimal(
-        readShopifyGraphqlMoneyAmount(
-          transaction.amountSet,
-          currency,
-          'refund transaction amount'
-        )
-      ),
-    0
+  return parseDecimal(
+    readShopifyGraphqlMoneyAmount(
+      refund.totalRefundedSet,
+      currency,
+      'refund total'
+    )
   )
 }
 

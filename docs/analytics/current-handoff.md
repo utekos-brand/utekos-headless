@@ -486,3 +486,90 @@ Production activation: NOT PERFORMED
 Fresh verifier: APPROVE — 99/99 verifier suite PASS
 Candidate commit: THIS COMMIT
 ```
+
+## 18. CE-2.4 production proof and CE-3.3R implementation
+
+CE-2.4 production activation was owner-approved and completed
+before CE-3.3R started:
+
+```text
+Integrated runtime SHA: b858a9a309abd445fcf2bc40227d5cd608f67db0
+Production deployment: dpl_EXJ2EeAKBXqtn9tB9winMARwTz97
+Deployment state: READY
+Supabase migration: 20260722001500 applied and verified
+Controlled Shopify order: #1877 / legacy ID 6976833847544
+Purchase event_id: d8a8089d-f774-4280-81d7-c6e2ff73524b
+Ledger rows for event: 1
+Source-evidence observations: 1
+Provider attempts: google 1, meta 1, microsoft_uet 1
+Duplicate provider/idempotency keys: 0
+Google: accepted_unverified, validateOnly=false
+Meta: accepted_unverified, eventsReceived=1
+Microsoft UET: skipped_unqualified, missing_msclkid
+Reconciliation execution: NOT PERFORMED
+Backfill/replay: NOT PERFORMED
+Provider mutation: NOT PERFORMED
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+```
+
+CE-3.3R start gate:
+
+```text
+Task: CE-3.3R — permit legitimate itemless Shopify refunds
+Start SHA: b858a9a309abd445fcf2bc40227d5cd608f67db0
+Branch: codex/ce-2.4-purchase-owner
+Worktree: /Users/kristofferohnstadhjelmeland/utekos-headless/.worktrees/ce-2.4-purchase-owner
+Writer: /root — sole writer
+Writer overlap: NONE
+Status: IMPLEMENTED — LOCAL VERIFICATION PASS
+Integrated fresh verifier: PENDING AFTER CE-2.5
+STOP_ACTIVE_DOUBLE_COUNT_RISK: ACTIVE
+```
+
+Exact no-glob allowlist frozen before the first CE-3.3R write:
+
+```text
+docs/analytics/current-handoff.md
+docs/analytics/program-state.json
+docs/analytics/tasks/CE-3.3R-permit-itemless-shopify-refunds.md
+docs/analytics/event-matrix.md
+docs/analytics/provider-matrix.md
+src/lib/analytics/refundEvent.ts
+src/lib/analytics/canonicalEvent.test.ts
+src/lib/analytics/server/shopifyRefundWebhookPayload.ts
+src/lib/analytics/server/shopifyRefundWebhookPayload.test.ts
+src/lib/analytics/server/shopifyRefundToCanonicalRefund.ts
+src/lib/analytics/server/shopifyRefundToCanonicalRefund.test.ts
+src/lib/analytics/server/shopifyGraphqlRefundToCanonicalRefund.ts
+src/lib/analytics/server/shopifyGraphqlRefundToCanonicalRefund.test.ts
+src/lib/analytics/server/handleShopifyRefundsCreateWebhook.test.ts
+src/lib/analytics/server/runShopifyCommerceReconciliation.test.ts
+src/lib/analytics/server/mapCanonicalRefundToGoogleDataManager.ts
+src/lib/analytics/server/mapCanonicalRefundToGoogleDataManager.test.ts
+src/lib/analytics/server/planCanonicalEventDispatch.test.ts
+```
+
+Local implementation evidence:
+
+```text
+TDD red: 10 expected failures
+Focused refund suite: 73/73 PASS
+Full analytics/cron suite: 443/443 PASS
+Targeted ESLint: PASS
+Next typegen: PASS on Node 24.17.0
+TypeScript: PASS on Node 24.17.0
+Next.js 16.2.9 Turbopack production build: PASS on Node 24.17.0
+Build boundary: NODE_OPTIONS, DOTENV_CONFIG_PATH and
+  SHOPIFY_ADMIN_API_TOKEN unset
+Tracking gateway smoke: PASS (https://utekos.no)
+Production refund test: NOT PERFORMED
+Reconciliation execution: NOT PERFORMED
+Provider mutation: NOT PERFORMED
+Candidate commit: THIS COMMIT
+```
+
+The later owner instruction supersedes the older intermediate
+CE-3.3R verifier/owner stop. Commit this logical change, continue
+CE-2.5 in the same sole-writer release-candidate worktree, then
+run one fresh verifier over the complete package. No docs-only
+status commit is inserted between the code commits.

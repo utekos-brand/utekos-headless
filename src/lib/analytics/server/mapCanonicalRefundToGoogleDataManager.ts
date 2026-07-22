@@ -15,22 +15,20 @@ import {
   resolveGoogleClientId
 } from './googleDataManagerSharedMapping'
 
-type DataManagerItem =
-  protos.google.ads.datamanager.v1.IItem
+type DataManagerItem = protos.google.ads.datamanager.v1.IItem
 
 const MAX_ADDITIONAL_ITEM_PARAMETERS = 24
-const {
-  Event: DataManagerEvent,
-  EventSource
-} = protos.google.ads.datamanager.v1
+const { Event: DataManagerEvent, EventSource } =
+  protos.google.ads.datamanager.v1
 
 function mapRefundItem(
   item: CanonicalRefund['custom_data']['items'][number]
 ): DataManagerItem {
-  const additionalItemParameters = compactGoogleDataManagerParameters([
-    googleDataManagerParameter('item_name', item.item_name),
-    googleDataManagerIdentifierParameter('sku', item.sku)
-  ]).slice(0, MAX_ADDITIONAL_ITEM_PARAMETERS)
+  const additionalItemParameters =
+    compactGoogleDataManagerParameters([
+      googleDataManagerParameter('item_name', item.item_name),
+      googleDataManagerIdentifierParameter('sku', item.sku)
+    ]).slice(0, MAX_ADDITIONAL_ITEM_PARAMETERS)
 
   return {
     itemId: item.item_id,
@@ -42,7 +40,10 @@ function mapRefundItem(
 
 function mapRefundEventParameters(event: CanonicalRefund) {
   return compactGoogleDataManagerParameters([
-    googleDataManagerIdentifierParameter('event_id', event.event_id),
+    googleDataManagerIdentifierParameter(
+      'event_id',
+      event.event_id
+    ),
     googleDataManagerIdentifierParameter(
       'transaction_id',
       event.custom_data.transaction_id
@@ -86,7 +87,9 @@ export function mapCanonicalRefundToGoogleDataManager(
   return DataManagerEvent.create({
     eventName: 'refund',
     transactionId: event.custom_data.transaction_id,
-    eventTimestamp: mapGoogleDataManagerTimestamp(event.event_time),
+    eventTimestamp: mapGoogleDataManagerTimestamp(
+      event.event_time
+    ),
     eventSource: EventSource.WEB,
     clientId: resolveGoogleClientId(event.browser_id),
     ...(marketingGranted && event.external_id ?
@@ -100,8 +103,12 @@ export function mapCanonicalRefundToGoogleDataManager(
     ...(eventDeviceInfo ? { eventDeviceInfo } : {}),
     ...(eventLocation ? { eventLocation } : {}),
     additionalEventParameters: mapRefundEventParameters(event),
-    cartData: {
-      items: event.custom_data.items.map(mapRefundItem)
-    }
+    ...(event.custom_data.items.length > 0 ?
+      {
+        cartData: {
+          items: event.custom_data.items.map(mapRefundItem)
+        }
+      }
+    : {})
   })
 }

@@ -20,6 +20,7 @@ import {
   type ShopifyCommerceReconciliationLease
 } from './shopifyCommerceReconciliationTypes'
 import { createShopifyReconciliationCommerceSourceEvidence } from './shopifyCommerceSourceEvidence'
+import { shopifyGraphqlRefundToCanonicalRefund } from './shopifyGraphqlRefundToCanonicalRefund'
 
 const moduleWithLoad = Module as typeof Module & {
   _load: (
@@ -682,6 +683,53 @@ test('red gate 1: repeated window accepts then duplicates with same event ids', 
     ]
       .sort()
       .join(',')
+  )
+})
+
+test('itemless reconciliation refund accepts once then remains duplicate-safe', async () => {
+  const itemlessRefund = refundNode('904', '15.00')
+  itemlessRefund.refundLineItems.nodes = []
+  itemlessRefund.transactions.nodes[0]!.status = 'PENDING'
+  const paid = order({
+    legacyResourceId: '104',
+    displayFinancialStatus: 'PAID',
+    refunds: [itemlessRefund]
+  })
+  const { dependencies, refundAcceptanceInputs } =
+    baseDependencies({
+      fetchOrdersPage: async () => ({
+        nodes: [paid],
+        hasNextPage: false,
+        endCursor: null
+      }),
+      mapRefund: shopifyGraphqlRefundToCanonicalRefund
+    })
+
+  const first = await runShopifyCommerceReconciliation(
+    { runMode: 'accept' },
+    dependencies
+  )
+  const second = await runShopifyCommerceReconciliation(
+    { runMode: 'accept' },
+    dependencies
+  )
+
+  assert.equal(first.refundsAccepted, 1)
+  assert.equal(second.refundsDuplicate, 1)
+  assert.equal(refundAcceptanceInputs.length, 2)
+  assert.deepEqual(
+    (
+      refundAcceptanceInputs[0]?.payload as {
+        custom_data: { items: unknown[]; value: number }
+      }
+    ).custom_data,
+    {
+      currency: 'NOK',
+      value: 15,
+      transaction_id: shopifyPurchaseTransactionId('104'),
+      refund_id: shopifyRefundRecordId('904'),
+      items: []
+    }
   )
 })
 

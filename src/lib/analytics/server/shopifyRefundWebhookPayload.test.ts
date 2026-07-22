@@ -100,6 +100,31 @@ test('nullable transaction currency is accepted without fabrication', () => {
   assert.equal(parsed.transactions[1]?.currency, 'NOK')
 })
 
+test('accepts a shipping-only refund with an explicit empty line-item array', () => {
+  const parsed = shopifyRefundWebhookSchema.parse(
+    baseRefund({
+      refund_line_items: [],
+      refund_shipping_lines: [
+        { id: 1, subtotal_amount: 49, tax_amount: 0 }
+      ],
+      transactions: [
+        {
+          id: 3,
+          order_id: 820982911,
+          amount: '49.00',
+          currency: 'NOK',
+          kind: 'refund',
+          gateway: 'bogus',
+          status: 'success',
+          created_at: '2021-12-31T19:00:00-05:00'
+        }
+      ]
+    })
+  )
+
+  assert.deepEqual(parsed.refund_line_items, [])
+})
+
 test('rejects negative subtotal', () => {
   assert.throws(() =>
     shopifyRefundWebhookSchema.parse(
@@ -148,6 +173,17 @@ test('rejects non-finite string subtotal', () => {
           }
         ]
       })
+    )
+  )
+})
+
+test('rejects invalid refund identities', () => {
+  assert.throws(() =>
+    shopifyRefundWebhookSchema.parse(baseRefund({ id: -1 }))
+  )
+  assert.throws(() =>
+    shopifyRefundWebhookSchema.parse(
+      baseRefund({ order_id: 1.5 })
     )
   )
 })

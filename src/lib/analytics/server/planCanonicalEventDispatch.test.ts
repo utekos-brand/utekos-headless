@@ -3,6 +3,7 @@ import test from 'node:test'
 import type { CanonicalEvent } from '../canonicalEvent'
 import { canonicalPageViewSchema } from '../pageViewEvent'
 import { canonicalPurchaseSchema } from '../purchaseEvent'
+import { canonicalRefundSchema } from '../refundEvent'
 import { canonicalViewItemSchema } from '../viewItemEvent'
 import { planCanonicalEventDispatch } from './planCanonicalEventDispatch'
 
@@ -40,9 +41,7 @@ function viewItem(): CanonicalEvent {
     environment: 'test',
     page_url: 'https://utekos.no/produkter/utekos-techdown',
     page_title: 'Utekos TechDown',
-    browser_id: {
-      ga_client_id: '123456789.1784201643'
-    },
+    browser_id: { ga_client_id: '123456789.1784201643' },
     consent,
     custom_data: {
       currency: 'NOK',
@@ -178,12 +177,8 @@ test('routes consented purchase with msclkid and UET token to Microsoft outbox',
       event_time: '2026-07-17T10:05:00.000Z',
       source: 'webhook',
       environment: 'test',
-      browser_id: {
-        ga_client_id: '123456789.1784201643'
-      },
-      click_id: {
-        msclkid: 'dd4afcccb1c9a4cad9544dd7e5006'
-      },
+      browser_id: { ga_client_id: '123456789.1784201643' },
+      click_id: { msclkid: 'dd4afcccb1c9a4cad9544dd7e5006' },
       consent,
       custom_data: {
         currency: 'NOK',
@@ -239,9 +234,7 @@ test('skips Microsoft purchase without msclkid as unqualified', () => {
       event_time: '2026-07-17T10:05:00.000Z',
       source: 'webhook',
       environment: 'test',
-      browser_id: {
-        ga_client_id: '123456789.1784201643'
-      },
+      browser_id: { ga_client_id: '123456789.1784201643' },
       consent,
       custom_data: {
         currency: 'NOK',
@@ -277,4 +270,41 @@ test('skips Microsoft purchase without msclkid as unqualified', () => {
       process.env.MICROSOFT_UET_CAPI_ACCESS_TOKEN = previous
     }
   }
+})
+
+test('itemless refund plans at most one attempt per eligible provider', () => {
+  const event = canonicalRefundSchema.parse({
+    schema_version: 1,
+    event_name: 'refund',
+    event_id: '4fe247d5-d8f8-458f-b09f-a8d8511f2644',
+    event_time: '2026-07-22T10:00:00.000Z',
+    source: 'webhook',
+    environment: 'test',
+    browser_id: { ga_client_id: '123456789.1784201643' },
+    consent,
+    custom_data: {
+      currency: 'NOK',
+      value: 49,
+      transaction_id: 'shopify_order_555',
+      refund_id: 'shopify_refund_900',
+      items: []
+    }
+  })
+  const intents = planCanonicalEventDispatch(event)
+
+  assert.deepEqual(intents, [
+    {
+      dispatch_mode: 'server_retry',
+      event_id: event.event_id,
+      provider: 'google'
+    }
+  ])
+  assert.equal(
+    new Set(
+      intents.map(
+        intent => `${intent.provider}:${intent.event_id}`
+      )
+    ).size,
+    intents.length
+  )
 })

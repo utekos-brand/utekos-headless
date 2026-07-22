@@ -6,6 +6,7 @@ import {
 } from './canonicalEvent'
 import { activeCanonicalEventNames } from './eventCatalog'
 import { createCanonicalPageView } from './pageViewEvent'
+import { canonicalRefundSchema } from './refundEvent'
 import { createCanonicalViewItem } from './viewItemEvent'
 
 const consent = {
@@ -107,7 +108,31 @@ test('parses supported page_view and view_item events', () => {
 
 test('rejects blocked_source events without an implemented schema', () => {
   assert.throws(
-    () => parseCanonicalEvent({ event_name: 'add_shipping_info' }),
+    () =>
+      parseCanonicalEvent({ event_name: 'add_shipping_info' }),
     /Invalid discriminator value/
   )
+})
+
+test('parses a legitimate itemless refund without fabricating an item', () => {
+  const refund = canonicalRefundSchema.parse({
+    schema_version: 1,
+    event_name: 'refund',
+    event_id: '4fe247d5-d8f8-458f-b09f-a8d8511f2644',
+    event_time: '2026-07-22T10:00:00.000Z',
+    source: 'webhook',
+    environment: 'test',
+    consent,
+    custom_data: {
+      currency: 'NOK',
+      value: 49,
+      transaction_id: 'shopify_order_555',
+      refund_id: 'shopify_refund_900',
+      items: []
+    }
+  })
+
+  assert.deepEqual(refund.custom_data.items, [])
+  assert.equal(refund.custom_data.value, 49)
+  assert.equal(refund.custom_data.currency, 'NOK')
 })

@@ -12,10 +12,12 @@ import {
   type ShopifyRefundWebhook
 } from './shopifyRefundWebhookPayload'
 
-const deniedConsentSnapshot = parseOrderConsentFromNoteAttributes([])
+const deniedConsentSnapshot =
+  parseOrderConsentFromNoteAttributes([])
 
 function parseDecimal(value: number | string) {
-  const parsed = typeof value === 'number' ? value : Number(value)
+  const parsed =
+    typeof value === 'number' ? value : Number(value)
   if (!Number.isFinite(parsed) || parsed < 0) {
     throw new Error('invalid_refund_decimal_amount')
   }
@@ -29,7 +31,8 @@ function resolveRefundCurrency(refund: ShopifyRefundWebhook) {
       transaction.currency.length > 0
   )?.currency
 
-  if (transactionCurrency) return transactionCurrency.toUpperCase()
+  if (transactionCurrency)
+    return transactionCurrency.toUpperCase()
 
   throw new Error(
     'Shopify refund webhook requires a transaction currency'
@@ -37,14 +40,6 @@ function resolveRefundCurrency(refund: ShopifyRefundWebhook) {
 }
 
 function resolveRefundValue(refund: ShopifyRefundWebhook) {
-  const lineItemTotal = refund.refund_line_items.reduce(
-    (sum, refundLineItem) =>
-      sum + parseDecimal(refundLineItem.subtotal),
-    0
-  )
-
-  if (lineItemTotal > 0) return lineItemTotal
-
   return refund.transactions.reduce(
     (sum, transaction) => sum + parseDecimal(transaction.amount),
     0
@@ -93,7 +88,8 @@ export function shopifyRefundToCanonicalRefund(
     custom_data: {
       currency: resolveRefundCurrency(parsedRefund),
       value: resolveRefundValue(parsedRefund),
-      transaction_id: shopifyPurchaseTransactionId(orderLegacyId),
+      transaction_id:
+        shopifyPurchaseTransactionId(orderLegacyId),
       refund_id: shopifyRefundRecordId(refundLegacyId),
       items
     }

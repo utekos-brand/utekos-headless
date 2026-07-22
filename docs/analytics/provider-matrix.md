@@ -192,16 +192,23 @@
   accepted transaction schedules the generic outbox.
 - **Finality:** `refunds/create` means refund created, not
   settled.
+- **Item/value contract:** line-item refunds retain their item
+  mapping; shipping-only and adjustment-only refunds retain an
+  explicit `items: []` without fabricated products. Google Data
+  Manager omits `cartData` for the itemless case while preserving
+  refund value, currency and identity.
 - **Diagnostics:** app-scoped subscriptions verified via Admin
   GraphQL 2025-07: **zero** `webhookSubscriptions` for the app
   token (2026-07-20). Delivery logs for any other subscriber
   remain unavailable.
-- **Status:** CE-2.4 local release candidate implemented. The
-  historical direct provider-resend/backfill entrypoints are
-  fail-closed before credentials, database or network access.
-  Production activation and the one-ledger-row/provider-attempt
-  proof are pending release approval;
-  `STOP_ACTIVE_DOUBLE_COUNT_RISK` remains active.
+- **Status:** CE-2.4 is production-proven and CE-3.3R is locally
+  verified; CE-2.5 ownership cutover remains the next logical
+  release-candidate commit. The historical direct
+  provider-resend/backfill entrypoints are fail-closed before
+  credentials, database or network access. Production activation
+  and the one-ledger-row/provider-attempt proof are pending
+  release approval; `STOP_ACTIVE_DOUBLE_COUNT_RISK` remains
+  active.
 
 ## Provider status comparison
 

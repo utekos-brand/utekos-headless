@@ -125,12 +125,13 @@ test('shopifyGraphqlRefundToCanonicalRefund uses deterministic ids and server so
   assert.equal(event.consent.marketing, 'denied')
 })
 
-test('shopifyGraphqlRefundToCanonicalRefund fails closed without transaction currency', () => {
+test('shopifyGraphqlRefundToCanonicalRefund fails closed without authoritative currency', () => {
   assert.throws(
     () =>
       shopifyGraphqlRefundToCanonicalRefund({
         order: order(),
         refund: refund({
+          totalRefundedSet: money('50.00', ''),
           transactions: {
             pageInfo: { hasNextPage: false, endCursor: null },
             nodes: []
@@ -141,7 +142,7 @@ test('shopifyGraphqlRefundToCanonicalRefund fails closed without transaction cur
           }
         })
       }),
-    /transaction currency/
+    /authoritative currency/
   )
 })
 
@@ -160,5 +161,70 @@ test('shopifyGraphqlRefundToCanonicalRefund fails closed without an item name', 
         refund: refundWithoutItemName
       }),
     /requires a name/
+  )
+})
+
+test('adjustment-only refund preserves refund-created semantics with no fabricated items', () => {
+  const event = shopifyGraphqlRefundToCanonicalRefund({
+    order: order(),
+    refund: refund({
+      totalRefundedSet: money('15.00'),
+      refundLineItems: {
+        pageInfo: { hasNextPage: false, endCursor: null },
+        nodes: []
+      },
+      transactions: {
+        pageInfo: { hasNextPage: false, endCursor: null },
+        nodes: [
+          {
+            id: 'gid://shopify/OrderTransaction/2',
+            amountSet: money('15.00'),
+            status: 'PENDING',
+            kind: 'REFUND',
+            gateway: 'shopify_payments',
+            createdAt: '2026-07-01T12:00:00Z',
+            order: { legacyResourceId: '555' }
+          }
+        ]
+      }
+    })
+  })
+
+  assert.deepEqual(event.custom_data.items, [])
+  assert.equal(event.custom_data.value, 15)
+  assert.equal(event.custom_data.currency, 'NOK')
+  assert.equal(event.event_time, '2026-07-01T12:00:00Z')
+})
+
+test('two itemless refunds on one order keep one transaction id and distinct refund ids', () => {
+  const first = shopifyGraphqlRefundToCanonicalRefund({
+    order: order(),
+    refund: refund({
+      refundLineItems: {
+        pageInfo: { hasNextPage: false, endCursor: null },
+        nodes: []
+      }
+    })
+  })
+  const second = shopifyGraphqlRefundToCanonicalRefund({
+    order: order(),
+    refund: refund({
+      id: 'gid://shopify/Refund/901',
+      legacyResourceId: '901',
+      refundLineItems: {
+        pageInfo: { hasNextPage: false, endCursor: null },
+        nodes: []
+      }
+    })
+  })
+
+  assert.equal(
+    first.custom_data.transaction_id,
+    second.custom_data.transaction_id
+  )
+  assert.notEqual(first.event_id, second.event_id)
+  assert.notEqual(
+    first.custom_data.refund_id,
+    second.custom_data.refund_id
   )
 })

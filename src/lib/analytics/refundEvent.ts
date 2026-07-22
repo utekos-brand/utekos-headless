@@ -15,7 +15,7 @@ export const canonicalRefundCommerceSchema = z.strictObject({
   value: z.number().finite().nonnegative(),
   transaction_id: z.string().min(1),
   refund_id: z.string().min(1),
-  items: z.array(refundItemSchema).min(1)
+  items: z.array(refundItemSchema)
 })
 
 export const canonicalRefundSchema =
@@ -30,7 +30,9 @@ export type CanonicalRefundCommerce = z.infer<
   typeof canonicalRefundCommerceSchema
 >
 
-export type CanonicalRefund = z.infer<typeof canonicalRefundSchema>
+export type CanonicalRefund = z.infer<
+  typeof canonicalRefundSchema
+>
 
 export function deterministicRefundEventId(refundId: string) {
   const hash = createHash('sha256')
