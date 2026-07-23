@@ -885,11 +885,14 @@ TRACKING_SMOKE_BASE_URL=https://utekos.no npm run tracking:commerce-smoke
 
 Keep `Content-Security-Policy-Report-Only` for at least the 24-hour observation
 window. The policy has a same-origin, size-limited report endpoint that logs
-only directive and host names. Do not enforce until normal navigation,
-checkout, Cookiebot, Meta, Microsoft, Clarity, PostHog and sGTM show no
-unexplained critical violations. Enforcement is a separate production change;
-it must not add a nonce design that forces the entire storefront to dynamic
-rendering.
+only directive and host names. Report-only `frame-src` must include
+`https://www.facebook.com` while Meta Pixel remains active under marketing
+consent (Pixel creates a hidden Facebook iframe; see
+`docs/analytics/evidence/meta-csp-frame-src-facebook.md`). Do not enforce until
+normal navigation, checkout, Cookiebot, Meta, Microsoft, Clarity, PostHog and
+sGTM show no unexplained critical violations. Enforcement is a separate
+production change; it must not add a nonce design that forces the entire
+storefront to dynamic rendering.
 
 Final sign-off requires the 24-hour observation window and matching control
 event evidence in GA4, Supabase, Cloud Run and GTM. GA4 BigQuery is a separate

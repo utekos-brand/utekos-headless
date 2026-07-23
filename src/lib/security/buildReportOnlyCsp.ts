@@ -33,6 +33,9 @@ const META_PIXEL_EVENT_ORIGINS = [
   'https://5z-2b6b7616f94640c2840d1841e1ac24c3.ecs.us-east-1.on.aws'
 ] as const
 
+/** Meta Pixel (fbevents) creates a hidden iframe to www.facebook.com. */
+const META_PIXEL_FRAME_ORIGINS = ['https://www.facebook.com'] as const
+
 const GOOGLE_ADS_ORIGINS = [
   'https://ad.doubleclick.net',
   'https://googleads.g.doubleclick.net',
@@ -107,6 +110,7 @@ export function buildReportOnlyCsp(): string {
     '\'self\'',
     ...KLARNA_ORIGINS,
     ...TAG_GATEWAY_ORIGINS,
+    ...META_PIXEL_FRAME_ORIGINS,
     ...VERCEL_LIVE_ORIGINS
   ]
 

@@ -48,7 +48,12 @@ test('permits the third-party scripts and frames observed during report-only rol
   assert.match(csp, /connect-src[^;]*https:\/\/\*\.klarnaevt\.com/)
   assert.match(csp, /img-src[^;]*https:\/\/c\.bing\.com/)
   assert.match(csp, /img-src[^;]*https:\/\/www\.facebook\.com/)
+  assert.match(csp, /frame-src[^;]*https:\/\/www\.facebook\.com/)
   assert.match(csp, /frame-src[^;]*https:\/\/vercel\.live/)
+  assert.doesNotMatch(
+    csp,
+    /frame-src[^;]*https:\/\/mpc2-prod-25-is5qnl632q-wl\.a\.run\.app/
+  )
 })
 
 test('permits GA4 advertising hosts and Klarna CDN assets required by report-only rollout', () => {
