@@ -25,11 +25,6 @@ export const CheckoutButton = ({
   disabled?: boolean
   disabledReason?: string
   cart?: Cart | null
-  cartId?: string | null
-  subtotalAmount?: string
-  currency?: string
-  item_ids?: string[]
-  num_items?: number
   className?: string
   children?: React.ReactNode
 } & Omit<
