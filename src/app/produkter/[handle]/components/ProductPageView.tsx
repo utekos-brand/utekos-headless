@@ -220,6 +220,8 @@ export function ProductPageView({
               threshold={0.2}
             >
               <ProductHeader
+                product={productData}
+                selectedVariant={selectedVariant}
                 productHandle={productData.handle}
                 productTitle={title}
                 productSubtitle={productSubtitle ?? ''}
@@ -229,6 +231,8 @@ export function ProductPageView({
           <OptionsColumn>
             <div className='dark:text-dark-background hidden text-background md:block'>
               <ProductHeader
+                product={productData}
+                selectedVariant={selectedVariant}
                 productHandle={productData.handle}
                 productTitle={title}
                 productSubtitle={productSubtitle ?? ''}

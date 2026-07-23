@@ -303,6 +303,8 @@ export function HelpChooseCard({
         </div>
       </Link>
       <WishlistButton
+        product={product}
+        variant={selectedVariant ?? availableSizes[0]?.variant ?? variants[0]}
         productTitle={product.title}
         returnTo={`/produkter/${product.handle}`}
         className='absolute top-3 right-3 z-50 size-11 rounded-xl md:top-3 md:right-3 md:size-12 md:rounded-2xl'

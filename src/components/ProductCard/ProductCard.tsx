@@ -192,6 +192,8 @@ export function ProductCard({
             </AspectRatio>
           </Link>
           <WishlistButton
+            product={product}
+            variant={selectedVariant}
             productTitle={product.title}
             returnTo={productUrl}
             className='absolute right-3 bottom-3 z-20 size-11 rounded-xl md:right-4 md:bottom-4 md:size-12 md:rounded-2xl'
@@ -298,6 +300,8 @@ export function ProductCard({
             </AspectRatio>
           </Link>
           <WishlistButton
+            product={product}
+            variant={selectedVariant}
             productTitle={product.title}
             returnTo={productUrl}
             className={cn(

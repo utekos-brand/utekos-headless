@@ -2,14 +2,20 @@ import { AnimatedBlock } from '@/components/AnimatedBlock'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { Sparkles } from 'lucide-react'
 import { WishlistButton } from '@/components/wishlist/WishlistButton'
+import type { ShopifyProduct } from 'types/product/ShopifyProduct'
+import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
 
 export interface ProductHeaderProps {
+  product: ShopifyProduct
+  selectedVariant: ShopifyProductVariant
   productHandle: string
   productTitle: string
   productSubtitle: string
 }
 
 export default function ProductHeader({
+  product,
+  selectedVariant,
   productHandle,
   productTitle,
   productSubtitle
@@ -48,9 +54,11 @@ export default function ProductHeader({
         </hgroup>
       </AnimatedBlock>
       <WishlistButton
+        product={product}
+        variant={selectedVariant}
         productTitle={productTitle}
         returnTo={`/produkter/${productHandle}`}
-        variant='labelled'
+        buttonVariant='labelled'
         className='mt-1 shrink-0'
       />
     </div>

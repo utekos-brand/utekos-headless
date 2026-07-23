@@ -1,20 +1,24 @@
 'use client'
 
-// Reporter exported for wishlist persistence wiring; no wishlist store detector is active yet.
 import { sendGTMEvent } from '@next/third-parties/google'
 import { readBrowserReporterContext } from './browserReporterContext'
 import { browserPageViewSession } from './pageViewSession'
+import { mapShopifyAddToWishlist } from './shopifyAddToWishlistCommerce'
 import {
   buildAddToWishlistDataLayerEvent,
   createCanonicalAddToWishlist,
-  type CanonicalAddToWishlist,
-  type CanonicalAddToWishlistCustomData
+  type CanonicalAddToWishlist
 } from './addToWishlistEvent'
 import { startAddToWishlistCollectorTransport } from './addToWishlistCollectorTransport'
+import type { ShopifyProduct } from 'types/product/ShopifyProduct'
+import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
 
 export type ReportCanonicalAddToWishlistInput = {
-  customData: CanonicalAddToWishlistCustomData
   pageViewId?: string
+  product: ShopifyProduct
+  quantity?: number
+  variant: ShopifyProductVariant
+  wishlistMutationId: string
 }
 
 export function reportCanonicalAddToWishlist(
@@ -33,6 +37,15 @@ export function reportCanonicalAddToWishlist(
       : {})
     })
 
+    const customData = mapShopifyAddToWishlist({
+      product: input.product,
+      variant: input.variant,
+      wishlistMutationId: input.wishlistMutationId,
+      ...(input.quantity !== undefined ?
+        { quantity: input.quantity }
+      : {})
+    })
+
     const event = createCanonicalAddToWishlist({
       environment: clientContext.environment,
       eventId: globalThis.crypto.randomUUID(),
@@ -44,7 +57,7 @@ export function reportCanonicalAddToWishlist(
         { referrerUrl: pageView.referrerUrl }
       : {}),
       consent: clientContext.consent,
-      customData: input.customData,
+      customData,
       ...(clientContext.browserId ?
         { browserId: clientContext.browserId }
       : {}),
