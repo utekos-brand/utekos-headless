@@ -9,7 +9,7 @@ export function MagazineComparisonBlock({
 }: MagazineComparisonBlockProps) {
   return (
     <article className='my-16'>
-      <h2 className='dark:text-dark-background font-sans text-4xl leading-[0.95] font-bold text-balance text-background sm:text-5xl'>
+      <h2 className='font-sans text-4xl leading-[0.95] font-bold text-balance text-foreground sm:text-5xl'>
         {block.title}
       </h2>
       <div className='mt-8 grid grid-cols-1 gap-4 lg:grid-cols-3'>
@@ -18,11 +18,11 @@ export function MagazineComparisonBlock({
             key={column.title}
             className='dark:border-dark-background/10 rounded-lg border border-background/10 bg-foreground p-5'
           >
-            <h3 className='dark:text-dark-background font-sans text-2xl leading-[0.95] font-bold text-background'>
+            <h3 className='font-sans text-2xl leading-[0.95] font-bold text-background'>
               {column.title}
             </h3>
             {column.text && (
-              <p className='dark:text-dark-background/74 mt-3 text-base leading-[1.55] text-background/74'>
+              <p className='mt-3 text-base leading-[1.55] text-background/80'>
                 {column.text}
               </p>
             )}
@@ -30,9 +30,9 @@ export function MagazineComparisonBlock({
               {column.items.map(item => (
                 <li
                   key={item}
-                  className='leading-text-paragraph dark:text-dark-background/80 flex gap-3 text-sm text-background/80'
+                  className='leading-text-paragraph flex gap-3 text-sm text-background/80'
                 >
-                  <span className='mt-1 size-2 shrink-0 rounded-full bg-(--magazine-accent)' />
+                  <span className='mt-1 size-2 shrink-0 rounded-full bg-background' />
                   <span>{item}</span>
                 </li>
               ))}

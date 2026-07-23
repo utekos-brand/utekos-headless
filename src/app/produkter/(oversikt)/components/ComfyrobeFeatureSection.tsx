@@ -2,43 +2,17 @@
 
 import Link from 'next/link'
 import type { Route } from 'next'
-import type { CSSProperties } from 'react'
 import { AnimatedBlock } from '@/components/AnimatedBlock'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { Button } from '@/components/ui/button'
 import { LazyComfyrobeImageCarousel } from '@/app/produkter/(oversikt)/components/LazyComfyrobeImageCarousel'
 import { ArrowRight, Wind } from 'lucide-react'
-import { comfyrobeFeatures } from '@/app/produkter/(oversikt)/utils/comfyrobeFeatures'
-
-const featureSurfaceStyles = {
-  weather: {
-    background: 'var(--card)',
-    border: 'var(--coral-green)',
-    iconBackground: 'var(--foreground)',
-    iconBorder: 'var(--card)',
-    iconColor: 'var(--coral-green)'
-  },
-  warmth: {
-    background: 'var(--card)',
-    border: 'var(--coral-green)',
-    iconBackground: 'var(--foreground)',
-    iconBorder: 'var(--card)',
-    iconColor: 'var(--coral-green)'
-  },
-  freedom: {
-    background: 'var(--card)',
-    border: 'var(--coral-green)',
-    iconBackground: 'var(--foreground)',
-    iconBorder: 'var(--card)',
-    iconColor: 'var(--coral-green)'
-  }
-} as const
 
 export function ComfyrobeFeatureSection() {
   return (
     <article
       aria-labelledby='comfyrobe-feature-heading'
-      className='w-full py-16 sm:py-24 md:mb-24'
+      className='w-full py-10 sm:py-16'
     >
       <div className='container mx-auto px-4'>
         <div className='border-coral-green dark:bg-dark-background relative overflow-hidden rounded-[1.75rem] border bg-background p-5 shadow-[0_28px_90px_-62px_color-mix(in_oklch,var(--background)_90%,transparent)] sm:p-8 lg:p-12'>
@@ -66,11 +40,11 @@ export function ComfyrobeFeatureSection() {
             />
           </div>
 
-          <div className='relative z-10 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-stretch lg:gap-12'>
+          <div className='relative z-10 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-start lg:gap-12'>
             <LazyComfyrobeImageCarousel />
 
-            <AnimatedBlock className='will-animate-fade-in-right h-full min-h-full'>
-              <div className='flex h-full min-h-full flex-col justify-center lg:min-h-152'>
+            <AnimatedBlock className='will-animate-fade-in-right'>
+              <div className='flex flex-col justify-start'>
                 <div>
                   <AnimatedBlock className='will-animate-fade-in-up'>
                     <BrandBadge
@@ -115,86 +89,20 @@ export function ComfyrobeFeatureSection() {
                     </p>
                   </AnimatedBlock>
 
-                  <div className='mt-8 w-full space-y-3'>
-                    {comfyrobeFeatures.map((feature, index) => {
-                      const surface =
-                        featureSurfaceStyles[feature.surface]
-                      const Icon = feature.icon
-
-                      return (
-                        <AnimatedBlock
-                          key={feature.title}
-                          className='will-animate-fade-in-up'
-                          delay={`${0.2 + index * 0.1}s`}
-                        >
-                          <article
-                            className='group relative overflow-hidden rounded-[1.05rem] border p-4 shadow-[0_18px_44px_-36px_color-mix(in_oklch,var(--background)_86%,transparent)] transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0'
-                            style={
-                              {
-                                '--feature-accent':
-                                  surface.iconColor,
-                                'borderColor': surface.border,
-                                'background': surface.background
-                              } as CSSProperties
-                            }
-                          >
-                            <div
-                              className='pointer-events-none absolute -inset-x-8 -top-20 h-44 opacity-[0.14] blur-3xl transition-opacity duration-300 group-hover:opacity-[0.22]'
-                              style={{
-                                background:
-                                  'radial-gradient(120% 120% at 50% 0%, transparent 38%, var(--feature-accent) 100%)'
-                              }}
-                            />
-
-                            <div className='relative z-10 min-h-17'>
-                              <div className='flex items-center gap-3'>
-                                <div
-                                  className='flex size-9 shrink-0 items-center justify-center rounded-lg border transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none sm:size-10 lg:size-11 lg:rounded-xl'
-                                  style={{
-                                    borderColor:
-                                      surface.iconBorder,
-                                    background:
-                                      surface.iconBackground
-                                  }}
-                                >
-                                  <Icon
-                                    className='size-4 lg:size-5'
-                                    style={{
-                                      color: surface.iconColor
-                                    }}
-                                    aria-hidden='true'
-                                  />
-                                </div>
-
-                                <h3 className='text-base leading-[1.2] font-semibold text-foreground'>
-                                  {feature.title}
-                                </h3>
-                              </div>
-
-                              <p className='leading-text-paragraph /78 mt-3 text-sm text-foreground/78 sm:mt-2'>
-                                {feature.description}
-                              </p>
-                            </div>
-                          </article>
-                        </AnimatedBlock>
-                      )
-                    })}
-                  </div>
-
                   <AnimatedBlock
                     className='will-animate-fade-in-up'
                     delay='0.5s'
                   >
                     <div className='mt-8 flex w-full flex-col items-start gap-4 sm:flex-row sm:items-center'>
-                      <p className='font-sans text-4xl leading-none font-bold text-foreground'>
+                      <p className='shrink-0 font-sans text-4xl leading-none font-bold whitespace-nowrap text-foreground'>
                         NOK 990,-
                       </p>
 
                       <Button
                         asChild
-                        variant='commerce-primary'
+                        variant='seeProduct'
                         size='lg'
-                        className='group min-h-12 w-full gap-2 rounded-full px-6 py-3 text-base leading-[1.35] font-semibold whitespace-normal shadow-[0_18px_40px_-28px_color-mix(in_oklch,var(--commerce-primary)_70%,transparent)] transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:w-auto sm:whitespace-nowrap'
+                        className='group min-h-12 w-full gap-2 rounded-full px-6 py-3 text-base leading-[1.35] font-semibold whitespace-normal shadow-[0_18px_40px_-28px_color-mix(in_oklch,var(--sidebar-primary)_70%,transparent)] transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:w-auto sm:whitespace-nowrap'
                       >
                         <Link
                           href={'/produkter/comfyrobe' as Route}

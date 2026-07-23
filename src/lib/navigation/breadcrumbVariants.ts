@@ -9,6 +9,7 @@
  *
  * Link opacities use /85 (not /72) to preserve ≥7:1 on muted states.
  * Separators use /55 — non-text UI, ≥3:1 vs adjacent (1.4.11 AA).
+ * light surface hover uses ceramic (not primary): primary on dark bg ≈3.85:1 (fails 1.4.3 normal text).
  */
 
 export type BreadcrumbSurface =
@@ -34,10 +35,10 @@ const lightText: BreadcrumbSurfaceStyles = {
   stripe:
     'border-b border-border  bg-background dark:bg-dark-background text-foreground ',
   list: 'text-foreground ',
-  link: 'text-foreground/85 /85 transition-colors hover:text-primary dark:hover:text-dark-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 dark:focus-visible:ring-dark-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:focus-visible:ring-offset-dark-background',
-  page: 'font-medium text-foreground ',
+  link: 'text-foreground/85 transition-colors hover:text-ceramic focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ceramic/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+  page: 'font-medium text-foreground',
   separator:
-    'text-foreground/55 /55 [&>svg]:text-foreground/55 dark:svg]:text-dark-foreground/55'
+    'text-foreground/55 [&>svg]:text-foreground/55'
 }
 
 const darkText: BreadcrumbSurfaceStyles = {

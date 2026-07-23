@@ -13,7 +13,7 @@ import { P } from '@/components/typography/TypographyP'
 const benefits = [
   {
     label: 'Vanntett og vindtett',
-    description: '— 8000mm vannsøyle og tapede sømmer',
+    description: '— 8000mm vannsøyle',
     glowColor: 'var(--primary)',
     tone: 'water' as const
   },

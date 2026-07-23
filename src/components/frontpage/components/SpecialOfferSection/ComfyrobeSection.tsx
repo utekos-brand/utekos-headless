@@ -1,4 +1,3 @@
-import ComfyrobeFallbackImage from '@public/comfyrobe/monica-arne-comfy.png'
 import { ComfyrobeImageSection } from './ComfyrobeImageSection'
 import { ComfyrobeContentColumn } from './ComfyrobeContentColumn'
 import type { ShopifyMediaImage } from 'types/media'
@@ -9,10 +8,10 @@ const COMFYROBE_FALLBACK_IMAGE: ShopifyMediaImage = {
   id: 'comfyrobe-fallback',
   image: {
     id: 'comfyrobe-fallback',
-    url: ComfyrobeFallbackImage.src,
+    url: '/ComyrobeKvinne3-1600x1600.webp',
     altText: 'Comfyrobe™ - Vanntett og vindtett robe',
-    width: 1080,
-    height: 1080
+    width: 1600,
+    height: 1600
   }
 }
 

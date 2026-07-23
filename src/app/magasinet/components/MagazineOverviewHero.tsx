@@ -13,7 +13,7 @@ export function MagazineOverviewHero({
             <span className='inline-flex items-center gap-1 sm:gap-1.5'>
               <span>Magasinet for</span>
               <span
-                className='inline-flex items-center justify-center rounded-xl bg-[#bb4d0f] px-5 py-2.5 sm:px-6 sm:py-3'
+                className='inline-flex items-center justify-center rounded-xl bg-primary px-5 py-2.5 sm:px-6 sm:py-3'
                 aria-hidden='true'
               >
                 <UtekosWordmark className='h-5 w-auto text-white sm:h-6' />

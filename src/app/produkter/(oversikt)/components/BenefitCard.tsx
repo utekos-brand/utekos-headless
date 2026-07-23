@@ -30,10 +30,11 @@ const surfaceStyles: Record<
   }
 > = {
   dazzle: {
-    background: 'var(--muted)',
+    background: 'var(--card)',
     borderColor: 'var(--border)',
-    textColor: 'var(--muted-foreground)',
-    descriptionColor: 'var(--muted-foreground)'
+    textColor: 'var(--card-foreground)',
+    descriptionColor: 'var(--card-foreground)',
+    iconColor: 'var(--sidebar-primary-foreground)'
   },
   orange: {
     background: 'var(--promo)',
@@ -42,10 +43,11 @@ const surfaceStyles: Record<
     descriptionColor: 'var(--promo-foreground)'
   },
   dazzleagain: {
-    background: 'var(--muted)',
+    background: 'var(--card)',
     borderColor: 'var(--border)',
-    textColor: 'var(--muted-foreground)',
-    descriptionColor: 'var(--muted-foreground)'
+    textColor: 'var(--card-foreground)',
+    descriptionColor: 'var(--card-foreground)',
+    iconColor: 'var(--sidebar-primary-foreground)'
   }
 }
 
@@ -75,13 +77,15 @@ export function BenefitCard({ benefit, delay }: BenefitCardProps) {
         <div
           className='flex size-8 shrink-0 items-center justify-center rounded-lg border transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none'
           style={{
-            borderColor: 'color-mix(in oklch, var(--benefit-accent) 44%, transparent)',
-            background: 'color-mix(in oklch, var(--background) 86%, var(--benefit-accent) 14%)'
+            borderColor: 'var(--sidebar-primary)',
+            background: 'var(--sidebar-primary)'
           }}
         >
           <Check
             className='size-5'
-            style={{ color: surface.iconColor ?? 'var(--benefit-accent)' }}
+            style={{
+              color: surface.iconColor ?? 'var(--sidebar-primary-foreground)'
+            }}
             aria-hidden='true'
           />
         </div>

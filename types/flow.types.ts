@@ -20,6 +20,7 @@ export interface EdgeData {
 
 export interface CustomerNetworkViewProps {
   nodes: NodeData[]
+  nodesDesktop: NodeData[]
   edges: EdgeData[]
   centerNode: NodeData | undefined
 }

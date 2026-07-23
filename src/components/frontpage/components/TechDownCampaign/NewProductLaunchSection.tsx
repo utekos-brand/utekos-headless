@@ -4,6 +4,8 @@ import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import { productHandle } from '@/api/constants'
 import { NewProductLaunchSectionView } from './NewProductLaunchSectionView'
+import type { ShopifyProduct } from 'types/product/ShopifyProduct'
+import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
 
 const QuickViewModal = dynamic(
   () =>
@@ -13,10 +15,16 @@ const QuickViewModal = dynamic(
   { ssr: false }
 )
 
-export function NewProductLaunchSection() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+type NewProductLaunchSectionProps = {
+  product: ShopifyProduct
+  selectedVariant: ShopifyProductVariant | null
+}
 
-  const handleDiscoverClick = () => {}
+export function NewProductLaunchSection({
+  product,
+  selectedVariant
+}: NewProductLaunchSectionProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleQuickViewClick = () => {
     setIsModalOpen(true)
@@ -25,8 +33,9 @@ export function NewProductLaunchSection() {
   return (
     <>
       <NewProductLaunchSectionView
-        onDiscoverClick={handleDiscoverClick}
         onQuickViewClick={handleQuickViewClick}
+        product={product}
+        selectedVariant={selectedVariant}
       />
 
       {isModalOpen ?

@@ -30,7 +30,7 @@ function FeaturedArticleCard({
   const usesPortraitHero = article.heroImage.src === '/med-utekos.png'
 
   return (
-    <article className='bg-background dark:text-dark-background py-14 text-background sm:py-20'>
+    <article className='bg-background py-14 text-foreground sm:py-20'>
       <div className='container mx-auto px-4'>
         <Link
           href={`/magasinet/${article.slug}` as Route}
@@ -77,7 +77,7 @@ function FeaturedArticleCard({
             <h2 className='font-utekos-text-medium group-hover:text-magazine-article-card-pill text-4xl leading-[0.95] font-bold text-balance transition-colors sm:text-5xl'>
               {article.title}
             </h2>
-            <p className='font-utekos-text mt-5 text-lg leading-[1.3] tracking-normal text-foreground/72'>
+            <p className='font-utekos-text mt-5 text-lg leading-[1.3] tracking-normal text-foreground/86'>
               {article.excerpt}
             </p>
             <BrandBadge
@@ -144,7 +144,7 @@ function MagazineArticleCard({
             <h3 className='font-utekos-text-medium group-hover:text-magazine-article-card-pill text-lg leading-[0.98] font-bold tracking-normal transition-colors'>
               {article.title}
             </h3>
-            <p className='font-utekos-text mt-3 flex-1 text-sm leading-[1.3] tracking-normal text-foreground/72'>
+            <p className='font-utekos-text mt-3 flex-1 text-sm leading-[1.3] tracking-normal text-foreground/86'>
               {article.excerpt}
             </p>
           </div>
@@ -175,7 +175,7 @@ function MagazineArticleCard({
           <h3 className='font-utekos-text-medium group-hover:text-magazine-article-card-pill text-lg leading-[0.98] font-bold tracking-normal transition-colors'>
             {article.title}
           </h3>
-          <p className='font-utekos-text mt-3 flex-1 text-sm leading-[1.3] tracking-normal text-foreground/72'>
+          <p className='font-utekos-text mt-3 flex-1 text-sm leading-[1.3] tracking-normal text-foreground/86'>
             {article.excerpt}
           </p>
         </div>

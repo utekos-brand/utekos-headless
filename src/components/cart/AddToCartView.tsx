@@ -5,13 +5,16 @@ import type { AddToCartViewProps } from 'types/cart'
 
 export function AddToCartView({
   form,
+  product,
+  selectedVariant,
   onSubmit,
   onCheckout,
   isPending,
-  isAddToCartPending,
   isCheckoutPending,
   isAvailable
 }: AddToCartViewProps) {
+  const quantity = form.watch('quantity')
+
   return (
     <Form {...form}>
       <form
@@ -25,7 +28,9 @@ export function AddToCartView({
           <QuantitySelector />
         </div>
         <ModalSubmitButton
-          isAddToCartPending={isAddToCartPending}
+          product={product}
+          selectedVariant={selectedVariant}
+          quantity={quantity}
           isCheckoutPending={isCheckoutPending}
           isDisabled={!isAvailable || isPending}
           availableForSale={isAvailable}

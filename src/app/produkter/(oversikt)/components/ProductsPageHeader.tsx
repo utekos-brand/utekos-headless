@@ -12,13 +12,13 @@ const STAR_POSITIONS = [
 
 export function ProductsPageHeader() {
   return (
-    <header className='relative mb-12 w-full overflow-hidden rounded-3xl bg-[radial-gradient(circle_at_top,color-mix(in_oklab,var(--ancient-water)_16%,transparent),transparent_42%),linear-gradient(180deg,color-mix(in_oklab,var(--havdyp)_90%,black)_0%,color-mix(in_oklab,var(--background)_94%,black)_100%)] pt-12 pb-16'>
+    <header className='relative left-[calc(-50vw+50%)] mb-12 w-screen overflow-hidden bg-[radial-gradient(circle_at_top,color-mix(in_oklab,var(--sidebar-primary)_28%,transparent),transparent_44%),linear-gradient(180deg,color-mix(in_oklab,var(--sidebar)_88%,black)_0%,color-mix(in_oklab,var(--background)_96%,black)_100%)] pt-12 pb-16'>
       <div className='pointer-events-none absolute inset-0 -z-10 overflow-hidden'>
         <div className='motion-grid absolute inset-0 bg-[linear-gradient(to_right,rgba(245,243,239,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(245,243,239,0.045)_1px,transparent_1px)] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] bg-size-[32px_32px]' />
 
-        <div className='absolute top-0 left-1/2 h-200 w-250 -translate-x-1/2 opacity-25 mix-blend-screen'>
+        <div className='absolute top-0 left-1/2 h-200 w-250 -translate-x-1/2 opacity-30 mix-blend-screen'>
           <div
-            className='motion-spotlight from-ancient-water via-very-peri/18 size-full bg-linear-to-b to-transparent blur-[120px] will-change-transform'
+            className='motion-spotlight from-sidebar-primary via-primary/20 size-full bg-linear-to-b to-transparent blur-[120px] will-change-transform'
             style={{ transform: 'translate(0, 0)' }}
           />
         </div>
@@ -41,16 +41,16 @@ export function ProductsPageHeader() {
       <div className='relative z-10 container mx-auto px-4 text-center'>
         <div className='motion-badge mb-8 inline-flex items-center justify-center'>
           <BrandBadge
-            backgroundColor='var(--havdyp)'
-            textColor='var(--foreground)'
-            className='group relative border border-foreground/18 px-5 py-2.5 shadow-[0_14px_32px_-24px_rgba(8,10,24,0.62)] sm:px-6 sm:py-3'
+            backgroundColor='var(--primary)'
+            textColor='var(--primary-foreground)'
+            className='group relative rounded-lg border border-primary-foreground/18 bg-primary px-5 py-2.5 shadow-[0_14px_32px_-24px_rgba(8,10,24,0.62)] sm:px-6 sm:py-3'
           >
-            <span className='absolute inset-0 overflow-hidden rounded-full'>
-              <span className='absolute top-0 -left-full size-full skew-x-12 bg-linear-to-r from-transparent via-foreground/25 to-transparent transition-all duration-1000 group-hover:left-full' />
+            <span className='absolute inset-0 overflow-hidden rounded-lg bg-primary'>
+              <span className='absolute top-0 -left-full size-full skew-x-12 bg-linear-to-r from-transparent via-primary-foreground/25 to-transparent transition-all duration-1000 group-hover:left-full' />
             </span>
             <UtekosWordmark
               className='relative z-10 h-auto w-24.5 sm:w-28'
-              style={{ color: 'var(--foreground)' }}
+              style={{ color: 'var(--primary-foreground)' }}
             />
           </BrandBadge>
         </div>
@@ -61,14 +61,14 @@ export function ProductsPageHeader() {
               Kolleksjonen for
             </span>
           </span>
-          <span className='block overflow-hidden pt-2'>
-            <span className='motion-title-line block py-1 font-sans leading-tight text-foreground'>
+          <span className='block overflow-hidden pt-0.5'>
+            <span className='motion-title-line block py-0.5 font-sans leading-tight text-foreground'>
               kompromissløs komfort
             </span>
           </span>
         </h1>
 
-        <p className='motion-desc /95 mx-auto mt-8 max-w-2xl text-lg leading-normal text-foreground/95 md:text-xl'>
+        <p className='motion-desc /95 mx-auto mt-4 max-w-3xl text-lg leading-normal text-foreground/95 md:text-xl'>
           Vi har{' '}
           <span className='relative inline-block font-medium text-foreground'>
             redefinert
@@ -78,8 +78,8 @@ export function ProductsPageHeader() {
           <br className='hidden md:block' />
           Utforsk vår kolleksjon og{' '}
           <span className='relative inline-block px-1'>
-            <span className='motion-highlight bg-very-peri/24 absolute inset-0 origin-left -skew-x-6 rounded' />
-            <span className='text-heading-secondary dark:text-dark-heading-secondary relative z-10 font-medium'>
+            <span className='motion-highlight absolute inset-0 origin-left -skew-x-6 rounded bg-sidebar-primary/35' />
+            <span className='relative z-10 font-medium text-foreground'>
               skreddersy
             </span>
           </span>{' '}

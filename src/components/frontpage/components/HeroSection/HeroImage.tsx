@@ -1,7 +1,12 @@
-import heroFourThreeImage from '@public/kate-linn-2048-1536-85.webp'
-import heroSixteenNineImage from '@public/kate-linn-2560-1440-85.webp'
-import heroSixteenTenImage from '@public/kate-linn-2560-1600-85.webp'
+import heroSixteenNineImage from '@public/Skreddersy-Varmen-16x9.png'
+import heroSixteenTenImage from '@public/SSV-16-10.webp'
 import { cn } from '@/lib/utils/className'
+
+const heroFourThreeImage = {
+  src: 'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/SkreddersyVarmenKlarnaUtekos.webp?v=1784829461',
+  width: 1333
+} as const
+
 const heroImageProps = {
   alt: 'To kvinner i Utekos TechDown sitter på en terassen og nyter ost og vin.',
   decoding: 'async',
@@ -17,7 +22,6 @@ export function HeroImage() {
         'group relative mx-auto mb-7 max-w-6xl overflow-hidden rounded-2xl border border-foreground/12 dark:border-dark-foreground/12 shadow-[0_28px_70px_-44px_color-mix(in_oklab,var(--card)_80%,transparent)] sm:mb-10'
       )}
     >
-      <div className='pointer-events-none absolute inset-0 z-10 bg-linear-to-t from-background/38 dark:from-dark-background/38 via-background/4 dark:via-dark-background/4 to-transparent' />
       <div
         className='relative aspect-4/3 transition-transform duration-300 motion-safe:group-hover:scale-[1.01] sm:aspect-16/10 lg:aspect-video'
         suppressHydrationWarning

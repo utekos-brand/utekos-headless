@@ -31,13 +31,13 @@ export function StapperFeatureSection() {
   )
 
   return (
-    <article className='relative mb-8 overflow-hidden rounded-[1.75rem] border border-foreground/12 bg-[radial-gradient(circle_at_14%_18%,color-mix(in_oklab,var(--ancient-water)_14%,transparent),transparent_30%),linear-gradient(135deg,var(--havdyp)_0%,var(--background)_48%,var(--havdyp)_100%)] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 xl:px-12'>
+    <article className='relative mb-8 overflow-hidden rounded-[1.75rem] border border-border bg-muted px-5 py-8 text-foreground sm:px-8 sm:py-10 lg:px-10 xl:px-12'>
       <div
         aria-hidden='true'
-        className='absolute inset-0 -z-10'
+        className='pointer-events-none absolute inset-0 -z-10 opacity-40'
         style={{
           background:
-            'radial-gradient(circle at 78% 34%, color-mix(in oklab, var(--very-peri) 16%, transparent), transparent 42%)'
+            'radial-gradient(circle at 78% 34%, color-mix(in oklab, var(--sidebar-primary) 18%, transparent), transparent 42%)'
         }}
       />
 
@@ -49,7 +49,7 @@ export function StapperFeatureSection() {
             <AnimatedBlock className='will-animate-fade-in-up'>
               <Badge
                 variant='outline'
-                className='dark:bg-dark-muted dark:text-dark-muted-foreground mb-5 border-border bg-muted px-3.5 py-1.5 text-muted-foreground'
+                className='mb-5 h-auto border-border bg-sidebar-primary px-3.5 py-2 text-foreground'
               >
                 Utekos Stapper™
               </Badge>
@@ -108,9 +108,7 @@ export function StapperFeatureSection() {
               className='will-animate-fade-in-up group relative flex gap-4 border-b border-foreground/10 py-6 sm:odd:pr-6 sm:even:border-l sm:even:border-foreground/10 sm:even:pl-6 lg:border-b-0 lg:border-l lg:border-foreground/10 lg:px-6 lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0'
               delay={`${index * 0.08}s`}
             >
-              <div
-                className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-transform duration-300 group-hover:-translate-y-0.5 ${feature.colorClasses}`}
-              >
+              <div className='mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-foreground/20 bg-muted text-foreground transition-transform duration-300 group-hover:-translate-y-0.5'>
                 <IconRenderer
                   name={feature.icon}
                   className='h-4.5 w-4.5'

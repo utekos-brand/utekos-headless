@@ -11,6 +11,7 @@ import { reportCanonicalAddToCart } from '@/lib/analytics/addToCartReporter'
 import { reportCanonicalBeginCheckout } from '@/lib/analytics/beginCheckoutReporter'
 import { CartIdContext } from '@/lib/context/CartIdContext'
 import { useCartMutations } from '@/hooks/useCartMutations'
+import { cn } from '@/lib/utils/className'
 import type { ShopifyProduct } from 'types/product/ShopifyProduct'
 import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
 
@@ -55,11 +56,12 @@ export function KlarnaProductExpressCheckout({
   }
 
   return (
-    <div className={className}>
+    <div className={cn('flex h-full min-h-0 w-full items-stretch', className)}>
       <KlarnaExpressCheckoutButton
         key={`${selectedVariant.id}-${quantity}-${orderPayload.order_amount}`}
         orderPayload={orderPayload}
         disabled={!selectedVariant.availableForSale}
+        className='h-full min-h-0'
         {...(buttonContainerClassName ?
           { buttonContainerClassName }
         : {})}

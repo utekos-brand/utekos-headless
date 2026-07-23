@@ -16,11 +16,15 @@ export function MagazineImageBlock({
         width={block.width}
         height={block.height}
         sizes='(max-width: 768px) calc(100vw - 32px), (max-width: 1200px) 760px, 760px'
-        className='h-auto w-full object-cover'
+        className={
+          block.width === block.height ?
+            'aspect-square h-auto w-full object-cover'
+          : 'h-auto w-full object-cover'
+        }
         {...(block.priority ? { priority: true } : {})}
       />
       {block.caption && (
-        <figcaption className='leading-text-paragraph dark:text-dark-background/68 px-5 py-4 text-sm text-background/68'>
+        <figcaption className='leading-text-paragraph px-5 py-4 text-sm text-background/80'>
           {block.caption}
         </figcaption>
       )}

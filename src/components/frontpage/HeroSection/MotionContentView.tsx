@@ -1,19 +1,18 @@
 import Link from 'next/link'
 import type { Route } from 'next'
 import { ArrowRight } from 'lucide-react'
-import { TypographyH1 } from '@/components/typography/TypographyH1'
 import { TypographyH2 } from '@/app/inspirasjon/components/typography/TypographyH2'
-import { WarmSince2020 } from '@/components/Badges/WarmSince2020'
 import { Button } from '@/components/ui/button'
 import { InlineText } from '@/components/typography/TypographyInlineText'
+import { HeroImage } from '@/components/frontpage/components/HeroSection/HeroImage'
 
 export function MotionContentView() {
   return (
     <div className='align-center relative mx-auto mb-7 flex w-full max-w-[95%] flex-col items-center justify-center overflow-hidden text-center sm:mb-10'>
-      <WarmSince2020 />
-      <header className='align-center mx-auto mb-0 w-full text-foreground md:pb-2'>
-        <TypographyH1 Text='Skreddersy varmen' ID='hero-h1' />
-      </header>
+      <h1 id='hero-h1' className='sr-only'>
+        Skreddersy varmen
+      </h1>
+      <HeroImage />
       <TypographyH2 />
 
       <div

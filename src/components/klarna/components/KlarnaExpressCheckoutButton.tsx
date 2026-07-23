@@ -231,13 +231,16 @@ export function KlarnaExpressCheckoutButton({
 
   return (
     <div
-      className={cn('flex w-full justify-center', className)}
+      className={cn('flex h-full w-full items-stretch justify-center', className)}
       aria-busy={disabled}
     >
       <div
         id={containerId}
         className={cn(
-          'h-12 min-h-12 w-full overflow-hidden rounded-full ring-1 ring-card-foreground/50 ring-inset',
+          'flex h-16 min-h-16 w-full items-stretch overflow-hidden rounded-full ring-1 ring-card-foreground/50 ring-inset md:h-14 md:min-h-14',
+          '*:h-full *:min-h-full *:w-full',
+          '[&_button]:h-full! [&_button]:min-h-full! [&_button]:w-full!',
+          '[&_iframe]:h-full! [&_iframe]:min-h-full! [&_iframe]:w-full!',
           buttonContainerClassName
         )}
       />

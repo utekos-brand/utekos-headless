@@ -1,4 +1,5 @@
 import { Check, Feather, Heart, Moon } from 'lucide-react'
+import type { EdgeData, NodeData } from 'types/flow.types'
 
 export type IconName = keyof typeof iconMap
 
@@ -14,11 +15,71 @@ const centerY = 260
 const nodeWidth = 208
 const nodeHeight = 54
 const centerNodeSize = 112
-const offsetX = 228
-const offsetY = 198
 
-export const nodes = [
+/** Compact orbit — works on mobile. */
+export const networkOrbitMobile = { offsetX: 228, offsetY: 198 } as const
+
+/** Wider orbit — iPad / laptop / desktop (more air from center). */
+export const networkOrbitDesktop = { offsetX: 254, offsetY: 232 } as const
+
+const benefitDefs = [
   {
+    id: 'benefit-1',
+    icon: 'moon' as IconName,
+    text: 'Forlenget kveldene',
+    corner: 'tl' as const
+  },
+  {
+    id: 'benefit-2',
+    icon: 'feather' as IconName,
+    text: 'Overraskende lett',
+    corner: 'tr' as const
+  },
+  {
+    id: 'benefit-3',
+    icon: 'heart' as IconName,
+    text: 'Gjennomført kvalitet',
+    corner: 'bl' as const
+  },
+  {
+    id: 'benefit-4',
+    icon: 'check' as IconName,
+    text: 'Verdt hver krone',
+    corner: 'br' as const
+  }
+]
+
+function positionForCorner(
+  corner: 'tl' | 'tr' | 'bl' | 'br',
+  offsetX: number,
+  offsetY: number
+) {
+  switch (corner) {
+    case 'tl':
+      return { x: centerX - offsetX, y: centerY - offsetY }
+    case 'tr':
+      return {
+        x: centerX + offsetX - nodeWidth,
+        y: centerY - offsetY
+      }
+    case 'bl':
+      return {
+        x: centerX - offsetX,
+        y: centerY + offsetY - nodeHeight
+      }
+    case 'br':
+      return {
+        x: centerX + offsetX - nodeWidth,
+        y: centerY + offsetY - nodeHeight
+      }
+  }
+}
+
+export function createNetworkNodes(
+  offsetX: number,
+  offsetY: number
+): NodeData[] {
+  const center: NodeData = {
     id: 'center',
     type: 'center',
     position: {
@@ -27,71 +88,36 @@ export const nodes = [
     },
     width: centerNodeSize,
     height: centerNodeSize
-  },
-  {
-    id: 'benefit-1',
-    type: 'benefit',
-    position: { x: centerX - offsetX, y: centerY - offsetY },
-    width: nodeWidth,
-    height: nodeHeight,
-    data: {
-      icon: 'moon' as IconName,
-      text: 'Forlenget kveldene',
-      color: 'var(--accent)',
-      iconColor: 'var(--foreground)'
-    }
-  },
-  {
-    id: 'benefit-2',
-    type: 'benefit',
-    position: {
-      x: centerX + offsetX - nodeWidth,
-      y: centerY - offsetY
-    },
-    width: nodeWidth,
-    height: nodeHeight,
-    data: {
-      icon: 'feather' as IconName,
-      text: 'Overraskende lett',
-      color: 'var(--accent)',
-      iconColor: 'var(--foreground)'
-    }
-  },
-  {
-    id: 'benefit-3',
-    type: 'benefit',
-    position: {
-      x: centerX - offsetX,
-      y: centerY + offsetY - nodeHeight
-    },
-    width: nodeWidth,
-    height: nodeHeight,
-    data: {
-      icon: 'heart' as IconName,
-      text: 'Gjennomført kvalitet',
-      color: 'var(--accent)',
-      iconColor: 'var(--foreground)'
-    }
-  },
-  {
-    id: 'benefit-4',
-    type: 'benefit',
-    position: {
-      x: centerX + offsetX - nodeWidth,
-      y: centerY + offsetY - nodeHeight
-    },
-    width: nodeWidth,
-    height: nodeHeight,
-    data: {
-      icon: 'check' as IconName,
-      text: 'Verdt hver krone',
-      color: 'var(--accent)',
-      iconColor: 'var(--foreground)'
-    }
   }
-]
 
-export const edges = [
+  const benefits: NodeData[] = benefitDefs.map(def => ({
+    id: def.id,
+    type: 'benefit',
+    position: positionForCorner(def.corner, offsetX, offsetY),
+    width: nodeWidth,
+    height: nodeHeight,
+    data: {
+      icon: def.icon,
+      text: def.text,
+      color: 'var(--accent)',
+      iconColor: 'var(--foreground)'
+    }
+  }))
+
+  return [center, ...benefits]
+}
+
+export const nodes = createNetworkNodes(
+  networkOrbitMobile.offsetX,
+  networkOrbitMobile.offsetY
+)
+
+export const nodesDesktop = createNetworkNodes(
+  networkOrbitDesktop.offsetX,
+  networkOrbitDesktop.offsetY
+)
+
+export const edges: EdgeData[] = [
   {
     id: 'e-center-1',
     sourceId: 'center',

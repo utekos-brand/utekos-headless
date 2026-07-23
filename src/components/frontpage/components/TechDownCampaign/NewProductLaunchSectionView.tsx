@@ -3,7 +3,6 @@ import { ImageColumn } from './ImageColumn'
 import { newProductFeatures } from './newProductFeatures'
 import {
   productName,
-  productUrl,
   originalPrice,
   currentPrice
 } from '@/api/constants'
@@ -19,11 +18,10 @@ import { P } from '@/components/typography/TypographyP'
 const kickerText = 'Norsk vår er uforutsigbar'
 
 export function NewProductLaunchSectionView({
-  onDiscoverClick,
-  onQuickViewClick
+  onQuickViewClick,
+  product,
+  selectedVariant
 }: NewProductLaunchSectionViewProps) {
-  const productModelName = productName.replace(/^Utekos\s+/, '')
-
   return (
     <PageSection
       as='article'
@@ -34,7 +32,7 @@ export function NewProductLaunchSectionView({
       )}
     >
       <div className='w-full'>
-        <div className='relative isolate overflow-hidden rounded-t-3xl p-4 sm:p-8 lg:p-12'>
+        <div className='relative isolate overflow-hidden rounded-lg bg-muted p-4 sm:p-8 lg:p-12'>
           <div className='pointer-events-none absolute inset-x-6 top-0 z-3 h-px' />
 
           <div className='relative z-10 container mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-3 sm:gap-12 sm:px-6 lg:px-10 xl:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] xl:gap-12'>
@@ -89,9 +87,8 @@ export function NewProductLaunchSectionView({
                     />
 
                     <DiscoverProductButton
-                      productModelName={productModelName}
-                      productUrl={productUrl}
-                      onDiscoverClick={onDiscoverClick}
+                      product={product}
+                      selectedVariant={selectedVariant}
                     />
                   </div>
                 </div>

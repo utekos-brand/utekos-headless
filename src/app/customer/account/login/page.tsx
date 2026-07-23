@@ -68,7 +68,7 @@ export default async function CustomerAccountLoginPage({
         <section className='relative isolate hidden overflow-hidden bg-sidebar-primary p-10 text-sidebar-primary-foreground lg:flex lg:flex-col lg:justify-between'>
           <div
             aria-hidden='true'
-            className='absolute -top-16 -right-16 -z-10 size-64 rounded-full border-[42px] border-white/10'
+            className='absolute -top-16 -right-16 -z-10 size-64 rounded-full border-42 border-white/10'
           />
           <div className='flex size-20 items-center justify-center rounded-[1.35rem] bg-cyan-500 text-[#172744] shadow-xl shadow-black/20'>
             <Heart
@@ -77,10 +77,10 @@ export default async function CustomerAccountLoginPage({
             />
           </div>
           <div className='space-y-4'>
-            <p className='text-sm font-semibold tracking-[0.18em] uppercase opacity-75'>
+            <p className='text-sm font-utekos-text-medium tracking-[0.18em] opacity-75'>
               Din Utekos-konto
             </p>
-            <p className='max-w-sm text-3xl leading-tight font-semibold text-balance'>
+            <p className='max-w-sm text-3xl leading-tight font-utekos-text-medium text-balance'>
               Lagre favoritter og finn dem igjen når det passer
               deg.
             </p>
@@ -96,10 +96,10 @@ export default async function CustomerAccountLoginPage({
               />
             </div>
 
-            <h1 className='text-3xl leading-tight font-semibold sm:text-4xl'>
+            <h1 className='text-3xl leading-tight font-utekos-text-medium sm:text-4xl'>
               {isCreateMode ? 'Opprett konto' : 'Logg inn'}
             </h1>
-            <p className='dark:text-dark-muted-foreground mt-4 text-base leading-7 text-muted-foreground'>
+            <p className='dark:text-dark-muted-foreground mt-4 text-base leading-7 font-utekos-text text-foreground'>
               {isCreateMode ?
                 'Opprett en Utekos-konto gjennom Shopify. Du trenger bare e-postadressen din for å komme i gang.'
               : 'Du kan logge inn med Utekos-kontoen din eller velge Facebook eller Google på den sikre Shopify-siden.'

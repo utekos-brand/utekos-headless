@@ -2,6 +2,13 @@
 
 import { HelpChooseCard } from '@/app/produkter/(oversikt)/components/HelpChooseCard'
 import { getHelpChooseProducts } from '@/app/produkter/(oversikt)/utils/getHelpChooseProducts'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from '@/components/ui/carousel'
 
 const PRODUCT_CONFIG = [
   {
@@ -9,12 +16,6 @@ const PRODUCT_CONFIG = [
     glowColor: '#0ea5e9',
     fallbackTitle: 'Utekos TechDown™',
     fallbackPrice: '1 790 kr'
-  },
-  {
-    handle: 'utekos-dun',
-    glowColor: '#3b82f6',
-    fallbackTitle: 'Utekos Dun™',
-    fallbackPrice: '2 490 kr'
   },
   {
     handle: 'utekos-mikrofiber',
@@ -28,10 +29,19 @@ const PRODUCT_CONFIG = [
     fallbackTitle: 'Comfyrobe™',
     fallbackPrice: '999 kr'
   }
-]
+] as const
 
 export async function HelpChooseSection() {
   const products = await getHelpChooseProducts()
+  const cards = PRODUCT_CONFIG.flatMap((config, index) => {
+    const product = products.find(p => p.handle === config.handle)
+    if (!product) return []
+    return [{ config, product, index }]
+  })
+
+  if (cards.length === 0) {
+    return null
+  }
 
   return (
     <article className='relative mb-24 w-full px-4 md:px-6'>
@@ -53,24 +63,59 @@ export async function HelpChooseSection() {
       </div>
 
       <div className='mx-auto max-w-7xl'>
-        <div className='grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-6'>
-          {PRODUCT_CONFIG.map((config, index) => {
-            const product = products.find(
-              p => p.handle === config.handle
-            )
-
-            if (!product) return null
-
-            return (
-              <HelpChooseCard
+        <Carousel
+          slideCount={cards.length}
+          ssr={{
+            slideSizes: Array.from(
+              { length: cards.length },
+              () => 100 / 1.5
+            ),
+            breakpoints: {
+              '(min-width: 640px)': {
+                slideSizes: Array.from(
+                  { length: cards.length },
+                  () => 50
+                )
+              },
+              '(min-width: 1024px)': {
+                slideSizes: Array.from(
+                  { length: cards.length },
+                  () => 100 / 3
+                )
+              }
+            }
+          }}
+          opts={{
+            align: 'start',
+            containScroll: false,
+            slidesToScroll: 1
+          }}
+          className='w-full'
+          aria-label='Produktkarusell — sveip for å se flere modeller'
+        >
+          <CarouselContent className='-ml-3 sm:-ml-4 lg:-ml-6'>
+            {cards.map(({ config, product, index }) => (
+              <CarouselItem
                 key={config.handle}
-                product={product}
-                index={index}
-                glowColor={config.glowColor}
-              />
-            )
-          })}
-        </div>
+                className='basis-[calc(100%/1.5)] pl-3 sm:basis-1/2 sm:pl-4 lg:basis-1/3 lg:pl-6'
+              >
+                <HelpChooseCard
+                  product={product}
+                  index={index}
+                  glowColor={config.glowColor}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious
+            forceVisible
+            className='top-[42%] left-1 z-20 size-9 border-border bg-card text-card-foreground shadow-md disabled:opacity-40 md:left-2 lg:hidden'
+          />
+          <CarouselNext
+            forceVisible
+            className='top-[42%] right-1 z-20 size-9 border-border bg-card text-card-foreground shadow-md disabled:opacity-40 md:right-2 lg:hidden'
+          />
+        </Carousel>
       </div>
     </article>
   )

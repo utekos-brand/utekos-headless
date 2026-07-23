@@ -20,9 +20,11 @@ export function MagazineArticleHeader({
 
   const isTechDownLaunch = article.slug === TECHDOWN_SLUG
   const desktopImage = {
-    src: isTechDownLaunch ? '/UtekosTechDown4.png' : article.heroImage.src,
+    src: isTechDownLaunch ?
+      '/TechDown-1600x1000.webp'
+    : article.heroImage.src,
     width: isTechDownLaunch ? 1600 : article.heroImage.width,
-    height: isTechDownLaunch ? 800 : article.heroImage.height,
+    height: isTechDownLaunch ? 1000 : article.heroImage.height,
     alt: article.heroImage.alt
   }
   const mobileImage = {
@@ -33,7 +35,7 @@ export function MagazineArticleHeader({
   }
 
   return (
-    <header className='bg-havdyp text-foreground'>
+    <header className='bg-magazine-header text-foreground'>
       <div className='container mx-auto px-4 pt-6 sm:pt-8 md:px-2 lg:px-0'>
         <h1 className='sr-only'>{article.title}</h1>
         <figure className='overflow-hidden rounded-lg'>

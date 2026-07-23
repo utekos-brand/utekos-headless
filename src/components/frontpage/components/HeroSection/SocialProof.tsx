@@ -7,20 +7,23 @@ import { H2 } from '@/components/typography/TypographyH2'
 import { P } from '@/components/typography/TypographyP'
 
 /**
- * Klarna pink-pill geometry from KlarnaLogo.png — locked on all breakpoints:
- * aspect ≈ 1447/609, circular corner radius ≈ 32.5% of height
- * → CSS elliptical radii 13.7% / 32.5%.
+ * Klarna pink-pill geometry from KlarnaLogo.png — slightly softer than full capsule:
+ * aspect ≈ 1447/609, corner radius ≈ 27% of height
+ * → CSS elliptical radii 11.4% / 27%.
  */
 const logoTileClasses =
-  'relative flex aspect-[1447/609] w-full shrink-0 items-center justify-center overflow-hidden rounded-[13.7%_/_32.5%] px-8 py-5 sm:px-10 sm:py-6'
+  'relative mx-auto flex aspect-[1447/609] w-[78%] shrink-0 items-center justify-center overflow-hidden rounded-[11.4%_/_27%] px-4 py-2.5 sm:px-5 sm:py-3'
+
+const logoMarkClasses =
+  'h-auto w-[82%] max-w-none object-contain'
 
 export function SocialProof() {
   const cardClasses =
-    'relative overflow-hidden rounded-[1.5rem] border border-border bg-card text-card-foreground backdrop-blur-2xl transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-2xl'
+    'relative overflow-hidden rounded-[1.5rem] bg-muted text-card-foreground backdrop-blur-2xl transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-2xl'
 
   return (
-    <div className='container mx-auto max-w-7xl px-4 py-8 sm:py-12 lg:py-16'>
-      <div className='cols-1 grid-bg-card grid gap-8 lg:grid-cols-3 lg:items-center'>
+    <div className='container mx-auto max-w-7xl rounded-lg bg-muted px-4 py-8 sm:py-12 lg:py-16'>
+      <div className='grid grid-cols-1 gap-8 bg-muted lg:grid-cols-3 lg:items-center'>
         <AnimatedBlock
           className='will-animate-fade-in-up lg:col-span-2'
           delay='0.2s'
@@ -29,7 +32,7 @@ export function SocialProof() {
           <div
             className={cn(
               cardClasses,
-              'group flex h-full flex-col justify-center bg-card p-8 sm:p-12 lg:p-16'
+              'group flex h-full flex-col justify-center bg-muted px-8 py-5 sm:px-12 sm:py-8 lg:px-16 lg:py-10'
             )}
           >
             <div
@@ -39,10 +42,13 @@ export function SocialProof() {
 
             <div className='relative z-10 text-left'>
               <H2
-                Text='Juster, form og nyt.'
                 ID='social-proof-heading'
-                className='text-card-foreground'
-              />
+                className='font-sans text-5xl font-bold text-card-foreground md:text-6xl lg:text-7xl'
+              >
+                <span className='block'>Juster,</span>
+                <span className='block'>form</span>
+                <span className='block'>og nyt.</span>
+              </H2>
 
               <P className='w-full text-left text-lg text-card-foreground not-first:mt-0 md:max-w-xl'>
                 Oppdag en smartere måte å holde deg komfortabel
@@ -67,7 +73,7 @@ export function SocialProof() {
               alt='Utekos'
               width={1280}
               height={311}
-              className='h-auto w-[70%] max-w-sm object-contain'
+              className={logoMarkClasses}
             />
           </div>
 
@@ -80,7 +86,7 @@ export function SocialProof() {
               alt='Klarna'
               width={739}
               height={188}
-              className='h-auto w-[70%] max-w-sm object-contain brightness-0'
+              className={cn(logoMarkClasses, 'brightness-0')}
             />
           </div>
         </AnimatedBlock>

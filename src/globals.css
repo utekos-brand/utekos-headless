@@ -16,14 +16,17 @@
   --color-ceramic: var(--ceramic);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
+  --color-alt-pill: oklch(0.5975 0.1138 173.83);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
+  --color-network-pill: oklch(0.8017 0.0772 182.11);
   --color-muted-foreground: var(--muted-foreground);
   --color-magazine-article-card-pill: var(--magazine-article-card-pill);
+  --color-magazine-header: var(--magazine-header);
   --color-havdyp: var(--havdyp);
   --color-overcast: var(--overcast);
   --color-ancient-water: var(--ancient-water);
@@ -43,6 +46,7 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-green-noir: var(--green-noir);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -70,12 +74,14 @@
   --font-utekos-text: 'Utekos Text', sans-serif;
   --font-utekos-text-medium: 'Utekos Text Medium', sans-serif;
   --radius: 0.625rem;
+  --color-alt-pill: oklch(0.5975 0.1138 173.83);
+  --color-network-pill: oklch(0.8017 0.0772 182.11);
   --background: oklch(0.165 0.0282 194.77);
   --foreground:  oklch(0.985 0 0);
   --badge: oklch(0.2357 0.0402 194.77);
   --card: #003434;
   --teal-25: oklch(0.9569 0.014 185.95);
-  --ceramin: oklch(0.6678 0.1141 194.02);
+  --ceramic: oklch(0.6678 0.1141 194.02);
   --card-foreground: oklch(0.9493 0.007 88.64);
   --popover: oklch(0.985 0 0);
   --popover-foreground: oklch(0.145 0 0);
@@ -87,7 +93,9 @@
   --muted-foreground: oklch(0.8974 0.0084 91.49);
   --magazine-article-card: oklch(0.350674 0.062274 183.5177);
   --magazine-article-card-pill: oklch(0.6787 0.0958 186.35);
+  --magazine-header: oklch(0.2419 0.0418 184.31);
   --havdyp: oklch(0.2884 0.0366 279.42);
+  --green-noir: oklch(0.1625 0.0279 207.93);
   --overcast: oklch(0.7983 0.0257 91.66);
   --ancient-water: oklch(0.8733 0.0246 259.82);
   --fair-orchid: oklch(0.7864 0.0487 359.96);
@@ -117,9 +125,11 @@
 .dark {
   --background: #001212;
   --foreground: oklch(0.985 0 0);
+  --color-alt-pill: oklch(0.5975 0.1138 173.83);
   --teal-25: oklch(0.9569 0.014 185.95);
   --badge: oklch(0.2357 0.0402 194.77);
   --magazine-article-card: oklch(0.350674 0.062274 183.5177);
+  --magazine-header: oklch(0.2419 0.0418 184.31);
   --card: oklch(0.325 0.0503 194.96);
   --ceramic: oklch(0.6678 0.1141 194.02);
   --alternate: oklch(0.2943 0.0502 194.77);
@@ -140,6 +150,8 @@
   --review-star: oklch(0.8302 0.1185 78.73);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.145 0 0);
+  --color-network-pill: oklch(0.8017 0.0772 182.11);
+  --color-green-noir: oklch(0.1625 0.0279 207.93);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);

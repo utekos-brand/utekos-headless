@@ -11,15 +11,15 @@ export function MagazineFeatureGridBlock({
   return (
     <article className='my-16'>
       {(block.title || block.intro) && (
-        <header className='mx-auto mb-8 max-w-3xl text-center'>
+        <header className='mx-auto mb-8 max-w-3xl text-left'>
           {block.title && (
-            <h2 className='dark:text-dark-background font-sans text-4xl leading-[0.95] font-bold text-balance text-background sm:text-5xl'>
+            <h2 className='font-sans text-4xl leading-[0.95] font-bold text-balance text-foreground sm:text-5xl'>
               {block.title}
             </h2>
           )}
 
           {block.intro && (
-            <p className='dark:text-dark-background/76 mx-auto mt-4 max-w-2xl text-lg leading-[1.55] text-background/76'>
+            <p className='mx-auto mt-4 max-w-2xl text-lg leading-[1.55] text-foreground/86'>
               {block.intro}
             </p>
           )}
@@ -39,11 +39,11 @@ export function MagazineFeatureGridBlock({
               />
             </div>
 
-            <h3 className='dark:text-dark-background font-sans text-2xl leading-[0.95] font-bold text-background'>
+            <h3 className='font-sans text-2xl leading-[0.95] font-bold text-background'>
               {item.title}
             </h3>
 
-            <p className='dark:text-dark-background/76 mt-3 text-base leading-[1.55] text-background/76'>
+            <p className='mt-3 text-base leading-[1.55] text-background/80'>
               {item.text}
             </p>
           </li>

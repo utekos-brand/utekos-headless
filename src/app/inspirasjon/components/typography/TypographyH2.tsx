@@ -6,7 +6,7 @@ export function TypographyH2() {
     <>
       <H2
         ID='hero-subheading'
-        className='font-utekos-text! pt-2 pb-0 text-xl font-normal md:text-3xl!'
+        className='font-utekos-text! w-full pt-2 pb-0 text-xl font-normal md:text-3xl!'
       >
         Kompromissløs komfort og overlegen allsidighet.
       </H2>

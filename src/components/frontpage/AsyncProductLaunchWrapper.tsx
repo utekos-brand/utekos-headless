@@ -1,6 +1,7 @@
 import { cacheLife, cacheTag } from 'next/cache'
 import { getFeaturedProducts } from '@/api/lib/products/getFeaturedProducts'
 import { NewProductLaunchSection } from '@/components/frontpage/components/TechDownCampaign/NewProductLaunchSection'
+import { getProductWithoutSmallSize } from '@/components/products/getProductWithoutSmallSize'
 
 export async function AsyncProductLaunchWrapper() {
   'use cache'
@@ -13,13 +14,26 @@ export async function AsyncProductLaunchWrapper() {
     product => product.handle === 'utekos-techdown'
   )
 
-  const techDownId =
-    techDownProduct?.variants?.edges?.find(edge => edge.node.availableForSale)
-      ?.node?.id
-    || techDownProduct?.variants?.edges?.[0]?.node?.id
-    || ''
+  if (!techDownProduct) {
+    return null
+  }
 
-  if (!techDownId) return null
+  const product = getProductWithoutSmallSize(techDownProduct)
+  const selectedVariant =
+    product.selectedOrFirstAvailableVariant
+    ?? product.variants.edges.find(edge => edge.node.availableForSale)
+      ?.node
+    ?? product.variants.edges[0]?.node
+    ?? null
 
-  return <NewProductLaunchSection />
+  if (!selectedVariant) {
+    return null
+  }
+
+  return (
+    <NewProductLaunchSection
+      product={product}
+      selectedVariant={selectedVariant}
+    />
+  )
 }

@@ -108,7 +108,7 @@ export function TestimonialConstellation() {
                 ease: [0.22, 1, 0.36, 1]
               }}
             >
-              <P className='max-w-3xl text-left text-2xl! leading-relaxed text-foreground not-first:mt-0'>
+              <P className='max-w-3xl text-left text-2xl! leading-snug text-foreground not-first:mt-0'>
                 Ekte tilbakemeldinger fra ekte mennesker,
                 verdsetter kompromissløs kvalitet og varige
                 opplevelser utendørs

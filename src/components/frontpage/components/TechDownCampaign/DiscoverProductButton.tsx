@@ -1,35 +1,32 @@
-import { ArrowRight } from 'lucide-react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import type { Route } from 'next'
-import { InlineText } from '@/components/typography/TypographyInlineText'
+'use client'
+
+import { KlarnaProductExpressCheckout } from '@/components/klarna/components/KlarnaProductExpressCheckout'
+import { cn } from '@/lib/utils/className'
+import type { ShopifyProduct } from 'types/product/ShopifyProduct'
+import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
 
 const DiscoverProductButtons = ({
-  productModelName,
-  productUrl,
-  onDiscoverClick
+  product,
+  selectedVariant
 }: {
-  productModelName: string
-  productUrl: string
-  onDiscoverClick: () => void
+  product: ShopifyProduct
+  selectedVariant: ShopifyProductVariant | null
 }) => {
   return (
-    <div className='w-full lg:flex-1'>
-      <Button
-        asChild
-        variant='seeProduct'
-        className='group font-utekos-text h-16 min-h-16 w-full justify-center rounded-full px-6 py-5 text-lg tracking-[-0.01em] transition-transform hover:scale-105 md:h-14 md:min-h-14 md:py-4'
-      >
-	        <Link
-	          href={productUrl as Route}
-	          onClick={onDiscoverClick}
-	          data-track='NewProductLaunchDiscoverClick'
-          aria-label={`Oppdag ${productModelName}`}
-        >
-          <InlineText>Oppdag {productModelName}</InlineText>
-          <ArrowRight className='ml-2 size-5 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0' />
-        </Link>
-      </Button>
+    <div
+      className='flex h-16 min-h-16 w-full items-stretch lg:flex-1 md:h-14 md:min-h-14'
+      aria-label='Klarna express checkout'
+    >
+      <KlarnaProductExpressCheckout
+        product={product}
+        selectedVariant={selectedVariant}
+        quantity={1}
+        className='flex h-full min-h-0 w-full min-w-0 items-stretch'
+        buttonContainerClassName={cn(
+          'h-full min-h-full',
+          'md:h-full md:min-h-full'
+        )}
+      />
     </div>
   )
 }

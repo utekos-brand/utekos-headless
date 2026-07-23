@@ -123,10 +123,10 @@ export const rawMagazineArticles = [
     readingTimeMinutes: 8,
     author: { name: 'Utekos' },
     heroImage: {
-      src: '/UtekosTechDown4.png',
+      src: '/TechDown-1600x1000.webp',
       alt: 'Utekos TechDown brukt ute i mykt nordisk lys',
       width: 1600,
-      height: 800,
+      height: 1000,
       caption: 'TechDown™ er laget for varme, letthet og mer trygghet når været skifter.'
     },
     seo: {
@@ -283,10 +283,10 @@ export const rawMagazineArticles = [
       },
       {
         type: 'image',
-        src: '/erling-messe.JPEG',
+        src: '/erling-messe.webp',
         alt: 'Gründerhistorie og Utekos-produkt vist på messe',
-        width: 1536,
-        height: 2048,
+        width: 1080,
+        height: 1080,
         caption: 'Produktet ble formet av praktiske behov, kundemøter og mange kalde testkvelder.'
       },
       {

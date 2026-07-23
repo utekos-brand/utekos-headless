@@ -31,14 +31,14 @@ export const COMFYROBE_PRODUCT_GALLERY_IMAGES: Image[] = [
   },
   {
     id: 'comfyrobe-sherpa-open',
-    url: 'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Comfyrobe-Kvinne-Ved-Vannet-1080-1350.png',
-    altText: 'Kvinne med Comfyrobe ved vannet.',
+    url: 'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/ComfyrobeHerre-1600x1600.webp',
+    altText: 'Herre med Comfyrobe ved vannet.',
     width: 1080,
     height: 1350
   },
   {
     id: 'comfyrobe-mann-regn-brygge',
-    url: 'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Comfyrobe-Mann-Regn-Brygge-1080-1350.png',
+    url: 'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Comfyrobe-Kvinne-1600x1600.webp',
     altText: 'Mann med Comfyrobe på brygge i regnvær.',
     width: 1080,
     height: 1350

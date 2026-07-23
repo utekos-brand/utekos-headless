@@ -14,7 +14,7 @@ import { MikrofiberSection } from './components/MicrofiberSection/MikrofiberSect
 const ProductsPage = async () => {
   return (
     <>
-      <article className='container mx-auto px-4 py-16 sm:py-24'>
+      <article className='container mx-auto px-4 pt-0 pb-16 sm:pb-24'>
         <ProductsPageHeader />
         <HelpChooseSection />
 
