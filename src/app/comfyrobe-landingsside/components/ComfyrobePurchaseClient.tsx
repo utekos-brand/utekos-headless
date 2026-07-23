@@ -106,7 +106,7 @@ export function ComfyrobePurchaseClient({
   const heroImage =
     selectedVariant.image?.url ??
     product.featuredImage?.url ??
-    product.images?.edges?.[0]?.node?.url ??
+    product.images.edges[0]?.node.image.url ??
     'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Comfyrobe-Kvinne-1600x1600.png?v=1784824903'
 
   return (
@@ -128,7 +128,7 @@ export function ComfyrobePurchaseClient({
             <h2 id='purchase-heading' className='mt-3 font-sans text-5xl leading-[0.92] font-bold tracking-[-0.02em] md:text-6xl'>
               Tøff ute. Myk inne.
             </h2>
-            <p className='mt-6 max-w-xl font-utekos-text text-lg leading-relaxed text-background/82 dark:text-dark-background/82'>
+            <p className='mt-6 max-w-xl font-utekos-text text-lg leading-relaxed text-background/80 dark:text-dark-background/80'>
               Velg en tilgjengelig størrelse og fullfør kjøpet med vanlig handlekurv eller Klarna Express Checkout.
             </p>
 
