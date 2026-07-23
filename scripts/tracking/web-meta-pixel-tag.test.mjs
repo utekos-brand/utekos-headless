@@ -68,12 +68,54 @@ function queuedCalls(window) {
 
 test('requires current marketing consent', () => {
   const runtime = createRuntime({ marketing: false })
+  const listeners = []
+  runtime.window.addEventListener = (name, handler) => {
+    listeners.push([name, handler])
+  }
   runtime.window.dataLayer.push(canonicalEvent('page_view', 'event-1'))
 
   vm.runInContext(script, runtime.context)
 
   assert.equal(runtime.window.fbq, undefined)
   assert.deepEqual(runtime.insertedScripts, [])
+  assert.deepEqual(
+    listeners.map(([name]) => name).sort(),
+    ['CookiebotOnAccept', 'CookiebotOnConsentReady']
+  )
+})
+
+test('installs pixel without waiting for _fbp cookie', () => {
+  const runtime = createRuntime({ marketing: true })
+  runtime.window.document.cookie =
+    'utekos_external_id=anon_550e8400-e29b-41d4-a716-446655440000'
+  runtime.window.location = new URL('https://utekos.no/produkter')
+  runtime.window.dataLayer.push({
+    event: 'page_view',
+    event_id: 'page-no-fbp',
+    canonical_event: {
+      event_id: 'page-no-fbp',
+      event_name: 'page_view',
+      page_url: 'https://utekos.no/produkter',
+      custom_data: {},
+      consent: { marketing: 'granted' }
+    }
+  })
+
+  vm.runInContext(script, runtime.context)
+
+  assert.equal(typeof runtime.window.fbq, 'function')
+  assert.equal(runtime.window.__utekosMetaPixelState.initialized, true)
+  assert.equal(runtime.insertedScripts.length, 1)
+  assert.equal(
+    runtime.insertedScripts[0].src,
+    'https://connect.facebook.net/en_US/fbevents.js'
+  )
+  assert.deepEqual(
+    queuedCalls(runtime.window)
+      .filter(call => call[0] === 'trackSingle')
+      .map(call => [call[2], call[4].eventID]),
+    [['PageView', 'page-no-fbp']]
+  )
 })
 
 test('initializes once and sends canonical Meta events with CAPI event IDs', () => {

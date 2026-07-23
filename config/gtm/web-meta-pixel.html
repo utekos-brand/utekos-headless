@@ -16,7 +16,8 @@
   var state = w.__utekosMetaPixelState || {
     initialized: false,
     sent: {},
-    timer: null
+    timer: null,
+    listening: false
   };
 
   w.__utekosMetaPixelState = state;
@@ -265,27 +266,41 @@
     }
   }
 
+  function scheduleConsentRetry() {
+    if (state.listening) return;
+    state.listening = true;
+
+    var retry = function() {
+      if (!hasMarketingConsent()) return;
+      run(0);
+    };
+
+    w.addEventListener('CookiebotOnAccept', retry);
+    w.addEventListener('CookiebotOnConsentReady', retry);
+  }
+
   function run(attempt) {
     state.timer = null;
-    if (!hasMarketingConsent()) return;
-
-    var externalId = readCookie(EXTERNAL_ID_COOKIE);
-    var fbp = readCookie('_fbp');
-    var needsFbc = /(?:^|[?&])fbclid=/.test(w.location.search || '');
-    var fbc = readCookie('_fbc');
-
-    if (
-      attempt < 30 &&
-      (!externalId || !fbp || (needsFbc && !fbc))
-    ) {
-      state.timer = w.setTimeout(function() {
-        run(attempt + 1);
-      }, 100);
+    if (!hasMarketingConsent()) {
+      scheduleConsentRetry();
       return;
     }
 
-    if (!externalId) externalId = ensureExternalId();
+    var externalId = readCookie(EXTERNAL_ID_COOKIE) || ensureExternalId();
+    var needsFbc = /(?:^|[?&])fbclid=/.test(w.location.search || '');
+    var fbc = readCookie('_fbc');
+
+    // Install as soon as marketing is granted. Do not wait for _fbp —
+    // fbevents.js creates it. Waiting blocked SPA clicks / returning visits.
     if (!state.initialized) installPixel(externalId);
+
+    if (attempt < 30 && needsFbc && !fbc) {
+      state.timer = w.setTimeout(function() {
+        run(attempt + 1);
+      }, 100);
+      // Still scan now; fbc retry re-scans when the cookie appears.
+    }
+
     scanDataLayer();
   }
 

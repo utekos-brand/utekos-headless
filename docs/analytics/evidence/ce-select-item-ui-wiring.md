@@ -3,7 +3,7 @@
 **Date:** 2026-07-24  
 **Start SHA:** `3ba756ab3e069f15e9309bf2df52c2b474c03dee`  
 **Implementation tip:** `cee7f63b2d62283874a12991689d06743033d0aa`  
-**Production tip at smoke:** `cf688f844c39a6a8bb6a07c4e98f976887d582b7` (ancestor includes `cee7f63b2`)  
+**Production tip at Meta SelectItem green smoke:** `fcedb38fd8aec809de613424e69f5b5897472e7a` (currency DOM fix Ready; ancestor includes `cee7f63b2`)  
 **Roadmap:** Stale-events design queue #1 (`select_item`)
 
 ## What shipped in-repo
@@ -15,6 +15,7 @@
 - Meta CAPI: `meta:select_item` adapter + outbox worker (`SelectItem`).
 - Catalog / event-matrix / EVENT_CATALOG: Meta + Microsoft MS-B documented.
 - GTM template source: `config/gtm/web-meta-pixel.html` maps `select_item` → `SelectItem` and includes commerce payload.
+- Tag 153 install race fix: do not wait for `_fbp` before loading `fbevents.js`; CookiebotOnAccept / CookiebotOnConsentReady retry; All Pages trigger added for returning-visitor parity. SHA-256 `052b5d9ade0688c1589249283a17bfa55a077e7d7b532a94e07ccdbbae5fcad5`.
 
 ## Unit verification performed
 
@@ -26,7 +27,7 @@ pnpm exec tsx --test \
 → pass
 
 node --test scripts/tracking/web-meta-pixel-tag.test.mjs
-→ pass (includes SelectItem + shared eventID)
+→ pass (includes SelectItem + shared eventID + no-_fbp install)
 ```
 
 ## Live / production gates (2026-07-24)
@@ -35,46 +36,49 @@ node --test scripts/tracking/web-meta-pixel-tag.test.mjs
 
 | Gate | Status |
 |------|--------|
-| Production deploy includes `cee7f63b2` | **READY** — `dpl_s4xot7FgrinbVkhinBRamDLspTnu` for `cee7f63b2`; later production tip `dpl_GU8T9k9UcU7FyBfpNSzoGQhHDekn` (`cf688f844`, CSP Meta iframe allowlist) still contains the select_item wiring |
-| dataLayer `select_item` on ProductCard click | **PASS** (see sample event_ids) |
-| `POST /api/events/select-item` | **PASS** HTTP `202` |
+| Production deploy includes `cee7f63b2` | **READY** — currency DOM tip `fcedb38fd` Ready on utekos.no; select_item wiring retained |
+| dataLayer `select_item` on ProductCard click | **PASS** |
+| `POST /api/events/select-item` | **PASS** (network hit observed; earlier samples HTTP `202`) |
 
 ### Web GTM publish (`GTM-5TWMJQFP`, account `6295468138`, container `220236256`)
 
 | Version | Name | Notes |
 |---------|------|-------|
-| **122** | Meta Pixel select_item SelectItem - 2026-07-24 | Tag **153** HTML from `config/gtm/web-meta-pixel.html` (`select_item: 'SelectItem'` + commerce branch). Template SHA-256 `aeb51cf8f3efe3075dc3ce855cb68785dcae41e85a68cac90cceda624e49da59`. Firing triggers `152`+`128` preserved. |
-| **123** | Meta Pixel select_item trigger 152 - 2026-07-24 | Trigger **152** regex updated to `^(page_view\|view_item\|select_item\|add_to_cart\|begin_checkout\|search\|generate_lead)$` so tag 153 can fire on `select_item`. |
-| **124** | Meta Pixel supportDocumentWrite boolean restore + select_item - 2026-07-24 | Restored tag 153 `supportDocumentWrite` to GTM type `boolean` after MCP `update_gtm_tag` had coerced it to `template` (risked Custom HTML render). |
+| **122** | Meta Pixel select_item SelectItem - 2026-07-24 | Tag **153** HTML (`select_item: 'SelectItem'` + commerce). Triggers `152`+`128`. |
+| **123** | Meta Pixel select_item trigger 152 - 2026-07-24 | Trigger **152** regex includes `select_item`. |
+| **124** | Meta Pixel supportDocumentWrite boolean restore + select_item - 2026-07-24 | Restored `supportDocumentWrite` boolean type. |
+| **125** | Meta Pixel ISO currency fail-closed - 2026-07-24 | `isoCurrency` `/^[A-Z]{3}$/` fail-closed (retained in later HTML). |
+| **126** | Meta Pixel install race fix + All Pages - 2026-07-24 | Remove `_fbp` pre-install wait; CookiebotOnAccept retry; add All Pages `2147479553`. Source SHA-256 `052b5d9…fcad5`. Live `__gtg/gtm.js` `"version":"126"`. |
 
-Live `__gtg/gtm.js` verified containing `select_item:\"SelectItem\"` and trigger regex with `select_item`.
+### Root cause (tag 153 never installed `fbq`)
+
+Tag 153 Custom HTML waited up to ~3s for `_fbp` **before** calling `installPixel()`. `fbevents.js` is what creates `_fbp`, so first-party visits without an existing `_fbp` never installed `window.fbq` / never requested `fbevents.js`. Clarity/Bing were unaffected (different tags). Network path to Facebook was open (manual script inject worked). Secondary gaps: no Cookiebot accept retry if the tag ran before marketing true; event-only triggers missed returning-visitor All Pages install after consent.
 
 ### Sample production event_ids (consented ProductCard click on `/produkter`)
 
-Surface: `LazyFeaturedProductCarousel` → `ProductCard` (`data-track=ProductCardViewMoreClick`), not the upper `HelpChooseCard` carousel (that card is not wired for `select_item`).
+Surface: `LazyFeaturedProductCarousel` → `ProductCard` (`data-track=ProductCardViewMoreClick`), not the upper `HelpChooseCard` carousel.
 
-| event_id | currency | gross_value | API |
-|----------|----------|-------------|-----|
-| `8291b466-9490-4e47-93d0-ef1e2427bdab` | NOK | 1790 | `POST /api/events/select-item` **202** |
-| `46d68ea2-2e93-4ce5-b7fd-c8274709f087` | NOK | 1790 | (dataLayer; same path) |
-| `ec1e300f-a109-4817-b80b-d1983ba2900c` | NOK | 1790 | (dataLayer after GTM v124) |
+| event_id | Notes |
+|----------|-------|
+| `8291b466-9490-4e47-93d0-ef1e2427bdab` | Pre-fix: dataLayer + API `202`; Meta `/tr` SelectItem missing (no `fbq`) |
+| `46d68ea2-2e93-4ce5-b7fd-c8274709f087` | dataLayer only (pre-fix) |
+| `ec1e300f-a109-4817-b80b-d1983ba2900c` | dataLayer after GTM v124 (pre-fix) |
+| `73093b95-8af2-45f7-a001-3cee78b34873` | **GREEN** after v126: dataLayer `select_item` + Meta `/tr?ev=SelectItem&eid=` same UUID + `/api/events/select-item` |
 
 ### Meta Pixel `SelectItem` browser parity
 
 | Gate | Status |
 |------|--------|
-| Meta Pixel `SelectItem` with shared `event_id` | **NOT OBSERVED** in automation smoke |
-| Meta CAPI / ledger outbox | Adapter registered; browser Pixel path blocked this pass — ledger row not re-queried here |
-
-**Blocked reason (automation):** After marketing Cookiebot consent and Consent Mode `gcs=G111`, GTM tag **153** did not install `window.fbq` / did not request `connect.facebook.net/en_US/fbevents.js` on its own. Manual script injection of `fbevents.js` loaded (`onload`), so the network path to Facebook is open. Clarity and Bing tags did load under the same consent. Follow-up: GTM Preview for tag 153 fire/consent on a human browser session; do not treat browser SelectItem as green until `/tr?ev=SelectItem&eid=<event_id>` is captured.
+| `window.fbq` + `fbevents.js` under marketing consent | **PASS** (post-v126) |
+| Meta Pixel `SelectItem` with shared `event_id` | **PASS** — `73093b95-8af2-45f7-a001-3cee78b34873` |
+| Meta CAPI / ledger outbox | Adapter registered; pink-lens row not re-queried in this pass |
 
 ## Limitations
 
-- Upper `/produkter` “Produktkarusell” (`HelpChooseCard`) does **not** emit `select_item`; use `ProductCard` / `ProductGridCard` surfaces.
-- Meta browser `SelectItem` parity remains open despite GTM HTML + trigger publish.
+- Upper `/produkter` “Produktkarusell” (`HelpChooseCard`) does **not** emit `select_item`; use `ProductCard` / `ProductGridCard` (scroll to `LazyFeaturedProductCarousel` on `/produkter`).
 - Pink-lens ledger/outbox sample not confirmed via SQL in this pass.
-- Do not start queue events #2–11 until Meta browser SelectItem is green (or explicitly waived).
+- Queue #2–11 not started (gate green for browser SelectItem shared ID).
 
 ## Stop condition
 
-Microtask live gate: app + GTM publish + dataLayer/API smoke complete. Meta Pixel SelectItem shared-`event_id` network proof still open. Queue #2–11 not started.
+Queue #1 live gate **GREEN** for Meta Pixel SelectItem shared-`event_id` on GTM **v126**. Do not auto-start queue #2–11 without a new start order.
