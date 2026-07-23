@@ -21,11 +21,6 @@ export const CartFooter = ({ cart }: { cart: Cart | null | undefined }): React.J
   const hasUnavailableLines = unavailableLines.length > 0
 
   const subtotalFormatted = formatPrice(cart!.cost.subtotalAmount)
-  const cartId = cart!.id
-  const subtotalAmount = cart!.cost.subtotalAmount.amount
-  const currency = cart!.cost.subtotalAmount.currencyCode
-  const itemIds = cart!.lines.map(line => line.merchandise.id)
-  const numItems = cart!.totalQuantity
 
   const disabledReason =
     hasUnavailableLines ? 'Fjern utsolgte varer fra handlekurven før du går til kassen.' : undefined
@@ -50,11 +45,6 @@ export const CartFooter = ({ cart }: { cart: Cart | null | undefined }): React.J
         disabled={hasUnavailableLines}
         {...(disabledReason === undefined ? {} : { disabledReason })}
         cart={cart!}
-        cartId={cartId}
-        subtotalAmount={subtotalAmount}
-        currency={currency}
-        item_ids={itemIds}
-        num_items={numItems}
         className='mt-4'
       />
     </DrawerFooter>
