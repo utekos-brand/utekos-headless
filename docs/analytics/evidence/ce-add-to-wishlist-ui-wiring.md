@@ -35,15 +35,44 @@ pnpm exec tsx --test \
   src/lib/analytics/addToWishlistEvent.test.ts \
   src/lib/analytics/shopifyAddToWishlistCommerce.test.ts \
   src/lib/analytics/persistAndReportAddToWishlist.test.ts
-→ pass
+→ pass (includes missing-taxable default)
 
 node --test scripts/tracking/web-meta-pixel-tag.test.mjs
 → pass (includes AddToWishlist + shared eventID; isoCurrency fail-closed retained; no-_fbp install retained)
 ```
 
-## Live / production gates
+## Live / production gates (2026-07-24)
 
-(pending after commit/push + GTM publish + smoke)
+### App / Vercel
+
+| Gate | Status |
+|------|--------|
+| Production tip | **READY** — `22527d290` (taxable default) on `utekos.no`; wiring commit `5a2d6222c` |
+| dataLayer `add_to_wishlist` after WishlistButton click | **PASS** — `a35b85a9-f88b-49c0-90e9-071abc361c6e` |
+| `POST /api/events/add-to-wishlist` | **PASS** — HTTP `202` |
+| Persist-before-emit | **PASS** — `utekos_wishlist_v1` mutation `d496c875-afa6-4256-a361-4a9f36e87c70` |
+
+### Web GTM publish (`GTM-5TWMJQFP`)
+
+| Version | Name | Notes |
+|---------|------|-------|
+| **127** | Meta Pixel add_to_wishlist AddToWishlist - 2026-07-24 | Tag **153** HTML (`add_to_wishlist`→`AddToWishlist` + commerce); trigger **152** regex includes `add_to_wishlist`; `supportDocumentWrite` boolean; install-race + isoCurrency retained. Source SHA-256 `712a1faadce07d1e6adf2ee632616d7633f41f4a85b6d63abd1f0cf1397b1668`. |
+
+### Meta Pixel `AddToWishlist` browser parity
+
+| Gate | Status |
+|------|--------|
+| `window.fbq` + tag 153 initialized | **PASS** |
+| Shared `event_id` Pixel↔dataLayer | **PASS** — `__utekosMetaPixelState.sent['AddToWishlist:a35b85a9-f88b-49c0-90e9-071abc361c6e']` |
+| OpenBridge / Meta network | OpenBridge `mpc2` posts observed; `/tr` PageView present |
+
+### Follow-up fix in same queue item
+
+List/overview variants omit GraphQL `taxable` → Zod reject after persist. Fixed in `22527d290` by defaulting `taxable: true` in `mapShopifyAddToWishlist`.
+
+## Hard stop
+
+Do not auto-continue to queue #3 (`view_cart`).
 
 ## Hard stop
 
