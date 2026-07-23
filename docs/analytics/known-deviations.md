@@ -315,19 +315,25 @@
 ## DEV-019
 
 - **Priority:** P2
+- **Status:** ROOT_CAUSE_IDENTIFIED_FIX_PENDING_DEPLOY (2026-07-24)
 - **Description:** Meta Pixel logs
   `Invalid parameter format for currency` in production.
-- **Evidence:** Browser console warning during smoke on the
-  product page 2026-07-20; the pixel's ViewContent payload
-  appears to carry a malformed `currency` value.
+- **Evidence:** Product-page isolation 2026-07-24
+  (`docs/analytics/evidence/ce-meta-currency-purchase-value.md`):
+  unused `data-product-price` /
+  `data-product-currency` on `ProductPageView` are scraped by
+  Meta Pixel on ViewContent even when `fbq` currency is valid
+  `NOK`. Secondary: incomplete `product:price:*` metadata when
+  `selectedOrFirstAvailableVariant` is absent from GraphQL.
 - **Consequence:** Meta may drop or degrade value/currency on
   affected browser events, reducing value-based optimization
   quality.
-- **Systems:** Browser Meta tag/dataLayer contract.
-- **Recommended next action:** Inspect the GTM Meta tag's
-  currency variable mapping against the dataLayer contract;
-  currency must be a three-letter ISO 4217 string.
-- **Target task:** Oppgave 1.
+- **Systems:** Product page DOM attributes; product metadata;
+  GTM Meta tag 153 (defense-in-depth ISO omit).
+- **Recommended next action:** Deploy app fix removing
+  `data-product-*` attrs + metadata pairing; confirm console
+  clean on product ViewContent. GTM ISO harden published.
+- **Target task:** Oppgave 1 / Meta quality.
 
 ## DEV-020
 

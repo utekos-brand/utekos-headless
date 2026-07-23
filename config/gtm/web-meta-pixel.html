@@ -112,26 +112,42 @@
     return typeof value === 'number' && isFinite(value);
   }
 
+  function isoCurrency(value) {
+    if (typeof value !== 'string') return null;
+
+    var currency = value.replace(/^\s+|\s+$/g, '').toUpperCase();
+
+    return /^[A-Z]{3}$/.test(currency) ? currency : null;
+  }
+
   function commerceData(customData) {
     var items = customData && customData.items;
     var contentIds = [];
     var contents = [];
     var index;
+    var currency;
+    var value;
 
     if (!items || !items.length) return null;
 
     for (index = 0; index < items.length; index += 1) {
       var item = items[index];
       var id = contentId(item.variant_id);
+      var content;
 
       if (!id) continue;
 
-      contentIds.push(id);
-      contents.push({
+      content = {
         id: id,
-        quantity: item.quantity,
-        item_price: item.gross_unit_price
-      });
+        quantity: item.quantity
+      };
+
+      if (finiteNumber(item.gross_unit_price)) {
+        content.item_price = item.gross_unit_price;
+      }
+
+      contentIds.push(id);
+      contents.push(content);
     }
 
     if (!contentIds.length) return null;
@@ -143,8 +159,17 @@
       content_type: 'product'
     };
 
-    if (customData.currency) result.currency = customData.currency;
-    if (finiteNumber(customData.gross_value)) result.value = customData.gross_value;
+    currency = isoCurrency(customData.currency);
+    value = finiteNumber(customData.gross_value) ?
+      customData.gross_value :
+      null;
+
+    // Meta warns on invalid/empty currency; never send value without ISO currency.
+    if (currency && value !== null) {
+      result.currency = currency;
+      result.value = value;
+    }
+
     if (primary.item_name) result.content_name = primary.item_name;
     if (primary.item_category || primary.product_type) {
       result.content_category = primary.item_category || primary.product_type;
@@ -172,9 +197,16 @@
 
     if (eventName === 'generate_lead') {
       var lead = {};
+      var leadCurrency = isoCurrency(customData.currency);
+      var leadValue = finiteNumber(customData.value) ?
+        customData.value :
+        null;
 
-      if (customData.currency) lead.currency = customData.currency;
-      if (finiteNumber(customData.value)) lead.value = customData.value;
+      if (leadCurrency && leadValue !== null) {
+        lead.currency = leadCurrency;
+        lead.value = leadValue;
+      }
+
       return lead;
     }
 

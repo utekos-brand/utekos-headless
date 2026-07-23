@@ -1,12 +1,40 @@
 import type { ShopifyProduct } from 'types/product'
+import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
 import type { MetadataOther } from '../types'
 
+const ISO_CURRENCY = /^[A-Z]{3}$/
+
+function resolveMetadataVariant(
+  product: ShopifyProduct
+): ShopifyProductVariant | undefined {
+  if (product.selectedOrFirstAvailableVariant) {
+    return product.selectedOrFirstAvailableVariant
+  }
+
+  const edges = product.variants?.edges ?? []
+  const available = edges.find(edge => edge.node.availableForSale)
+
+  return available?.node ?? edges[0]?.node
+}
+
+function normalizeIsoCurrency(value: string | undefined): string | null {
+  if (!value) return null
+
+  const currency = value.trim().toUpperCase()
+  return ISO_CURRENCY.test(currency) ? currency : null
+}
+
 export function buildProductOtherMetadata(product: ShopifyProduct): MetadataOther {
-  const selectedVariant = product.selectedOrFirstAvailableVariant
+  const selectedVariant = resolveMetadataVariant(product)
   const other: MetadataOther = {}
 
-  const priceAmount = selectedVariant?.price.amount
-  const currencyCode = selectedVariant?.price.currencyCode
+  const priceAmount =
+    selectedVariant?.price.amount ??
+    product.priceRange?.minVariantPrice?.amount
+  const currencyCode = normalizeIsoCurrency(
+    selectedVariant?.price.currencyCode ??
+      product.priceRange?.minVariantPrice?.currencyCode
+  )
   const retailerItemId = selectedVariant?.id
   const itemGroupId = product.id
 
@@ -23,16 +51,20 @@ export function buildProductOtherMetadata(product: ShopifyProduct): MetadataOthe
     other['product:item_group_id'] = itemGroupId
   }
 
-  if (priceAmount != null) {
+  // Emit amount+currency together only. Incomplete product price metas
+  // make Meta Pixel report "Invalid parameter format for currency".
+  if (priceAmount != null && currencyCode) {
     other['product:price:amount'] = String(priceAmount)
-  }
-
-  if (currencyCode) {
     other['product:price:currency'] = currencyCode
   }
 
-  if (selectedVariant?.compareAtPrice?.amount != null) {
-    other['product:variant:compare_at_price'] = String(selectedVariant.compareAtPrice.amount)
+  if (
+    selectedVariant?.compareAtPrice?.amount != null &&
+    currencyCode
+  ) {
+    other['product:variant:compare_at_price'] = String(
+      selectedVariant.compareAtPrice.amount
+    )
   }
 
   other['product:availability'] = isOutOfStock ? 'out of stock' : 'in stock'

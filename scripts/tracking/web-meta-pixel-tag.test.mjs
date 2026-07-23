@@ -160,3 +160,57 @@ test('rejects mismatched IDs and events from a different page', () => {
     []
   )
 })
+
+test('omits currency and value when currency is empty or non-ISO', () => {
+  const runtime = createRuntime()
+  const items = [{
+    variant_id: 'gid://shopify/ProductVariant/47123456789012',
+    item_name: 'Utekos TechDown',
+    item_category: 'Uteklær',
+    quantity: 1,
+    gross_unit_price: 1790
+  }]
+
+  runtime.window.dataLayer.push(
+    canonicalEvent('view_item', 'empty-currency', {
+      currency: '',
+      gross_value: 1790,
+      items
+    }),
+    canonicalEvent('view_item', 'invalid-currency', {
+      currency: 'NO',
+      gross_value: 1790,
+      items
+    }),
+    canonicalEvent('view_item', 'normalized-lowercase', {
+      currency: 'nok',
+      gross_value: 1790,
+      items
+    }),
+    canonicalEvent('view_item', 'value-without-currency', {
+      gross_value: 1790,
+      items
+    }),
+    canonicalEvent('generate_lead', 'lead-empty-currency', {
+      currency: '',
+      value: 1
+    })
+  )
+
+  vm.runInContext(script, runtime.context)
+
+  const eventCalls = queuedCalls(runtime.window)
+    .filter(call => call[0] === 'trackSingle')
+
+  assert.equal(eventCalls.length, 5)
+
+  for (const call of [eventCalls[0], eventCalls[1], eventCalls[3]]) {
+    assert.equal('currency' in call[3], false)
+    assert.equal('value' in call[3], false)
+    assert.deepEqual(call[3].content_ids, ['47123456789012'])
+  }
+
+  assert.equal(eventCalls[2][3].currency, 'NOK')
+  assert.equal(eventCalls[2][3].value, 1790)
+  assert.deepEqual(eventCalls[4][3], {})
+})

@@ -134,11 +134,7 @@ export function ProductPageView({
     }) ?? ''
 
   const priceActivityPanel = (
-    <div
-      data-product-price={selectedVariant.price.amount ?? '0'}
-      data-product-currency={selectedVariant.price.currencyCode}
-      className='! relative mt-2 pt-0 text-foreground! md:mt-0 md:pt-2'
-    >
+    <div className='! relative mt-2 pt-0 text-foreground! md:mt-0 md:pt-2'>
       <PriceActivityPanel
         productHandle={productData.handle}
         priceAmount={selectedVariant.price.amount ?? '0'}
