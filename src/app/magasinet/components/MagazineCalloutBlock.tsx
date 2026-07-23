@@ -1,18 +1,16 @@
 import type { MagazineBlock } from '../types'
-import { MagazineInlineTitle } from './MagazineInlineTitle'
 
 type MagazineCalloutBlockProps = {
   block: Extract<MagazineBlock, { type: 'callout' }>
 }
 
 const calloutClassByTone = {
-  quiet:
-    'border-background/12 dark:border-dark-background/12 bg-foreground text-background dark:text-dark-background',
-  dark: 'border-foreground/12 bg-background dark:bg-dark-background text-foreground ',
+  quiet: 'border-background/12 bg-foreground text-background',
+  dark: 'border-foreground/12 bg-background text-foreground',
   accent:
-    'border-background/14 dark:border-dark-background/14 bg-[var(--magazine-accent)] text-background dark:text-dark-background',
+    'border-transparent bg-[var(--magazine-accent)] text-[var(--magazine-accent-foreground)]',
   commerce:
-    'border-primary/30 dark:border-dark-primary/30 bg-primary dark:bg-dark-primary text-background dark:text-dark-background'
+    'border-primary-foreground/30 bg-primary text-primary-foreground'
 } satisfies Record<
   Extract<MagazineBlock, { type: 'callout' }>['tone'],
   string
@@ -27,10 +25,10 @@ export function MagazineCalloutBlock({
     >
       {block.title && (
         <h3 className='font-sans text-2xl leading-[0.95] font-bold sm:text-3xl'>
-          <MagazineInlineTitle text={block.title} />
+          {block.title}
         </h3>
       )}
-      <p className='mt-4 text-lg leading-[1.55] opacity-90'>
+      <p className='mt-4 text-lg leading-[1.55]'>
         {block.text}
       </p>
     </aside>

@@ -3,7 +3,6 @@ import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import type { Route } from 'next'
 import type { MagazineBlock } from '../types'
-import { MagazineInlineTitle } from './MagazineInlineTitle'
 
 type MagazineCtaBlockProps = {
   block: Extract<MagazineBlock, { type: 'cta' }>
@@ -15,7 +14,7 @@ export function MagazineCtaBlock({
   return (
     <article className='dark:bg-dark-background my-16 rounded-lg border border-foreground/12 bg-background p-6 text-foreground shadow-[0_28px_90px_-62px_color-mix(in_oklch,var(--background)_90%,transparent)] sm:p-8'>
       <h2 className='max-w-2xl font-sans text-3xl leading-[0.95] font-bold text-balance sm:text-4xl'>
-        <MagazineInlineTitle text={block.title} />
+        {block.title}
       </h2>
       <p className='/82 mt-4 max-w-2xl text-lg leading-[1.55] text-foreground/82'>
         {block.text}

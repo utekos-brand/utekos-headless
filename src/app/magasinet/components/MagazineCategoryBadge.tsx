@@ -21,12 +21,12 @@ export function MagazineCategoryBadge({ category }: MagazineCategoryBadgeProps) 
 
   return (
     <BrandBadge
-      backgroundColor='var(--magazine-accent, var(--ancient-water))'
+      backgroundColor='var(--color-magazine-article-card-pill)'
       textColor='var(--background)'
-      className='gap-2 border border-background/10 dark:border-dark-background/10 px-4 py-2 text-sm font-semibold leading-[1.35]  '
+      className='font-utekos-text-medium gap-1.5 rounded-lg border border-background/15 px-4 py-2 text-sm leading-[1.35] tracking-tight'
     >
-      <Icon className='size-4 shrink-0' aria-hidden />
-      <span>{category}</span>
+      <Icon className='size-3 shrink-0' aria-hidden />
+      <small className='font-utekos-text-medium text-sm tracking-tight'>{category}</small>
     </BrandBadge>
   )
 }

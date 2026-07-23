@@ -17,11 +17,6 @@ export function MagazineArticleHeroImage({
         className='aspect-4/3h-auto w-full object-cover'
         priority
       />
-      {article.heroImage.caption && (
-        <figcaption className='dark:bg-dark-background leading-text-paragraph /72 bg-background px-5 py-4 text-sm text-foreground/72'>
-          {article.heroImage.caption}
-        </figcaption>
-      )}
     </figure>
   )
 }

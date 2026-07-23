@@ -1,5 +1,4 @@
 import type { MagazineBlock } from '../types'
-import { MagazineInlineTitle } from './MagazineInlineTitle'
 
 type MagazineHeadingBlockProps = {
   block: Extract<MagazineBlock, { type: 'heading' }>
@@ -17,7 +16,7 @@ export function MagazineHeadingBlock({
           </p>
         )}
         <h3 className='font-sans text-3xl leading-[0.95] font-bold text-balance text-background dark:text-dark-background sm:text-4xl'>
-          <MagazineInlineTitle text={block.text} />
+          {block.text}
         </h3>
       </div>
     )
@@ -31,7 +30,7 @@ export function MagazineHeadingBlock({
         </p>
       )}
       <h2 className='font-sans text-4xl leading-[0.95] font-bold text-balance text-background dark:text-dark-background sm:text-5xl'>
-        <MagazineInlineTitle text={block.text} />
+        {block.text}
       </h2>
     </div>
   )

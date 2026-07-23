@@ -1,5 +1,4 @@
 import type { MagazineBlock } from '../types'
-import { MagazineInlineTitle } from './MagazineInlineTitle'
 
 type MagazineFaqBlockProps = {
   block: Extract<MagazineBlock, { type: 'faq' }>
@@ -12,7 +11,7 @@ export function MagazineFaqBlock({
     <article className='my-16'>
       {block.title && (
         <h2 className='dark:text-dark-background font-sans text-4xl leading-[0.95] font-bold text-balance text-background sm:text-5xl'>
-          <MagazineInlineTitle text={block.title} />
+          {block.title}
         </h2>
       )}
       <dl className='mt-8 space-y-4'>

@@ -17,9 +17,9 @@ export default function CardsPage() {
         <CardHorizontalStjerneklarKveld />
       </div>
       <div className='container mx-auto grid max-w-7xl grid-cols-3 gap-4 px-4 py-16 sm:py-24'>
-        <CardFastDelivery />
         <CardHappyCustomers />
         <CardSafeShopping />
+        <CardFastDelivery />
       </div>
       <CardTweetDemo />
       <CardBottomImage />

@@ -2,53 +2,95 @@ import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Route } from 'next'
+import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import type { MagazineArticle } from '../types'
 import { MagazineCategoryBadge } from './MagazineCategoryBadge'
-import { MagazineInlineTitle } from './MagazineInlineTitle'
 
 type MagazineGridProps = { articles: MagazineArticle[] }
+
+const BEREDSKAP_PORTRAIT_HERO = {
+  src: '/med-utekos-1080x1350.png',
+  width: 1080,
+  height: 1350
+} as const
+
+const TECHDOWN_LAUNCH_SLUG = 'utekos-techdown-lansering'
+
+const TECHDOWN_GRID_MOBILE_IMAGE = {
+  src: '/UtekosTechDown15.jpg',
+  width: 1600,
+  height: 1000
+} as const
 
 function FeaturedArticleCard({
   article
 }: {
   article: MagazineArticle
 }) {
+  const usesPortraitHero = article.heroImage.src === '/med-utekos.png'
+
   return (
-    <article className='bg-overcast dark:text-dark-background py-14 text-background sm:py-20'>
+    <article className='bg-background dark:text-dark-background py-14 text-background sm:py-20'>
       <div className='container mx-auto px-4'>
         <Link
           href={`/magasinet/${article.slug}` as Route}
-          className='group dark:border-dark-background/10 grid overflow-hidden rounded-lg border border-background/10 bg-foreground shadow-[0_24px_70px_-54px_color-mix(in_oklch,var(--background)_68%,transparent)] transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 md:grid-cols-2'
+          className='group grid overflow-hidden rounded-lg bg-card shadow-[0_24px_70px_-54px_color-mix(in_oklch,var(--background)_68%,transparent)] transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 md:grid-cols-2'
           data-track='MagazineFeaturedClick'
         >
-          <Image
-            src={article.heroImage.src}
-            alt={article.heroImage.alt}
-            width={article.heroImage.width}
-            height={article.heroImage.height}
-            sizes='(max-width: 768px) calc(100vw - 32px), 50vw'
-            className='aspect-16/11 h-auto w-full object-cover md:aspect-auto md:h-full'
-            priority
-          />
-          <div className='flex flex-col justify-center p-6 sm:p-9 lg:p-12'>
+          {usesPortraitHero ?
+            <>
+              <Image
+                src={BEREDSKAP_PORTRAIT_HERO.src}
+                alt={article.heroImage.alt}
+                width={BEREDSKAP_PORTRAIT_HERO.width}
+                height={BEREDSKAP_PORTRAIT_HERO.height}
+                sizes='(max-width: 767px) calc(100vw - 32px), 50vw'
+                className='aspect-4/5 h-auto w-full object-cover lg:hidden'
+                priority
+              />
+              <Image
+                src={article.heroImage.src}
+                alt={article.heroImage.alt}
+                width={article.heroImage.width}
+                height={article.heroImage.height}
+                sizes='50vw'
+                className='hidden h-full w-full object-cover lg:block'
+                priority
+              />
+            </>
+          : <Image
+              src={article.heroImage.src}
+              alt={article.heroImage.alt}
+              width={article.heroImage.width}
+              height={article.heroImage.height}
+              sizes='(max-width: 768px) calc(100vw - 32px), 50vw'
+              className='aspect-16/11 h-auto w-full object-cover md:aspect-auto md:h-full'
+              priority
+            />
+          }
+          <div className='flex flex-col justify-center bg-muted p-6 text-foreground sm:p-9 lg:p-12'>
             <div className='mb-5'>
               <MagazineCategoryBadge
                 category={article.category}
               />
             </div>
-            <h2 className='dark:text-dark-background font-sans text-4xl leading-[0.95] font-bold text-balance text-background sm:text-5xl'>
-              <MagazineInlineTitle text={article.title} />
+            <h2 className='font-utekos-text-medium group-hover:text-magazine-article-card-pill text-4xl leading-[0.95] font-bold text-balance transition-colors sm:text-5xl'>
+              {article.title}
             </h2>
-            <p className='leading-text-paragraph dark:text-dark-background/90 mt-5 text-lg text-background/90'>
+            <p className='font-utekos-text mt-5 text-lg leading-[1.3] tracking-normal text-foreground/72'>
               {article.excerpt}
             </p>
-            <span className='text-havdyp mt-8 inline-flex items-center gap-2 text-base leading-4 font-semibold'>
-              Les hele saken
+            <BrandBadge
+              backgroundColor='var(--color-magazine-article-card-pill)'
+              textColor='var(--background)'
+              className='font-utekos-text-medium mt-8 w-fit gap-2 rounded-lg border border-background/15 px-4 py-2 text-sm leading-[1.35] tracking-tight'
+            >
+              <span>Les hele saken</span>
               <ArrowRight
-                className='size-4 transition-transform group-hover:translate-x-1'
+                className='size-4 shrink-0 transition-transform group-hover:translate-x-1 motion-reduce:transition-none'
                 aria-hidden
               />
-            </span>
+            </BrandBadge>
           </div>
         </Link>
       </div>
@@ -61,11 +103,61 @@ function MagazineArticleCard({
 }: {
   article: MagazineArticle
 }) {
+  const usesTechDownBanner =
+    article.slug === TECHDOWN_LAUNCH_SLUG
+
+  if (usesTechDownBanner) {
+    return (
+      <li className='col-span-full h-full lg:col-span-1'>
+        <Link
+          href={`/magasinet/${article.slug}` as Route}
+          className='group flex overflow-hidden rounded-lg bg-card transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 lg:hidden'
+          data-track='MagazineGridClick'
+        >
+          <Image
+            src={TECHDOWN_GRID_MOBILE_IMAGE.src}
+            alt={article.heroImage.alt}
+            width={TECHDOWN_GRID_MOBILE_IMAGE.width}
+            height={TECHDOWN_GRID_MOBILE_IMAGE.height}
+            sizes='(max-width: 768px) calc(100vw - 32px), calc(100vw - 64px)'
+            className='aspect-16/10 h-auto w-full object-cover'
+          />
+          <span className='sr-only'>{article.title}</span>
+        </Link>
+        <Link
+          href={`/magasinet/${article.slug}` as Route}
+          className='group hidden h-full flex-col overflow-hidden rounded-lg bg-card transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 lg:flex'
+          data-track='MagazineGridClick'
+        >
+          <Image
+            src={article.heroImage.src}
+            alt={article.heroImage.alt}
+            width={article.heroImage.width}
+            height={article.heroImage.height}
+            sizes='30vw'
+            className='aspect-16/10 h-auto w-full shrink-0 object-cover'
+          />
+          <div className='flex flex-1 flex-col bg-muted p-5 text-foreground'>
+            <div className='mb-4'>
+              <MagazineCategoryBadge category={article.category} />
+            </div>
+            <h3 className='font-utekos-text-medium group-hover:text-magazine-article-card-pill text-lg leading-[0.98] font-bold tracking-normal transition-colors'>
+              {article.title}
+            </h3>
+            <p className='font-utekos-text mt-3 flex-1 text-sm leading-[1.3] tracking-normal text-foreground/72'>
+              {article.excerpt}
+            </p>
+          </div>
+        </Link>
+      </li>
+    )
+  }
+
   return (
-    <li>
+    <li className='h-full'>
       <Link
         href={`/magasinet/${article.slug}` as Route}
-        className='group dark:border-dark-background/10 block h-full overflow-hidden rounded-lg border border-background/10 bg-foreground transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0'
+        className='group flex h-full flex-col overflow-hidden rounded-lg bg-card transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0'
         data-track='MagazineGridClick'
       >
         <Image
@@ -74,16 +166,16 @@ function MagazineArticleCard({
           width={article.heroImage.width}
           height={article.heroImage.height}
           sizes='(max-width: 768px) calc(100vw - 32px), (max-width: 1200px) 45vw, 30vw'
-          className='aspect-16/10 h-auto w-full object-cover'
+          className='aspect-16/10 h-auto w-full shrink-0 object-cover'
         />
-        <div className='p-5'>
+        <div className='flex flex-1 flex-col bg-muted p-5 text-foreground'>
           <div className='mb-4'>
             <MagazineCategoryBadge category={article.category} />
           </div>
-          <h3 className='dark:text-dark-background group-hover:text-havdyp font-sans text-2xl leading-[0.98] font-bold text-background transition-colors'>
-            <MagazineInlineTitle text={article.title} />
+          <h3 className='font-utekos-text-medium group-hover:text-magazine-article-card-pill text-lg leading-[0.98] font-bold tracking-normal transition-colors'>
+            {article.title}
           </h3>
-          <p className='dark:text-dark-background/72 mt-3 text-sm leading-normal text-background/72'>
+          <p className='font-utekos-text mt-3 flex-1 text-sm leading-[1.3] tracking-normal text-foreground/72'>
             {article.excerpt}
           </p>
         </div>
@@ -111,12 +203,12 @@ export function MagazineGrid({ articles }: MagazineGridProps) {
     <>
       <FeaturedArticleCard article={featuredArticle} />
       <article
-        className='bg-overcast dark:text-dark-background pb-16 text-background sm:pb-24'
+        className='bg-background pb-16 text-foreground sm:pb-24'
         aria-labelledby='magazine-latest-heading'
       >
-        <div className='container mx-auto px-4'>
+        <div className='container mx-auto px-6 sm:px-4'>
           <header className='mb-8 max-w-2xl'>
-            <p className='text-havdyp text-sm leading-4 font-semibold'>
+            <p className='text-magazine-article-card-pill text-sm leading-4 font-semibold'>
               Siste fra magasinet
             </p>
             <h2
@@ -126,7 +218,7 @@ export function MagazineGrid({ articles }: MagazineGridProps) {
               Flere guider og historier
             </h2>
           </header>
-          <ul className='grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
+          <ul className='grid auto-rows-fr grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
             {otherArticles.map(article => (
               <MagazineArticleCard
                 key={article.slug}

@@ -11,10 +11,10 @@ export const rawMagazineArticles = [
     readingTimeMinutes: 7,
     author: { name: 'Utekos' },
     heroImage: {
-      src: 'https://utekos.no/utekos-beredskap-2.png',
+      src: '/med-utekos.png',
       alt: 'Utekos i en beredskapssituasjon med varme og trygghet i fokus',
-      width: 1200,
-      height: 628,
+      width: 1600,
+      height: 1000,
       caption: 'Egenberedskap handler også om ro, varme og klær som virker når hverdagen stopper opp.'
     },
     seo: {
@@ -115,18 +115,18 @@ export const rawMagazineArticles = [
   },
   {
     slug: 'utekos-techdown-lansering',
-    title: 'Utekos TechDown™ - Plagget som redefinerer personlig komfort',
-    excerpt: 'Lansering: Dunlignende letthet med syntetisk driftssikkerhet for skiftende norsk vær.',
+    title: 'Redefinerer personlig komfort.',
+    excerpt: 'Oppdag en smartere måte å holde deg komfortabel utendørs på, slik at du kan forlenge favorittstundene dine.',
     category: 'Tips og råd',
     publishedAt: '2025-10-27T00:00:00+01:00',
     updatedAt: '2025-10-27T00:00:00+01:00',
     readingTimeMinutes: 8,
     author: { name: 'Utekos' },
     heroImage: {
-      src: '/magasinet/helene.png',
+      src: '/UtekosTechDown4.png',
       alt: 'Utekos TechDown brukt ute i mykt nordisk lys',
-      width: 1536,
-      height: 2048,
+      width: 1600,
+      height: 800,
       caption: 'TechDown™ er laget for varme, letthet og mer trygghet når været skifter.'
     },
     seo: {
@@ -218,7 +218,7 @@ export const rawMagazineArticles = [
   },
   {
     slug: 'hva-er-utekos',
-    title: 'Historien og filosofien bak Utekos: En investering i din egen hygge',
+    title: 'Invester i din egen hygge',
     excerpt: 'Utekos er mer enn et klesmerke. Det er en enkel ide: mer ro, mer varme og mer tid ute.',
     category: 'Om Utekos',
     publishedAt: '2025-10-17T00:00:00+02:00',
@@ -326,7 +326,7 @@ export const rawMagazineArticles = [
   },
   {
     slug: 'balpannen-din-guide-til-den-perfekte-hostkvelden',
-    title: 'Bålpannen: Din guide til den perfekte høstkvelden',
+    title: 'Perfekt høstkveld med bålpannen',
     excerpt: 'Lær de fem P-ene for perfekt bålkos og skap en lun kveld rundt bålpannen.',
     category: 'Tips og råd',
     publishedAt: '2025-09-22T00:00:00+02:00',
@@ -420,7 +420,7 @@ export const rawMagazineArticles = [
   },
   {
     slug: 'vinterklargjoring-av-hytta-en-sjekkliste-for-livsnyteren',
-    title: 'Vinterklargjøring av hytten: En sjekkliste for livsnyteren',
+    title: 'Sjekkliste: Vinterklargjøring av hytten',
     excerpt: 'Gjør vinterstengingen til en del av kosen med en ryddig sjekkliste for trygg hyttekomfort.',
     category: 'Hytteliv',
     publishedAt: '2025-09-21T00:00:00+02:00',
@@ -500,7 +500,7 @@ export const rawMagazineArticles = [
   },
   {
     slug: '5-enkle-tips-for-a-forlenge-terrassesongen',
-    title: '5 enkle tips som forlenger terrassesesongen med måneder',
+    title: 'Så enkelt forlenger du terrassesesongen',
     excerpt: 'Med noen smarte grep kan uteplassen din bli en lun sone fra tidlig vår til sen høst.',
     category: 'Terrasseliv',
     publishedAt: '2025-09-20T00:00:00+02:00',
@@ -586,7 +586,7 @@ export const rawMagazineArticles = [
   },
   {
     slug: 'slik-skaper-du-den-perfekte-stemningen-pa-hytta',
-    title: 'Slik skaper du den perfekte stemningen på hytten',
+    title: 'Skap de perfekte hyttestemningen',
     excerpt: 'Utforsk lys, lyd, tekstur og komfort som gjør hytten roligere og mer inviterende.',
     category: 'Hytteliv',
     publishedAt: '2025-09-18T00:00:00+02:00',
@@ -663,7 +663,7 @@ export const rawMagazineArticles = [
   },
   {
     slug: 'den-ultimate-guiden-til-komfortabel-vintercamping',
-    title: 'Den ultimate guiden til komfortabel vintercamping',
+    title: 'Guiden for komfortabel vintercamping',
     excerpt: 'Vintercamping kan være magisk hvis du er godt forberedt på kulde, rutiner og varme pauser.',
     category: 'Bobilliv',
     publishedAt: '2025-09-15T00:00:00+02:00',
@@ -746,7 +746,7 @@ export const rawMagazineArticles = [
   },
   {
     slug: 'bobil-i-hostferien-de-vakreste-rutene-for-a-oppleve-hostfargene',
-    title: 'Bobil i høstferien: De vakreste rutene for å oppleve høstfargene',
+    title: 'Opplev høstfargene her',
     excerpt: 'Opplev Norges høstfarger fra første rad med to ruter som gir ro, utsikt og varme stopp.',
     category: 'Bobilliv',
     publishedAt: '2025-09-22T00:00:00+02:00',
@@ -819,7 +819,7 @@ export const rawMagazineArticles = [
   },
   {
     slug: 'varm-og-klar-for-batpussen',
-    title: 'Vårpussen av båten: Slik holder du varmen',
+    title: 'Vårpussen av båten med komfort.',
     excerpt: 'Vårpussen er et sikkert vårtegn, men kan bli langt bedre når kroppen holder jevn varme.',
     category: 'Båtliv',
     publishedAt: '2025-04-12T00:00:00+02:00',
