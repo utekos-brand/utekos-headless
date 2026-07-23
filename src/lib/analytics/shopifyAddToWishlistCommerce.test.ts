@@ -4,23 +4,23 @@ import { mapShopifyAddToWishlist } from './shopifyAddToWishlistCommerce'
 import type { ShopifyProduct } from 'types/product/ShopifyProduct'
 import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
 
-test('maps wishlist mutation id onto commerce custom_data', () => {
-  const product = {
-    id: 'gid://shopify/Product/456',
-    handle: 'utekos-techdown',
-    title: 'Utekos TechDown',
-    vendor: 'Utekos',
-    productType: 'Yttertøy',
-    collections: { nodes: [] },
-    options: [],
-    variants: { nodes: [] },
-    featuredImage: null,
-    priceRange: {
-      minVariantPrice: { amount: '1790.0', currencyCode: 'NOK' },
-      maxVariantPrice: { amount: '1790.0', currencyCode: 'NOK' }
-    }
-  } as unknown as ShopifyProduct
+const product = {
+  id: 'gid://shopify/Product/456',
+  handle: 'utekos-techdown',
+  title: 'Utekos TechDown',
+  vendor: 'Utekos',
+  productType: 'Yttertøy',
+  collections: { nodes: [] },
+  options: [],
+  variants: { nodes: [] },
+  featuredImage: null,
+  priceRange: {
+    minVariantPrice: { amount: '1790.0', currencyCode: 'NOK' },
+    maxVariantPrice: { amount: '1790.0', currencyCode: 'NOK' }
+  }
+} as unknown as ShopifyProduct
 
+test('maps wishlist mutation id onto commerce custom_data', () => {
   const variant = {
     id: 'gid://shopify/ProductVariant/46944403882232',
     title: 'Default',
@@ -49,4 +49,30 @@ test('maps wishlist mutation id onto commerce custom_data', () => {
   assert.equal(customData.gross_value, 1790)
   assert.equal(customData.items.length, 1)
   assert.equal(customData.items[0]?.variant_id, variant.id)
+})
+
+test('defaults missing taxable to true for list payloads', () => {
+  const variant = {
+    id: 'gid://shopify/ProductVariant/46944403882232',
+    title: 'Default',
+    availableForSale: true,
+    currentlyNotInStock: false,
+    quantityAvailable: 3,
+    selectedOptions: [],
+    price: { amount: '1790.0', currencyCode: 'NOK' },
+    compareAtPrice: null,
+    image: null,
+    sku: 'TD-1'
+  } as unknown as ShopifyProductVariant
+
+  const customData = mapShopifyAddToWishlist({
+    product,
+    variant,
+    wishlistMutationId: 'mutation-missing-taxable'
+  })
+
+  assert.equal(customData.items[0]?.taxable, true)
+  assert.equal(customData.currency, 'NOK')
+  assert.equal(customData.gross_value, 1790)
+  assert.equal(customData.tax_value, 358)
 })

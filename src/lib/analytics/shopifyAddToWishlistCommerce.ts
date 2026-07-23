@@ -10,12 +10,23 @@ export type MapShopifyAddToWishlistInput = {
   wishlistMutationId: string
 }
 
+/**
+ * Overview/list payloads sometimes omit `taxable`. Norway storefront defaults
+ * to taxable so Meta/Google commerce values stay consistent with view_item.
+ */
+function withTaxableDefault(
+  variant: ShopifyProductVariant
+): ShopifyProductVariant {
+  if (typeof variant.taxable === 'boolean') return variant
+  return { ...variant, taxable: true }
+}
+
 export function mapShopifyAddToWishlist(
   input: MapShopifyAddToWishlistInput
 ): CanonicalAddToWishlistCustomData {
   const commerce = mapShopifyViewItem({
     product: input.product,
-    variant: input.variant,
+    variant: withTaxableDefault(input.variant),
     quantity: input.quantity ?? 1
   })
 
