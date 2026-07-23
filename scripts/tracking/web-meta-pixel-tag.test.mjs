@@ -93,6 +93,7 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
   runtime.window.dataLayer.push(
     canonicalEvent('page_view', 'page-event'),
     canonicalEvent('view_item', 'view-event', commerce),
+    canonicalEvent('select_item', 'select-event', commerce),
     canonicalEvent('add_to_cart', 'cart-event', commerce),
     canonicalEvent('begin_checkout', 'checkout-event', commerce),
     canonicalEvent('search', 'search-event', { search_term: 'utekos' }),
@@ -121,6 +122,7 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
     [
       ['PageView', 'page-event'],
       ['ViewContent', 'view-event'],
+      ['SelectItem', 'select-event'],
       ['AddToCart', 'cart-event'],
       ['InitiateCheckout', 'checkout-event'],
       ['Search', 'search-event'],

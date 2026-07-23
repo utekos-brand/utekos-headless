@@ -31,6 +31,7 @@ import { metaGenerateLeadProviderAdapter } from './providerAdapters/metaGenerate
 import { metaPageViewProviderAdapter } from './providerAdapters/metaPageViewProviderAdapter'
 import { metaPurchaseProviderAdapter } from './providerAdapters/metaPurchaseProviderAdapter'
 import { metaSearchProviderAdapter } from './providerAdapters/metaSearchProviderAdapter'
+import { metaSelectItemProviderAdapter } from './providerAdapters/metaSelectItemProviderAdapter'
 import { metaViewItemProviderAdapter } from './providerAdapters/metaViewItemProviderAdapter'
 import { microsoftUetAddToCartProviderAdapter } from './providerAdapters/microsoftUetAddToCartProviderAdapter'
 import { microsoftUetBeginCheckoutProviderAdapter } from './providerAdapters/microsoftUetBeginCheckoutProviderAdapter'
@@ -130,6 +131,9 @@ export const providerOutboxWorkerRegistry = {
   ),
   'meta:search': createPostgresProviderOutboxWorker(
     metaSearchProviderAdapter
+  ),
+  'meta:select_item': createPostgresProviderOutboxWorker(
+    metaSelectItemProviderAdapter
   ),
   'meta:view_item': createPostgresProviderOutboxWorker(
     metaViewItemProviderAdapter

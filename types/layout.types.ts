@@ -103,6 +103,7 @@ export type ProductCardProps = {
   product: ShopifyProduct
   preferredColor?: string
   colorHexMap: Map<string, string>
+  itemListId?: string
 }
 export type RichTextRendererProps = { content: RootNode | null }
 

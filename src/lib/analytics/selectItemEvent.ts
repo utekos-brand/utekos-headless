@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { canonicalCommerceItemSchema, canonicalCommerceValueSchema } from './canonicalCommerceItem'
+import { canonicalCommerceItemSchema } from './canonicalCommerceItem'
 import { canonicalEventEnvelopeSchema, type CanonicalEventEnvelope, type ConsentSnapshot } from './canonicalEventEnvelope'
 import { mapEventDeviceInfo } from './mapEventDeviceInfo'
 
@@ -7,6 +7,10 @@ export const canonicalSelectItemCustomDataSchema = z.strictObject({
   interaction_id: z.string().min(1),
   item_list_id: z.string().min(1),
   destination_url: z.string().url().optional(),
+  currency: z.string().regex(/^[A-Z]{3}$/),
+  value: z.number().finite().nonnegative(),
+  gross_value: z.number().finite().nonnegative(),
+  tax_value: z.number().finite().nonnegative(),
   items: z.array(canonicalCommerceItemSchema).min(1).max(1)
 })
 

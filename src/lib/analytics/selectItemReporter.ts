@@ -1,20 +1,26 @@
 'use client'
 
-// Reporter exported for product list selection wiring; no detector is active yet.
+// Wired via product list click helper (ProductCard / ProductGridCard).
 import { sendGTMEvent } from '@next/third-parties/google'
 import { readBrowserReporterContext } from './browserReporterContext'
 import { browserPageViewSession } from './pageViewSession'
+import { mapShopifySelectItem } from './shopifySelectItemCommerce'
 import {
   buildSelectItemDataLayerEvent,
   createCanonicalSelectItem,
-  type CanonicalSelectItem,
-  type CanonicalSelectItemCustomData
+  type CanonicalSelectItem
 } from './selectItemEvent'
 import { startSelectItemCollectorTransport } from './selectItemCollectorTransport'
+import type { ShopifyProduct } from 'types/product/ShopifyProduct'
+import type { ShopifyProductVariant } from 'types/product/ShopifyProductVariant'
 
 export type ReportCanonicalSelectItemInput = {
-  customData: CanonicalSelectItemCustomData
+  destinationUrl?: string
+  itemListId: string
   pageViewId?: string
+  product: ShopifyProduct
+  quantity?: number
+  variant: ShopifyProductVariant
 }
 
 export function reportCanonicalSelectItem(
@@ -33,6 +39,19 @@ export function reportCanonicalSelectItem(
       : {})
     })
 
+    const customData = mapShopifySelectItem({
+      product: input.product,
+      variant: input.variant,
+      itemListId: input.itemListId,
+      interactionId: globalThis.crypto.randomUUID(),
+      ...(input.destinationUrl ?
+        { destinationUrl: input.destinationUrl }
+      : {}),
+      ...(input.quantity !== undefined ?
+        { quantity: input.quantity }
+      : {})
+    })
+
     const event = createCanonicalSelectItem({
       environment: clientContext.environment,
       eventId: globalThis.crypto.randomUUID(),
@@ -44,7 +63,7 @@ export function reportCanonicalSelectItem(
         { referrerUrl: pageView.referrerUrl }
       : {}),
       consent: clientContext.consent,
-      customData: input.customData,
+      customData,
       ...(clientContext.browserId ?
         { browserId: clientContext.browserId }
       : {}),

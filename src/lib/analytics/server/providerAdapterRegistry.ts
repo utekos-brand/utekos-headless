@@ -29,6 +29,7 @@ import { metaGenerateLeadProviderAdapter } from './providerAdapters/metaGenerate
 import { metaPageViewProviderAdapter } from './providerAdapters/metaPageViewProviderAdapter'
 import { metaPurchaseProviderAdapter } from './providerAdapters/metaPurchaseProviderAdapter'
 import { metaSearchProviderAdapter } from './providerAdapters/metaSearchProviderAdapter'
+import { metaSelectItemProviderAdapter } from './providerAdapters/metaSelectItemProviderAdapter'
 import { metaViewItemProviderAdapter } from './providerAdapters/metaViewItemProviderAdapter'
 import { microsoftUetAddToCartProviderAdapter } from './providerAdapters/microsoftUetAddToCartProviderAdapter'
 import { microsoftUetBeginCheckoutProviderAdapter } from './providerAdapters/microsoftUetBeginCheckoutProviderAdapter'
@@ -69,6 +70,7 @@ export const providerAdapterRegistry = {
   'meta:page_view': metaPageViewProviderAdapter,
   'meta:purchase': metaPurchaseProviderAdapter,
   'meta:search': metaSearchProviderAdapter,
+  'meta:select_item': metaSelectItemProviderAdapter,
   'meta:view_item': metaViewItemProviderAdapter,
   'microsoft_uet:add_to_cart': microsoftUetAddToCartProviderAdapter,
   'microsoft_uet:begin_checkout':

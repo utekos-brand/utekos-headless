@@ -1208,6 +1208,19 @@ const eventCatalogBase = {
     providers: activeEventProviders('select_item', {
       commerce: true,
       googleRequired: ['item_list_id', 'items'],
+      meta: {
+        eventName: 'SelectItem',
+        requiredParameters: [
+          'currency',
+          'value',
+          'contents',
+          'content_ids'
+        ]
+      },
+      microsoft: {
+        eventName: 'select_item',
+        requiredParameters: ['items']
+      },
       posthog: true
     })
   },

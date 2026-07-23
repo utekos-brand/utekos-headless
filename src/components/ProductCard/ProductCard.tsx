@@ -24,6 +24,7 @@ import { KlarnaProductExpressCheckout } from '@/components/klarna/components/Kla
 import { ProductCardCompactVariantSelector } from './ProductCardCompactVariantSelector'
 import { ProductColorSwatches } from './ProductColorSwatches'
 import { WishlistButton } from '@/components/wishlist/WishlistButton'
+import { reportProductListSelectItem } from '@/lib/analytics/reportProductListSelectItem'
 
 interface ExtendedProductCardProps extends ProductCardProps {
   isPriority?: boolean
@@ -38,7 +39,8 @@ export function ProductCard({
   isPriority = false,
   initialOptions,
   compactMobile = false,
-  cardClassName
+  cardClassName,
+  itemListId = 'product_card'
 }: ExtendedProductCardProps) {
   const [selectedOptions, setSelectedOptions] = useState(
     () => initialOptions ?? getInitialOptionsForProduct(product)
@@ -131,6 +133,20 @@ export function ProductCard({
     })()
   }
 
+  const handleViewProduct = () => {
+    const destinationUrl =
+      typeof window === 'undefined' ?
+        productUrl
+      : new URL(productUrl, window.location.origin).toString()
+
+    reportProductListSelectItem({
+      product,
+      variant: selectedVariant,
+      itemListId,
+      destinationUrl
+    })
+  }
+
   const compactProductCardContent =
     compactMobile ?
       <div className='flex flex-col xl:hidden'>
@@ -139,6 +155,7 @@ export function ProductCard({
             href={productUrl}
             data-track='ProductCardViewMoreClick'
             aria-label={`Se produkt ${product.title}`}
+            onClick={handleViewProduct}
             className='dark:focus-visible:outline-dark-card-foreground block w-full rounded-t-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
           >
             <BrandBadge
@@ -187,6 +204,7 @@ export function ProductCard({
               href={productUrl}
               data-track='ProductCardViewMoreClick'
               title={product.title}
+              onClick={handleViewProduct}
               className='dark:focus-visible:outline-dark-card-foreground min-w-0 flex-1 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
             >
               <h3 className='truncate text-base leading-6 font-semibold tracking-tight text-card-foreground md:text-lg md:leading-7'>
@@ -235,6 +253,7 @@ export function ProductCard({
             href={productUrl}
             data-track='ProductCardViewMoreClick'
             aria-label={`Se produkt ${product.title}`}
+            onClick={handleViewProduct}
             className='dark:focus-visible:outline-dark-card-foreground block w-full rounded-t-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-card-foreground'
           >
             <BrandBadge
@@ -297,6 +316,7 @@ export function ProductCard({
           onOptionChange={setSelectedOptions}
           price={price}
           productUrl={productUrl}
+          onViewProduct={handleViewProduct}
           compactMobile={compactMobile}
         />
       </div>

@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 import { findMatchingVariant } from '@/components/ProductCard/findMatchingVariant'
 import { getInitialOptionsForProduct } from '@/components/ProductCard/getInitialOptionsForProduct'
 import { ProductCardSoldOut } from '@/components/ProductCard/ProductCardSoldOut'
+import { reportProductListSelectItem } from '@/lib/analytics/reportProductListSelectItem'
 
 interface ExtendedProductCardProps extends ProductCardProps {
   isPriority?: boolean
@@ -25,7 +26,8 @@ interface ExtendedProductCardProps extends ProductCardProps {
 export function ProductGridCard({
   product,
   isPriority = false,
-  initialOptions
+  initialOptions,
+  itemListId = 'gaveguide_grid'
 }: ExtendedProductCardProps) {
   const [selectedOptions] = useState(
     () => initialOptions ?? getInitialOptionsForProduct(product)
@@ -77,6 +79,20 @@ export function ProductGridCard({
     })()
   }
 
+  const handleViewProduct = () => {
+    const destinationUrl =
+      typeof window === 'undefined' ?
+        productUrl
+      : new URL(productUrl, window.location.origin).toString()
+
+    reportProductListSelectItem({
+      product,
+      variant: selectedVariant,
+      itemListId,
+      destinationUrl
+    })
+  }
+
   return (
     <Card className='group relative flex h-full flex-col overflow-hidden border-none bg-transparent shadow-none'>
       <div className='relative overflow-hidden rounded-lg'>
@@ -85,6 +101,7 @@ export function ProductGridCard({
             href={productUrl}
             aria-label={`Se produkt ${product.title}`}
             data-track='ProductGridCardViewMoreClick'
+            onClick={handleViewProduct}
           >
             <AspectRatio ratio={2 / 3}>
               <Image

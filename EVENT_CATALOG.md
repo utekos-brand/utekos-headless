@@ -168,7 +168,7 @@ Tabellkodene er komplette statusprofiler:
 | Event | Supabase | Google | Meta | Microsoft | PostHog |
 | --- | --- | --- | --- | --- | --- |
 | `view_item_list` | P | P(`view_item_list`) | — | P(`view_item_list`) | P |
-| `select_item` | P | P(`select_item`) | — | — | P |
+| `select_item` | P | P(`select_item`) | P/A(`SelectItem`) | P(`select_item`) MS-B | P |
 | `add_to_wishlist` | P | P(`add_to_wishlist`) | P(`AddToWishlist`) | P(`add_to_wishlist`) | P |
 | `add_to_cart` | P | P(`add_to_cart`) | P(`AddToCart`) | P(`add_to_cart`) | P |
 | `remove_from_cart` | P | P(`remove_from_cart`) | — | P(`remove_from_cart`) | P |
