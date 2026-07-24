@@ -2,6 +2,7 @@
 
 import { useAddToCartAction } from '@/hooks/useAddToCartAction'
 import { WishlistButton } from '@/components/wishlist/WishlistButton'
+import { reportProductListSelectItem } from '@/lib/analytics/reportProductListSelectItem'
 import { AnimatePresence, motion } from 'motion/react'
 import { ArrowUpRight, Loader2, ShoppingBag, X } from 'lucide-react'
 import type { Route } from 'next'
@@ -136,6 +137,27 @@ export function HelpChooseCard({
   const price = product.priceRange.minVariantPrice.amount
   const formattedPrice = `${parseInt(price).toLocaleString('no-NO')} kr`
   const isOutOfStock = !product.availableForSale
+  const selectItemVariant =
+    selectedVariant ??
+    availableSizes[0]?.variant ??
+    variants.find(variant => variant.availableForSale) ??
+    variants[0] ??
+    null
+  const productUrl = `/produkter/${product.handle}` as Route
+
+  const handleViewProduct = () => {
+    const destinationUrl =
+      typeof window === 'undefined' ?
+        productUrl
+      : new URL(productUrl, window.location.origin).toString()
+
+    reportProductListSelectItem({
+      product,
+      variant: selectItemVariant,
+      itemListId: 'help_choose_carousel',
+      destinationUrl
+    })
+  }
 
   return (
     <motion.div
@@ -151,8 +173,10 @@ export function HelpChooseCard({
       onMouseLeave={() => setIsSelectingSize(false)}
     >
       <Link
-        href={`/produkter/${product.handle}` as Route}
+        href={productUrl}
         className='block size-full'
+        data-track='HelpChooseCardViewMoreClick'
+        onClick={handleViewProduct}
       >
         <div className='relative flex aspect-2/3 h-full flex-col overflow-hidden rounded-3xl border border-white/5 bg-neutral-900 shadow-2xl transition-transform duration-300 md:hover:-translate-y-1'>
           <div className='absolute inset-0 z-0 bg-neutral-800'>

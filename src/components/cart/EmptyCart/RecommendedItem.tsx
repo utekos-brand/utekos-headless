@@ -5,9 +5,11 @@ import { findMatchingVariant } from '@/components/ProductCard/findMatchingVarian
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Button } from '@/components/ui/button'
 import { useCanonicalAddToCart } from '@/hooks/useCanonicalAddToCart'
+import { reportProductListSelectItem } from '@/lib/analytics/reportProductListSelectItem'
 import { cartStore } from '@/lib/state/cartStore'
 import { formatPrice } from '@/lib/utils/formatPrice'
 import type { ShopifyProduct } from 'types/product'
+import type { Route } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -34,11 +36,29 @@ export function RecommendedItem({
     })
   }
 
+  const productUrl = `/produkter/${product.handle}` as Route
+
+  const handleViewProduct = () => {
+    const destinationUrl =
+      typeof window === 'undefined' ?
+        productUrl
+      : new URL(productUrl, window.location.origin).toString()
+
+    reportProductListSelectItem({
+      product,
+      variant: selectedVariant,
+      itemListId: 'cart_recommended',
+      destinationUrl
+    })
+    cartStore.send({ type: 'CLOSE' })
+  }
+
   return (
     <div className='flex items-center gap-4'>
       <Link
-        href={`/produkter/${product.handle}`}
-        onClick={() => cartStore.send({ type: 'CLOSE' })}
+        href={productUrl}
+        data-track='CartRecommendedItemClick'
+        onClick={handleViewProduct}
       >
         <div className='w-16 shrink-0'>
           <AspectRatio
@@ -61,8 +81,9 @@ export function RecommendedItem({
       </Link>
       <div className='grow'>
         <Link
-          href={`/produkter/${product.handle}`}
-          onClick={() => cartStore.send({ type: 'CLOSE' })}
+          href={productUrl}
+          data-track='CartRecommendedItemClick'
+          onClick={handleViewProduct}
         >
           <h4 className='text-sm font-medium text-foreground hover:underline'>
             {product.title}

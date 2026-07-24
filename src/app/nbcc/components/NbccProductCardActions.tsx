@@ -3,6 +3,7 @@
 import { MoveRightIcon } from '@/components/animate-icons/icons/move-right'
 import { Button } from '@/components/ui/button'
 import { useCanonicalAddToCart } from '@/hooks/useCanonicalAddToCart'
+import { reportProductListSelectItem } from '@/lib/analytics/reportProductListSelectItem'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -64,6 +65,27 @@ export function NbccProductCardActions({
     })()
   }
 
+  const handleViewProduct = () => {
+    const shopifyVariant =
+      product.variants.edges
+        .map(edge => edge.node)
+        .find(
+          variant => variant.id === selectedVariant?.variantId
+        ) ?? product.variants.edges[0]?.node
+
+    const destinationUrl =
+      typeof window === 'undefined' ?
+        href
+      : new URL(href, window.location.origin).toString()
+
+    reportProductListSelectItem({
+      product,
+      variant: shopifyVariant,
+      itemListId: 'nbcc_product_card',
+      destinationUrl
+    })
+  }
+
   return (
     <div className='flex flex-col gap-4'>
       <div>
@@ -121,6 +143,7 @@ export function NbccProductCardActions({
             href={href}
             data-track='NbccProductCardCtaClick'
             data-track-data={JSON.stringify(tracking)}
+            onClick={handleViewProduct}
           >
             Produktside
             <MoveRightIcon size={16} animateOnHover='default' />
