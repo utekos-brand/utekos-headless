@@ -142,6 +142,11 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
     canonicalEvent('view_cart', 'view-cart-event', commerce),
     canonicalEvent('begin_checkout', 'checkout-event', commerce),
     canonicalEvent('search', 'search-event', { search_term: 'utekos' }),
+    canonicalEvent('scroll_depth', 'scroll-depth-event', {
+      threshold: 50,
+      percent_scrolled: 50,
+      document_height: 2400
+    }),
     canonicalEvent('generate_lead', 'lead-event', { currency: 'NOK', value: 1 })
   )
 
@@ -174,6 +179,7 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
       ['ViewCart', 'view-cart-event'],
       ['InitiateCheckout', 'checkout-event'],
       ['Search', 'search-event'],
+      ['LandingScrollDepth', 'scroll-depth-event'],
       ['Lead', 'lead-event']
     ]
   )
@@ -186,6 +192,14 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
     content_name: 'Utekos TechDown',
     content_category: 'Uteklær'
   })
+  assert.deepEqual(
+    eventCalls.find(call => call[2] === 'LandingScrollDepth')?.[3],
+    {
+      threshold: 50,
+      percent_scrolled: 50,
+      document_height: 2400
+    }
+  )
   assert.equal(runtime.insertedScripts.length, 1)
   assert.equal(
     runtime.insertedScripts[0].src,

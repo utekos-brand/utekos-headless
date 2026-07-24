@@ -1,12 +1,15 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { reportCanonicalScrollDepth } from '@/lib/analytics/scrollDepthReporter'
 import { browserPageViewSession } from '@/lib/analytics/pageViewSession'
 
 const THRESHOLDS = [25, 50, 75, 90] as const
 
 export function ScrollDepthObserver() {
+  const pathname = usePathname()
+  const search = useSearchParams().toString()
   const emittedRef = useRef(new Set<number>())
 
   useEffect(() => {
@@ -62,7 +65,7 @@ export function ScrollDepthObserver() {
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [])
+  }, [pathname, search])
 
   return null
 }

@@ -14,7 +14,9 @@
     view_cart: 'ViewCart',
     begin_checkout: 'InitiateCheckout',
     search: 'Search',
-    generate_lead: 'Lead'
+    generate_lead: 'Lead',
+    // Existing Meta custom event name; canonical app contract is scroll_depth.
+    scroll_depth: 'LandingScrollDepth'
   };
   var state = w.__utekosMetaPixelState || {
     initialized: false,
@@ -200,6 +202,22 @@
     if (eventName === 'search') {
       return customData.search_term ?
         { search_string: customData.search_term } : {};
+    }
+
+    if (eventName === 'scroll_depth') {
+      var scroll = {};
+
+      if (finiteNumber(customData.threshold)) {
+        scroll.threshold = customData.threshold;
+      }
+      if (finiteNumber(customData.percent_scrolled)) {
+        scroll.percent_scrolled = customData.percent_scrolled;
+      }
+      if (finiteNumber(customData.document_height)) {
+        scroll.document_height = customData.document_height;
+      }
+
+      return scroll;
     }
 
     if (eventName === 'generate_lead') {
