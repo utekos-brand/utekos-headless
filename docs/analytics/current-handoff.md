@@ -1,7 +1,7 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.19.2 **Oppdatert:**
-2026-07-24T03:50:00+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.19.3 **Oppdatert:**
+2026-07-24T05:51:00+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
@@ -805,5 +805,22 @@ Evidence: docs/analytics/evidence/ce-scroll-depth-ui-wiring.md
 Design: docs/superpowers/specs/2026-07-24-canonical-stale-events-design.md #5 → GO (EM confirmed)
 GTM: v130 tag 153 scroll_depth → LandingScrollDepth
 STOP: do not auto-continue to queue #6 view_category
+```
+
+## 28. Stale-events queue #6 — view_category EM-VISIBLE GO
+
+```text
+Task: Meta ViewCategory EM Overview/Pixel hard gate (queue #6)
+Conclusion: EM-VISIBLE_CONFIRMED — hard gate CLOSED
+Path: Overview / Pixel (no Meta CAPI; matrix Meta server = -)
+GTM: v131 tag 153 view_category → ViewCategory; trigger 152 includes view_category
+event_id: d8a3cf31-14b6-47fb-8261-8fb46dbdef2c
+Params: content_category=produkter, content_name=Kolleksjonen, view_sequence=1
+action_source=website | AM: IP + UA | Browser Manual Setup | Processed
+EM URL display may show https://utekos.no/ (Overview quirk); mount is /produkter + /gaveguide
+Evidence: docs/analytics/evidence/ce-view-category-ui-wiring.md
+Design: docs/superpowers/specs/2026-07-24-canonical-stale-events-design.md #6 → GO (EM confirmed)
+App tip at PPR fix: 2b7efdbb9
+STOP: do not auto-continue to queue #7 hero_interact
 ```
 

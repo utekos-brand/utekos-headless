@@ -57,7 +57,7 @@ Template SHA-256: `9bdef37da970bc63e8510baf372945e959825e4ef0697fab456d18d3945c9
 | dataLayer `view_category` after consent | **PASS** — before consent count `0`; after Allow-All count `1` |
 | Consent on event | **PASS** — `marketing=granted` |
 | `POST /api/events/view-category` | **PASS** — HTTP `202` |
-| Meta Pixel `ViewCategory` shared `event_id` | **Blocked in automation** — Playwright/Chrome DevTools session never loaded `fbevents.js` / `__utekosMetaPixelState` (same class of automation gap; GTM map is live). Prefer Overview path. |
+| Meta Pixel `ViewCategory` shared `event_id` | **PASS (EM-VISIBLE)** — user Overview confirmation below; automation often lacks `fbevents.js` |
 | Meta CAPI | **N/A** — matrix Meta server = `-` |
 
 ### Browser smoke sample
@@ -71,7 +71,23 @@ Template SHA-256: `9bdef37da970bc63e8510baf372945e959825e4ef0697fab456d18d3945c9
 | `view_sequence` | `1` |
 | API | `202` |
 
-Secondary Chrome sample (post-consent): `4b5569c5-9fde-491e-b5f5-2f68990c05df`.
+Secondary Chrome sample (post-consent): `4b5569c5-9fde-491e-b5f5-2f68990c05df`.  
+EM-VISIBLE sample: `d8a3cf31-14b6-47fb-8261-8fb46dbdef2c` (`/produkter?vc_em=1` → Overview).
+
+## Meta Events Manager visibility — GO (EM-VISIBLE)
+
+Hard gate **CLOSED**. Pixel-only path (matrix Meta server = `-`) uses Events Manager **Overview / Pixel** for `ViewCategory` (same bar as `view_cart` / `LandingScrollDepth`).
+
+| Gate | Status |
+|------|--------|
+| Meta Events Manager **Overview / Pixel** (`ViewCategory`) | **PASS** — user confirmed |
+| Pixel / dataset | `1092362672918571` |
+| `event_id` | `d8a3cf31-14b6-47fb-8261-8fb46dbdef2c` |
+| Status | Processed · Browser · Manual Setup |
+| Parameters | `content_category=produkter`, `content_name=Kolleksjonen`, `view_sequence=1` |
+| `action_source` | `website` |
+| Advanced Matching | IP + UA |
+| EM URL display | Meta may show `https://utekos.no/` even when fired from `/produkter` (known Overview quirk) |
 
 ## How to verify in Meta Events Manager
 
@@ -80,6 +96,7 @@ Secondary Chrome sample (post-consent): `4b5569c5-9fde-491e-b5f5-2f68990c05df`.
 3. Look for custom event **`ViewCategory`** freshness.
 4. Optional browser check: `__utekosMetaPixelState.sent` contains `ViewCategory:<event_id>` matching dataLayer `view_category.event_id`.
 
-## Hard stop
+## Hard stop (queue advance)
 
-Do **not** auto-continue to queue #7 (`hero_interact`). Await EM/Overview confirmation before next item.
+Hard gate for queue #6 is **CLOSED** (EM-VISIBLE confirmed).  
+Do **not** auto-continue to queue #7 (`hero_interact`) without explicit start approval.
