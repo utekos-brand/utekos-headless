@@ -6,8 +6,6 @@ export type ComfyrobePurchaseGallerySlide = {
   ipadSrc: string
   /** How the image should fill the slide frame. */
   fit?: 'cover' | 'contain'
-  /** Tailwind background behind contain/packshot slides. */
-  backdropClassName?: string
 }
 
 export const COMFYROBE_PURCHASE_PRIMARY_IMAGE =
@@ -49,15 +47,13 @@ export const COMFYROBE_PURCHASE_GALLERY: readonly ComfyrobePurchaseGallerySlide[
       alt: 'Comfyrobe™ forfra med SherpaCore™-hette',
       squareSrc: COMFY_VERT_9,
       ipadSrc: COMFY_VERT_9,
-      fit: 'contain',
-      backdropClassName: 'bg-white-sand'
+      fit: 'contain'
     },
     {
       id: 'back',
       alt: 'Comfyrobe™ sett bakfra',
       squareSrc: COMFY_VERT_7,
       ipadSrc: COMFY_VERT_7,
-      fit: 'contain',
-      backdropClassName: 'bg-white-sand'
+      fit: 'contain'
     }
   ] as const

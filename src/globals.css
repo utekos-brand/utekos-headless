@@ -14,7 +14,7 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-ceramic: var(--ceramic);
-  --color-white-sand: var(--white-sand);
+  --color-white-sand: oklch(0.8767 0.0086 56.3);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-alt-pill: oklch(0.5975 0.1138 173.83);
