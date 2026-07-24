@@ -1326,7 +1326,7 @@ const eventCatalogBase = {
     trigger: {
       description:
         'Create after Shopify accepts removal and returns an updated cart without the targeted quantity.',
-      sources: ['browser', 'server'],
+      sources: ['browser', 'server', 'webhook'],
       repeatability:
         'Each successful Shopify removal mutation is new.',
       eventTime: 'The successful Shopify response timestamp.',

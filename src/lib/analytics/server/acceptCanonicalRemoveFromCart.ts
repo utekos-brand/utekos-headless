@@ -1,5 +1,6 @@
 import type { CanonicalRemoveFromCart } from '../removeFromCartEvent'
 import type { CanonicalEventStore } from './canonicalEventStore'
+import type { CanonicalEventSourceEvidence } from './canonicalEventSourceEvidence'
 import {
   normalizeCanonicalRemoveFromCart,
   type CanonicalRemoveFromCartRequestContext
@@ -11,6 +12,7 @@ export type CanonicalRemoveFromCartStore = CanonicalEventStore
 type AcceptCanonicalRemoveFromCartInput = {
   payload: unknown
   requestContext: CanonicalRemoveFromCartRequestContext
+  sourceEvidence?: CanonicalEventSourceEvidence
   store: CanonicalRemoveFromCartStore
 }
 
@@ -25,17 +27,23 @@ export async function acceptCanonicalRemoveFromCart(
     input.payload,
     input.requestContext
   )
+  const isWebhookSource = event.source === 'webhook'
   const hasPermittedPurpose =
     event.consent.analytics === 'granted' ||
     event.consent.marketing === 'granted'
 
-  if (!hasPermittedPurpose) {
+  // Browser path stays consent-gated. Webhook ledger writes are
+  // operational; provider outbox still respects consent + matrix.
+  if (!isWebhookSource && !hasPermittedPurpose) {
     return { reason: 'consent_denied', status: 'rejected' }
   }
 
   const result = await input.store.accept({
     dispatches: planCanonicalEventDispatch(event),
-    event
+    event,
+    ...(input.sourceEvidence ?
+      { sourceEvidence: input.sourceEvidence }
+    : {})
   })
 
   return {

@@ -12,15 +12,35 @@ export type CanonicalRemoveFromCartCustomData = z.infer<
   typeof canonicalRemoveFromCartCustomDataSchema
 >
 
-export const canonicalRemoveFromCartSchema = canonicalEventEnvelopeSchema.extend({
-  event_name: z.literal('remove_from_cart'),
-  source: z.literal('web'),
-    page_url: z.string().url(),
+export const canonicalRemoveFromCartSchema = canonicalEventEnvelopeSchema
+  .extend({
+    event_name: z.literal('remove_from_cart'),
+    source: z.enum(['web', 'webhook']),
+    page_url: z.string().url().optional(),
     referrer_url: z.string().url().optional(),
-    page_title: z.string().min(1),
-  page_view_id: z.string().uuid().optional(),
-  custom_data: canonicalRemoveFromCartCustomDataSchema
-})
+    page_title: z.string().min(1).optional(),
+    page_view_id: z.string().uuid().optional(),
+    custom_data: canonicalRemoveFromCartCustomDataSchema
+  })
+  .superRefine((event, ctx) => {
+    if (event.source !== 'web') return
+
+    if (!event.page_url) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'page_url is required for web remove_from_cart',
+        path: ['page_url']
+      })
+    }
+
+    if (!event.page_title) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'page_title is required for web remove_from_cart',
+        path: ['page_title']
+      })
+    }
+  })
 
 export type CanonicalRemoveFromCart = z.infer<typeof canonicalRemoveFromCartSchema>
 
@@ -63,10 +83,10 @@ export function createCanonicalRemoveFromCart(
     event_time: input.eventTime,
     source: 'web',
     environment: input.environment,
-    ...(input.pageUrl ? { page_url: input.pageUrl } : {}),
+    page_url: input.pageUrl ?? 'https://utekos.no/',
+    page_title: input.pageTitle ?? 'Utekos',
     ...(input.pageViewId ? { page_view_id: input.pageViewId } : {}),
     ...(input.referrerUrl ? { referrer_url: input.referrerUrl } : {}),
-    ...(input.pageTitle ? { page_title: input.pageTitle } : {}),
     consent: input.consent,
     custom_data: input.customData,
     ...(input.browserId ? { browser_id: input.browserId } : {}),
