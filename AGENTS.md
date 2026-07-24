@@ -475,5 +475,7 @@ documentation before changing Google Cloud integrations.
 
 ## Google Analytics
 
-The Measurement Protocol has reached a mature, finalized product state and will remain operational with no plans for deprecation. However, to ensure your technical setups are future-proofed,
-build server-to-server event integrations using the Data Manager API, which is our central infrastructure for future data ingestion innovations.
+Measurement Protocol is legacy and must not be introduced or repaired in this
+repository. All Google Analytics server-to-server event integrations must use
+the Data Manager API. Remove remaining Measurement Protocol credentials and
+external senders rather than treating them as a fallback transport.

@@ -27,6 +27,28 @@ export type GoogleAnalyticsBrowserIdDependencies = {
 
 type GoogleTagWindow = Window & { dataLayer?: unknown[] }
 
+export function queueGoogleTagGet(
+  dataLayer: unknown[],
+  field: GoogleAnalyticsField,
+  callback: GoogleTagCallback
+) {
+  function gtag(
+    ...args: [
+      command: 'get',
+      target: string,
+      field: GoogleAnalyticsField,
+      callback: GoogleTagCallback
+    ]
+  ) {
+    void args
+    // Google documents gtag as pushing its arguments object.
+    // eslint-disable-next-line prefer-rest-params
+    dataLayer.push(arguments)
+  }
+
+  gtag('get', GA_MEASUREMENT_ID, field, callback)
+}
+
 function getGoogleTagValue(
   field: GoogleAnalyticsField,
   callback: GoogleTagCallback
@@ -39,19 +61,7 @@ function getGoogleTagValue(
   const currentWindow = window as GoogleTagWindow
   const dataLayer = currentWindow.dataLayer ?? []
   currentWindow.dataLayer = dataLayer
-
-  function gtag(
-    ...args: [
-      command: 'get',
-      target: string,
-      field: GoogleAnalyticsField,
-      callback: GoogleTagCallback
-    ]
-  ) {
-    dataLayer.push(args)
-  }
-
-  gtag('get', GA_MEASUREMENT_ID, field, callback)
+  queueGoogleTagGet(dataLayer, field, callback)
 }
 
 const defaultDependencies: GoogleAnalyticsBrowserIdDependencies = {

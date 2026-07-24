@@ -7,6 +7,7 @@ import {
 } from './viewItemEvent'
 import {
   enrichCanonicalViewItemWithGoogleAnalyticsIds,
+  queueGoogleTagGet,
   type GoogleAnalyticsBrowserIdDependencies,
   type GoogleAnalyticsField
 } from './googleAnalyticsBrowserIds'
@@ -77,6 +78,22 @@ function dependencies(
     timeoutMs
   }
 }
+
+test('queues the documented gtag arguments object', () => {
+  const dataLayer: unknown[] = []
+  const callback = () => {}
+
+  queueGoogleTagGet(dataLayer, 'session_id', callback)
+
+  assert.equal(dataLayer.length, 1)
+  assert.equal(Array.isArray(dataLayer[0]), false)
+  assert.deepEqual(Array.from(dataLayer[0] as ArrayLike<unknown>), [
+    'get',
+    'G-FCES3L0M9M',
+    'session_id',
+    callback
+  ])
+})
 
 test('adds client_id and ga_session_id after analytics consent', async () => {
   const requested: GoogleAnalyticsField[] = []

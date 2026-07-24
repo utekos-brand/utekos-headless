@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { mapGoogleDataManagerTimestamp } from './googleDataManagerSharedMapping'
+import {
+  mapGoogleDataManagerEventLocation,
+  mapGoogleDataManagerTimestamp
+} from './googleDataManagerSharedMapping'
 
 test('preserves a valid event timestamp that is not in the future', () => {
   const mapped = mapGoogleDataManagerTimestamp(
@@ -23,5 +26,33 @@ test('clamps browser clock skew to the server dispatch time', () => {
   assert.deepEqual(mapped, {
     seconds: 1784389392,
     nanos: 391000000
+  })
+})
+
+test('keeps country and city without synthesizing a subdivision code', () => {
+  const mapped = mapGoogleDataManagerEventLocation({
+    location: {
+      city: 'Oslo',
+      country_code: 'no',
+      region_code: '07'
+    }
+  } as Parameters<typeof mapGoogleDataManagerEventLocation>[0])
+
+  assert.deepEqual(mapped, {
+    city: 'Oslo',
+    regionCode: 'NO'
+  })
+})
+
+test('omits an unverified subdivision code even when it looks qualified', () => {
+  const mapped = mapGoogleDataManagerEventLocation({
+    location: {
+      country_code: 'NO',
+      region_code: 'NO-07'
+    }
+  } as Parameters<typeof mapGoogleDataManagerEventLocation>[0])
+
+  assert.deepEqual(mapped, {
+    regionCode: 'NO'
   })
 })

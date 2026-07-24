@@ -17,9 +17,6 @@ export const IP_MATCHING_RESTRICTED_COUNTRY_CODES = new Set([
   'LT', 'LU', 'LV', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SE',
   'SI', 'SK', 'UK'
 ])
-const SUBDIVISION_CODE = /^[A-Z]{2}-[A-Z0-9]{1,3}$/
-const REGION_PART = /^[A-Z0-9]{1,3}$/
-
 const { ConsentStatus } = protos.google.ads.datamanager.v1
 
 type MappableBrowserEvent = Pick<
@@ -294,32 +291,14 @@ export function mapGoogleDataManagerDeviceInfo(
     : undefined
 }
 
-function resolveSubdivisionCode(
-  event: MappableBrowserEvent
-) {
-  const countryCode = event.location?.country_code?.toUpperCase()
-  const regionCode = event.location?.region_code?.toUpperCase()
-
-  if (!regionCode) return undefined
-  if (SUBDIVISION_CODE.test(regionCode)) return regionCode
-
-  return countryCode && REGION_PART.test(regionCode) ?
-      `${countryCode}-${regionCode}`
-    : undefined
-}
-
 export function mapGoogleDataManagerEventLocation(
   event: MappableBrowserEvent
 ) {
   const location = event.location
-  const subdivisionCode = resolveSubdivisionCode(event)
   const eventLocation = {
     ...(location?.city ? { city: location.city } : {}),
     ...(location?.country_code ?
       { regionCode: location.country_code.toUpperCase() }
-    : {}),
-    ...(subdivisionCode ?
-      { subdivisionCode }
     : {})
   }
 

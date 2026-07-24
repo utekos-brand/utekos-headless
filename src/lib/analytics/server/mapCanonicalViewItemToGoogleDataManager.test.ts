@@ -178,8 +178,7 @@ test('maps a canonical view_item to a GA4 Data Manager event', () => {
     },
     eventLocation: {
       city: 'Oslo',
-      regionCode: 'NO',
-      subdivisionCode: 'NO-03'
+      regionCode: 'NO'
     },
     additionalEventParameters: [
       {
