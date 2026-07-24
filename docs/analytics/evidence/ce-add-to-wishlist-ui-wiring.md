@@ -94,23 +94,47 @@ CAPI is **queued** (`server_retry`) until `/api/cron/provider-outbox-dispatch` r
 
 | Gate | Status |
 |------|--------|
-| Graph Pixel `/stats` (14d + last 12h) | **NO-GO for EM proof** — aggregated counts include `AddToCart`, `InitiateCheckout`, `ViewContent`, custom `SelectItem`, etc., but **zero** `AddToWishlist` / `AddToWishList` at capture time (lag possible; feature first emitted ~2026-07-23T23:56Z) |
-| Browser `/tr` + OpenBridge + CAPI accept | **PASS** (stack) |
-| Events Manager Overview / Test Events UI | **blocked_verification** — no dashboard screenshot; do **not** claim EM-visible from browser/`eventsReceived` alone |
+| Graph Pixel `/stats` + `event_total_counts` (14d / 24h / 6h / 1h, rechecked 2026-07-24T00:19Z) | **NO-GO for EM proof** — `AddToWishlist` / `AddToWishList` remain **0**. Same window shows `AddToCart`, `InitiateCheckout`, `ViewContent`, `PageView`, `Purchase`, `SelectItem`. |
+| Graph `dataset_quality` (no agent filter) | Event names present: `AddToCart`, `InitiateCheckout`, `PageView`, `Purchase`, `SelectItem`, `ViewContent` — **no** `AddToWishlist`. |
+| Browser dataLayer + Pixel state + OpenBridge + first-party POST | **PASS** (stack) — fresh live `899d659c-7b18-4bf7-ab69-6b2bbec80a14` (2026-07-24T00:16Z) |
+| Meta CAPI accept (`events_received=1`) | **PASS** (stack only) — 6 ledger rows all `accepted_unverified` incl. `899d659c-…` / `95e3da94-…` |
+| Production `META_TEST_EVENT_CODE` | **not set** on Vercel production (correct) |
+| Direct Graph Test Events CAPI probe | **API accept only** — `TEST46149` + `AddToWishlist` → `events_received=1` (`fd3c0a4c-39fb-454a-aa23-41255a55e9d3`, `fbtrace_id=AGSjxXtIagIZ1Ux9jbVXpxe`). Overview/`/stats` still 0. UI screenshot still blocked. |
+| Events Manager Overview UI screenshot | **blocked_verification** — no Meta UI MCP |
 
-**Conclusion for EM report «Ingen AddToWishList…»:**
+**Asset identity (mismatch check):**
 
-1. Wrong search spelling (`AddToWishList` ≠ `AddToWishlist`) is a likely UI miss.
-2. Stack is **not** missing CAPI mapper and is **not** sending a non-standard Pixel name.
-3. Prior evidence over-claimed EM readiness from local `__utekosMetaPixelState` without `/tr` body parse.
-4. Independent EM UI / `/stats` confirmation remains **NO-GO** until Meta Overview/Test Events shows `AddToWishlist` (or `/stats` counts > 0).
+| Surface | Value |
+|---------|-------|
+| Pixel / dataset ID | `1092362672918571` (`Utekos Pixel`) |
+| Owner business | `1384717111999921` (`Utekos Marketing Data Layer`) |
+| Shared agency | `538548380599665` (`Utekos Marketing Group`) |
+| OpenBridge | `mpc2-prod-25-is5qnl632q-wl.a.run.app` (+ AWS fallback); blocklist only `SubscribedButtonClick`, `Microdata` — **does not** block `AddToWishlist` |
+| Live web GTM | **v128** tag **153** maps `add_to_wishlist` → `AddToWishlist` (pixel ID matches) |
+| First-party CAPI | `META_PIXEL_ID=1092362672918571`, `action_source=website`, mapper event name `AddToWishlist` |
+
+**Why EM can stay empty despite `/tr` / OpenBridge 200 + CAPI accept:**
+
+1. Meta Graph `/stats` is the independent EM-count proxy we can read: it still shows **zero** `AddToWishlist` after multiple stack-proven fires. `events_received=1` is only an ingress ACK (known Meta failure mode: accept without Overview visibility).
+2. Exact spelling is `AddToWishlist` (Meta standard). Searching `AddToWishList` misses it — but Graph zero proves this is not only a UI typo.
+3. Several agent smokes used synthetic `fbclid` / polluted `_fbc` (`codex_fbclid_*`, `IwAR0_ic_parity_*`). That may cause post-accept quality drop; it does **not** explain away the need for EM-visible proof.
+4. OpenBridge owns browser transport alongside `/tr`; Graph `openbridge_configurations` edge is empty but signals config has live endpoints. Partner view is not a separate pixel ID — still `1092362672918571`.
+5. No app/GTM mapping bug found that would send a non-standard name or wrong pixel. **Fix applied: N.**
 
 ```text
 STACK_WISHLIST_META_FIRE_PROVEN
-EVENTS_MANAGER_VISIBLE_NOT_PROVEN
-Fix mapping/GTM republish: NOT REQUIRED (live v127 already maps AddToWishlist)
-Do not auto-continue to queue #3 (view_cart)
+EVENTS_MANAGER_VISIBLE_NOT_PROVEN   # Graph AddToWishlist count = 0
+Fix mapping/GTM republish: NOT REQUIRED (live v128 already maps AddToWishlist)
+Do not auto-continue to remove_from_cart / queue #4+
 ```
+
+**What to open in Events Manager (human):**
+
+1. Business portfolio **Utekos Marketing Data Layer** (or agency share) → Data sources → **Utekos Pixel** `1092362672918571`.
+2. **Test events** → select/filter code **`TEST46149`** → look for `AddToWishlist` (probe `fd3c0a4c-…` / live heart click in a clean Incognito with marketing consent).
+3. **Overview** (last 1h / 24h) → search exactly `AddToWishlist` — not `AddToWishList`.
+4. **Diagnostics** for drops/warnings on this dataset.
+5. Meta docs: standard event is `fbq('track', 'AddToWishlist')`; Test Events may lead Overview by 30+ minutes.
 
 ### Follow-up fix in same queue item
 
@@ -118,4 +142,4 @@ List/overview variants omit GraphQL `taxable` → Zod reject after persist. Fixe
 
 ## Hard stop
 
-Do not auto-continue to queue #3 (`view_cart`).
+Do not auto-continue to `remove_from_cart` / queue #4+. Queue #3 `view_cart` already has separate evidence — this EM gate still blocks claiming wishlist complete.
