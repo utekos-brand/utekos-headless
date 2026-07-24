@@ -4,10 +4,51 @@ import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import { reportCanonicalViewCategory } from '@/lib/analytics/viewCategoryReporter'
 import { browserPageViewSession } from '@/lib/analytics/pageViewSession'
+import { hasCookiebotDecision } from '@/lib/analytics/pageViewCollectorTransport'
 
 export type ViewCategoryObserverProps = {
   categoryId: string
   categoryName: string
+}
+
+type CookiebotWindow = Window & {
+  Cookiebot?: {
+    consent?: {
+      marketing?: boolean
+      preferences?: boolean
+      statistics?: boolean
+    }
+    consented?: boolean
+    declined?: boolean
+    hasResponse?: boolean
+  }
+}
+
+const COOKIEBOT_EVENTS = [
+  'CookiebotOnConsentReady',
+  'CookiebotOnAccept',
+  'CookiebotOnDecline'
+] as const
+
+function emitViewCategory(
+  categoryId: string,
+  categoryName: string
+) {
+  const pageView = browserPageViewSession.ensure({
+    pageUrl: window.location.href,
+    ...(document.referrer ?
+      { documentReferrer: document.referrer }
+    : {})
+  })
+
+  reportCanonicalViewCategory({
+    pageViewId: pageView.pageViewId,
+    customData: {
+      category_id: categoryId,
+      category_name: categoryName,
+      view_sequence: 1
+    }
+  })
 }
 
 export function ViewCategoryObserver({
@@ -18,27 +59,50 @@ export function ViewCategoryObserver({
   const emittedForPageViewRef = useRef<string | null>(null)
 
   useEffect(() => {
-    const pageView = browserPageViewSession.ensure({
-      pageUrl: window.location.href,
-      ...(document.referrer ?
-        { documentReferrer: document.referrer }
-      : {})
-    })
-
-    if (emittedForPageViewRef.current === pageView.pageViewId) {
+    if (typeof window === 'undefined') {
       return
     }
 
-    emittedForPageViewRef.current = pageView.pageViewId
+    let cancelled = false
+    const listeners: Array<() => void> = []
 
-    reportCanonicalViewCategory({
-      pageViewId: pageView.pageViewId,
-      customData: {
-        category_id: categoryId,
-        category_name: categoryName,
-        view_sequence: 1
+    function tryEmit() {
+      if (cancelled) return
+
+      const pageView = browserPageViewSession.ensure({
+        pageUrl: window.location.href,
+        ...(document.referrer ?
+          { documentReferrer: document.referrer }
+        : {})
+      })
+
+      if (emittedForPageViewRef.current === pageView.pageViewId) {
+        return
       }
-    })
+
+      const cookiebot = (window as CookiebotWindow).Cookiebot
+      if (!hasCookiebotDecision(cookiebot)) {
+        return
+      }
+
+      emittedForPageViewRef.current = pageView.pageViewId
+      emitViewCategory(categoryId, categoryName)
+    }
+
+    tryEmit()
+
+    for (const eventName of COOKIEBOT_EVENTS) {
+      const handler = () => tryEmit()
+      window.addEventListener(eventName, handler)
+      listeners.push(() => window.removeEventListener(eventName, handler))
+    }
+
+    return () => {
+      cancelled = true
+      for (const dispose of listeners) {
+        dispose()
+      }
+    }
   }, [pathname, categoryId, categoryName])
 
   return null
