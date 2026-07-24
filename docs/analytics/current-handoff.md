@@ -1,7 +1,7 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.19.0 **Oppdatert:**
-2026-07-22T13:15:00+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.19.1 **Oppdatert:**
+2026-07-24T03:18:00+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
@@ -773,5 +773,19 @@ Primary event_id: e4d043ee-34af-47ac-8102-22bf2a907b05
 Smoke: scripts/tracking/verify-meta-begin-checkout-dedupe.mjs
 Evidence: docs/analytics/evidence/ce-begin-checkout-meta-browser-server-dedupe.md
 STOP: do not auto-continue to CE-2.4 / CE-2.5
+```
+
+## 26. Stale-events queue #4 — remove_from_cart EM-VISIBLE GO
+
+```text
+Task: Meta RemoveFromCart EM Test Events hard gate (queue #4)
+Conclusion: EM-VISIBLE_CONFIRMED — hard gate CLOSED
+Test code: TEST30107
+event_id #1: t30107-RemoveFromCart-1784855701-c9f73fc8 (TechDown, 1590 NOK)
+event_id #2: t30107-RemoveFromCart-1784855899-f20f7723 (Mikrofiber, 1590 NOK)
+Evidence: docs/analytics/evidence/ce-remove-from-cart-ui-wiring.md
+Design: docs/superpowers/specs/2026-07-24-canonical-stale-events-design.md #4 → GO (EM confirmed)
+Prior: Pixel-only + Graph /stats lag (RemoveFromCart=0) superseded by Server Test Events
+STOP: do not auto-continue to queue #5 scroll_depth
 ```
 

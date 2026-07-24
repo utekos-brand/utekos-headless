@@ -52,7 +52,7 @@ Reference implementation pattern: existing `addToCartReporter` / `/api/events/ad
 | 1 | `select_item` | Product list/card click → wire `selectItemReporter` | Catalog+API, unwired | `SelectItem` (per GTM map) |
 | 2 | `add_to_wishlist` | Minimal wishlist store + button; emit after persist | Catalog+API, no store | `AddToWishlist` |
 | 3 | `view_cart` | `CartDrawer` | Verify params + providers + dedupe | `ViewCart` |
-| 4 | `remove_from_cart` | `CartLineItem` | Verify (not `RemoveCart`) | `RemoveFromCart` |
+| 4 | `remove_from_cart` | `CartLineItem` | **GO (EM confirmed)** — `t30107-RemoveFromCart-1784855701-c9f73fc8` + `t30107-RemoveFromCart-1784855899-f20f7723` | `RemoveFromCart` |
 | 5 | `scroll_depth` | `ScrollDepthObserver`; replaces LandingScrollDepth | Verify on landings; disable legacy dual tag | existing map |
 | 6 | `view_category` | Category/collection view | New catalog + reporter | `ViewCategory` |
 | 7 | `hero_interact` | Hero «Se mer» (`ReadMoreHeroClick`) | New | `HeroInteract` |
