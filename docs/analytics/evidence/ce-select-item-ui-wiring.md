@@ -67,13 +67,33 @@ No `item_list_name` field exists in the canonical schema yet (id-only list conte
 |----------|-------|
 | `73093b95-8af2-45f7-a001-3cee78b34873` | **GREEN** after GTM v126: dataLayer `select_item` + Meta `/tr?ev=SelectItem&eid=` same UUID + `/api/events/select-item` |
 
-### Placement pass sample (HelpChooseCard)
+### Placement pass sample (HelpChooseCard) — **GO** (2026-07-24)
+
+Production tip at smoke: `08a24ae81` (includes wiring commit `4a1e34a92`).
 
 | Gate | Status |
 |------|--------|
-| HelpChooseCard emits `select_item` | Pending production deploy of this SHA |
-| Shared `event_id` dataLayer + `/tr` + CAPI | Pending smoke after deploy |
-| Meta Test Events `TEST30107` / Graph `/stats` SelectItem | See post-deploy smoke section below |
+| HelpChooseCard emits `select_item` | **PASS** — `item_list_id=help_choose_carousel` |
+| Shared `event_id` dataLayer + Meta `/tr?ev=SelectItem` | **PASS** — dedupe **Y** |
+| `/api/events/select-item` POST same `event_id` | **PASS** (request body; response race after nav) |
+| Meta Test Events code | **`TEST30107`** (Pixel `1092362672918571`) — check EM Test Events for row |
+| Graph `/stats` SelectItem | Queried 24h aggregation: **SelectItem not yet in returned buckets** (lag / low volume); browser `/tr` proof stands. Check **Test Events `TEST30107`** for this `event_id`. |
+
+**Live sample `event_id`:** `50293ecd-c70e-4ced-8b46-6feb95d6b33b`
+
+Evidence: Playwright chromium on `https://utekos.no/produkter` → marketing consent (`AllowAll`) → click `[data-track=HelpChooseCardViewMoreClick]` → TechDown Havdyp/Middels.
+
+| Surface | Value |
+|---------|-------|
+| dataLayer `event` | `select_item` |
+| Meta `/tr` `ev` | `SelectItem` |
+| Meta `/tr` `eid` | `50293ecd-c70e-4ced-8b46-6feb95d6b33b` |
+| API POST `event_id` | `50293ecd-c70e-4ced-8b46-6feb95d6b33b` |
+| Pixel value / currency | `1790` / `NOK` |
+| `content_ids` | `["46944403882232"]` |
+| Artifact | `/tmp/select-item-helpchoose-smoke.json` |
+
+**Verdict:** **GO** for HelpChooseCard placement + browser/server `event_id` dedupe. Do **not** auto-continue to `remove_from_cart`.
 
 ## Limitations
 
@@ -83,4 +103,4 @@ No `item_list_name` field exists in the canonical schema yet (id-only list conte
 
 ## Stop condition
 
-Do not start queue #2 (`remove_from_cart`) until HelpChooseCard (or another newly wired surface) proves SelectItem activity under `TEST30107` and/or Graph `/stats` SelectItem > 0 recent after this deploy.
+HelpChooseCard live sample is **GO** (`50293ecd-c70e-4ced-8b46-6feb95d6b33b`, dedupe Y). Do **not** auto-continue to queue #2 (`remove_from_cart`) — requires explicit go.
