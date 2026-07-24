@@ -22,6 +22,7 @@ type RawHelpChooseVariant = {
   currentlyNotInStock: boolean
   selectedOptions: SelectedOption[]
   availableForSale: boolean
+  taxable: boolean
   price: Money
   compareAtPrice: Money | null
   image: HelpChooseImage | null
@@ -121,6 +122,7 @@ const helpChooseProductsQuery = /* GraphQL */ `
                   value
                 }
                 availableForSale
+                taxable
                 price {
                   amount
                   currencyCode

@@ -12,12 +12,24 @@ export type MapShopifySelectItemInput = {
   variant: ShopifyProductVariant
 }
 
+/**
+ * Overview/list payloads (HelpChoose, carousels) sometimes omit `taxable`.
+ * Norway storefront defaults to taxable so Meta/Google commerce values match
+ * view_item / add_to_cart.
+ */
+function withTaxableDefault(
+  variant: ShopifyProductVariant
+): ShopifyProductVariant {
+  if (typeof variant.taxable === 'boolean') return variant
+  return { ...variant, taxable: true }
+}
+
 export function mapShopifySelectItem(
   input: MapShopifySelectItemInput
 ): CanonicalSelectItemCustomData {
   const commerce = mapShopifyViewItem({
     product: input.product,
-    variant: input.variant,
+    variant: withTaxableDefault(input.variant),
     quantity: input.quantity ?? 1
   })
 
