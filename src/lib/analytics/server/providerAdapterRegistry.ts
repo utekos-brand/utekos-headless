@@ -28,6 +28,7 @@ import { metaBeginCheckoutProviderAdapter } from './providerAdapters/metaBeginCh
 import { metaGenerateLeadProviderAdapter } from './providerAdapters/metaGenerateLeadProviderAdapter'
 import { metaPageViewProviderAdapter } from './providerAdapters/metaPageViewProviderAdapter'
 import { metaPurchaseProviderAdapter } from './providerAdapters/metaPurchaseProviderAdapter'
+import { metaRemoveFromCartProviderAdapter } from './providerAdapters/metaRemoveFromCartProviderAdapter'
 import { metaSearchProviderAdapter } from './providerAdapters/metaSearchProviderAdapter'
 import { metaSelectItemProviderAdapter } from './providerAdapters/metaSelectItemProviderAdapter'
 import { metaViewItemProviderAdapter } from './providerAdapters/metaViewItemProviderAdapter'
@@ -69,6 +70,7 @@ export const providerAdapterRegistry = {
   'meta:generate_lead': metaGenerateLeadProviderAdapter,
   'meta:page_view': metaPageViewProviderAdapter,
   'meta:purchase': metaPurchaseProviderAdapter,
+  'meta:remove_from_cart': metaRemoveFromCartProviderAdapter,
   'meta:search': metaSearchProviderAdapter,
   'meta:select_item': metaSelectItemProviderAdapter,
   'meta:view_item': metaViewItemProviderAdapter,

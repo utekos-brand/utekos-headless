@@ -30,6 +30,7 @@ import { metaBeginCheckoutProviderAdapter } from './providerAdapters/metaBeginCh
 import { metaGenerateLeadProviderAdapter } from './providerAdapters/metaGenerateLeadProviderAdapter'
 import { metaPageViewProviderAdapter } from './providerAdapters/metaPageViewProviderAdapter'
 import { metaPurchaseProviderAdapter } from './providerAdapters/metaPurchaseProviderAdapter'
+import { metaRemoveFromCartProviderAdapter } from './providerAdapters/metaRemoveFromCartProviderAdapter'
 import { metaSearchProviderAdapter } from './providerAdapters/metaSearchProviderAdapter'
 import { metaSelectItemProviderAdapter } from './providerAdapters/metaSelectItemProviderAdapter'
 import { metaViewItemProviderAdapter } from './providerAdapters/metaViewItemProviderAdapter'
@@ -128,6 +129,9 @@ export const providerOutboxWorkerRegistry = {
   ),
   'meta:purchase': createPostgresProviderOutboxWorker(
     metaPurchaseProviderAdapter
+  ),
+  'meta:remove_from_cart': createPostgresProviderOutboxWorker(
+    metaRemoveFromCartProviderAdapter
   ),
   'meta:search': createPostgresProviderOutboxWorker(
     metaSearchProviderAdapter

@@ -1347,6 +1347,10 @@ const eventCatalogBase = {
     providers: activeEventProviders('remove_from_cart', {
       commerce: true,
       googleRequired: ['currency', 'value', 'items'],
+      meta: {
+        eventName: 'RemoveFromCart',
+        requiredParameters: ['content_ids', 'currency', 'value']
+      },
       microsoft: {
         eventName: 'remove_from_cart',
         requiredParameters: ['items']
