@@ -61,29 +61,6 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
 
   const localQuantity = quantityOverride ?? line.quantity
 
-  const handleUpdateQuantity = (newQuantity: number) => {
-    setQuantityOverride(newQuantity)
-
-    if (updateTimerRef.current) {
-      clearTimeout(updateTimerRef.current)
-    }
-
-    if (newQuantity === 0) {
-      setIsDeleting(true)
-      cartActor.send({
-        type: 'REMOVE_LINE',
-        input: { lineId: line.id }
-      })
-    } else {
-      updateTimerRef.current = setTimeout(() => {
-        cartActor.send({
-          type: 'UPDATE_LINE',
-          input: { lineId: line.id, quantity: newQuantity }
-        })
-      }, 300)
-    }
-  }
-
   const handleRemoveLine = async () => {
     if (updateTimerRef.current) {
       clearTimeout(updateTimerRef.current)
@@ -95,6 +72,7 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
 
     const queryKey = ['cart', cartId] as const
     let previousCart: Cart | null | undefined
+    const removedQuantity = line.quantity
 
     if (cartId) {
       await queryClient.cancelQueries({ queryKey })
@@ -106,13 +84,13 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
         const removedLine = oldCart.lines.find(
           cartLine => cartLine.id === line.id
         )
-        const removedQuantity = removedLine?.quantity ?? line.quantity
+        const quantityDelta = removedLine?.quantity ?? removedQuantity
 
         return {
           ...oldCart,
           totalQuantity: Math.max(
             0,
-            oldCart.totalQuantity - removedQuantity
+            oldCart.totalQuantity - quantityDelta
           ),
           lines: oldCart.lines.filter(cartLine => cartLine.id !== line.id)
         }
@@ -150,7 +128,7 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
           cartId: resolvedCartId,
           mutationTimestamp: eventTime,
           product,
-          quantity: line.quantity,
+          quantity: removedQuantity,
           variant: line.merchandise
         })
       })
@@ -159,6 +137,26 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
     if (cartId) {
       await queryClient.invalidateQueries({ queryKey })
     }
+  }
+
+  const handleUpdateQuantity = (newQuantity: number) => {
+    if (updateTimerRef.current) {
+      clearTimeout(updateTimerRef.current)
+    }
+
+    if (newQuantity === 0) {
+      void handleRemoveLine()
+      return
+    }
+
+    setQuantityOverride(newQuantity)
+
+    updateTimerRef.current = setTimeout(() => {
+      cartActor.send({
+        type: 'UPDATE_LINE',
+        input: { lineId: line.id, quantity: newQuantity }
+      })
+    }, 300)
   }
 
   const productTitle: string =
@@ -290,7 +288,8 @@ export const CartLineItem = ({ lineId }: CartLineItemProps) => {
                 onClick={() =>
                   handleUpdateQuantity(localQuantity - 1)
                 }
-                disabled={localQuantity <= 1 || isDeleting}
+                disabled={localQuantity < 1 || isDeleting}
+                aria-label={`Reduser antall for ${productTitle}`}
               >
                 <Minus className='size-3' />
               </Button>

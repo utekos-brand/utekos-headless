@@ -1,0 +1,54 @@
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import { mapShopifyRemoveFromCart } from './shopifyRemoveFromCartCommerce'
+import type { CartProductVariant } from 'types/cart/CartProductVariant'
+import type { ShopifyProduct } from 'types/product/ShopifyProduct'
+
+const product = {
+  id: 'gid://shopify/Product/456',
+  handle: 'utekos-techdown',
+  title: 'Utekos TechDown',
+  vendor: 'Utekos',
+  productType: 'Yttertøy',
+  collections: { nodes: [] },
+  options: [],
+  variants: { nodes: [] },
+  featuredImage: null,
+  priceRange: {
+    minVariantPrice: { amount: '1790.0', currencyCode: 'NOK' },
+    maxVariantPrice: { amount: '1790.0', currencyCode: 'NOK' }
+  }
+} as unknown as ShopifyProduct
+
+const variant = {
+  id: 'gid://shopify/ProductVariant/46944403882232',
+  title: 'Default',
+  availableForSale: true,
+  selectedOptions: [],
+  price: { amount: '1790.0', currencyCode: 'NOK' },
+  compareAtPrice: null,
+  image: null,
+  product
+} as unknown as CartProductVariant
+
+test('mapShopifyRemoveFromCart carries cart_id, mutation id, and commerce', () => {
+  const customData = mapShopifyRemoveFromCart({
+    cartId: 'gid://shopify/Cart/abc123',
+    mutationTimestamp: '2026-07-24T12:00:00.000Z',
+    product,
+    quantity: 2,
+    variant
+  })
+
+  assert.equal(customData.cart_id, 'gid://shopify/Cart/abc123')
+  assert.ok(customData.cart_mutation_id.length > 0)
+  assert.equal(customData.currency, 'NOK')
+  assert.equal(customData.gross_value, 3580)
+  assert.equal(customData.items.length, 1)
+  assert.equal(
+    customData.items[0]?.variant_id,
+    'gid://shopify/ProductVariant/46944403882232'
+  )
+  assert.equal(customData.items[0]?.quantity, 2)
+  assert.equal(customData.items[0]?.taxable, true)
+})
