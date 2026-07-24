@@ -2,6 +2,7 @@
 
 **Date:** 2026-07-24  
 **Start SHA:** `9032f040ed2f2a20af340c8e317507cec9cd1013`  
+**App tip:** `e064fa6e2e0231a1d66cf53fabae18ee332b5f22`  
 **Roadmap:** Stale-events design queue #6 (`view_category`)
 
 ## Governance preflight
@@ -20,7 +21,8 @@ Documentation status: design + handoff + matrix + existing scroll_depth/view_car
 
 - New canonical `view_category` (Zod + reporter + collector + `/api/events/view-category` + Google DM adapter/outbox).
 - Catalog lifecycle `active`; Meta CAPI `not_relevant` (browser Pixel only, same bar as `view_cart` / `scroll_depth`).
-- UI: `ViewCategoryObserver` once on `/produkter` overview **layout** (`category_id=produkter`) and once on `/gaveguide` (`category_id=gaveguide`). Removed duplicate mount from produkter `page.tsx` (would double-fire).
+- UI: `ViewCategoryObserver` once on `/produkter` overview **layout** (`category_id=produkter`) and once on `/gaveguide` (`category_id=gaveguide`). Removed duplicate mount from produkter `page.tsx`.
+- Observer waits for Cookiebot decision (`CookiebotOnConsentReady` / Accept / Decline) before emit — avoids pre-banner denied-consent race.
 - GTM template: `view_category` → `ViewCategory` with `content_category` / `content_name` / `view_sequence`.
 
 ## Unit verification
@@ -44,27 +46,40 @@ Template SHA-256: `9bdef37da970bc63e8510baf372945e959825e4ef0697fab456d18d3945c9
 
 | Version | Name | Notes |
 |---------|------|-------|
-| **131** | Meta Pixel view_category ViewCategory - 2026-07-24 | Tag **153** HTML (`view_category`→`ViewCategory`); trigger **152** regex includes `view_category`; Source SHA-256 `9bdef37…`. |
+| **131** | Meta Pixel view_category ViewCategory - 2026-07-24 | Tag **153** HTML (`view_category`→`ViewCategory`); trigger **152** regex includes `view_category`; Source SHA-256 `9bdef37…`. Live `gtm.js` `"version":"131"` contains `view_category` + `ViewCategory`. |
 
-### App / Vercel / smoke
-
-Filled after commit/push + production Ready + browser smoke on `/produkter` (and optionally `/gaveguide`).
+### App / Vercel
 
 | Gate | Status |
 |------|--------|
-| App commit | _pending fill_ |
-| Production tip | _pending fill_ |
-| dataLayer `view_category` | _pending fill_ |
-| `POST /api/events/view-category` | _pending fill_ |
-| Pixel `ViewCategory` shared `event_id` | _pending fill_ |
+| App commit | `e064fa6e2` (Cookiebot wait); feature `4bb03e100` |
+| Production tip | **READY** — `dpl_hKyisKuTjx6c68P8FBVThe31WCLy` aliased to `utekos.no` |
+| dataLayer `view_category` after consent | **PASS** — before consent count `0`; after Allow-All count `1` |
+| Consent on event | **PASS** — `marketing=granted` |
+| `POST /api/events/view-category` | **PASS** — HTTP `202` |
+| Meta Pixel `ViewCategory` shared `event_id` | **Blocked in automation** — Playwright/Chrome DevTools session never loaded `fbevents.js` / `__utekosMetaPixelState` (same class of automation gap; GTM map is live). Prefer Overview path. |
 | Meta CAPI | **N/A** — matrix Meta server = `-` |
+
+### Browser smoke sample
+
+| Field | Value |
+|-------|-------|
+| Route | `https://utekos.no/produkter?vc_smoke=consentwait` |
+| `event_id` | `9b48e2c0-1ad7-4a9b-a296-e33cf760e4fc` |
+| `category_id` | `produkter` |
+| `category_name` | `Kolleksjonen` |
+| `view_sequence` | `1` |
+| API | `202` |
+
+Secondary Chrome sample (post-consent): `4b5569c5-9fde-491e-b5f5-2f68990c05df`.
 
 ## How to verify in Meta Events Manager
 
 1. Open Pixel/dataset `1092362672918571` → **Overview** (not Test Events-only).
-2. Look for custom event **`ViewCategory`** freshness after visiting `utekos.no/produkter` or `/gaveguide` with marketing consent.
-3. Optional browser check: `__utekosMetaPixelState.sent` contains `ViewCategory:<event_id>` matching dataLayer `view_category.event_id`.
+2. Visit `utekos.no/produkter` or `/gaveguide` with marketing consent.
+3. Look for custom event **`ViewCategory`** freshness.
+4. Optional browser check: `__utekosMetaPixelState.sent` contains `ViewCategory:<event_id>` matching dataLayer `view_category.event_id`.
 
 ## Hard stop
 
-Do **not** auto-continue to queue #7 (`hero_interact`).
+Do **not** auto-continue to queue #7 (`hero_interact`). Await EM/Overview confirmation before next item.
