@@ -39,9 +39,42 @@ node --test scripts/tracking/web-meta-pixel-tag.test.mjs
 
 Template SHA-256: `10199cc8ce1a7026621346d28913df5077a4ace2b1b58475530ed0e90d4ee541`
 
-## Live / production gates
+## Live / production gates (2026-07-24)
 
-_Populate after GTM publish + app deploy + browser smoke + EM Overview._
+### Web GTM publish (`GTM-5TWMJQFP`)
+
+| Version | Name | Notes |
+|---------|------|-------|
+| **132** | Meta Pixel hero_interact HeroInteract - 2026-07-24 | Tag **153** HTML (`hero_interact`→`HeroInteract`); trigger **152** regex includes `hero_interact`; Source SHA-256 `10199cc8…`. Live `gtm.js` `"version":"132"` contains `hero_interact` + `HeroInteract`. |
+
+### App / Vercel
+
+| Gate | Status |
+|------|--------|
+| App commit | `aaca17cf2` |
+| Production tip | **READY** — `dpl_36uANn1Fyhr6gDcZVgNkKzZAF6fe` aliased to `utekos.no` |
+| dataLayer `hero_interact` on CTA click | **PASS** — `f2ecfe32-cf4d-4cf5-aa7a-3fed954c618b` |
+| `POST /api/events/hero-interact` | **PASS** — HTTP `202` |
+| Meta Pixel `HeroInteract` shared `event_id` | **Blocked in automation** — prefer Overview path |
+| Meta CAPI | **N/A** — matrix Meta server = `-` |
+
+### Browser smoke sample
+
+| Field | Value |
+|-------|-------|
+| Route | `https://utekos.no/?hi_smoke=1` |
+| `event_id` | `f2ecfe32-cf4d-4cf5-aa7a-3fed954c618b` |
+| `cta_id` | `read_more_hero` |
+| `destination_path` | `/skreddersy-varmen` |
+| `click_sequence` | `1` |
+| API | `202` |
+
+## How to verify in Meta Events Manager
+
+1. Open Pixel/dataset `1092362672918571` → **Overview** (not Test Events-only).
+2. Visit `utekos.no`, Allow marketing, click hero **Se mer**.
+3. Look for custom event **`HeroInteract`** freshness.
+4. Optional: `__utekosMetaPixelState.sent` contains `HeroInteract:<event_id>`.
 
 ## Hard stop
 

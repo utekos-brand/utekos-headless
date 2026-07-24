@@ -824,3 +824,19 @@ App tip at PPR fix: 2b7efdbb9
 STOP: do not auto-continue to queue #7 hero_interact
 ```
 
+## 29. Stale-events queue #7 — hero_interact SHIPPED (await EM)
+
+```text
+Task: Meta HeroInteract EM Overview/Pixel hard gate (queue #7)
+Status: SHIPPED — await EM Overview confirmation
+App commit: aaca17cf2
+GTM: v132 tag 153 hero_interact → HeroInteract; trigger 152 includes hero_interact
+Smoke event_id: f2ecfe32-cf4d-4cf5-aa7a-3fed954c618b
+Params: cta_id=read_more_hero, destination_path=/skreddersy-varmen, click_sequence=1
+API: POST /api/events/hero-interact → 202
+Meta CAPI: N/A (matrix -) — verify Overview/Pixel, not Test Events
+Evidence: docs/analytics/evidence/ce-hero-interact-ui-wiring.md
+Design: docs/superpowers/specs/2026-07-24-canonical-stale-events-design.md #7
+STOP: do not auto-continue to queue #8 interact_with_accordion
+```
+
