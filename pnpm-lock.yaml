@@ -15,8 +15,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       '@ai-sdk/devtools':
-        specifier: ^0.0.18
-        version: 0.0.18
+        specifier: ^1.0.7
+        version: 1.0.7
       '@ai-sdk/openai':
         specifier: ^3.0.67
         version: 3.0.73(zod@4.4.3)
@@ -498,9 +498,9 @@ packages:
   '@adobe/leonardo-contrast-colors@1.1.0':
     resolution: {integrity: sha512-URFR8vNgNsE/rnXqljVrx6OyZV3nQXTfbDDWZwTUYfOkmBr9hRB7ENK8f7pT7gHDjSuCf2bjJ227u4PUHUXHHg==}
 
-  '@ai-sdk/devtools@0.0.18':
-    resolution: {integrity: sha512-0J25Q7occrkMJM1MrP0KeR8XNdGGKNgzxhOLfxBe/qZBQP6yXgV4H5Gf2DnDC3UgXDBJBskH9nh23doCo2Pebw==}
-    engines: {node: '>=18'}
+  '@ai-sdk/devtools@1.0.7':
+    resolution: {integrity: sha512-6wbKHE23oUPOIcJxrkeq3QR+zD7/PxTA+IQFpxbx4CljDi83MBTu4KOotLJRQTXkU1oPZlqWPtGsg8c5j5sFFQ==}
+    engines: {node: '>=22'}
     hasBin: true
 
   '@ai-sdk/gateway@3.0.133':
@@ -524,6 +524,10 @@ packages:
   '@ai-sdk/provider@3.0.10':
     resolution: {integrity: sha512-Q3BZ27qfpYqnCYGvE3vt+Qi6LGOF9R5Nmzn+9JoM1lCRsD9mYaIhfJLkSunN48nfGXJ6n+XNV0J/XVpqGQl7Dw==}
     engines: {node: '>=18'}
+
+  '@ai-sdk/provider@4.0.3':
+    resolution: {integrity: sha512-e0CpNWJUY7OxAFAnCZkw+ri9QOHWwTs1tXP42782KFGCU07qt8NiXCrCVowyCB5dP2r5/Uls+g2oPd8kOJn9dw==}
+    engines: {node: '>=22'}
 
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -6299,6 +6303,10 @@ packages:
     resolution: {integrity: sha512-uyZtpnYxM9CmQ7QsQknM4zN8EftNqhON1qYeIKM0Se67CCEe2c44xyGURwB0axX2fBDu1dqHrHAc1hmNT8ITkw==}
     engines: {node: '>=16.9.0'}
 
+  hono@4.12.31:
+    resolution: {integrity: sha512-zJIHFrl6bq3RDd2YusFNCDlM8qUprxKswyi/OPzPyzKDdyBXDqWx8bZlZ7R+saTdSTatUmb3O7K4SspGPaEOQg==}
+    engines: {node: '>=16.9.0'}
+
   hsluv@1.0.2:
     resolution: {integrity: sha512-HTYvUWwnkH63bzIWEz0wek//GCqSRv6Tqeo9RWhEvra3dVsjiPVIvPYZs7/LbCkEuR03lfJvqRyCSI5HXAMpqA==}
 
@@ -9329,11 +9337,11 @@ snapshots:
       ciecam02: 0.4.6
       hsluv: 1.0.2
 
-  '@ai-sdk/devtools@0.0.18':
+  '@ai-sdk/devtools@1.0.7':
     dependencies:
-      '@ai-sdk/provider': 3.0.10
-      '@hono/node-server': 1.19.14(hono@4.12.26)
-      hono: 4.12.26
+      '@ai-sdk/provider': 4.0.3
+      '@hono/node-server': 1.19.14(hono@4.12.31)
+      hono: 4.12.31
 
   '@ai-sdk/gateway@3.0.133(zod@4.4.3)':
     dependencies:
@@ -9356,6 +9364,10 @@ snapshots:
       zod: 4.4.3
 
   '@ai-sdk/provider@3.0.10':
+    dependencies:
+      json-schema: 0.4.0
+
+  '@ai-sdk/provider@4.0.3':
     dependencies:
       json-schema: 0.4.0
 
@@ -10796,6 +10808,10 @@ snapshots:
   '@hono/node-server@1.19.14(hono@4.12.26)':
     dependencies:
       hono: 4.12.26
+
+  '@hono/node-server@1.19.14(hono@4.12.31)':
+    dependencies:
+      hono: 4.12.31
 
   '@hookform/resolvers@5.4.0(react-hook-form@7.80.0(react@19.2.7))':
     dependencies:
@@ -16012,6 +16028,8 @@ snapshots:
       react-is: 16.13.1
 
   hono@4.12.26: {}
+
+  hono@4.12.31: {}
 
   hsluv@1.0.2: {}
 
