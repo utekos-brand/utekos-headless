@@ -17,7 +17,8 @@
     generate_lead: 'Lead',
     // Existing Meta custom event name; canonical app contract is scroll_depth.
     scroll_depth: 'LandingScrollDepth',
-    view_category: 'ViewCategory'
+    view_category: 'ViewCategory',
+    hero_interact: 'HeroInteract'
   };
   var state = w.__utekosMetaPixelState || {
     initialized: false,
@@ -235,6 +236,22 @@
       }
 
       return category;
+    }
+
+    if (eventName === 'hero_interact') {
+      var hero = {};
+
+      if (customData.cta_id) {
+        hero.content_name = customData.cta_id;
+      }
+      if (customData.destination_path) {
+        hero.content_category = customData.destination_path;
+      }
+      if (finiteNumber(customData.click_sequence)) {
+        hero.click_sequence = customData.click_sequence;
+      }
+
+      return hero;
     }
 
     if (eventName === 'generate_lead') {

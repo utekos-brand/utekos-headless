@@ -19,6 +19,7 @@ import { googleDataManagerVariantSelectProviderAdapter } from './providerAdapter
 import { googleDataManagerVideoProgressProviderAdapter } from './providerAdapters/googleDataManagerVideoProgressProviderAdapter'
 import { googleDataManagerViewCartProviderAdapter } from './providerAdapters/googleDataManagerViewCartProviderAdapter'
 import { googleDataManagerViewCategoryProviderAdapter } from './providerAdapters/googleDataManagerViewCategoryProviderAdapter'
+import { googleDataManagerHeroInteractProviderAdapter } from './providerAdapters/googleDataManagerHeroInteractProviderAdapter'
 import { googleDataManagerViewItemProviderAdapter } from './providerAdapters/googleDataManagerViewItemProviderAdapter'
 import { googleDataManagerViewItemListProviderAdapter } from './providerAdapters/googleDataManagerViewItemListProviderAdapter'
 import { googleDataManagerViewPromotionProviderAdapter } from './providerAdapters/googleDataManagerViewPromotionProviderAdapter'
@@ -48,6 +49,7 @@ export const providerAdapterRegistry = {
   'google:form_start': googleDataManagerFormStartProviderAdapter,
   'google:form_submit': googleDataManagerFormSubmitProviderAdapter,
   'google:generate_lead': googleDataManagerGenerateLeadProviderAdapter,
+  'google:hero_interact': googleDataManagerHeroInteractProviderAdapter,
   'google:purchase': googleDataManagerPurchaseProviderAdapter,
   'google:refund': googleDataManagerRefundProviderAdapter,
   'google:remove_from_cart': googleDataManagerRemoveFromCartProviderAdapter,

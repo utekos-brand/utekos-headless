@@ -6,6 +6,10 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import type { Route } from 'next'
 import { motion, useReducedMotion } from 'motion/react'
+import { reportCanonicalHeroInteract } from '@/lib/analytics/heroInteractReporter'
+
+const HERO_CTA_ID = 'read_more_hero'
+const HERO_DESTINATION = '/skreddersy-varmen'
 
 export function ChevronDownSection() {
   const shouldReduceMotion = useReducedMotion()
@@ -13,9 +17,18 @@ export function ChevronDownSection() {
 
   return (
     <Link
-      href={'/skreddersy-varmen' as Route}
+      href={HERO_DESTINATION as Route}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={() => {
+        reportCanonicalHeroInteract({
+          customData: {
+            cta_id: HERO_CTA_ID,
+            destination_path: HERO_DESTINATION,
+            click_sequence: 1
+          }
+        })
+      }}
       className='motion-cta group relative inline-flex min-h-11 items-center justify-center px-5 py-4'
       aria-label='Gå til skreddersy varmen'
       data-track='ReadMoreHeroClick'

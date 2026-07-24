@@ -2050,6 +2050,42 @@ const eventCatalogBase = {
       posthog: true
     })
   },
+  hero_interact: {
+    version: 1,
+    name: 'hero_interact',
+    lifecycle: 'active',
+    owner: 'storefront_hero_cta',
+    trigger: {
+      description:
+        'Create when the homepage hero CTA (Se mer / ReadMoreHeroClick) is clicked.',
+      sources: ['browser'],
+      repeatability:
+        'Once per page view, CTA, and click sequence.',
+      eventTime: 'The hero CTA click timestamp.',
+      prerequisites: [
+        'page_view_id',
+        'cta_id',
+        'destination_path',
+        'click_sequence'
+      ]
+    },
+    dedupe: dedupe(
+      'page_view_id + cta_id + click_sequence',
+      'A new page view or newly qualifying hero CTA click sequence receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: activeEventProviders('hero_interact', {
+      googleRequired: ['cta_id', 'destination_path'],
+      firstPartyRequired: [
+        'page_view_id',
+        'cta_id',
+        'destination_path',
+        'click_sequence'
+      ],
+      posthog: true
+    })
+  },
   video_progress: {
     version: 1,
     name: 'video_progress',
@@ -2121,6 +2157,7 @@ export const eventSignalProfiles = {
   payment_error: 'blocked_mixed',
   scroll_depth: 'website',
   view_category: 'website',
+  hero_interact: 'website',
   video_progress: 'website'
 } as const satisfies {
   readonly [K in keyof typeof eventCatalogBase]: EventSignalProfile

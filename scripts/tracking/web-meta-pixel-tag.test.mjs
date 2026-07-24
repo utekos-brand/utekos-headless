@@ -152,6 +152,11 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
       category_name: 'Kolleksjonen',
       view_sequence: 1
     }),
+    canonicalEvent('hero_interact', 'hero-interact-event', {
+      cta_id: 'read_more_hero',
+      destination_path: '/skreddersy-varmen',
+      click_sequence: 1
+    }),
     canonicalEvent('generate_lead', 'lead-event', { currency: 'NOK', value: 1 })
   )
 
@@ -186,6 +191,7 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
       ['Search', 'search-event'],
       ['LandingScrollDepth', 'scroll-depth-event'],
       ['ViewCategory', 'view-category-event'],
+      ['HeroInteract', 'hero-interact-event'],
       ['Lead', 'lead-event']
     ]
   )
@@ -212,6 +218,14 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
       content_category: 'produkter',
       content_name: 'Kolleksjonen',
       view_sequence: 1
+    }
+  )
+  assert.deepEqual(
+    eventCalls.find(call => call[2] === 'HeroInteract')?.[3],
+    {
+      content_name: 'read_more_hero',
+      content_category: '/skreddersy-varmen',
+      click_sequence: 1
     }
   )
   assert.equal(runtime.insertedScripts.length, 1)

@@ -21,6 +21,7 @@ import { googleDataManagerVariantSelectProviderAdapter } from './providerAdapter
 import { googleDataManagerVideoProgressProviderAdapter } from './providerAdapters/googleDataManagerVideoProgressProviderAdapter'
 import { googleDataManagerViewCartProviderAdapter } from './providerAdapters/googleDataManagerViewCartProviderAdapter'
 import { googleDataManagerViewCategoryProviderAdapter } from './providerAdapters/googleDataManagerViewCategoryProviderAdapter'
+import { googleDataManagerHeroInteractProviderAdapter } from './providerAdapters/googleDataManagerHeroInteractProviderAdapter'
 import { googleDataManagerViewItemProviderAdapter } from './providerAdapters/googleDataManagerViewItemProviderAdapter'
 import { googleDataManagerViewItemListProviderAdapter } from './providerAdapters/googleDataManagerViewItemListProviderAdapter'
 import { googleDataManagerViewPromotionProviderAdapter } from './providerAdapters/googleDataManagerViewPromotionProviderAdapter'
@@ -103,6 +104,9 @@ export const providerOutboxWorkerRegistry = {
   ),
   'google:view_category': createPostgresProviderOutboxWorker(
     googleDataManagerViewCategoryProviderAdapter
+  ),
+  'google:hero_interact': createPostgresProviderOutboxWorker(
+    googleDataManagerHeroInteractProviderAdapter
   ),
   'google:view_item': createPostgresProviderOutboxWorker(
     googleDataManagerViewItemProviderAdapter

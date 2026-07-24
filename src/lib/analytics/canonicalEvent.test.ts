@@ -44,6 +44,7 @@ test('implemented union covers every active catalog event', () => {
     'size_guide_view',
     'scroll_depth',
     'view_category',
+    'hero_interact',
     'video_progress'
   ])
 

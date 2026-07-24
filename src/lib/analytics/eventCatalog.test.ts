@@ -40,6 +40,7 @@ const expectedCanonicalEventNames = [
   'payment_error',
   'scroll_depth',
   'view_category',
+  'hero_interact',
   'video_progress'
 ] as const
 
@@ -51,8 +52,8 @@ const providerIds = [
   'posthog'
 ] as const satisfies readonly ProviderId[]
 
-test('contains exactly the 30 v1 canonical events', () => {
-  assert.equal(canonicalEventNames.length, 30)
+test('contains exactly the 31 v1 canonical events', () => {
+  assert.equal(canonicalEventNames.length, 31)
   assert.deepEqual(
     [...canonicalEventNames],
     expectedCanonicalEventNames
