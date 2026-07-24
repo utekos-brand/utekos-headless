@@ -18,7 +18,7 @@ Documentation status: design + handoff + matrix + existing catalog/API/Google ad
 
 ## What shipped in-repo
 
-- `CartLineItem` trash confirm and quantity-to-zero (minus at qty 1) share the post-mutation `reportCanonicalRemoveFromCart` path.
+- `CartLineItem` trash confirm and quantity-to-zero (minus at qty 1) share the post-mutation `reportCanonicalRemoveFromCart` path (`90768b1df`).
 - Catalog + `/api/events/remove-from-cart` + Google DM outbox already active; Meta CAPI left disabled per matrix (`-`).
 - GTM template: `remove_from_cart` → `RemoveFromCart` + commerce payload (isoCurrency fail-closed retained; install-race fix retained).
 
@@ -36,9 +36,32 @@ node --test scripts/tracking/web-meta-pixel-tag.test.mjs
 
 Template SHA-256: `37f77b66fbe370d5184c3497362acabf8917bdcef8ac305422bd94f1bd322082`
 
-## Live / production gates
+## Live / production gates (2026-07-24)
 
-(pending after commit/push + smoke)
+### App / Vercel
+
+| Gate | Status |
+|------|--------|
+| Production tip | **READY** — `90768b1df` (`dpl_8E6aLxg4pKx85vzrfWfn8asEtpfy`) |
+| dataLayer `remove_from_cart` after line remove | **PASS** — `48ea1a5d-6ac6-4149-a51e-bcfcafe3e1e9` (`currency=NOK`, `gross_value=1590`, items=1, `cart_mutation_id` present) |
+| `POST /api/events/remove-from-cart` | **PASS** — HTTP `202` |
+
+### Web GTM publish (`GTM-5TWMJQFP`)
+
+| Version | Name | Notes |
+|---------|------|-------|
+| **129** | Meta Pixel remove_from_cart RemoveFromCart - 2026-07-24 | Tag **153** HTML (`remove_from_cart`→`RemoveFromCart` + commerce); trigger **152** regex includes `remove_from_cart`; `supportDocumentWrite` boolean `false`; install-race + isoCurrency retained. Source SHA-256 `37f77b66fbe370d5184c3497362acabf8917bdcef8ac305422bd94f1bd322082`. |
+
+### Meta Pixel `RemoveFromCart` browser parity
+
+| Gate | Status |
+|------|--------|
+| `window.fbq` + tag 153 initialized | **PASS** |
+| Shared `event_id` Pixel↔dataLayer | **PASS** — `__utekosMetaPixelState.sent['RemoveFromCart:48ea1a5d-6ac6-4149-a51e-bcfcafe3e1e9']` |
+| Legacy `RemoveCart` | **PASS** — no `RemoveCart:*` keys in Pixel sent map |
+| Meta `/tr` RemoveFromCart | Not observed in automated capture (OpenBridge may own transport); Pixel state.sent is authoritative for shared `eventID` |
+| Meta CAPI | **N/A** — matrix Meta server = `-` for `remove_from_cart` |
+| Events Manager Test Events | Use **TEST30107** (never TEST46149) |
 
 ## Hard stop
 
