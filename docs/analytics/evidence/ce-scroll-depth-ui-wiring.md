@@ -41,8 +41,8 @@ Template SHA-256: `d12ec0df9cf0eb2b3900d64e7012405180e8a381faacc0e52b0a535afd7a3
 
 | Gate | Status |
 |------|--------|
-| App commit | `e1835be327385d4ca33aa130638e00800efb3356` (SPA threshold reset) |
-| Production tip | Smoke below used live `utekos.no` + GTM **v130**. Tip deploy of SPA reset was blocked by unrelated `removeFromCartEvent` TS error (`source: 'web'\|'webhook'`); fixed in follow-up commit. Failed dpl: `dpl_GAsNTRmoGxryHiciWXrpvoUGKen8`. |
+| App commit | `e1835be327385d4ca33aa130638e00800efb3356` (SPA threshold reset); tip includes build unblock `45e532895` |
+| Production tip | **READY** — `45e532895` (`dpl_CFCmMKD3V98hgPqEZjwTZizDuZzP`) |
 | dataLayer `scroll_depth` after threshold cross | **PASS** — `07b5f5f2-9917-442c-a6d8-daaf7dd5f26d` (`threshold=25`, `percent_scrolled=25`, `page_view_id` present) |
 | `POST /api/events/scroll-depth` | **PASS** — HTTP `202` |
 
