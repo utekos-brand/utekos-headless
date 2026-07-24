@@ -98,12 +98,22 @@ export function ComfyrobeLandingClient({
               En beskyttende allværskåpe med vanntett skall og mykt SherpaCore™-fôr — laget for norsk hverdagsvær.
             </p>
             <div className='mt-8 flex max-w-md flex-col gap-3 sm:flex-row'>
-              <BrandBadge asChild tone='commerce-primary' className='h-13 px-6 py-0 font-semibold'>
+              <BrandBadge
+                asChild
+                bgColor='oklch(0.7294 0.0907 188.98)'
+                fgColor='oklch(0.2413 0.0374 194.96)'
+                className='h-13 px-6 py-0 font-semibold hover:opacity-90'
+              >
                 <button type='button' onClick={() => scrollTo('purchase-section', 'comfyrobe-landing-hero-primary', 'Velg størrelse')}>
                   Velg størrelse <ArrowRight className='size-4' aria-hidden />
                 </button>
               </BrandBadge>
-              <BrandBadge asChild tone='commerce-secondary' className='h-13 px-6 py-0 font-semibold'>
+              <BrandBadge
+                asChild
+                bgColor='oklch(0.5203 0.1038 230.1)'
+                fgColor='oklch(1 0 0)'
+                className='h-13 px-6 py-0 font-semibold hover:opacity-90'
+              >
                 <button type='button' onClick={() => scrollTo('section-benefits', 'comfyrobe-landing-hero-secondary', 'Se hvordan den beskytter')}>
                   Se hvordan den beskytter <ChevronDown className='size-4' aria-hidden />
                 </button>
@@ -115,11 +125,12 @@ export function ComfyrobeLandingClient({
               </p>
               <div
                 aria-label='Betalingsinformasjon fra Klarna'
-                className='max-w-md overflow-hidden text-sm text-white/90 [&_a]:text-white [&_a]:underline'
+                className='max-w-md overflow-hidden'
               >
                 <KlarnaCreditPromotionAutoSize
                   id='klarna-credit-promotion-comfyrobe-landing-hero'
                   purchaseAmount={klarnaPurchaseAmount}
+                  theme='default'
                 />
               </div>
             </div>

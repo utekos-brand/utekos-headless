@@ -12,21 +12,26 @@
  */
 // Path: src/components/klarna/components/KlarnaCreditPromotionAutoSize.tsx
 
+import type { KlarnaPlacementTheme } from '@/components/klarna/types'
+
 type KlarnaCreditPromotionAutoSizeProps = {
   id?: string
   purchaseAmount?: number | string
+  /** Klarna OSM themes: omit/`default` = light, `dark`, or `custom` (Merchant portal). */
+  theme?: KlarnaPlacementTheme
 }
 
 export function KlarnaCreditPromotionAutoSize({
   id,
-  purchaseAmount = ''
+  purchaseAmount = '',
+  theme = 'default'
 }: KlarnaCreditPromotionAutoSizeProps) {
   return (
     <klarna-placement
       id={id}
       data-key='credit-promotion-auto-size'
       data-locale='no-NO'
-      data-theme='dark'
+      data-theme={theme}
       data-purchase-amount={purchaseAmount}
     ></klarna-placement>
   )
