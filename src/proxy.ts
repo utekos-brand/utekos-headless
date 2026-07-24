@@ -10,7 +10,7 @@ const allowedReferrers = new Set(['nbocc.no', 'bergenhordaland.nbocc.no'])
 
 const NBCC_DESTINATION_PATH = '/nbcc'
 
-const MAGASINET_UPGRADE_ENABLED = false
+const MAGASINET_UPGRADE_ENABLED = true
 const MAGASINET_UPGRADE_PATH = '/magasinet/oppgradering'
 const KLARNA_FEED_PATH = '/klarna-feed.xml'
 
