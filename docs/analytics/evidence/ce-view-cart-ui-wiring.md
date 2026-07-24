@@ -36,9 +36,30 @@ node --test scripts/tracking/web-meta-pixel-tag.test.mjs
 
 Template SHA-256: `a125a05dbe0ae4eec5ee1ad0dec8c2379bbc892f238ea7ea4fb7e2c6667b3039`
 
-## Live / production gates
+## Live / production gates (2026-07-24)
 
-(pending after commit/push + GTM publish + smoke)
+### App / Vercel
+
+| Gate | Status |
+|------|--------|
+| Production tip | **READY** — `d65559852` (`dpl_5s3SGa3edeKMgxmuWScCnPegSyC8`) |
+| dataLayer `view_cart` after cart open with items | **PASS** — `1854d3aa-cf01-40eb-8935-d6087e3998dd` (cart_id present, `view_sequence=1`, `currency=NOK`, items=1) |
+| `POST /api/events/view-cart` | **PASS** — HTTP `202` |
+
+### Web GTM publish (`GTM-5TWMJQFP`)
+
+| Version | Name | Notes |
+|---------|------|-------|
+| **128** | Meta Pixel view_cart ViewCart - 2026-07-24 | Tag **153** HTML (`view_cart`→`ViewCart` + commerce); trigger **152** regex includes `view_cart`; `supportDocumentWrite` boolean; install-race + isoCurrency retained. Source SHA-256 `a125a05dbe0ae4eec5ee1ad0dec8c2379bbc892f238ea7ea4fb7e2c6667b3039`. |
+
+### Meta Pixel `ViewCart` browser parity
+
+| Gate | Status |
+|------|--------|
+| `window.fbq` + tag 153 initialized | **PASS** |
+| Shared `event_id` Pixel↔dataLayer | **PASS** — `__utekosMetaPixelState.sent['ViewCart:1854d3aa-cf01-40eb-8935-d6087e3998dd']` |
+| Meta `/tr` ViewCart | Not observed in automated capture (OpenBridge may own transport); Pixel state.sent is authoritative for shared `eventID` |
+| Meta CAPI | **N/A** — matrix Meta server = `-` for `view_cart` |
 
 ## Hard stop
 
