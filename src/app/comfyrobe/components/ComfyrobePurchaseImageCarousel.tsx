@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useRef } from 'react'
+import { useState } from 'react'
 import Fade from 'embla-carousel-fade'
 import {
   Carousel,
@@ -19,12 +19,12 @@ const PACKSHOT_BACKDROP = 'oklch(0.8767 0.0086 56.3)'
 const IPAD_MEDIA = '(min-width: 51rem) and (max-width: 85rem)'
 
 export function ComfyrobePurchaseImageCarousel() {
-  const fadePlugin = useRef(Fade())
+  const [fadePlugin] = useState(() => Fade())
 
   return (
-    <div className='relative min-h-[560px] bg-muted lg:h-full lg:min-h-full'>
+    <div className='relative min-h-0 bg-muted lg:h-full lg:min-h-full'>
       <Carousel
-        plugins={[fadePlugin.current]}
+        plugins={[fadePlugin]}
         slideCount={COMFYROBE_PURCHASE_GALLERY.length}
         opts={{ loop: true, align: 'center' }}
         aria-label='Comfyrobe produktbilder'
@@ -34,8 +34,9 @@ export function ComfyrobePurchaseImageCarousel() {
           <CarouselContent className='absolute inset-0 ml-0 h-full'>
             {COMFYROBE_PURCHASE_GALLERY.map((slide, index) => {
               const isPackshot = slide.fit === 'contain'
-              const fitClass = isPackshot
-                ? 'object-contain object-center'
+              const fitClass =
+                isPackshot ?
+                  'object-contain object-center'
                 : 'object-cover object-center'
 
               return (
@@ -45,18 +46,21 @@ export function ComfyrobePurchaseImageCarousel() {
                 >
                   <div
                     className={
-                      isPackshot
-                        ? 'relative size-full overflow-hidden bg-white-sand'
-                        : 'relative size-full overflow-hidden bg-muted'
+                      isPackshot ?
+                        'relative size-full overflow-hidden bg-white-sand'
+                      : 'relative size-full overflow-hidden bg-muted'
                     }
                     style={
-                      isPackshot
-                        ? { backgroundColor: PACKSHOT_BACKDROP }
-                        : undefined
+                      isPackshot ?
+                        { backgroundColor: PACKSHOT_BACKDROP }
+                      : undefined
                     }
                   >
                     <picture>
-                      <source media={IPAD_MEDIA} srcSet={slide.ipadSrc} />
+                      <source
+                        media={IPAD_MEDIA}
+                        srcSet={slide.ipadSrc}
+                      />
                       <Image
                         src={slide.squareSrc}
                         alt={slide.alt}
@@ -76,11 +80,13 @@ export function ComfyrobePurchaseImageCarousel() {
 
         <CarouselPrevious
           forceVisible
-          className='left-3 border-foreground/15 bg-background/80 text-foreground backdrop-blur-md hover:bg-background md:left-5'
+          aria-label='Forrige produktbilde'
+          className='left-3 size-14 border-foreground/15 bg-background/85 text-foreground shadow-lg backdrop-blur-md hover:bg-background md:left-5 md:size-10 [&_svg]:!size-6 md:[&_svg]:!size-5'
         />
         <CarouselNext
           forceVisible
-          className='right-3 border-foreground/15 bg-background/80 text-foreground backdrop-blur-md hover:bg-background md:right-5'
+          aria-label='Neste produktbilde'
+          className='right-3 size-14 border-foreground/15 bg-background/85 text-foreground shadow-lg backdrop-blur-md hover:bg-background md:right-5 md:size-10 [&_svg]:!size-6 md:[&_svg]:!size-5'
         />
       </Carousel>
     </div>

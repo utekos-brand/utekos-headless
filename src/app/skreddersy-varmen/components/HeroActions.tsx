@@ -79,7 +79,10 @@ export function HeroActions() {
       {/* Bla videre pil nederst - justert til off-white for å blende elegant inn i det mørke */}
       <button
         type='button'
-        onClick={() => smoothScrollTo(SCROLL_TARGETS.solution)}
+        onClick={() => {
+          reportLandingSelectPromotion('heroScrollCue')
+          smoothScrollTo(SCROLL_TARGETS.solution)
+        }}
         aria-label='Bla videre'
         className='absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-foreground/75 transition-[opacity,transform] duration-300 hover:translate-y-1 hover:text-foreground hover:opacity-100 md:flex'
       >

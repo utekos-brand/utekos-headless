@@ -1,6 +1,5 @@
 'use client'
 
-// Reporter exported for promotion selection wiring; no promotion observer is active yet.
 import { sendGTMEvent } from '@next/third-parties/google'
 import { readBrowserReporterContext } from './browserReporterContext'
 import { browserPageViewSession } from './pageViewSession'

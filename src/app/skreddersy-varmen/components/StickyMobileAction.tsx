@@ -12,8 +12,11 @@ import { cn } from '@/lib/utils/className'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import { scrollToElement } from '@/lib/motion/scrollToElement'
 import { reportLandingSelectPromotion } from '@/app/skreddersy-varmen/utils/reportLandingSelectPromotion'
+import { reportCanonicalViewPromotion } from '@/lib/analytics/viewPromotionReporter'
+import { browserPageViewSession } from '@/lib/analytics/pageViewSession'
 
 const DISMISS_KEY = 'utekos:sticky-mobile-dismissed'
+const IMPRESSION_DWELL_MS = 1000
 
 const focusRing =
   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:focus-visible:outline-dark-primary focus-visible:ring-2 focus-visible:ring-foreground/20 dark:focus-visible:ring-dark-foreground/20'
@@ -23,6 +26,7 @@ export function StickyMobileAction() {
   const [isVisible, setIsVisible] = useState(false)
   const [isDismissed, setIsDismissed] = useState(false)
   const rafRef = useRef<number | null>(null)
+  const reportedPromotionPageViewId = useRef<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -83,7 +87,41 @@ export function StickyMobileAction() {
     }
   }, [isDismissed])
 
-  const scrollToPurchase = (promotion: 'stickyCta' | 'stickyOrder') => {
+  useEffect(() => {
+    if (!isVisible) return
+
+    const timer = window.setTimeout(() => {
+      const pageView = browserPageViewSession.ensure({
+        pageUrl: window.location.href,
+        documentReferrer: document.referrer
+      })
+
+      if (
+        reportedPromotionPageViewId.current ===
+        pageView.pageViewId
+      ) {
+        return
+      }
+      reportedPromotionPageViewId.current = pageView.pageViewId
+
+      reportCanonicalViewPromotion({
+        pageViewId: pageView.pageViewId,
+        customData: {
+          promotion_id: 'skreddersy-varmen-sticky',
+          promotion_name: 'Skreddersy varmen',
+          creative_name: 'Mobil bestillingssnarvei',
+          creative_slot: 'sticky_mobile',
+          impression_sequence: 1
+        }
+      })
+    }, IMPRESSION_DWELL_MS)
+
+    return () => window.clearTimeout(timer)
+  }, [isVisible])
+
+  const scrollToPurchase = (
+    promotion: 'stickyCta' | 'stickyOrder'
+  ) => {
     reportLandingSelectPromotion(promotion)
     void scrollToElement('purchase-section', {
       offsetY: 72,
@@ -92,7 +130,6 @@ export function StickyMobileAction() {
   }
 
   const handleDismiss = () => {
-    reportLandingSelectPromotion('stickyClose')
     setIsDismissed(true)
     setIsVisible(false)
     try {
@@ -154,7 +191,7 @@ export function StickyMobileAction() {
                 aria-hidden
                 className='flex min-w-0 items-baseline gap-1.5 leading-none'
               >
-                <span className='font-utekos-text-medium truncate text-[11px] tracking-normal text-foreground sm:text-xs'>
+                <span className='truncate font-utekos-text-medium text-[11px] tracking-normal text-foreground sm:text-xs'>
                   Utekos
                 </span>
                 <span className='truncate text-[11px] font-semibold tracking-normal text-foreground sm:text-xs'>
@@ -171,7 +208,7 @@ export function StickyMobileAction() {
               bgColor='var(--primary)'
               fgColor='var(--primary-foreground)'
               className={cn(
-                'h-11 shrink-0 gap-1.5 px-3.5 py-0 text-xs font-bold tracking-normal shadow-[0_4px_15px_rgba(255,180,120,0.15)] transition-[filter,transform,box-shadow] hover:bg-primary-hover hover:text-primary-foreground hover:brightness-105 active:scale-[0.985] sm:px-5 sm:text-sm',
+                'hover:bg-primary-hover h-11 shrink-0 gap-1.5 px-3.5 py-0 text-xs font-bold tracking-normal shadow-[0_4px_15px_rgba(255,180,120,0.15)] transition-[filter,transform,box-shadow] hover:text-primary-foreground hover:brightness-105 active:scale-[0.985] sm:px-5 sm:text-sm',
                 focusRing
               )}
             >

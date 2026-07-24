@@ -3,13 +3,13 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { LandingPromotionImpression } from './LandingPromotionImpression'
+import { PromotionImpression } from '@/components/analytics/PromotionImpression'
 
 function ThreeInOneFallback() {
   return (
     <div
       aria-hidden
-      className=' min-h-[900px] w-full bg-card text-foreground'
+      className='min-h-[900px] w-full bg-card text-foreground'
     />
   )
 }
@@ -77,27 +77,33 @@ const SectionSocialProof = dynamic(
 export function DeferredLandingSections() {
   return (
     <>
-      <LandingPromotionImpression
+      <PromotionImpression
         promotionId='skreddersy-varmen-three-in-one'
+        promotionName='Skreddersy varmen'
         creativeName='Three in one'
+        creativeSlot='three_in_one'
         className='w-full'
       >
         <SectionThreeInOne />
-      </LandingPromotionImpression>
-      <LandingPromotionImpression
+      </PromotionImpression>
+      <PromotionImpression
         promotionId='skreddersy-varmen-techdown'
+        promotionName='Skreddersy varmen'
         creativeName='TechDown slider'
+        creativeSlot='techdown_slider'
         className='w-full'
       >
         <TechDownSlider />
-      </LandingPromotionImpression>
-      <LandingPromotionImpression
+      </PromotionImpression>
+      <PromotionImpression
         promotionId='skreddersy-varmen-social-proof'
+        promotionName='Skreddersy varmen'
         creativeName='Social proof'
+        creativeSlot='social_proof'
         className='w-full'
       >
         <SectionSocialProof />
-      </LandingPromotionImpression>
+      </PromotionImpression>
     </>
   )
 }

@@ -5,27 +5,31 @@ import { useEffect, useRef } from 'react'
 import { reportCanonicalViewPromotion } from '@/lib/analytics/viewPromotionReporter'
 import { browserPageViewSession } from '@/lib/analytics/pageViewSession'
 
-type LandingPromotionImpressionProps = {
+type PromotionImpressionProps = {
   children: ReactNode
   className?: string
   creativeName: string
+  creativeSlot: string
   promotionId: string
+  promotionName: string
 }
 
-const VISIBILITY_RATIO = 0.5
 const DWELL_MS = 1000
+const VIEWPORT_EDGE_INSET = '-96px 0px -96px 0px'
 
-export function LandingPromotionImpression({
+export function PromotionImpression({
   children,
   className,
   creativeName,
-  promotionId
-}: LandingPromotionImpressionProps) {
+  creativeSlot,
+  promotionId,
+  promotionName
+}: PromotionImpressionProps) {
   const rootRef = useRef<HTMLDivElement>(null)
   const reportedKeys = useRef(new Set<string>())
-  const dwellTimer = useRef<ReturnType<typeof setTimeout> | null>(
-    null
-  )
+  const dwellTimer = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null)
 
   useEffect(() => {
     const node = rootRef.current
@@ -41,12 +45,7 @@ export function LandingPromotionImpression({
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
-        if (!entry) return
-
-        if (
-          !entry.isIntersecting ||
-          entry.intersectionRatio < VISIBILITY_RATIO
-        ) {
+        if (!entry?.isIntersecting) {
           clearDwell()
           return
         }
@@ -69,13 +68,15 @@ export function LandingPromotionImpression({
             pageViewId: pageView.pageViewId,
             customData: {
               promotion_id: promotionId,
+              promotion_name: promotionName,
               creative_name: creativeName,
+              creative_slot: creativeSlot,
               impression_sequence: 1
             }
           })
         }, DWELL_MS)
       },
-      { threshold: [VISIBILITY_RATIO] }
+      { rootMargin: VIEWPORT_EDGE_INSET, threshold: 0 }
     )
 
     observer.observe(node)
@@ -84,7 +85,7 @@ export function LandingPromotionImpression({
       clearDwell()
       observer.disconnect()
     }
-  }, [creativeName, promotionId])
+  }, [creativeName, creativeSlot, promotionId, promotionName])
 
   return (
     <div ref={rootRef} className={className}>

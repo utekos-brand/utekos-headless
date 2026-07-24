@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { getKlarnaMinorUnitAmount } from '@/components/klarna/utils/getKlarnaMinorUnitAmount'
+import { PromotionImpression } from '@/components/analytics/PromotionImpression'
 import { ComfyrobeLandingClient } from './components/ComfyrobeLandingClient'
 import { ComfyrobePurchaseFallback } from './components/ComfyrobePurchaseFallback'
 import { ComfyrobePurchaseSection } from './components/ComfyrobePurchaseSection'
@@ -16,13 +17,8 @@ import {
 export const metadata: Metadata = {
   title: COMFYROBE_LANDING_NAME,
   description: COMFYROBE_LANDING_DESCRIPTION,
-  alternates: {
-    canonical: COMFYROBE_PRODUCT_URL
-  },
-  robots: {
-    index: false,
-    follow: true
-  },
+  alternates: { canonical: COMFYROBE_PRODUCT_URL },
+  robots: { index: false, follow: true },
   openGraph: {
     type: 'website',
     locale: 'nb_NO',
@@ -56,13 +52,26 @@ export default async function ComfyrobeLandingPage() {
     : ''
 
   return (
-    <article className='flex min-h-screen w-full flex-col overflow-x-clip bg-background text-foreground dark:bg-dark-background'>
-      <ComfyrobeLandingClient klarnaPurchaseAmount={klarnaPurchaseAmount} />
-      <div id='purchase-section' className='w-full scroll-mt-20'>
-        <Suspense fallback={<ComfyrobePurchaseFallback />}>
-          <ComfyrobePurchaseSection />
-        </Suspense>
-      </div>
+    <article className='flex min-h-screen w-full flex-col overflow-x-clip bg-background text-foreground'>
+      <ComfyrobeLandingClient
+        klarnaPurchaseAmount={klarnaPurchaseAmount}
+      />
+      <PromotionImpression
+        promotionId='comfyrobe-purchase'
+        promotionName='Comfyrobe'
+        creativeName='Purchase'
+        creativeSlot='purchase'
+        className='w-full'
+      >
+        <div
+          id='purchase-section'
+          className='w-full scroll-mt-20'
+        >
+          <Suspense fallback={<ComfyrobePurchaseFallback />}>
+            <ComfyrobePurchaseSection />
+          </Suspense>
+        </div>
+      </PromotionImpression>
     </article>
   )
 }

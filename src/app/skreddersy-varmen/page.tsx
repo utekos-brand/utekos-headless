@@ -6,7 +6,7 @@ import { HeroAndEmpathy } from './components/HeroEmpathy'
 import { LandingPurchaseFallback } from './components/LandingPurchaseFallback'
 import { LandingPurchaseSection } from './components/LandingPurchaseSection'
 import { StickyMobileAction } from './components/StickyMobileAction'
-import { LandingPromotionImpression } from './components/LandingPromotionImpression'
+import { PromotionImpression } from '@/components/analytics/PromotionImpression'
 import { PreFooterNavigation } from './components/PreFooterNavigation'
 import { SkreddersyVarmenBreadcrumbs } from './components/SkreddersyVarmenBreadcrumbs'
 import type { Metadata } from 'next'
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <article className='flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip bg-background dark:bg-dark-background'>
+    <article className='dark:bg-dark-background flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip bg-background'>
       <StickyMobileAction />
 
       <SkreddersyVarmenBreadcrumbs />
@@ -74,15 +74,17 @@ export default function LandingPage() {
         id='purchase-section'
         className='w-full scroll-mt-17.5 xl:scroll-mt-21.5'
       >
-        <LandingPromotionImpression
+        <PromotionImpression
           promotionId='skreddersy-varmen-purchase'
+          promotionName='Skreddersy varmen'
           creativeName='Purchase'
+          creativeSlot='purchase'
           className='w-full'
         >
           <Suspense fallback={<LandingPurchaseFallback />}>
             <LandingPurchaseSection />
           </Suspense>
-        </LandingPromotionImpression>
+        </PromotionImpression>
       </div>
 
       <PreFooterNavigation />

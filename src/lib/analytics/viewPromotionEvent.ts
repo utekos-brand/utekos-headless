@@ -1,30 +1,40 @@
 import { z } from 'zod'
-import { canonicalCommerceItemSchema, canonicalCommerceValueSchema } from './canonicalCommerceItem'
-import { canonicalEventEnvelopeSchema, type CanonicalEventEnvelope, type ConsentSnapshot } from './canonicalEventEnvelope'
+import { canonicalCommerceItemSchema } from './canonicalCommerceItem'
+import {
+  canonicalEventEnvelopeSchema,
+  type CanonicalEventEnvelope,
+  type ConsentSnapshot
+} from './canonicalEventEnvelope'
 import { mapEventDeviceInfo } from './mapEventDeviceInfo'
 
-export const canonicalViewPromotionCustomDataSchema = z.strictObject({
-  promotion_id: z.string().min(1),
-  creative_name: z.string().min(1),
-  impression_sequence: z.number().int().positive(),
-  items: z.array(canonicalCommerceItemSchema).optional()
-})
+export const canonicalViewPromotionCustomDataSchema =
+  z.strictObject({
+    promotion_id: z.string().min(1),
+    promotion_name: z.string().min(1).optional(),
+    creative_name: z.string().min(1),
+    creative_slot: z.string().min(1).optional(),
+    impression_sequence: z.number().int().positive(),
+    items: z.array(canonicalCommerceItemSchema).optional()
+  })
 
 export type CanonicalViewPromotionCustomData = z.infer<
   typeof canonicalViewPromotionCustomDataSchema
 >
 
-export const canonicalViewPromotionSchema = canonicalEventEnvelopeSchema.extend({
-  event_name: z.literal('view_promotion'),
-  source: z.literal('web'),
+export const canonicalViewPromotionSchema =
+  canonicalEventEnvelopeSchema.extend({
+    event_name: z.literal('view_promotion'),
+    source: z.literal('web'),
     page_url: z.string().url(),
     referrer_url: z.string().url().optional(),
     page_title: z.string().min(1),
-  page_view_id: z.string().uuid(),
-  custom_data: canonicalViewPromotionCustomDataSchema
-})
+    page_view_id: z.string().uuid(),
+    custom_data: canonicalViewPromotionCustomDataSchema
+  })
 
-export type CanonicalViewPromotion = z.infer<typeof canonicalViewPromotionSchema>
+export type CanonicalViewPromotion = z.infer<
+  typeof canonicalViewPromotionSchema
+>
 
 type CreateCanonicalViewPromotionInput = {
   browserId?: Record<string, string>
@@ -56,7 +66,9 @@ export type ViewPromotionDataLayerEvent = {
 export function createCanonicalViewPromotion(
   input: CreateCanonicalViewPromotionInput
 ): CanonicalViewPromotion {
-  const eventDeviceInfo = mapEventDeviceInfo(input.eventDeviceInfo)
+  const eventDeviceInfo = mapEventDeviceInfo(
+    input.eventDeviceInfo
+  )
 
   return canonicalViewPromotionSchema.parse({
     schema_version: 1,
@@ -66,16 +78,26 @@ export function createCanonicalViewPromotion(
     source: 'web',
     environment: input.environment,
     ...(input.pageUrl ? { page_url: input.pageUrl } : {}),
-    ...(input.pageViewId ? { page_view_id: input.pageViewId } : {}),
-    ...(input.referrerUrl ? { referrer_url: input.referrerUrl } : {}),
+    ...(input.pageViewId ?
+      { page_view_id: input.pageViewId }
+    : {}),
+    ...(input.referrerUrl ?
+      { referrer_url: input.referrerUrl }
+    : {}),
     ...(input.pageTitle ? { page_title: input.pageTitle } : {}),
     consent: input.consent,
     custom_data: input.customData,
     ...(input.browserId ? { browser_id: input.browserId } : {}),
     ...(input.clickId ? { click_id: input.clickId } : {}),
-    ...(input.externalId ? { external_id: input.externalId } : {}),
-    ...(input.impressionId ? { impression_id: input.impressionId } : {}),
-    ...(eventDeviceInfo ? { event_device_info: eventDeviceInfo } : {})
+    ...(input.externalId ?
+      { external_id: input.externalId }
+    : {}),
+    ...(input.impressionId ?
+      { impression_id: input.impressionId }
+    : {}),
+    ...(eventDeviceInfo ?
+      { event_device_info: eventDeviceInfo }
+    : {})
   })
 }
 
@@ -87,7 +109,9 @@ export function buildViewPromotionDataLayerEvent(
     event_id: event.event_id,
     event_time: event.event_time,
     source: event.source,
-    ...(event.page_view_id ? { page_view_id: event.page_view_id } : {}),
+    ...(event.page_view_id ?
+      { page_view_id: event.page_view_id }
+    : {}),
     custom_data: event.custom_data,
     canonical_event: event
   }

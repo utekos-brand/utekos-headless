@@ -1,25 +1,29 @@
 // Path: src/app/skreddersy-varmen/components/HeroEmpathy.tsx
 import { Hero } from './Hero'
 import { EmpathySection } from './EmpathySection'
-import { LandingPromotionImpression } from './LandingPromotionImpression'
+import { PromotionImpression } from '@/components/analytics/PromotionImpression'
 
 export function HeroAndEmpathy() {
   return (
     <>
-      <LandingPromotionImpression
+      <PromotionImpression
         promotionId='skreddersy-varmen-hero'
+        promotionName='Skreddersy varmen'
         creativeName='Hero'
+        creativeSlot='hero'
         className='w-full'
       >
         <Hero />
-      </LandingPromotionImpression>
-      <LandingPromotionImpression
+      </PromotionImpression>
+      <PromotionImpression
         promotionId='skreddersy-varmen-empathy'
+        promotionName='Skreddersy varmen'
         creativeName='Empathy'
+        creativeSlot='empathy'
         className='w-full'
       >
         <EmpathySection />
-      </LandingPromotionImpression>
+      </PromotionImpression>
     </>
   )
 }
