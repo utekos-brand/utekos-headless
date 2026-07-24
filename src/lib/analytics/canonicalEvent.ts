@@ -23,6 +23,7 @@ import { canonicalSortApplySchema } from './sortApplyEvent'
 import { canonicalVariantSelectSchema } from './variantSelectEvent'
 import { canonicalSizeGuideViewSchema } from './sizeGuideViewEvent'
 import { canonicalScrollDepthSchema } from './scrollDepthEvent'
+import { canonicalViewCategorySchema } from './viewCategoryEvent'
 import { canonicalVideoProgressSchema } from './videoProgressEvent'
 
 export const canonicalEventSchema = z.discriminatedUnion(
@@ -52,6 +53,7 @@ export const canonicalEventSchema = z.discriminatedUnion(
     canonicalVariantSelectSchema,
     canonicalSizeGuideViewSchema,
     canonicalScrollDepthSchema,
+    canonicalViewCategorySchema,
     canonicalVideoProgressSchema
   ]
 )

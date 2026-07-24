@@ -20,6 +20,7 @@ import { googleDataManagerSortApplyProviderAdapter } from './providerAdapters/go
 import { googleDataManagerVariantSelectProviderAdapter } from './providerAdapters/googleDataManagerVariantSelectProviderAdapter'
 import { googleDataManagerVideoProgressProviderAdapter } from './providerAdapters/googleDataManagerVideoProgressProviderAdapter'
 import { googleDataManagerViewCartProviderAdapter } from './providerAdapters/googleDataManagerViewCartProviderAdapter'
+import { googleDataManagerViewCategoryProviderAdapter } from './providerAdapters/googleDataManagerViewCategoryProviderAdapter'
 import { googleDataManagerViewItemProviderAdapter } from './providerAdapters/googleDataManagerViewItemProviderAdapter'
 import { googleDataManagerViewItemListProviderAdapter } from './providerAdapters/googleDataManagerViewItemListProviderAdapter'
 import { googleDataManagerViewPromotionProviderAdapter } from './providerAdapters/googleDataManagerViewPromotionProviderAdapter'
@@ -99,6 +100,9 @@ export const providerOutboxWorkerRegistry = {
   ),
   'google:view_cart': createPostgresProviderOutboxWorker(
     googleDataManagerViewCartProviderAdapter
+  ),
+  'google:view_category': createPostgresProviderOutboxWorker(
+    googleDataManagerViewCategoryProviderAdapter
   ),
   'google:view_item': createPostgresProviderOutboxWorker(
     googleDataManagerViewItemProviderAdapter

@@ -1,6 +1,7 @@
 import { ProductListJsonLd } from './components/ProductListJsonLd'
 import { ProductOverviewBreadcrumbJsonLd } from './components/ProductOverviewBreadcrumbJsonLd'
 import { ProductOverviewBreadcrumbs } from './components/ProductOverviewBreadcrumbs'
+import { ViewCategoryObserver } from '@/components/analytics/ViewCategoryObserver'
 import type { ReactNode } from 'react'
 import type { Metadata } from 'next'
 
@@ -33,6 +34,10 @@ export const metadata: Metadata = {
 export default function ProductListLayout({ children }: { children: ReactNode }) {
   return (
     <>
+      <ViewCategoryObserver
+        categoryId='produkter'
+        categoryName='Kolleksjonen'
+      />
       <ProductOverviewBreadcrumbJsonLd />
       <ProductListJsonLd />
       <ProductOverviewBreadcrumbs />

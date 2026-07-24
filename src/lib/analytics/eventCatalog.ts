@@ -2014,6 +2014,42 @@ const eventCatalogBase = {
       posthog: true
     })
   },
+  view_category: {
+    version: 1,
+    name: 'view_category',
+    lifecycle: 'active',
+    owner: 'storefront_category_surface',
+    trigger: {
+      description:
+        'Create when a category or collection surface is actually visible.',
+      sources: ['browser'],
+      repeatability:
+        'Once per page view, category, and view sequence.',
+      eventTime: 'The qualifying category-visibility timestamp.',
+      prerequisites: [
+        'page_view_id',
+        'category_id',
+        'category_name',
+        'view_sequence'
+      ]
+    },
+    dedupe: dedupe(
+      'page_view_id + category_id + view_sequence',
+      'A new page view or newly qualifying category view sequence receives a new event_id.',
+      retain30Days
+    ),
+    consent: behaviorConsent,
+    providers: activeEventProviders('view_category', {
+      googleRequired: ['category_id', 'category_name'],
+      firstPartyRequired: [
+        'page_view_id',
+        'category_id',
+        'category_name',
+        'view_sequence'
+      ],
+      posthog: true
+    })
+  },
   video_progress: {
     version: 1,
     name: 'video_progress',
@@ -2084,6 +2120,7 @@ export const eventSignalProfiles = {
   checkout_error: 'blocked_mixed',
   payment_error: 'blocked_mixed',
   scroll_depth: 'website',
+  view_category: 'website',
   video_progress: 'website'
 } as const satisfies {
   readonly [K in keyof typeof eventCatalogBase]: EventSignalProfile

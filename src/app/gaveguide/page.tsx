@@ -5,6 +5,7 @@ import { ProductCarousel } from '@/app/gaveguide/components/ProductCardCarousel'
 import { TrustSection } from './components/TrustSection'
 import { SocialProofSection } from './components/SocialProofSection'
 import { GaveGuideHero } from './components/GaveGuideHero'
+import { ViewCategoryObserver } from '@/components/analytics/ViewCategoryObserver'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://utekos.no'),
@@ -42,6 +43,10 @@ export const metadata: Metadata = {
 export default function GaveguidePage() {
   return (
     <main className='bg-background dark:bg-dark-background'>
+      <ViewCategoryObserver
+        categoryId='gaveguide'
+        categoryName='Gaveguide'
+      />
       <GaveGuideHero />
       <article className='container mx-auto py-12 sm:py-16 md:max-w-7xl lg:py-16'>
         <ProductCarousel />

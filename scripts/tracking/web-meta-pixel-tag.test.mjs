@@ -147,6 +147,11 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
       percent_scrolled: 50,
       document_height: 2400
     }),
+    canonicalEvent('view_category', 'view-category-event', {
+      category_id: 'produkter',
+      category_name: 'Kolleksjonen',
+      view_sequence: 1
+    }),
     canonicalEvent('generate_lead', 'lead-event', { currency: 'NOK', value: 1 })
   )
 
@@ -180,6 +185,7 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
       ['InitiateCheckout', 'checkout-event'],
       ['Search', 'search-event'],
       ['LandingScrollDepth', 'scroll-depth-event'],
+      ['ViewCategory', 'view-category-event'],
       ['Lead', 'lead-event']
     ]
   )
@@ -198,6 +204,14 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
       threshold: 50,
       percent_scrolled: 50,
       document_height: 2400
+    }
+  )
+  assert.deepEqual(
+    eventCalls.find(call => call[2] === 'ViewCategory')?.[3],
+    {
+      content_category: 'produkter',
+      content_name: 'Kolleksjonen',
+      view_sequence: 1
     }
   )
   assert.equal(runtime.insertedScripts.length, 1)

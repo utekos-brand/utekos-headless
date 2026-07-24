@@ -18,6 +18,7 @@ import { googleDataManagerSortApplyProviderAdapter } from './providerAdapters/go
 import { googleDataManagerVariantSelectProviderAdapter } from './providerAdapters/googleDataManagerVariantSelectProviderAdapter'
 import { googleDataManagerVideoProgressProviderAdapter } from './providerAdapters/googleDataManagerVideoProgressProviderAdapter'
 import { googleDataManagerViewCartProviderAdapter } from './providerAdapters/googleDataManagerViewCartProviderAdapter'
+import { googleDataManagerViewCategoryProviderAdapter } from './providerAdapters/googleDataManagerViewCategoryProviderAdapter'
 import { googleDataManagerViewItemProviderAdapter } from './providerAdapters/googleDataManagerViewItemProviderAdapter'
 import { googleDataManagerViewItemListProviderAdapter } from './providerAdapters/googleDataManagerViewItemListProviderAdapter'
 import { googleDataManagerViewPromotionProviderAdapter } from './providerAdapters/googleDataManagerViewPromotionProviderAdapter'
@@ -59,6 +60,7 @@ export const providerAdapterRegistry = {
   'google:variant_select': googleDataManagerVariantSelectProviderAdapter,
   'google:video_progress': googleDataManagerVideoProgressProviderAdapter,
   'google:view_cart': googleDataManagerViewCartProviderAdapter,
+  'google:view_category': googleDataManagerViewCategoryProviderAdapter,
   'google:view_item': googleDataManagerViewItemProviderAdapter,
   'google:view_item_list': googleDataManagerViewItemListProviderAdapter,
   'google:view_promotion': googleDataManagerViewPromotionProviderAdapter,
