@@ -2,6 +2,7 @@
 
 **Date:** 2026-07-24  
 **Start SHA:** `4fe732abdccb7844798ef2c4f5e248e10972ce50`  
+**Runtime SHA:** `60f1597ca2903a4ae18b806f20115b1a8b99882b`  
 **API version:** Shopify webhook / Admin REST **`2026-07`**  
 **Roadmap:** Stale-events queue #4 follow-on (server webhook source)
 
