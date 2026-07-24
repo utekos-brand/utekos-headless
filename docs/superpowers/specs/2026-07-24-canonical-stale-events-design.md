@@ -53,7 +53,7 @@ Reference implementation pattern: existing `addToCartReporter` / `/api/events/ad
 | 2 | `add_to_wishlist` | Minimal wishlist store + button; emit after persist | Catalog+API, no store | `AddToWishlist` |
 | 3 | `view_cart` | `CartDrawer` | Verify params + providers + dedupe | `ViewCart` |
 | 4 | `remove_from_cart` | `CartLineItem` | **GO (EM confirmed)** — `t30107-RemoveFromCart-1784855701-c9f73fc8` + `t30107-RemoveFromCart-1784855899-f20f7723` | `RemoveFromCart` |
-| 5 | `scroll_depth` | `ScrollDepthObserver`; replaces LandingScrollDepth | Verify on landings; disable legacy dual tag | existing map |
+| 5 | `scroll_depth` | `ScrollDepthObserver`; replaces LandingScrollDepth | **GO (EM confirmed)** — `9a4c0da9-aaeb-45d3-bbd4-7a1a2ffa614b` (90) + `0ec09d07-81be-417b-b517-2f87bfbfd1eb` (75) + `cde6d55a-a56e-4f78-8164-5199b059630a` (50) + `1b3a412c-e3c6-4978-ac26-d123216e769a` (25) | `LandingScrollDepth` (existing map) |
 | 6 | `view_category` | Category/collection view | New catalog + reporter | `ViewCategory` |
 | 7 | `hero_interact` | Hero «Se mer» (`ReadMoreHeroClick`) | New | `HeroInteract` |
 | 8 | `interact_with_accordion` | PDP accordion | New | `InteractWithAccordion` |

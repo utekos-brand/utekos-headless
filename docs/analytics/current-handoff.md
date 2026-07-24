@@ -1,7 +1,7 @@
 # CanonicalEvent Current Handoff
 
-**Handoff-versjon:** 1.19.1 **Oppdatert:**
-2026-07-24T03:18:00+02:00 **Gyldighet:** Verifiser Git-,
+**Handoff-versjon:** 1.19.2 **Oppdatert:**
+2026-07-24T03:50:00+02:00 **Gyldighet:** Verifiser Git-,
 deployment- og livefakta før enhver handling
 
 ## 1. Les først
@@ -787,5 +787,23 @@ Evidence: docs/analytics/evidence/ce-remove-from-cart-ui-wiring.md
 Design: docs/superpowers/specs/2026-07-24-canonical-stale-events-design.md #4 → GO (EM confirmed)
 Prior: Pixel-only + Graph /stats lag (RemoveFromCart=0) superseded by Server Test Events
 STOP: do not auto-continue to queue #5 scroll_depth
+```
+
+## 27. Stale-events queue #5 — scroll_depth EM-VISIBLE GO
+
+```text
+Task: Meta LandingScrollDepth EM Overview/Pixel hard gate (queue #5)
+Conclusion: EM-VISIBLE_CONFIRMED — hard gate CLOSED
+Path: Overview / Pixel (no Meta CAPI; matrix Meta server = -)
+URL: https://utekos.no/ | action_source=website | AM: IP + UA
+event_id 90%: 9a4c0da9-aaeb-45d3-bbd4-7a1a2ffa614b (percent_scrolled=90, document_height=8150)
+event_id 75%: 0ec09d07-81be-417b-b517-2f87bfbfd1eb (percent_scrolled=75, document_height=8150)
+event_id 50%: cde6d55a-a56e-4f78-8164-5199b059630a (percent_scrolled=50, document_height=1902)
+event_id 25%: 1b3a412c-e3c6-4978-ac26-d123216e769a (percent_scrolled=25, document_height=1902)
+Prior smoke: 07b5f5f2-9917-442c-a6d8-daaf7dd5f26d (threshold=25)
+Evidence: docs/analytics/evidence/ce-scroll-depth-ui-wiring.md
+Design: docs/superpowers/specs/2026-07-24-canonical-stale-events-design.md #5 → GO (EM confirmed)
+GTM: v130 tag 153 scroll_depth → LandingScrollDepth
+STOP: do not auto-continue to queue #6 view_category
 ```
 

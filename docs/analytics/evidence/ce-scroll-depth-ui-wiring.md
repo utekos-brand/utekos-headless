@@ -2,17 +2,18 @@
 
 **Date:** 2026-07-24  
 **Start SHA:** `2cabe991d11ec31ae0ab580c9a4d33581a45da7a`  
-**Roadmap:** Stale-events design queue #5 (`scroll_depth`)
+**Roadmap:** Stale-events design queue #5 (`scroll_depth`)  
+**Tip at Meta EM-VISIBLE GO:** see commit that closes this hard gate
 
 ## Governance preflight
 
 ```text
-Charter-version: referenced by current-handoff 1.19.0 — program-charter.md / roadmap.md are NOT present on disk in this worktree
+Charter-version: referenced by current-handoff 1.19.1 — program-charter.md / roadmap.md are NOT present on disk in this worktree
 Roadmap task: Stale-events queue #5 scroll_depth (design 2026-07-24)
 Affected invariants: once per page_view_id + threshold (25/50/75/90); consent fail-closed; Meta Pixel eventID = canonical event_id; no Meta CAPI (matrix Meta server = -)
 Goal: reset thresholds on SPA navigation; Pixel map scroll_depth → LandingScrollDepth (existing Meta name); trigger 152; verify dataLayer + /api/events/scroll-depth + Google DM path
 Non-goals: queue #6 view_category; Meta CAPI outbox (not in matrix); dual LandingScrollDepth legacy tag (none present in live workspace)
-Allowed files: ScrollDepthObserver, web-meta-pixel.html, scroll_depth tests, this evidence, GTM tag 153 / trigger 152
+Allowed files: ScrollDepthObserver, web-meta-pixel.html, scroll_depth tests, this evidence, GTM tag 153 / trigger 152, design/handoff GO close
 Documentation status: design + handoff + matrix + existing catalog/API/Google adapter sufficient; charter/roadmap files missing on disk
 ```
 
@@ -60,7 +61,30 @@ Template SHA-256: `d12ec0df9cf0eb2b3900d64e7012405180e8a381faacc0e52b0a535afd7a3
 | Shared `event_id` Pixel↔dataLayer | **PASS** — `__utekosMetaPixelState.sent['LandingScrollDepth:07b5f5f2-9917-442c-a6d8-daaf7dd5f26d']` |
 | Meta `/tr` LandingScrollDepth | Not required for gate; Pixel state.sent is authoritative for shared `eventID` |
 | Meta CAPI | **N/A** — matrix Meta server = `-` for `scroll_depth` |
-| Events Manager visibility | Prefer **Overview / Pixel** path for `LandingScrollDepth` (same bar as `view_cart`). Test Events under **TEST30107** may stay empty without CAPI. |
+| Events Manager visibility | **EM-VISIBLE GO** — user confirmed Overview / Pixel path for `LandingScrollDepth` (no CAPI; Test Events under **TEST30107** may stay empty) |
+
+## Meta Events Manager visibility — GO (EM-VISIBLE)
+
+Hard gate **CLOSED**. Pixel-only path (matrix Meta server = `-`) uses Events Manager **Overview / Pixel** for `LandingScrollDepth` (same bar as `view_cart`). User confirmed four threshold rows on `https://utekos.no/` with `action_source=website` and Advanced Matching IP + UA.
+
+| Gate | Status |
+|------|--------|
+| Meta Events Manager **Overview / Pixel** (`LandingScrollDepth`) | **PASS** — user confirmed |
+| Pixel / dataset | `1092362672918571` |
+| URL | `https://utekos.no/` |
+| `action_source` | `website` |
+| Advanced Matching | IP + UA |
+
+### Events Manager GO — event IDs (user-confirmed)
+
+| threshold | `percent_scrolled` | `document_height` | `event_id` |
+|-----------|--------------------|-------------------|------------|
+| 90 | 90 | 8150 | `9a4c0da9-aaeb-45d3-bbd4-7a1a2ffa614b` |
+| 75 | 75 | 8150 | `0ec09d07-81be-417b-b517-2f87bfbfd1eb` |
+| 50 | 50 | 1902 | `cde6d55a-a56e-4f78-8164-5199b059630a` |
+| 25 | 25 | 1902 | `1b3a412c-e3c6-4978-ac26-d123216e769a` |
+
+Earlier browser smoke (kept): `07b5f5f2-9917-442c-a6d8-daaf7dd5f26d` (`threshold=25`, dataLayer + Pixel `LandingScrollDepth:<event_id>` parity).
 
 ## How to verify in Meta Events Manager
 
@@ -68,6 +92,7 @@ Template SHA-256: `d12ec0df9cf0eb2b3900d64e7012405180e8a381faacc0e52b0a535afd7a3
 2. Look for custom event **`LandingScrollDepth`** freshness after scrolling past 25% on `utekos.no` with marketing consent.
 3. Optional browser check: after scroll, `__utekosMetaPixelState.sent` contains `LandingScrollDepth:<event_id>` matching dataLayer `scroll_depth.event_id`.
 
-## Hard stop
+## Hard stop (queue advance)
 
-Do not auto-continue to queue #6 (`view_category`).
+Hard gate for queue #5 is **CLOSED** (EM-VISIBLE confirmed).  
+Do **not** auto-continue to queue #6 (`view_category`).
