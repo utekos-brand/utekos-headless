@@ -1,15 +1,23 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
+import { getKlarnaMinorUnitAmount } from '@/components/klarna/utils/getKlarnaMinorUnitAmount'
 import { ComfyrobeLandingClient } from './components/ComfyrobeLandingClient'
 import { ComfyrobePurchaseFallback } from './components/ComfyrobePurchaseFallback'
 import { ComfyrobePurchaseSection } from './components/ComfyrobePurchaseSection'
+import { getComfyrobeLandingProduct } from './lib/getComfyrobeLandingProduct'
+import {
+  COMFYROBE_LANDING_DESCRIPTION,
+  COMFYROBE_LANDING_IMAGE,
+  COMFYROBE_LANDING_NAME,
+  COMFYROBE_LANDING_URL,
+  COMFYROBE_PRODUCT_URL
+} from './data/comfyrobeLandingSeo'
 
 export const metadata: Metadata = {
-  title: 'Comfyrobe™ – varm og vanntett allværskåpe | Utekos',
-  description:
-    'Comfyrobe™ kombinerer et værbeskyttende skall med mykt SherpaCore™-fôr. Velg størrelse og kjøp direkte med Klarna eller legg i handlekurven.',
+  title: COMFYROBE_LANDING_NAME,
+  description: COMFYROBE_LANDING_DESCRIPTION,
   alternates: {
-    canonical: 'https://utekos.no/produkter/comfyrobe'
+    canonical: COMFYROBE_PRODUCT_URL
   },
   robots: {
     index: false,
@@ -22,10 +30,10 @@ export const metadata: Metadata = {
     title: 'Comfyrobe™ – tøff mot været, komfortabel mot deg',
     description:
       'Vanntett allværskåpe med mykt SherpaCore™-fôr for norsk hverdagsvær.',
-    url: 'https://utekos.no/comfyrobe-landingsside',
+    url: COMFYROBE_LANDING_URL,
     images: [
       {
-        url: 'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Comfyrobe-Kvinne-1600x1600.png?v=1784824903',
+        url: COMFYROBE_LANDING_IMAGE,
         width: 1200,
         height: 1200,
         alt: 'Kvinne med Comfyrobe fra Utekos'
@@ -34,10 +42,22 @@ export const metadata: Metadata = {
   }
 }
 
-export default function ComfyrobeLandingPage() {
+export default async function ComfyrobeLandingPage() {
+  const product = await getComfyrobeLandingProduct()
+  const price =
+    product?.selectedOrFirstAvailableVariant?.price ??
+    product?.priceRange?.minVariantPrice
+  const klarnaPurchaseAmount =
+    price ?
+      (getKlarnaMinorUnitAmount({
+        amount: price.amount ?? '0',
+        currencyCode: price.currencyCode
+      }) ?? '')
+    : ''
+
   return (
     <article className='flex min-h-screen w-full flex-col overflow-x-clip bg-background text-foreground dark:bg-dark-background'>
-      <ComfyrobeLandingClient />
+      <ComfyrobeLandingClient klarnaPurchaseAmount={klarnaPurchaseAmount} />
       <div id='purchase-section' className='w-full scroll-mt-20'>
         <Suspense fallback={<ComfyrobePurchaseFallback />}>
           <ComfyrobePurchaseSection />

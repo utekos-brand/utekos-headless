@@ -5,8 +5,11 @@ import Link from 'next/link'
 import { ArrowRight, Check, ChevronDown, Move3d, ShieldCheck, ThermometerSnowflake } from 'lucide-react'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
 import UtekosWordmark from '@/components/BrandComponents/utils/UtekosWordmark'
+import { KlarnaCreditPromotionAutoSize } from '@/components/klarna/components/KlarnaCreditPromotionAutoSize'
+import { KlarnaOnSiteMessagingScript } from '@/components/klarna/components/KlarnaOnSiteMessagingScript'
 import { scrollToElement } from '@/lib/motion/scrollToElement'
 import { reportCanonicalSelectPromotion } from '@/lib/analytics/selectPromotionReporter'
+import { COMFYROBE_LANDING_FAQ } from '../data/comfyrobeLandingSeo'
 
 const benefits = [
   {
@@ -40,34 +43,6 @@ const proof = [
   'Romslig unisex-passform'
 ] as const
 
-const faqs = [
-  {
-    question: 'Er Comfyrobe™ vanntett?',
-    answer:
-      'Comfyrobe™ har et værbeskyttende skall med 8 000 mm vannsøyle, pustende membran og tapede sømmer. Den er utviklet for regn, vind og skiftende norsk hverdagsvær.'
-  },
-  {
-    question: 'Hvordan er passformen?',
-    answer:
-      'Passformen er bevisst romslig og unisex, slik at kåpen enkelt kan brukes over vanlige klær eller flere lag. Sidesplitter gir ekstra bevegelsesfrihet.'
-  },
-  {
-    question: 'Hvilken størrelse bør jeg velge?',
-    answer:
-      'Velg størrelsen du vanligvis bruker, men husk at Comfyrobe™ er laget for å sitte romslig. Se den komplette størrelsesguiden for mål og anbefalinger.'
-  },
-  {
-    question: 'Kan den brukes som vanlig jakke?',
-    answer:
-      'Ja. Comfyrobe™ er laget for allvær og hverdagsbruk, som hundelufting, hytteterrasse, brygge, camping, sidelinje og raske ærender.'
-  },
-  {
-    question: 'Passer den etter isbading?',
-    answer:
-      'Ja. Det romslige snittet og det myke fôret gjør den godt egnet etter isbading og andre vannaktiviteter, men siden er først og fremst utviklet rundt bred allværs- og hverdagsbruk.'
-  }
-] as const
-
 function reportPromotion(promotionId: string, creativeName: string) {
   reportCanonicalSelectPromotion({
     customData: {
@@ -84,23 +59,33 @@ function scrollTo(id: string, promotionId: string, creativeName: string) {
   void scrollToElement(id, { offsetY: 76, reducedMotion })
 }
 
-export function ComfyrobeLandingClient() {
+export function ComfyrobeLandingClient({
+  klarnaPurchaseAmount = ''
+}: {
+  klarnaPurchaseAmount?: string
+}) {
   return (
     <>
       <section aria-labelledby='comfyrobe-hero-heading' className='relative min-h-[calc(100svh-70px)] overflow-hidden bg-foreground text-background'>
-        <Image
-          src='https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Comfyrobe-Kvinne-1600x1600.png?v=1784824903'
-          alt='Kvinne med mørk Comfyrobe fra Utekos'
-          fill
-          priority
-          sizes='100vw'
-          className='object-cover object-[65%_center] md:object-center'
-        />
+        <picture className='absolute inset-0'>
+          <source
+            media='(min-width: 104rem)'
+            srcSet='https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Comfy-1920-1080-2.webp?v=1784870433'
+          />
+          <Image
+            src='https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Comfyrobe-Kvinne-1600x1600.png?v=1784824903'
+            alt='Kvinne med mørk Comfyrobe fra Utekos'
+            fill
+            priority
+            sizes='100vw'
+            className='object-cover object-[68%_0%] sm:object-[62%_4%] md:object-[58%_8%] lg:object-[55%_12%] min-[104rem]:object-[72%_center]'
+          />
+        </picture>
         <div aria-hidden className='absolute inset-0 bg-linear-to-r from-black/90 via-black/55 to-black/10' />
         <div aria-hidden className='absolute inset-0 bg-linear-to-t from-black/65 via-transparent to-black/20' />
 
         <div className='relative z-10 mx-auto flex min-h-[calc(100svh-70px)] w-full max-w-350 items-center px-6 py-24 md:px-12 lg:px-20'>
-          <div className='max-w-2xl rounded-3xl border border-white/10 bg-black/28 p-6 shadow-2xl backdrop-blur-sm md:p-10'>
+          <div className='max-w-2xl rounded-3xl border border-white/10 bg-black/28 p-6 shadow-2xl backdrop-blur-sm md:p-10 min-[104rem]:max-w-xl'>
             <div className='mb-6 h-10 w-44 text-white md:h-14 md:w-60'>
               <UtekosWordmark className='size-full text-white' />
             </div>
@@ -124,21 +109,40 @@ export function ComfyrobeLandingClient() {
                 </button>
               </BrandBadge>
             </div>
-            <p className='mt-6 text-sm text-white/80'>På lager i utvalgte størrelser · Klarna tilgjengelig · 14 dagers retur</p>
+            <div className='mt-6 space-y-3'>
+              <p className='text-sm text-white/80'>
+                På lager i utvalgte størrelser · 14 dagers retur
+              </p>
+              <div
+                aria-label='Betalingsinformasjon fra Klarna'
+                className='max-w-md overflow-hidden text-sm text-white/90 [&_a]:text-white [&_a]:underline'
+              >
+                <KlarnaCreditPromotionAutoSize
+                  id='klarna-credit-promotion-comfyrobe-landing-hero'
+                  purchaseAmount={klarnaPurchaseAmount}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className='bg-foreground py-20 text-background dark:bg-dark-foreground dark:text-dark-background md:py-28' aria-labelledby='problem-heading'>
+      <KlarnaOnSiteMessagingScript />
+
+      <section className='bg-muted py-20 text-foreground md:py-28' aria-labelledby='problem-heading'>
         <div className='mx-auto grid max-w-7xl gap-12 px-6 md:px-12 lg:grid-cols-2 lg:items-center'>
           <div>
             <p className='mb-4 font-utekos-text-medium text-primary dark:text-dark-primary'>Allvær i hverdagen</p>
-            <h2 id='problem-heading' className='max-w-[12ch] font-sans text-4xl leading-[0.95] font-bold tracking-[-0.02em] md:text-6xl'>
+            <h2 id='problem-heading' className='max-w-[12ch] font-sans text-4xl leading-[0.95] font-bold tracking-[-0.02em] text-foreground md:text-6xl'>
               Været trenger ikke bestemme dagen.
             </h2>
-            <div className='mt-7 max-w-xl space-y-5 font-utekos-text text-lg leading-relaxed text-background/85 dark:text-dark-background/85'>
-              <p>Regnet går sidelengs. Hunden må ut. Kaffen på hytteterrassen frister, men vinden biter.</p>
-              <p>Comfyrobe™ samler værbeskyttelse og myk varme i ett plagg, slik at du slipper å velge mellom teknisk skall og lun komfort.</p>
+            <div className='mt-7 max-w-xl space-y-5 font-utekos-text text-lg leading-relaxed'>
+              <p className='text-foreground'>
+                Regnet går sidelengs. Hunden må ut. Kaffen på hytteterrassen frister, men vinden biter.
+              </p>
+              <p className='text-foreground'>
+                Comfyrobe™ samler værbeskyttelse og myk varme i ett plagg, slik at du slipper å velge mellom teknisk skall og lun komfort.
+              </p>
             </div>
           </div>
           <div className='relative aspect-4/5 overflow-hidden rounded-3xl shadow-2xl md:aspect-square'>
@@ -166,11 +170,13 @@ export function ComfyrobeLandingClient() {
               const Icon = item.icon
               return (
                 <article key={item.title} className='rounded-3xl border border-border bg-card p-7 shadow-sm md:p-9'>
-                  <div className='flex size-12 items-center justify-center rounded-2xl bg-foreground text-primary dark:bg-dark-foreground dark:text-dark-primary'>
-                    <Icon className='size-6' aria-hidden />
+                  <div className='flex items-center gap-3'>
+                    <div className='flex size-12 shrink-0 items-center justify-center rounded-2xl bg-foreground text-primary dark:bg-dark-foreground dark:text-dark-primary'>
+                      <Icon className='size-6' aria-hidden />
+                    </div>
+                    <p className='font-utekos-text-medium text-lg text-primary dark:text-dark-primary'>{item.eyebrow}</p>
                   </div>
-                  <p className='mt-6 font-utekos-text-medium text-sm text-primary dark:text-dark-primary'>{item.eyebrow}</p>
-                  <h3 className='mt-2 font-sans text-3xl leading-[1] font-bold'>{item.title}</h3>
+                  <h3 className='mt-6 font-utekos-text-medium text-3xl leading-[1] font-bold'>{item.title}</h3>
                   <p className='mt-4 font-utekos-text leading-relaxed text-foreground/78'>{item.body}</p>
                 </article>
               )
@@ -210,7 +216,7 @@ export function ComfyrobeLandingClient() {
             Det viktigste, samlet.
           </h2>
           <div className='mt-12 space-y-3'>
-            {faqs.map(item => (
+            {COMFYROBE_LANDING_FAQ.map(item => (
               <details key={item.question} className='group rounded-2xl border border-border bg-card p-5 open:shadow-sm'>
                 <summary className='cursor-pointer list-none font-sans text-lg font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary'>
                   <span className='flex items-center justify-between gap-4'>

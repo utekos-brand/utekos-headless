@@ -1,16 +1,6 @@
 import Link from 'next/link'
-import { cacheLife, cacheTag } from 'next/cache'
-import { getProduct } from '@/api/lib/products/getProduct'
 import { ComfyrobePurchaseClient } from './ComfyrobePurchaseClient'
-
-async function getComfyrobeLandingProduct() {
-  'use cache: remote'
-
-  cacheLife('products')
-  cacheTag('products', 'product-comfyrobe')
-
-  return getProduct('comfyrobe')
-}
+import { getComfyrobeLandingProduct } from '../lib/getComfyrobeLandingProduct'
 
 export async function ComfyrobePurchaseSection() {
   const product = await getComfyrobeLandingProduct()
@@ -23,7 +13,10 @@ export async function ComfyrobePurchaseSection() {
           <p className='mt-4 font-utekos-text leading-relaxed text-background/80 dark:text-dark-background/80'>
             Vi kunne ikke hente oppdatert pris og lagerstatus akkurat nå. Ingen pris eller lagerpåstand vises før Shopify svarer.
           </p>
-          <Link href='/produkter/comfyrobe' className='mt-6 inline-flex font-semibold underline underline-offset-4'>
+          <Link
+            href={`/produkter/comfyrobe`}
+            className='mt-6 inline-flex font-semibold underline underline-offset-4'
+          >
             Åpne produktsiden
           </Link>
         </div>

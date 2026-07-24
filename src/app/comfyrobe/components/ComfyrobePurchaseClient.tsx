@@ -1,12 +1,11 @@
 'use client'
 
 import { useEffect, useMemo, useRef } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Check, Ruler, ShoppingBag } from 'lucide-react'
 import { AddToCart } from '@/components/cart/AddToCart'
 import BrandBadge from '@/components/BrandComponents/utils/BrandBadge'
-import { KlarnaLandingExpressCheckout } from '@/app/skreddersy-varmen/components/KlarnaLandingExpressCheckout'
+import { ComfyrobePurchaseImageCarousel } from './ComfyrobePurchaseImageCarousel'
 import { useVariantState } from '@/hooks/useVariantState'
 import { flattenVariants } from '@/lib/utils/flattenVariants'
 import { reportCanonicalViewItem } from '@/lib/analytics/viewItemReporter'
@@ -103,42 +102,29 @@ export function ComfyrobePurchaseClient({
   const color = selectedVariant.selectedOptions.find(option => option.name === 'Farge')?.value
   const gender = selectedVariant.selectedOptions.find(option => option.name === 'Kjønn')?.value
   const savings = getSavings(selectedVariant)
-  const heroImage =
-    selectedVariant.image?.url ??
-    product.featuredImage?.url ??
-    product.images.edges[0]?.node.image.url ??
-    'https://cdn.shopify.com/s/files/1/0634/2154/6744/files/Comfyrobe-Kvinne-1600x1600.png?v=1784824903'
 
   return (
     <section aria-labelledby='purchase-heading' className='w-full bg-foreground text-background dark:bg-dark-foreground dark:text-dark-background'>
       <div className='grid min-h-[760px] lg:grid-cols-2'>
-        <div className='relative min-h-[520px] overflow-hidden bg-background dark:bg-dark-background lg:min-h-full'>
-          <Image
-            src={heroImage}
-            alt={product.featuredImage?.altText || 'Comfyrobe produktbilde'}
-            fill
-            sizes='(max-width: 1023px) 100vw, 50vw'
-            className='object-contain p-6 md:p-12'
-          />
-        </div>
+        <ComfyrobePurchaseImageCarousel />
 
         <div className='flex flex-col'>
-          <div className='flex-1 px-6 py-14 md:px-12 lg:px-16 lg:py-20'>
+          <div className='flex-1 bg-background px-6 py-14 text-foreground md:px-12 lg:px-16 lg:py-20'>
             <p className='font-utekos-text-medium text-primary dark:text-dark-primary'>Velg din Comfyrobe™</p>
-            <h2 id='purchase-heading' className='mt-3 font-sans text-5xl leading-[0.92] font-bold tracking-[-0.02em] md:text-6xl'>
-              Tøff ute. Myk inne.
+            <h2 id='purchase-heading' className='mt-3 font-sans text-5xl leading-[0.92] font-bold tracking-[-0.02em] text-foreground md:text-6xl'>
+              Tøff ute. Myk på innsiden.
             </h2>
-            <p className='mt-6 max-w-xl font-utekos-text text-lg leading-relaxed text-background/80 dark:text-dark-background/80'>
-              Velg en tilgjengelig størrelse og fullfør kjøpet med vanlig handlekurv eller Klarna Express Checkout.
+            <p className='mt-6 max-w-xl font-utekos-text text-lg leading-relaxed text-foreground'>
+              Finn din størrelse og velg mellom våre fleksible betalingsmuligheter.
             </p>
 
             <div className='mt-8 flex flex-wrap items-end gap-x-4 gap-y-2'>
-              <span className='font-sans text-5xl font-bold tabular-nums'>
+              <span className='font-sans text-5xl font-bold tabular-nums text-foreground'>
                 {formatMoney(selectedVariant.price.amount, selectedVariant.price.currencyCode)}
               </span>
               {savings && selectedVariant.compareAtPrice ? (
                 <>
-                  <span className='pb-1 text-lg text-background/60 line-through dark:text-dark-background/60'>
+                  <span className='pb-1 text-lg text-foreground/60 line-through'>
                     {formatMoney(selectedVariant.compareAtPrice.amount, selectedVariant.compareAtPrice.currencyCode)}
                   </span>
                   <BrandBadge tone='promo' className='mb-1 h-8 px-3 py-0 text-xs font-bold'>
@@ -150,14 +136,14 @@ export function ComfyrobePurchaseClient({
 
             <div className='mt-10 grid gap-4 sm:grid-cols-2'>
               {color ? (
-                <div className='rounded-2xl border border-background/15 p-4 dark:border-dark-background/15'>
-                  <span className='block text-xs text-background/60 dark:text-dark-background/60'>Farge</span>
+                <div className='rounded-2xl border border-foreground/15 p-4'>
+                  <span className='block text-xs text-foreground/60'>Farge</span>
                   <span className='mt-1 block font-utekos-text-medium'>{color}</span>
                 </div>
               ) : null}
               {gender ? (
-                <div className='rounded-2xl border border-background/15 p-4 dark:border-dark-background/15'>
-                  <span className='block text-xs text-background/60 dark:text-dark-background/60'>Passform</span>
+                <div className='rounded-2xl border border-foreground/15 p-4'>
+                  <span className='block text-xs text-foreground/60'>Passform</span>
                   <span className='mt-1 block font-utekos-text-medium'>{gender}</span>
                 </div>
               ) : null}
@@ -191,7 +177,7 @@ export function ComfyrobePurchaseClient({
                         onClick={() => available && updateVariant(sizeOption.name, value)}
                         className={[
                           'relative min-h-14 rounded-2xl border px-3 py-3 text-center font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary',
-                          selected ? 'border-background bg-background text-foreground dark:border-dark-background dark:bg-dark-background dark:text-dark-foreground' : 'border-background/20 text-background dark:border-dark-background/20 dark:text-dark-background',
+                          selected ? 'border-foreground bg-foreground text-background' : 'border-foreground/20 text-foreground',
                           available ? 'hover:border-primary' : 'cursor-not-allowed opacity-45'
                         ].join(' ')}
                       >
@@ -207,7 +193,7 @@ export function ComfyrobePurchaseClient({
               </fieldset>
             ) : null}
 
-            <div className='mt-10 rounded-2xl border border-background/12 bg-background/5 p-5 dark:border-dark-background/12 dark:bg-dark-background/5'>
+            <div className='mt-10 rounded-2xl border border-foreground/12 bg-foreground/5 p-5'>
               <ul className='grid gap-3 text-sm sm:grid-cols-2'>
                 <li className='flex items-center gap-2'><Check className='size-4 text-primary' aria-hidden /> 8 000 mm vannsøyle</li>
                 <li className='flex items-center gap-2'><Check className='size-4 text-primary' aria-hidden /> Mykt SherpaCore™-fôr</li>
@@ -219,14 +205,7 @@ export function ComfyrobePurchaseClient({
 
           <div className='border-t border-background/15 bg-card p-6 text-card-foreground md:p-10'>
             {selectedVariant.availableForSale ? (
-              <div className='space-y-4'>
-                <AddToCart product={product} selectedVariant={selectedVariant} />
-                <KlarnaLandingExpressCheckout
-                  product={product}
-                  selectedVariant={selectedVariant}
-                  quantity={1}
-                />
-              </div>
+              <AddToCart product={product} selectedVariant={selectedVariant} />
             ) : (
               <div className='rounded-2xl border border-border p-5 text-center'>
                 <ShoppingBag className='mx-auto size-6' aria-hidden />
