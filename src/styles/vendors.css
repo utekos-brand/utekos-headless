@@ -26,9 +26,9 @@
     line-height: 0;
   }
 
-  /* Comfyrobe hero OSM: light theme + tighter vertical padding */
-  #klarna-credit-promotion-comfyrobe-landing-hero::part(osm-container) {
-    padding-block: 0.5rem;
+  /* Klarna credit-promotion OSM: default/light theme + shared vertical padding */
+  .klarna-credit-promotion-auto-size::part(osm-container) {
+    padding-block: 0.75rem;
     padding-inline: 0.75rem;
     border-radius: 0.75rem;
   }

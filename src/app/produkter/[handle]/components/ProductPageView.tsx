@@ -257,6 +257,7 @@ export function ProductPageView({
                 <KlarnaCreditPromotionAutoSize
                   id={`klarna-credit-promotion-${productData.handle}`}
                   purchaseAmount={klarnaPurchaseAmount}
+                  theme='default'
                 />
               </div>
             </AnimatedBlock>
