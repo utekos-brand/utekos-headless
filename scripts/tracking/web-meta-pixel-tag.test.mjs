@@ -138,6 +138,7 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
     canonicalEvent('select_item', 'select-event', commerce),
     canonicalEvent('add_to_wishlist', 'wishlist-event', commerce),
     canonicalEvent('add_to_cart', 'cart-event', commerce),
+    canonicalEvent('view_cart', 'view-cart-event', commerce),
     canonicalEvent('begin_checkout', 'checkout-event', commerce),
     canonicalEvent('search', 'search-event', { search_term: 'utekos' }),
     canonicalEvent('generate_lead', 'lead-event', { currency: 'NOK', value: 1 })
@@ -168,6 +169,7 @@ test('initializes once and sends canonical Meta events with CAPI event IDs', () 
       ['SelectItem', 'select-event'],
       ['AddToWishlist', 'wishlist-event'],
       ['AddToCart', 'cart-event'],
+      ['ViewCart', 'view-cart-event'],
       ['InitiateCheckout', 'checkout-event'],
       ['Search', 'search-event'],
       ['Lead', 'lead-event']

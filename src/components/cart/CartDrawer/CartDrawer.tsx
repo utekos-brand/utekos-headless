@@ -33,7 +33,12 @@ export function CartDrawer(): React.JSX.Element {
   const baseHandleStateChange = createDrawerStateHandler(cartStore)
 
   useEffect(() => {
-    if (!open || !cart?.id || cart.lines.length === 0) return
+    if (!open) {
+      lastReportedCartRevision.current = null
+      return
+    }
+
+    if (!cart?.id || cart.lines.length === 0) return
 
     const revision = `${cart.id}:${cart.totalQuantity}:${cart.lines.length}`
     if (lastReportedCartRevision.current === revision) return

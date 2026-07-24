@@ -10,6 +10,7 @@
     select_item: 'SelectItem',
     add_to_wishlist: 'AddToWishlist',
     add_to_cart: 'AddToCart',
+    view_cart: 'ViewCart',
     begin_checkout: 'InitiateCheckout',
     search: 'Search',
     generate_lead: 'Lead'
@@ -188,6 +189,7 @@
       eventName === 'select_item' ||
       eventName === 'add_to_wishlist' ||
       eventName === 'add_to_cart' ||
+      eventName === 'view_cart' ||
       eventName === 'begin_checkout'
     ) {
       return commerceData(customData);
