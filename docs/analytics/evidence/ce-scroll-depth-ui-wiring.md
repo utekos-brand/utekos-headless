@@ -41,24 +41,32 @@ Template SHA-256: `d12ec0df9cf0eb2b3900d64e7012405180e8a381faacc0e52b0a535afd7a3
 
 | Gate | Status |
 |------|--------|
-| Production tip | PENDING deploy of this commit |
-| dataLayer `scroll_depth` after threshold cross | PENDING smoke |
-| `POST /api/events/scroll-depth` | PENDING smoke |
+| App commit | `e1835be327385d4ca33aa130638e00800efb3356` (SPA threshold reset) |
+| Production tip | Smoke below used live `utekos.no` + GTM **v130**. Tip deploy of SPA reset was blocked by unrelated `removeFromCartEvent` TS error (`source: 'web'\|'webhook'`); fixed in follow-up commit. Failed dpl: `dpl_GAsNTRmoGxryHiciWXrpvoUGKen8`. |
+| dataLayer `scroll_depth` after threshold cross | **PASS** — `07b5f5f2-9917-442c-a6d8-daaf7dd5f26d` (`threshold=25`, `percent_scrolled=25`, `page_view_id` present) |
+| `POST /api/events/scroll-depth` | **PASS** — HTTP `202` |
 
 ### Web GTM publish (`GTM-5TWMJQFP`)
 
 | Version | Name | Notes |
 |---------|------|-------|
-| **130** | Meta Pixel scroll_depth LandingScrollDepth - 2026-07-24 | Tag **153** HTML (`scroll_depth`→`LandingScrollDepth` + threshold params); trigger **152** regex includes `scroll_depth`; `supportDocumentWrite` boolean `false`; install-race + isoCurrency retained. Source SHA-256 `d12ec0df9cf0eb2b3900d64e7012405180e8a381faacc0e52b0a535afd7a3652`. |
+| **130** | Meta Pixel scroll_depth LandingScrollDepth - 2026-07-24 | Tag **153** HTML (`scroll_depth`→`LandingScrollDepth` + threshold params); trigger **152** regex includes `scroll_depth`; `supportDocumentWrite` boolean `false`; install-race + isoCurrency retained. Source SHA-256 `d12ec0df9cf0eb2b3900d64e7012405180e8a381faacc0e52b0a535afd7a3652`. Live `gtm.js` `"version":"130"` contains `scroll_depth` + `LandingScrollDepth`. |
 
 ### Meta Pixel `LandingScrollDepth` browser parity
 
 | Gate | Status |
 |------|--------|
-| `window.fbq` + tag 153 initialized | PENDING smoke |
-| Shared `event_id` Pixel↔dataLayer | PENDING smoke |
+| `window.fbq` + tag 153 initialized | **PASS** |
+| Shared `event_id` Pixel↔dataLayer | **PASS** — `__utekosMetaPixelState.sent['LandingScrollDepth:07b5f5f2-9917-442c-a6d8-daaf7dd5f26d']` |
+| Meta `/tr` LandingScrollDepth | Not required for gate; Pixel state.sent is authoritative for shared `eventID` |
 | Meta CAPI | **N/A** — matrix Meta server = `-` for `scroll_depth` |
-| Events Manager visibility | Prefer **Overview / Pixel** path (same bar as `view_cart`). Test Events under **TEST30107** may stay empty without CAPI. |
+| Events Manager visibility | Prefer **Overview / Pixel** path for `LandingScrollDepth` (same bar as `view_cart`). Test Events under **TEST30107** may stay empty without CAPI. |
+
+## How to verify in Meta Events Manager
+
+1. Open Pixel/dataset `1092362672918571` → **Overview** (not Test Events-only).
+2. Look for custom event **`LandingScrollDepth`** freshness after scrolling past 25% on `utekos.no` with marketing consent.
+3. Optional browser check: after scroll, `__utekosMetaPixelState.sent` contains `LandingScrollDepth:<event_id>` matching dataLayer `scroll_depth.event_id`.
 
 ## Hard stop
 

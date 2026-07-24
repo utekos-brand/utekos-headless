@@ -104,7 +104,8 @@ export function buildRemoveFromCartDataLayerEvent(
     event: 'remove_from_cart',
     event_id: event.event_id,
     event_time: event.event_time,
-    source: event.source,
+    // dataLayer is browser-only; webhook-sourced rows never enter this builder.
+    source: 'web',
     ...(event.page_view_id ? { page_view_id: event.page_view_id } : {}),
     custom_data: event.custom_data,
     canonical_event: event
